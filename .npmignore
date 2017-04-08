@@ -1,0 +1,5 @@
+*
+!lib/
+!example
+example/_build
+example/_dist
