@@ -1,8 +1,7 @@
 # gulp-build-manager
 modular gulp build manager using using babel/es6
 
-Gulp Build Manager is a tool enabling fast gulp task creation with simple configuration.
-The configuration is described in a JavaScript file supporting babel/es6, so users can have much flexibility in handling config settings.
+Gulp Build Manager enables gulp task to be created or customized easily and quickly by using simple configurations, but with more flexiility leveraging javascript.
 
 ## Example
 
@@ -15,7 +14,7 @@ gbm.loadBuilders('./gulp/gbmconfig.js');
 ```
 
 #### ./gulp/gbmconfig.js
-Refer to the example dir in the source
+Refer to the [example dir](https://github.com/shnam7/gulp-build-manager/tree/master/example) in the source
 
 Currently available builders are:
 ```
