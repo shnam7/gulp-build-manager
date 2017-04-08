@@ -2,6 +2,11 @@
   "name": "gulp-build-manager",
   "version": "1.1.0",
   "description": "Modular gulp build manager using babel/es6. Gulp task configuration and made easy",
+  "files": [
+    "lib",
+    "example",
+    "README.md"
+  ],
   "main": "lib/index.js",
   "scripts": {
     "build": "babel src --presets babel-preset-es2015 --out-dir lib",
