@@ -1,6 +1,4 @@
 # gulp-build-manager
-modular gulp build manager using using babel/es6
-
 Gulp Build Manager enables gulp task to be created or customized easily and quickly by using simple configurations, but with more flexiility leveraging javascript.
 
 ## Example
