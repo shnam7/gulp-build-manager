@@ -122,11 +122,10 @@ export default class GulpBuildManager {
           del(clean, this._defaultModuleOptions.del).then(()=>done());
         });
       }
+      if (config.systemBuilds.watch) gulp.task('@watch', (done)=>{this.watch(); done()});
 
       let defaultBuild = config.systemBuilds.default;
-      if (defaultBuild) gulp.task('@default', buildSet(defaultBuild).resolve(), (done)=>done());
-
-      if (config.systemBuilds.watch) gulp.task('@watch', (done)=>{this.watch(); done()});
+      if (defaultBuild) gulp.task('default', buildSet(defaultBuild).resolve(), (done)=>done());
     }
   }
 

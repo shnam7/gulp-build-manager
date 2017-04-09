@@ -47,10 +47,11 @@ const gbmConfig = {
       'markdown', 'panini', 'twig', 'images', 'copy', 'custom'
     ),
 
+    watch: true,
+
     // default task
     default: ['@clean', '@build'],
 
-    watch: true,
   },
 
   moduleOptions: {
