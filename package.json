@@ -5,6 +5,7 @@
   "files": [
     "lib",
     "example",
+    "src",
     "README.md"
   ],
   "main": "lib/index.js",
