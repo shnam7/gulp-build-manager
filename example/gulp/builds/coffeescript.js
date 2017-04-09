@@ -4,7 +4,7 @@
  */
 
 import gbmConfig from '../gbmconfig';
-import path from 'path';
+import upath from 'upath';
 
 const srcRoot = gbmConfig.srcRoot;
 
@@ -13,7 +13,7 @@ export default module.exports = [
     buildName: 'coffeescript',
     builder: 'GCoffeeScriptBuilder',
     // builder: 'GCustomTestBuilder',
-    src: [path.join(srcRoot, 'scripts/coffee/**/*.coffee')],
+    src: [upath.join(srcRoot, 'scripts/coffee/**/*.coffee')],
     dest: (file) => file.base,
     buildOptions: {enableLint: false},
     moduleOptions: {},

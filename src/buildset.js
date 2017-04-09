@@ -2,7 +2,7 @@
 
 import is from './utils/is';
 import gulp from 'gulp';
-import path from 'path';
+import upath from 'upath';
 import merge from 'lodash.merge';
 
 // BuildSet items are processed in gulp parallel task by default
@@ -91,7 +91,7 @@ class BuildSet {
       // console.log(`Trying custom builders in '${customDirs}'`);
       for (const customDir of customDirs) {
         try {
-          let builderClass = require(path.join(process.cwd(), customDir, builder));
+          let builderClass = require(upath.join(process.cwd(), customDir, builder));
           return new builderClass;
         }
         catch (e) {
@@ -102,7 +102,7 @@ class BuildSet {
 
     // if custom builder is not available, then try default builder
     try {
-      let builderClass = require(path.join(__dirname, './builders', buildItem.builder));
+      let builderClass = require(upath.join(__dirname, './builders', buildItem.builder));
       return new builderClass;
     }
     catch (e) {

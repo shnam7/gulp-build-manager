@@ -4,7 +4,7 @@
  */
 
 import gbmConfig from '../gbmconfig';
-import path from 'path';
+import upath from 'upath';
 
 const srcRoot = gbmConfig.srcRoot;
 const destRoot = gbmConfig.destRoot;
@@ -13,8 +13,8 @@ export default module.exports = [
   {
     buildName: 'markdown',
     builder: 'GMarkdownBuilder',
-    src: [path.join(srcRoot, 'docs/panini/pages/**/*.md')],
-    dest: path.join(destRoot, 'markdown-test'),
+    src: [upath.join(srcRoot, 'docs/panini/pages/**/*.md')],
+    dest: upath.join(destRoot, 'markdown-test'),
     buildOptions: {},
     moduleOptions: {}
   },

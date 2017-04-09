@@ -12,7 +12,7 @@ import buildSet from '../buildset';
 import GWatcher from './GWatcher';
 import gulp from 'gulp';
 import is from '../utils/is';
-import path from 'path';
+import upath from 'upath';
 import del from 'del';
 import merge from 'lodash.merge';
 
@@ -95,18 +95,18 @@ export default class GulpBuildManager {
   loadBuilders(config) {
     let basePath = "";
     if (is.String(config)) {
-      basePath = path.dirname(config);
-      config = require(path.join(process.cwd(), config))
+      basePath = upath.dirname(config);
+      config = require(upath.join(process.cwd(), config))
     }
 
     if (config.systemBuilds) this._watcher.setOptions(config.systemBuilds.watch);
 
-    // console.log(path.join(process.cwd(), config));
+    // console.log(upath.join(process.cwd(), config));
     if (config.moduleOptions) merge(this._defaultModuleOptions, config.moduleOptions);
     if (config.builds) {
       for (let buildItem of config.builds) {
-        let bs = buildSet(require(path.join(process.cwd(), basePath, buildItem)));
-        let customBuildDir = path.join(basePath, config.customBuilderDir);
+        let bs = buildSet(require(upath.join(process.cwd(), basePath, buildItem)));
+        let customBuildDir = upath.join(basePath, config.customBuilderDir);
         // console.log(bs, customBuildDir, basePath);
         bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher);
       }

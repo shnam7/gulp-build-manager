@@ -4,7 +4,7 @@
  */
 
 import gbmConfig from '../gbmconfig';
-import path from 'path';
+import upath from 'upath';
 
 const srcRoot = gbmConfig.srcRoot;
 const destRoot = gbmConfig.destRoot;
@@ -15,12 +15,12 @@ export default module.exports = [
     buildName: 'twig',
     builder: 'GTwigBuilder',
 
-    src: [path.join(srcRoot, 'docs/twig/*.twig')],
-    dest: path.join(destRoot, 'docs/twig-test'),
+    src: [upath.join(srcRoot, 'docs/twig/*.twig')],
+    dest: upath.join(destRoot, 'docs/twig-test'),
     buildOptions: {},
     moduleOptions: {
       twig: {
-        base: path.join(srcRoot, 'docs/twig'),
+        base: upath.join(srcRoot, 'docs/twig'),
         data: {
           site: {
             name: 'Gulp Build Manager Test',

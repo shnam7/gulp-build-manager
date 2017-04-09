@@ -4,7 +4,7 @@
 
 'use strict';
 import buildSet from '../../src/buildset';
-import path from 'path';
+import upath from 'upath';
 
 const srcRoot = 'assets';
 const destRoot = '_build';
@@ -36,8 +36,8 @@ const gbmConfig = {
       'css',
       'js',
       'images',
-      path.join(srcRoot, 'scripts/{coffee,ts}/*.{js,js.map}'),
-      path.join(srcRoot, 'assets/languages/*.mo')
+      upath.join(srcRoot, 'scripts/{coffee,ts}/*.{js,js.map}'),
+      upath.join(srcRoot, 'assets/languages/*.mo')
     ],
 
     // system task: '@build'

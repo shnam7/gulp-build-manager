@@ -67,6 +67,7 @@
     "merge-stream": "^1.0.1",
     "panini": "^1.4.0",
     "should": "^11.2.1",
-    "typescript": "^2.2.2"
+    "typescript": "^2.2.2",
+    "upath": "^1.0.0"
   }
 }

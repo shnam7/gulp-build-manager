@@ -4,7 +4,7 @@
  */
 
 import gbmConfig from '../gbmconfig';
-import path from 'path';
+import upath from 'upath';
 
 const srcRoot = gbmConfig.srcRoot;
 const destRoot = gbmConfig.destRoot;
@@ -13,8 +13,8 @@ export default module.exports = [
   {
     buildName: 'copy',
     builder: 'GBuilder',      // GBuilder is basically copies src to dest
-    src: [path.join(srcRoot, 'copy-test/**/*.*')],
-    dest: path.join(destRoot, 'copy-test'),
+    src: [upath.join(srcRoot, 'copy-test/**/*.*')],
+    dest: upath.join(destRoot, 'copy-test'),
     buildOptions: {},
     moduleOptions: {}
   }

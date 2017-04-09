@@ -4,7 +4,7 @@
  */
 
 import gbmCofig from '../gbmconfig';
-import path from 'path';
+import upath from 'upath';
 
 const srcRoot = gbmCofig.srcRoot;
 const destRoot = gbmCofig.destRoot;
@@ -14,10 +14,10 @@ export default module.exports = [
     buildName: 'sass',
     builder: 'GSassBuilder',
     src: [
-      path.join(srcRoot, 'scss/**/*.scss'),
-      path.join(srcRoot, 'sass/**/*.sass')
+      upath.join(srcRoot, 'scss/**/*.scss'),
+      upath.join(srcRoot, 'sass/**/*.sass')
     ],
-    dest: path.join(destRoot, 'css'),
+    dest: upath.join(destRoot, 'css'),
     buildOptions: {
       enableLint: false
     },
