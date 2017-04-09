@@ -32,6 +32,10 @@ export default module.exports = [
           'assets/scss'
         ]
       }
+    },
+    watch: {
+      livereload: true
     }
+
   },
 ];

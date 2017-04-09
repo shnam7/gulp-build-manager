@@ -5,7 +5,7 @@ import livereload from 'gulp-livereload';
 
 class GWatcher {
   constructor(watchOptions) {
-    this._watchOptions = merge({enabled: true, livereload: true}, watchOptions);
+    this._watchOptions = merge({enabled: false, livereload: false}, watchOptions);
     this._watchMap = [];
   }
 

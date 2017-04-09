@@ -6,6 +6,7 @@
 import gbmConfig from '../gbmconfig';
 import path from 'path';
 
+const srcRoot = gbmConfig.srcRoot;
 const destRoot = gbmConfig.destRoot;
 
 export default module.exports = [
@@ -13,9 +14,8 @@ export default module.exports = [
     buildName: 'javascript:core',
     builder: 'GJavaScriptBuilder',
     src: [
-      'assets/scripts/coffee/{*,js/*}.js',
-      'assets/scripts/ts/{*,js/*}.js',
-      '!assets/scripts/js/*.js'
+      path.join(srcRoot, 'scripts/{coffee,ts}/{*,js/*}.js'),
+      '!' + path.join(srcRoot, 'scripts/js/*.js'),
     ],
     dest: path.join(destRoot, 'js'),
     outfile: 'sample-script1.js',
@@ -24,15 +24,12 @@ export default module.exports = [
       enableBabel: true
     },
     moduleOptions: {},
-
-    addWatch: [],
-    disableWatch: false
   },
 
   {
     buildName: 'javascript:customizer',
     builder: 'GJavaScriptBuilder',
-    src: ['assets/scripts/js/**/*.js'],
+    src: [path.join(srcRoot, 'scripts/js/**/*.js')],
     dest: path.join(destRoot, 'js'),
     outfile: 'sample-script2.js',
     buildOptions: {
@@ -40,8 +37,6 @@ export default module.exports = [
       enableBabel: true
     },
     moduleOptions: {},
-
-    taskDeps: null, // ['javascript:core']
   },
 
   {

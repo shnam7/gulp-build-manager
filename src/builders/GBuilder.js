@@ -43,6 +43,10 @@ class GBuilder {
   }
 
   OnDest(stream, conf, defaultModuleOptions) {
+    if (conf.watch && conf.watch.livereload) {
+      let livereload = require('gulp-livereload');
+      return stream.pipe(gulp.dest(conf.dest)).pipe(livereload());
+    }
     return stream.pipe(gulp.dest(conf.dest));
   }
 

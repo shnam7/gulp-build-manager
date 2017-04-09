@@ -99,31 +99,35 @@ export default class GulpBuildManager {
       config = require(path.join(process.cwd(), config))
     }
 
-    this._watcher.setOptions(config.systemBuilds.watch);
+    if (config.systemBuilds) this._watcher.setOptions(config.systemBuilds.watch);
 
     // console.log(path.join(process.cwd(), config));
     if (config.moduleOptions) merge(this._defaultModuleOptions, config.moduleOptions);
-    for (let buildItem of config.builds) {
-      let bs = buildSet(require(path.join(process.cwd(), basePath, buildItem)));
-      let customBuildDir = path.join(basePath, config.customBuilderDir);
-      // console.log(bs, customBuildDir, basePath);
-      bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher);
+    if (config.builds) {
+      for (let buildItem of config.builds) {
+        let bs = buildSet(require(path.join(process.cwd(), basePath, buildItem)));
+        let customBuildDir = path.join(basePath, config.customBuilderDir);
+        // console.log(bs, customBuildDir, basePath);
+        bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher);
+      }
     }
 
-    let sysBuilds = config.systemBuilds.build;
-    if (sysBuilds) gulp.task('@build', buildSet(sysBuilds).resolve(), (done)=>done());
+    if (config.systemBuilds) {
+      let sysBuilds = config.systemBuilds.build;
+      if (sysBuilds) gulp.task('@build', buildSet(sysBuilds).resolve(), (done)=>done());
 
-    let clean = config.systemBuilds.clean;
-    if (clean) {
-      gulp.task('@clean', (done)=>{
-        del(clean, this._defaultModuleOptions.del).then(()=>done());
-      });
+      let clean = config.systemBuilds.clean;
+      if (clean) {
+        gulp.task('@clean', (done)=>{
+          del(clean, this._defaultModuleOptions.del).then(()=>done());
+        });
+      }
+
+      let defaultBuild = config.systemBuilds.default;
+      if (defaultBuild) gulp.task('@default', buildSet(defaultBuild).resolve(), (done)=>done());
+
+      if (config.systemBuilds.watch) gulp.task('@watch', (done)=>{this.watch(); done()});
     }
-
-    let defaultBuild = config.systemBuilds.default;
-    if (defaultBuild) gulp.task('@default', buildSet(defaultBuild).resolve(), (done)=>done());
-
-    if (config.systemBuilds.watch) gulp.task('@watch', (done)=>{this.watch(); done()});
   }
 
   watch() { this._watcher.watch(); }

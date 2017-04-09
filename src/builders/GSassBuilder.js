@@ -54,7 +54,13 @@ class GSassBuilder extends GBuilder {
     return mergeStream(pipeCompressed, pipeUncompressed);
   }
 
-  OnDest(stream) { return stream; }
+  OnDest(stream, conf) {
+    if (conf.watch && conf.watch.livereload) {
+      let livereload = require('gulp-livereload');
+      return stream.pipe(livereload());
+    }
+    return stream;
+  }
 }
 
 export default GSassBuilder;
