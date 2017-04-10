@@ -44,6 +44,7 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
+    "cssnext": "^1.8.4",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
     "gulp-cleanhtml": "^1.0.3",
@@ -67,6 +68,10 @@
     "gulp-zip": "^4.0.0",
     "merge-stream": "^1.0.1",
     "panini": "^1.4.0",
+    "postcss-easings": "^0.3.0",
+    "postcss-mixins": "^5.4.1",
+    "postcss-nested": "^1.0.0",
+    "postcss-simple-vars": "^3.1.0",
     "should": "^11.2.1",
     "typescript": "^2.2.2",
     "upath": "^1.0.0"

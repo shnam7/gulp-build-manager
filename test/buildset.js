@@ -1,6 +1,6 @@
 import chai from 'chai';
 import {expect} from 'chai';
-import buildSet from '../src/buildset';
+import buildSet from '../src/buildSet';
 
 let should = chai.should();
 

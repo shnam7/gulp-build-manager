@@ -5,6 +5,7 @@
 'use strict';
 import GBuilder from './GBuilder';
 import postcss from 'gulp-postcss';
+import sourcemaps from 'gulp-sourcemaps';
 
 
 class GPostCSSBuilder extends GBuilder {

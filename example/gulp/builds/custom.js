@@ -5,12 +5,18 @@
 
 export default module.exports = [
   {
-    buildName: 'custom',
-    builder: (conf, defaultModuleOptions, done)=>{
-      console.log('CustomBuild Task: Hello!!!', conf.src);
+    buildName: 'custom:function',
+    builder: (defaultModuleOptions, conf, done)=>{
+      console.log('Custom builder using function(): Hello!!!', conf.src);
       done();
     },
-
-    src: [],
+  },
+  {
+    buildName: 'custom:GCustomTestBuilder',
+    builder: 'GCustomTestBuilder'
+  },
+  {
+    buildName: 'custom',
+    dependencies: ['custom:function', 'custom:GCustomTestBuilder']
   },
 ];

@@ -8,7 +8,7 @@
  */
 
 'use strict';
-import buildSet from '../buildset';
+import buildSet from '../buildSet';
 import GWatcher from './GWatcher';
 import gulp from 'gulp';
 import is from '../utils/is';

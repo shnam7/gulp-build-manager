@@ -3,7 +3,7 @@
  */
 
 'use strict';
-import buildSet from '../../src/buildset';
+import buildSet from '../../src/buildSet';
 import upath from 'upath';
 
 const srcRoot = 'assets';
@@ -16,6 +16,7 @@ const gbmConfig = {
 
   builds: [
     './builds/sass',
+    './builds/postcss',
     './builds/coffeescript',
     './builds/typescript',
     './builds/javascript',
@@ -42,7 +43,7 @@ const gbmConfig = {
 
     // system task: '@build'
     build: buildSet(
-      'sass',
+      'sass', 'postcss',
       ['coffeescript', 'javascript'],
       'markdown', 'panini', 'twig', 'images', 'copy', 'custom'
     ),

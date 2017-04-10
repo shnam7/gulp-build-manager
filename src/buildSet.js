@@ -50,10 +50,10 @@ class BuildSet {
         if (item.hasOwnProperty('dependencies')) {
           let deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher);
           if (!is.Function(deps)) deps = gulp.parallel(deps);
-          gulp.task(item.buildName, deps, (done)=>builder.build(item, defaultModuleOptions, done));
+          gulp.task(item.buildName, deps, (done)=>builder.build(defaultModuleOptions, item, done));
         }
         else
-          gulp.task(item.buildName, (done)=>builder.build(item, defaultModuleOptions, done));
+          gulp.task(item.buildName, (done)=>builder.build(defaultModuleOptions, item, done));
 
         // resolve watch
         let watch = {
@@ -87,6 +87,7 @@ class BuildSet {
 
     // try custom dir first to give a chance to overload default builder
     if (is.String(customDirs)) customDirs = [customDirs];
+
     if (customDirs) {
       // console.log(`Trying custom builders in '${customDirs}'`);
       for (const customDir of customDirs) {
@@ -107,7 +108,7 @@ class BuildSet {
     }
     catch (e) {
       if (e.code !== 'MODULE_NOT_FOUND') throw e;
-      console.log(`builder '${builder}' not found.`);
+      console.log(`builder '${builder}' not found:`, e);
     }
     throw Error('Builder not found: ' + builder + ', or check for modules imported from ' + builder);
   }

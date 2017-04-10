@@ -15,39 +15,36 @@ class GBuilder {
 
   // defaultModuleOptions: this is from GulpBuilderManager config with updates from each buildItem config
   // In this callback, custom builder class can add bui
-  build(conf, defaultModuleOptions) {
+  build(defaultModuleOptions, conf, done) {
     let mopts = {};
-
-    this.OnInitModuleOptions(mopts, conf, defaultModuleOptions);
+    this.OnInitModuleOptions(mopts, defaultModuleOptions, conf);
     // console.log(`'mopts for:${conf.buildName}:`, mopts);
-    let stream = this.OnInitStream(mopts, conf, defaultModuleOptions);
-    return this.OnDest(this.OnBuild(stream, mopts, conf), conf, defaultModuleOptions);
+    let stream = this.OnInitStream(mopts, defaultModuleOptions, conf);
+    return this.OnDest(this.OnBuild(stream, mopts, conf), mopts, conf) || done();
   }
 
-  OnInitModuleOptions(mopts, conf, defaultModuleOptions) {
+  OnInitModuleOptions(mopts, defaultModuleOptions, conf) {
     merge(mopts, pick(defaultModuleOptions, ['gulp','changed']));
     merge(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions));
     merge(mopts, pick(conf.moduleOptions, Object.keys(mopts)));
   }
 
-  OnBuilderModuleOptions(mopts, defaultModuleOptions) {}
+  OnBuilderModuleOptions(mopts, defaultModuleOptions, conf) {}
 
-  OnInitStream(mopts, conf, defaultModuleOptions) {
-    return gulp.src(conf.src, mopts.gulp)
-      .pipe(plumber())
-      .pipe(changed(conf.dest, mopts.changed));
+  OnInitStream(mopts, defaultModuleOptions, conf) {
+    return conf.src && gulp.src(conf.src, mopts.gulp)
+        .pipe(plumber())
+        .pipe(changed(conf.dest, mopts.changed));
   }
 
-  OnBuild(stream, mopts, conf) {
-    return stream.pipe(gulp.dest(conf.dest));
-  }
+  OnBuild(stream, mopts, conf) { return stream; }
 
-  OnDest(stream, conf, defaultModuleOptions) {
+  OnDest(stream, mopts, conf) {
     if (conf.watch && conf.watch.livereload) {
       let livereload = require('gulp-livereload');
       return stream.pipe(gulp.dest(conf.dest)).pipe(livereload());
     }
-    return stream.pipe(gulp.dest(conf.dest));
+    return stream && stream.pipe(gulp.dest(conf.dest));
   }
 
   pick(...arg) { return pick(...arg); }

@@ -1,11 +1,19 @@
-import GBuilder from '../../../src/builders/GBuilder';
+/**
+ *  CustomTestBuilder
+ *
+ */
+
+'use strict';
+
+import GBuilder from '../../../lib/builders/GBuilder';
 
 class GCustomTestBuilder extends GBuilder {
-  constructor(gbm, config) { super(gbm, config); }
+  constructor() { super();
+    console.log('aaa1');
+  }
 
-  build(conf, done) {
-    console.log("Hello, GCustomTestBuilder!!");
-    done();
+  OnBuild(stream, mopts, conf) {
+    console.log('Hello, CustomBuilder!');
   }
 }
 
