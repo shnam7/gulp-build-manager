@@ -100,14 +100,11 @@ export default class GulpBuildManager {
     }
 
     if (config.systemBuilds) this._watcher.setOptions(config.systemBuilds.watch);
-
-    // console.log(upath.join(process.cwd(), config));
     if (config.moduleOptions) merge(this._defaultModuleOptions, config.moduleOptions);
     if (config.builds) {
       for (let buildItem of config.builds) {
         let bs = buildSet(require(upath.join(process.cwd(), basePath, buildItem)));
         let customBuildDir = upath.join(basePath, config.customBuilderDir);
-        // console.log(bs, customBuildDir, basePath);
         bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher);
       }
     }
