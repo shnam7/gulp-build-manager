@@ -6,6 +6,7 @@
 import GBuilder from './GBuilder';
 import postcss from 'gulp-postcss';
 import sourcemaps from 'gulp-sourcemaps';
+import rename from 'gulp-rename';
 
 
 class GPostCSSBuilder extends GBuilder {
@@ -16,18 +17,15 @@ class GPostCSSBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    let plugins = [
-      require('postcss-nested'),
-      require('postcss-mixins'),
-      require('postcss-simple-vars'),
-      require('autoprefixer')({browsers: ['last 1 version']}),
-      require('postcss-easings'),
-      require('cssnext'),
-    ];
+    let plugins = [];
+    if (conf.buildOptions.postcss && conf.buildOptions.postcss.plugins)
+      for (let plugin of conf.buildOptions.postcss.plugins)
+        plugins.push(plugin);
 
     return stream
       .pipe(sourcemaps.init())
       .pipe(postcss(plugins, mopts.postcss))
+      .pipe(rename({extname:'.css'}))
       .pipe(sourcemaps.write('.'))
   }
 }

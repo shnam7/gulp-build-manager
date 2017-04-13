@@ -1,7 +1,7 @@
 {
   "name": "gulp-build-manager",
   "version": "1.2.2",
-  "description": "Modular gulp build manager using babel/es6. Gulp task configuration and made easy",
+  "description": "Gulp build manager using babel/es6. Gulp task made easy with configuration support",
   "files": [
     "lib",
     "example",
@@ -22,8 +22,17 @@
   "keywords": [
     "gulp",
     "build",
+    "builder",
     "babel",
-    "es6"
+    "es6",
+    "sass",
+    "scss",
+    "postcss",
+    "twig",
+    "coffeescript",
+    "typescript",
+    "markdown",
+    "panini"
   ],
   "author": "Robin Soo-hyuk Nam",
   "license": "MIT",
@@ -67,10 +76,13 @@
     "gulp-zip": "^4.0.0",
     "merge-stream": "^1.0.1",
     "panini": "^1.4.0",
+    "postcss-cssnext": "^2.10.0",
     "postcss-easings": "^0.3.0",
     "postcss-mixins": "^5.4.1",
     "postcss-nested": "^1.0.0",
     "postcss-simple-vars": "^3.1.0",
+    "postcss-utilities": "^0.7.0",
+    "precss": "^1.4.0",
     "should": "^11.2.1",
     "typescript": "^2.2.2",
     "upath": "^1.0.0"

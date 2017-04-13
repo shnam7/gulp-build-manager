@@ -13,11 +13,19 @@ export default module.exports = [
   {
     buildName: 'postcss',
     builder: 'GPostCSSBuilder',
-    src: [upath.join(srcRoot, 'postcss/**/*.css')],
+    src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
     dest: upath.join(destRoot, 'css'),
     buildOptions: {
-      enableLint: false
+      enableLint: false,
+      postcss:{
+        plugins: [
+            require('postcss-cssnext'),
+            require('postcss-utilities'),
+        ]
+      }
     },
-    moduleOptions: {}
+    moduleOptions: {
+      changed: {changed:{extension: '.css'}}
+    }
   },
 ];
