@@ -1,5 +1,15 @@
-$x: 500;
+:root {
+  --color: blue;
+}
+
+$x: 500px;
 
 .test-style {
   width: $x;
+
+  @util aspect-ratio(4:3);
+}
+
+:fullscreen a {
+  color: var(--color);
 }

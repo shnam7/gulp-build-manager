@@ -23,29 +23,32 @@ class GSassBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    let lint = nop;
-    lint.format = nop;
-    lint.failOnError = nop;
-    let stylish = nop;
     if (conf.buildOptions.enableLint === true) {
-      lint = require('gulp-sass-lint');
-      stylish = require('gulp-scss-lint-stylish');
+      let lint = require('gulp-sass-lint');
+      let stylish = require('gulp-scss-lint-stylish');
+      streqm.pipe(lint()) // bug:CRLF causes error
+        .pipe(lint({customReport: stylish}))
+        .pipe(lint.format())
+        .pipe(lint.failOnError())
     }
 
-    let source = stream
-      .pipe(lint()) // bug:CRLF causes error
-      .pipe(lint({customReport: stylish}))
-      .pipe(lint.format())
-      .pipe(lint.failOnError())
-      .pipe(sass(mopts.sass).on('error', sass.logError))
+    stream = stream
       .pipe(sourcemaps.init())
-      .pipe(autoprefixer(mopts.autoprefixer));
+      .pipe(sass(mopts.sass).on('error', sass.logError));
 
-    let pipeUncompressed = source.pipe(clone())
+    if (conf.buildOptions.enablePostCSS) {
+      let postcss = require('gulp-postcss');
+      let plugins = conf.buildOptions.postcss ? conf.buildOptions.postcss.plugins : [];
+      stream = stream.pipe(postcss(plugins, mopts.postcss))
+    }
+    else
+        stream = stream.pipe(autoprefixer(mopts.autoprefixer));
+
+    let pipeUncompressed = stream.pipe(clone())
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(conf.dest));
 
-    let pipeCompressed = source.pipe(clone())
+    let pipeCompressed = stream.pipe(clone())
       .pipe(rename({extname: '.min.css'}))
       .pipe(cssnano(mopts.cssnano))
       .pipe(sourcemaps.write('.'))

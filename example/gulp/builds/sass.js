@@ -19,18 +19,26 @@ export default module.exports = [
     ],
     dest: upath.join(destRoot, 'css'),
     buildOptions: {
-      enableLint: false
+      enableLint: false,
+      enablePostCSS: true,
+      postcss: {
+        plugins:[
+          require('postcss-cssnext'),
+          require('postcss-utilities'),
+        ]
+      }
     },
     moduleOptions: {
       sass: {
         includePaths: [
-          // 'bower_components/compass-mixins/lib',
           'bower_components/gridle/sass',
           'bower_components/uikit/scss',
           'bower_components',
           'd:/web/lib/wcl/assets/scss',
           'assets/scss'
         ]
+      },
+      postcss: {
       }
     },
     watch: {
