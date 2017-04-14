@@ -26,7 +26,7 @@ class GBuilder {
   OnInitModuleOptions(mopts, defaultModuleOptions, conf) {
     merge(mopts, pick(defaultModuleOptions, ['gulp','changed']));
     merge(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions));
-    merge(mopts, pick(conf.moduleOptions, Object.keys(mopts)));
+    merge(mopts, conf.moduleOptions);
   }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions, conf) {}
