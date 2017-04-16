@@ -16,6 +16,7 @@ export default module.exports = [
     src: [upath.join(srcRoot, 'docs/panini/pages/**/*.md')],
     dest: upath.join(destRoot, 'markdown-test'),
     buildOptions: {},
-    moduleOptions: {}
+    moduleOptions: {},
+    watch: {livereload:true}
   },
 ];

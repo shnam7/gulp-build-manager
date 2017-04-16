@@ -12,6 +12,9 @@ export default module.exports = [
     outfile: 'sample.zip',
 
     buildOptions: {},
-    moduleOptions: {}
+    moduleOptions: {},
+    watch: {
+      watched:[]    // disable watch
+    }
   }
 ];

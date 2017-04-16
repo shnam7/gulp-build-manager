@@ -45,6 +45,7 @@ export default module.exports = [
           }
         ]
       }
-    }
+    },
+    watch: {livereload:true}
   },
 ];

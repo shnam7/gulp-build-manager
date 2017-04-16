@@ -24,6 +24,7 @@ export default module.exports = [
       enableBabel: true
     },
     moduleOptions: {},
+    watch: {livereload:true}
   },
 
   {
@@ -37,10 +38,11 @@ export default module.exports = [
       enableBabel: true
     },
     moduleOptions: {},
+    watch: {livereload:true}
   },
 
   {
     buildName: 'javascript',
-    dependencies: ['javascript:core', 'javascript:customizer']
+    dependencies: ['javascript:core', 'javascript:customizer'],
   }
 ];

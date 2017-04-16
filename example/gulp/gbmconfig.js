@@ -48,16 +48,13 @@ const gbmConfig = {
       'markdown', 'panini', 'twig', 'images', 'copy', 'custom'
     ),
 
-    watch: true,
+    // system task: '@watch' with livereload options
+    watch: {
+      livereload: {start:true}
+    },
 
     // default task
     default: ['@clean', '@build'],
-
-  },
-
-  moduleOptions: {
-    gulp: {},
-    livereload: {}
   },
 };
 

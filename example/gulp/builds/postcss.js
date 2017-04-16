@@ -24,8 +24,7 @@ export default module.exports = [
         ]
       }
     },
-    moduleOptions: {
-      changed: {changed:{extension: '.css'}}
-    }
+    moduleOptions: {},
+    watch: {livereload:true}
   },
 ];

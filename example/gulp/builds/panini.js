@@ -26,6 +26,7 @@ export default module.exports = [
         data: upath.join(srcRoot, 'docs/panini/data/'),
         helpers: upath.join(srcRoot, 'docs/panini/helpers/')
       }
-    }
+    },
+    watch: {livereload:true}
   },
 ];

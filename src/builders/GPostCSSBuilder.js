@@ -7,12 +7,14 @@ import GBuilder from './GBuilder';
 import postcss from 'gulp-postcss';
 import sourcemaps from 'gulp-sourcemaps';
 import rename from 'gulp-rename';
+import merge from 'lodash.merge';
 
 
 class GPostCSSBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions) {
+    merge(mopts, {changed:{extension: '.css'}});
     return this.pick(defaultModuleOptions, ['postcss']);
   }
 

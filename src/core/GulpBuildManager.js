@@ -76,18 +76,10 @@ export default class GulpBuildManager {
         helpers: 'docs/helpers/'
       },
 
-      twig: {},
-
       htmlPrettify: {
         indent_char: ' ',
         indent_size: 4
       },
-
-      marked: {},
-
-      del: {},
-
-      livereload: {}
     };
     this._watcher = new GWatcher();
   }
@@ -99,7 +91,6 @@ export default class GulpBuildManager {
       config = require(upath.join(process.cwd(), config))
     }
 
-    if (config.systemBuilds) this._watcher.setOptions(config.systemBuilds.watch);
     if (config.moduleOptions) merge(this._defaultModuleOptions, config.moduleOptions);
     if (config.builds) {
       for (let buildItem of config.builds) {
@@ -119,12 +110,13 @@ export default class GulpBuildManager {
           del(clean, this._defaultModuleOptions.del).then(()=>done());
         });
       }
-      if (config.systemBuilds.watch) gulp.task('@watch', (done)=>{this.watch(); done()});
+      if (config.systemBuilds.watch)
+        gulp.task('@watch', (done)=>{this.watch(config.systemBuilds.watch); done()});
 
       let defaultBuild = config.systemBuilds.default;
       if (defaultBuild) gulp.task('default', buildSet(defaultBuild).resolve(), (done)=>done());
     }
   }
 
-  watch() { this._watcher.watch(); }
+  watch(watchOptions) { this._watcher.watch(watchOptions); }
 }

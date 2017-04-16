@@ -19,10 +19,10 @@ export default module.exports = [
     moduleOptions: {},
 
     // watcher is enabled by default. To disable it, set watched property to empty or null
-    // watch: {
+    watch: {
     //   watched: [],  // this will disable watch
     //   task: ()=>{ console.log('aaabbb');},  // task name or function can be specified
-    //   livereload: true
-    // }
+      livereload: true
+    }
   }
 ];

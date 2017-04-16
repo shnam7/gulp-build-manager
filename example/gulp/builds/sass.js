@@ -25,6 +25,7 @@ export default module.exports = [
         plugins:[
           require('postcss-cssnext'),
           require('postcss-utilities'),
+          require('lost'),
         ]
       }
     },
@@ -38,11 +39,7 @@ export default module.exports = [
           'assets/scss'
         ]
       },
-      postcss: {
-      }
     },
-    watch: {
-      livereload: true
-    }
+    watch: {livereload: true}
   },
 ];

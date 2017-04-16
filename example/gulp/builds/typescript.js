@@ -17,6 +17,7 @@ export default module.exports = [
     buildOptions: {
       enableLint: false
     },
-    moduleOptions: {}
+    moduleOptions: {},
+    watch: {livereload:true}
   },
 ];

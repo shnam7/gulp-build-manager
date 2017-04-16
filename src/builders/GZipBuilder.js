@@ -12,7 +12,7 @@ import zip from 'gulp-zip';
 class GZipBuilder extends GBuilder {
   constructor() { super(); }
 
-  OnInitStream(mopts, conf, defultModuleOptions) {
+  OnInitStream(mopts, defultModuleOptions, conf) {
     // zip should not check for 'changed' to zip everything
     return gulp.src(conf.src, mopts.gulp).pipe(plumber())
   }

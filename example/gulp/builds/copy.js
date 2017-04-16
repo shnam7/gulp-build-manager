@@ -16,6 +16,7 @@ export default module.exports = [
     src: [upath.join(srcRoot, 'copy-test/**/*.*')],
     dest: upath.join(destRoot, 'copy-test'),
     buildOptions: {},
-    moduleOptions: {}
+    moduleOptions: {},
+    watch: {livereload: true}
   }
 ];
