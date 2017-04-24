@@ -102,8 +102,7 @@ export default class GulpBuildManager {
 
     if (config.systemBuilds) {
       let sysBuilds = config.systemBuilds.build;
-      if (sysBuilds) gulp.task('@build', buildSet(sysBuilds).resolve(), (done)=>done());
-
+      if (sysBuilds) gulp.task('@build', gulp.parallel(buildSet(sysBuilds).resolve()), (done)=>done());
       let clean = config.systemBuilds.clean;
       if (clean) {
         gulp.task('@clean', (done)=>{
@@ -114,7 +113,7 @@ export default class GulpBuildManager {
         gulp.task('@watch', (done)=>{this.watch(config.systemBuilds.watch); done()});
 
       let defaultBuild = config.systemBuilds.default;
-      if (defaultBuild) gulp.task('default', buildSet(defaultBuild).resolve(), (done)=>done());
+      if (defaultBuild) gulp.task('default', gulp.parallel(buildSet(defaultBuild).resolve()), (done)=>done());
     }
   }
 

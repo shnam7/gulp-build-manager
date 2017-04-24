@@ -15,6 +15,9 @@
     "prepublish": "npm run build",
     "test": "mocha --compilers js:babel-core/register --reporter spec"
   },
+  "bin": {
+    "gbm": "./bin/index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shnam7/gulp-build-manager.git"
@@ -41,13 +44,16 @@
   },
   "homepage": "https://github.com/shnam7/gulp-build-manager#readme",
   "dependencies": {
-    "del": "^2.2.2",
-    "gulp": "github:gulpjs/gulp#4.0",
-    "gulp-changed": "^2.0.0",
-    "gulp-plumber": "^1.1.0",
-    "lodash.merge": "^4.6.0",
     "babel-core": "^6.24.1",
     "babel-preset-latest": "^6.24.1",
+    "commander": "^2.9.0",
+    "upath": "^1.0.0",
+    "del": "^2.2.2",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-changed": "^3.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-livereload": "^3.8.1",
+    "lodash.merge": "^4.6.0",
     "lodash.pick": "^4.4.0"
   },
   "devDependencies": {
@@ -63,7 +69,6 @@
     "gulp-debug": "^3.1.0",
     "gulp-html-prettify": "0.0.1",
     "gulp-imagemin": "^3.2.0",
-    "gulp-livereload": "^3.8.1",
     "gulp-markdown": "^1.2.0",
     "gulp-nop": "0.0.3",
     "gulp-postcss": "^6.4.0",
@@ -85,7 +90,6 @@
     "postcss-utilities": "^0.7.0",
     "precss": "^1.4.0",
     "should": "^11.2.1",
-    "typescript": "^2.2.2",
-    "upath": "^1.0.0"
+    "typescript": "^2.2.2"
   }
 }

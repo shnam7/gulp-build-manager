@@ -50,7 +50,7 @@ class BuildSet {
         if (item.hasOwnProperty('dependencies')) {
           let deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher);
           if (!is.Function(deps)) deps = gulp.parallel(deps);
-          gulp.task(item.buildName, deps, (done)=>builder.build(defaultModuleOptions, item, done));
+          gulp.task(item.buildName, gulp.parallel(deps), (done)=>builder.build(defaultModuleOptions, item, done));
         }
         else
           gulp.task(item.buildName, (done)=>builder.build(defaultModuleOptions, item, done));

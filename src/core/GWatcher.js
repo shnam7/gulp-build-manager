@@ -1,6 +1,5 @@
 'use strict';
 import gulp from 'gulp';
-import merge from 'lodash.merge';
 import livereload from 'gulp-livereload';
 
 class GWatcher {

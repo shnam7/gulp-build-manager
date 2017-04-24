@@ -13,6 +13,12 @@ npm install gulpjs/gulp.git#4.0 --save-dev
 
 npm i gulp-build-manager --save-dev
 ```
+To enable es6, be sure to have .babelrc file with contents below:
+```javascript
+{
+  "presets": ["es2015"]
+}
+```
 
 ### Preparing gulpfile with babel support
 Gulp 4.x supports babel, so to use it just create 'gulpfile.babel.js', instead of 'gulpfile.js' with contents below.
@@ -24,7 +30,7 @@ import gbm from 'gulp-build-manager';
 gbm.loadBuilders('./gulp/gbmconfig.js');
 ```
 
-### Creating gulp-build-manager main configuration file: './gulp/gbmconfig.js'
+### Creating main configuration file: 'gbmconfig.js'
 ```javascript
 'use strict';
 import buildSet from 'gulp-build-manager/lib/buildSet';
