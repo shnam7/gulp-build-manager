@@ -1,5 +1,7 @@
 *
 !lib/
 !example
+!bin
+!templates
 example/_build
 example/_dist

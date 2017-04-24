@@ -5,6 +5,7 @@
   "files": [
     "lib",
     "example",
+    "bin",
     "templates",
     "README.md"
   ],
