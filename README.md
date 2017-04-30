@@ -26,7 +26,7 @@ npm install gulp-build-manager -g
 gbm init
 ```
 This will create an initial project framework with example build configurations in current directory.
-If you want to set it up in a different directory, use 'gbm init <dir-name>'.
+If you want to set it up in a different directory, unpm versose 'gbm init <dir-name>'.
 
 ### Preparing gulpfile with babel support
 Gulp 4.x supports babel, so to use it just create 'gulpfile.babel.js', instead of 'gulpfile.js' with contents below.
