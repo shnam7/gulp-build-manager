@@ -18,7 +18,7 @@
     "test": "mocha --compilers js:babel-core/register --reporter spec"
   },
   "bin": {
-    "gbm": "./bin/index.js"
+    "gbm": "./bin/gbm.js"
   },
   "repository": {
     "type": "git",
