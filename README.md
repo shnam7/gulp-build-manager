@@ -35,10 +35,10 @@ Gulp 4.x supports babel, so to use it just create 'gulpfile.babel.js', instead o
 process.chdir(__dirname);
 
 import gbm from 'gulp-build-manager';
-gbm.loadBuilders('./gulp/gbmconfig.js');
+gbm.loadBuilders('./gulp/gbmConfig.js');
 ```
 
-### Creating main configuration file: 'gbmconfig.js'
+### Creating main configuration file: 'gbmConfig.js'
 ```javascript
 'use strict';
 import buildSet from 'gulp-build-manager/lib/buildSet';
@@ -129,7 +129,7 @@ export default module.exports = [
  *
  */
 
-import gbmCofig from '../gbmconfig';
+import gbmCofig from '../gbmConfig';
 import upath from 'upath';
 
 const srcRoot = gbmCofig.srcRoot;
@@ -179,7 +179,7 @@ This is the only mandatory property to define a build task. The string specified
 
 ##### builder: string | function(defaultModuleOptions, conf, done) {}
 Name of builder class or custom function to be executed.
-The customBuildDir, which is specified in the gbmconfig.js will be searched first, and if not found, built-in default builders of the same name will be searched. With this search sequence, users can have chance to overload default builders.
+The customBuildDir, which is specified in the gbmConfig.js will be searched first, and if not found, built-in default builders of the same name will be searched. With this search sequence, users can have chance to overload default builders.
 Currently available builders are:
 ```
  - GBuilder: General (Copy) Builder, which just executes user defined custom function.
@@ -218,7 +218,7 @@ Options for modules loaded by builders.
 
 
 ### Custom class
-Create custom builder classes by placing custom builder class file in the locations specified by customBuilderDir property in gbmconfig.js.
+Create custom builder classes by placing custom builder class file in the locations specified by customBuilderDir property in gbmConfig.js.
 customBuildDir property can be a string of single path, or array of multiple paths.
 GBuilder is the base class of all other builders, and it provides following overloadable methods.
 ```javascript
@@ -343,7 +343,7 @@ Here's a sample sass build definition:
  *
  */
 
-import gbmCofig from '../gbmconfig';
+import gbmCofig from '../gbmConfig';
 import upath from 'upath';
 
 const srcRoot = gbmCofig.srcRoot;

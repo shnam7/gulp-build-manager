@@ -49,14 +49,15 @@
     "babel-core": "^6.24.1",
     "babel-preset-latest": "^6.24.1",
     "commander": "^2.9.0",
-    "upath": "^1.0.0",
     "del": "^2.2.2",
+    "glob": "^7.1.1",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-changed": "^3.0.0",
-    "gulp-plumber": "^1.1.0",
     "gulp-livereload": "^3.8.1",
+    "gulp-plumber": "^1.1.0",
     "lodash.merge": "^4.6.0",
-    "lodash.pick": "^4.4.0"
+    "lodash.pick": "^4.4.0",
+    "upath": "^1.0.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",

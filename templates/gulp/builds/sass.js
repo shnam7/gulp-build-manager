@@ -3,7 +3,7 @@
  *
  */
 
-import gbmCofig from '../gbmconfig';
+import gbmCofig from '../gbmConfig';
 import upath from 'upath';
 
 const srcRoot = gbmCofig.srcRoot;
