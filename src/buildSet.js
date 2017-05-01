@@ -87,7 +87,6 @@ class BuildSet {
 
     // try custom dir first to give a chance to overload default builder
     if (is.String(customDirs)) customDirs = [customDirs];
-
     if (customDirs) {
       // console.log(`Trying custom builders in '${customDirs}'`);
       for (const customDir of customDirs) {
@@ -103,6 +102,7 @@ class BuildSet {
 
     // if custom builder is not available, then try default builder
     try {
+      // console.log('trying system builder: ', upath.join(__dirname, './builders', buildItem.builder));
       let builderClass = require(upath.join(__dirname, './builders', buildItem.builder));
       return new builderClass;
     }

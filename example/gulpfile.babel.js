@@ -2,7 +2,7 @@
 process.chdir(__dirname);
 
 import gbm from '../src/';
-gbm.loadBuilders('./gulp/gbmconfig.js');
+gbm.loadBuilders('./gulp/gbmConfig.js');
 
 // import gulp from 'gulp';
 // gulp.task('test', done=>done());

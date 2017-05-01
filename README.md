@@ -14,14 +14,14 @@ npm install gulpjs/gulp.git#4.0 --save-dev
 npm i gulp-build-manager --save-dev
 ```
 To enable es6, be sure to have .babelrc file with contents below:
-```javascript
+```json
 {
   "presets": ["es2015"]
 }
 ```
 
 ### Using command line tool 'gbm' to setup initial project frame with example config
-```javascript
+```bash
 npm install gulp-build-manager -g
 gbm init
 ```
@@ -57,7 +57,7 @@ const gbmConfig = {
   systemBuilds: {
     clean: ['_build' ],
     build: buildSet('sass','javascript'),
-    watch: true,
+    watch: true,  
     default: ['@clean', '@build'],
   },
 };
