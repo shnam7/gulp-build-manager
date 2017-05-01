@@ -1,5 +1,5 @@
 .idea
-/node_modules
+node_modules
 /lib
-/example/_build
+example/_build
 _trash
