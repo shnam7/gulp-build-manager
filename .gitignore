@@ -1,4 +1,5 @@
 .idea
-node_modules
-lib
-example/_build
+/node_modules
+/lib
+/example/_build
+_trash

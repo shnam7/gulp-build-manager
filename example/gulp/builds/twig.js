@@ -5,6 +5,7 @@
 
 import gbmConfig from '../gbmconfig';
 import upath from 'upath';
+import twigMarkdown from 'twig-markdown';
 
 const srcRoot = gbmConfig.srcRoot;
 const destRoot = gbmConfig.destRoot;
@@ -28,6 +29,7 @@ export default module.exports = [
             url:'.'
           }
         },
+        extend: twigMarkdown,
         functions:[
           {
             name: "nameOfFunction",
