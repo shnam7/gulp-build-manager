@@ -131,11 +131,11 @@ export default module.exports = [
  *
  */
 
-import gbmCofig from '../gbmConfig';
+import gbmConfig from '../gbmConfig';
 import upath from 'upath';
 
-const srcRoot = gbmCofig.srcRoot;
-const destRoot = gbmCofig.destRoot;
+const srcRoot = gbmConfig.srcRoot;
+const destRoot = gbmConfig.destRoot;
 
 export default module.exports = [
   {
@@ -345,11 +345,11 @@ Here's a sample sass build definition:
  *
  */
 
-import gbmCofig from '../gbmConfig';
+import gbmConfig from '../gbmConfig';
 import upath from 'upath';
 
-const srcRoot = gbmCofig.srcRoot;
-const destRoot = gbmCofig.destRoot;
+const srcRoot = gbmConfig.srcRoot;
+const destRoot = gbmConfig.destRoot;
 
 export default module.exports = [
   {
