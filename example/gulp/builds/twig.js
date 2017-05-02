@@ -48,6 +48,9 @@ export default module.exports = [
         ]
       }
     },
-    watch: {livereload:true}
+    watch: {
+      watched: [upath.join(srcRoot, 'docs/twig/**/*.twig')],   // include sub directories which are not in src list.
+      livereload:true
+    }
   },
 ];
