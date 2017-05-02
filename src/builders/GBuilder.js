@@ -9,7 +9,6 @@ import changed from 'gulp-changed';
 import merge from 'lodash.merge';
 import pick from 'lodash.pick';
 
-
 class GBuilder {
   constructor() {}
 

@@ -8,7 +8,6 @@ import twig from 'gulp-twig';
 import cleanHtml from 'gulp-cleanhtml';
 import htmlPrettify from 'gulp-html-prettify';
 
-
 class GTwigBuilder extends GBuilder {
   constructor() { super(); }
 

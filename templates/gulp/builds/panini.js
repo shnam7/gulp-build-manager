@@ -27,6 +27,10 @@ export default module.exports = [
         helpers: upath.join(srcRoot, 'docs/panini/helpers/')
       }
     },
-    watch: {livereload:true}
+    watch: {
+      // include sub directories to detect changes of the file which are not in src list.
+      watched: [upath.join(srcRoot, 'docs/panini/**/*')],
+      livereload:true
+    }
   },
 ];

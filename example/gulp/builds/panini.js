@@ -15,7 +15,7 @@ export default module.exports = [
     builder: 'GPaniniBuilder',
 
     // panini does not handle backslashes correctly, so replace them to slash
-    src: [upath.join(srcRoot, 'docs/panini/pages/**/*').replace(/\\/g, '/')],
+    src: [upath.join(srcRoot, 'docs/panini/pages/**/*')],
     dest: upath.join(destRoot, 'docs/panini'),
     buildOptions: {},
     moduleOptions: {
@@ -27,6 +27,10 @@ export default module.exports = [
         helpers: upath.join(srcRoot, 'docs/panini/helpers/')
       }
     },
-    watch: {livereload:true}
+    watch: {
+      // include sub directories to detect changes of the file which are not in src list.
+      watched: [upath.join(srcRoot, 'docs/panini/**/*')],
+      livereload:true
+    }
   },
 ];
