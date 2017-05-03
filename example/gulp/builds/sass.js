@@ -32,7 +32,6 @@ export default module.exports = [
     moduleOptions: {
       sass: {
         includePaths: [
-          'bower_components/uikit/scss',
           'bower_components',
           'd:/web/lib/wcl/assets/scss',
           'assets/scss'
