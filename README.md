@@ -13,8 +13,10 @@ To have the development environment set, follow the commands below:
 npm install gulp -g
 npm install gulpjs/gulp.git#4.0 --save-dev
 
+npm i gulp-build-manager -g
 npm i gulp-build-manager --save-dev
 ```
+
 To enable es6, be sure to have .babelrc file with contents below:
 ```json
 {

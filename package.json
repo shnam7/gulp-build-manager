@@ -93,6 +93,6 @@
     "precss": "^1.4.0",
     "should": "^11.2.1",
     "twig-markdown": "^0.1.2",
-    "typescript": "^2.2.2"
+    "typescript": "^2.3.2"
   }
 }

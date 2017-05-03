@@ -17,7 +17,12 @@ export default module.exports = [
     buildOptions: {
       enableLint: false
     },
-    moduleOptions: {},
+    moduleOptions: {
+      typescript: {
+        "noImplicitAny": true,
+        "target": "es5"
+      }
+    },
     watch: {livereload:true}
   },
 ];
