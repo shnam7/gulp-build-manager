@@ -5,10 +5,8 @@
 'use strict';
 import GBuilder from './GBuilder';
 import gulp from 'gulp';
-import nop from 'gulp-nop';
 import sourcemaps from 'gulp-sourcemaps';
 import clone from 'gulp-clone';
-import concat from 'gulp-concat';
 import uglify from 'gulp-uglify';
 import rename from 'gulp-rename';
 import mergeStream from 'merge-stream';
@@ -22,24 +20,21 @@ class GJavaScriptBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    let babel = conf.buildOptions.enableBabel ? require('gulp-babel') : nop;
-    let lint = nop; lint.reporter= nop;
-    let stylish=nop;
+    let babel = require(conf.buildOptions.enableBabel ? 'gulp-babel' : 'nop');
+    let concat = require(conf.outfile ? 'gulp-concat' : 'nop');
+
     if (conf.buildOptions.enableLint === true) {
-      lint = require('gulp-jshint');
-      stylish = require('jshint-stylish');
+      let lint = require('gulp-jshint');
+      let stylish = require('jshint-stylish');
+      stream = stream
+        .pipe(lint('.jshintrc'))
+        .pipe(lint.reporter(stylish));
     }
-    let concat2 = conf.outfile ? concat  : nop;
-    // if (babel !== nop) console.log('GJavaScriptBuilder:using babel...');
 
-    let source = stream
-      .pipe(lint('.jshintrc'))
-      .pipe(lint.reporter(stylish));
-
-    let pipeCompressed = source.pipe(clone())
+    let pipeCompressed = stream.pipe(clone())
       .pipe(sourcemaps.init())
       .pipe(babel(mopts.babel))
-      .pipe(concat2(conf.outfile))
+      .pipe(concat(conf.outfile))
       .pipe(uglify(mopts.uglify))
       .on('error', (e) => {
         console.log('Uglify:Error on File:', e.fileName);
@@ -49,10 +44,10 @@ class GJavaScriptBuilder extends GBuilder {
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(conf.dest));
 
-    let pipeUncompressed = source.pipe(clone())
+    let pipeUncompressed = stream.pipe(clone())
       .pipe(sourcemaps.init())
       .pipe(babel(mopts.babel))
-      .pipe(concat2(conf.outfile))
+      .pipe(concat(conf.outfile))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(conf.dest));
 

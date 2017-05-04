@@ -16,11 +16,10 @@ import upath from 'upath';
 import del from 'del';
 import merge from 'lodash.merge';
 
-
 export default class GulpBuildManager {
   constructor() {
     this._defaultModuleOptions = {
-      gulp: {sourcemaps:true},
+      gulp: { sourcemaps:true },
 
       changed: {
         // hasChanged: require('gulp-changed').compareSha1Digest
@@ -52,7 +51,6 @@ export default class GulpBuildManager {
       },
 
       typescript: {
-        noImplicitAny: true
       },
 
       babel: {

@@ -4,8 +4,8 @@
 
 'use strict';
 import GBuilder from './GBuilder';
-import nop from 'gulp-nop';
 import coffee from 'gulp-coffee';
+import sourcemaps from 'gulp-sourcemaps';
 
 
 class GCoffeeScriptBuilder extends GBuilder {
@@ -17,21 +17,19 @@ class GCoffeeScriptBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    let lint = nop; lint.reporter= nop;
-    let stylish=nop;
     if (conf.buildOptions.enableLint === true) {
-      lint = require('gulp-coffeelint');
-      stylish = require('coffeelint-stylish');
+      let lint = require('gulp-coffeelint');
+      let stylish = require('coffeelint-stylish');
+      stream = stream.pipe(lint()).pipe(lint.reporter(stylish));
     }
-
     return stream
-      .pipe(lint())
-      .pipe(lint.reporter(stylish))
+      .pipe(sourcemaps.init())
       .pipe(coffee(mopts.coffee))
       .on('error', (e) => {
         console.log('CoffeeScript:Error on File:', e.fileName);
         console.log('CoffeeScript:Cause of Error:', e.cause);
       })
+      .pipe(sourcemaps.write('.'))
   }
 }
 

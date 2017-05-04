@@ -7,7 +7,7 @@ export default module.exports = [
   {
     buildName: 'custom:function',
     builder: (defaultModuleOptions, conf, done)=>{
-      console.log('Custom builder using function(): Hello!!!', conf.src);
+      console.log('Custom builder using function(): Hello!!!', conf.buildName);
       done();
     },
   },

@@ -5,7 +5,6 @@
 'use strict';
 import GBuilder from './GBuilder';
 import gulp from 'gulp';
-import nop from 'gulp-nop';
 import sourcemaps from 'gulp-sourcemaps';
 import rename from 'gulp-rename';
 import clone from 'gulp-clone';
@@ -26,12 +25,11 @@ class GSassBuilder extends GBuilder {
     if (conf.buildOptions.enableLint === true) {
       let lint = require('gulp-sass-lint');
       let stylish = require('gulp-scss-lint-stylish');
-      streqm.pipe(lint()) // bug:CRLF causes error
+      stream.pipe(lint()) // bug:CRLF causes error
         .pipe(lint({customReport: stylish}))
         .pipe(lint.format())
         .pipe(lint.failOnError())
     }
-
     stream = stream
       .pipe(sourcemaps.init())
       .pipe(sass(mopts.sass).on('error', sass.logError));

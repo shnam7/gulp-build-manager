@@ -15,12 +15,16 @@ export default module.exports = [
     src: [upath.join(srcRoot, 'scripts/ts/**/*.ts')],
     dest: (file)=>file.base,
     buildOptions: {
-      enableLint: false
+      enableLint: false,
+
+      // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
+      // tsConfig: upath.join(srcRoot, 'scripts/ts/tsconfig.json')
     },
     moduleOptions: {
+      // this will override the tsConfig settings in buildOptions
       typescript: {
         "noImplicitAny": true,
-        "target": "es5"
+        "target": "es5",
       }
     },
     watch: {livereload:true}

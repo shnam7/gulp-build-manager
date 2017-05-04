@@ -60,7 +60,6 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "cssnext": "^1.8.4",
     "gulp-autoprefixer": "^3.1.1",
     "gulp-babel": "^6.1.2",
     "gulp-cleanhtml": "^1.0.3",
