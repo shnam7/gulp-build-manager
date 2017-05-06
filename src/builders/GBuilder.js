@@ -36,10 +36,11 @@ class GBuilder {
       let order = require('gulp-order');
       stream = stream.pipe(order(conf.order, mopts.order));
     }
-    if (conf.buildOptions.enablePlumber)
-      stream = stream.pipe(plumber());
-    if (conf.buildOptions.enableChanged)
-      stream = stream.pipe(changed(conf.dest, mopts.changed));
+
+    if (conf.buildOptions) {
+      if (conf.buildOptions.enablePlumber) stream = stream.pipe(plumber());
+      if (conf.buildOptions.enableChanged) stream = stream.pipe(changed(conf.dest, mopts.changed));
+    }
     return stream;
   }
 
