@@ -23,8 +23,10 @@ export default module.exports = [
     moduleOptions: {
       // this will override the tsConfig settings in buildOptions
       typescript: {
-        "noImplicitAny": true,
         "target": "es5",
+        "module": "none",
+        "noImplicitAny": true,
+        "noEmitOnError": true
       }
     },
     watch: {livereload:true}

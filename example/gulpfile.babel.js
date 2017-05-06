@@ -1,9 +1,6 @@
 'use strict';
 process.chdir(__dirname);
 
-import gbm from '../src/';
-gbm.loadBuilders('./gulp/gbmConfig.js');
-
 // import gulp from 'gulp';
 // gulp.task('test', done=>done());
 //
@@ -17,9 +14,12 @@ gbm.loadBuilders('./gulp/gbmConfig.js');
 // gulp.task('test2', done=>{
 //   console.log('test2 executed.');
 //
-//   return gulp.src('./assets/scss/*.scss', {sourcemaps: true})
-//     .pipe(sass())
-//     .pipe(gulp.dest('_build/styles'));
+//   // return gulp.src('./assets/scss/*.scss', {sourcemaps: true})
+//   //   .pipe(sass())
+//   //   .pipe(gulp.dest('_build/styles'));
 //
 //   done();
 // });
+
+import gbm from '../src/';
+gbm.loadBuilders('./gulp/gbmConfig.js');

@@ -11,13 +11,11 @@ const destRoot = gbmConfig.destRoot;
 
 export default module.exports = [
   {
-    buildName: 'javascript:core',
+    buildName: 'javascript',
     builder: 'GJavaScriptBuilder',
-    src: [
-      upath.join(srcRoot, 'scripts/{coffee,ts}/{*,js/*}.js'),
-      '!' + upath.join(srcRoot, 'scripts/js/*.js'),
-    ],
+    src: [upath.join(srcRoot, 'scripts/{coffee,js,ts}/**/*.js')],
     dest: upath.join(destRoot, 'js'),
+    order:['js/**/*.js', 'ts/**.*'],
     outfile: 'sample-script1.js',
     buildOptions: {
       enableLint: false,
@@ -25,24 +23,5 @@ export default module.exports = [
     },
     moduleOptions: {},
     watch: {livereload:true}
-  },
-
-  {
-    buildName: 'javascript:customizer',
-    builder: 'GJavaScriptBuilder',
-    src: [upath.join(srcRoot, 'scripts/js/**/*.js')],
-    dest: upath.join(destRoot, 'js'),
-    outfile: 'sample-script2.js',
-    buildOptions: {
-      enableLint: false,
-      enableBabel: true
-    },
-    moduleOptions: {},
-    watch: {livereload:true}
-  },
-
-  {
-    buildName: 'javascript',
-    dependencies: ['javascript:core', 'javascript:customizer'],
   }
 ];

@@ -37,14 +37,14 @@ const gbmConfig = {
       'css',
       'js',
       'images',
-      upath.join(srcRoot, 'scripts/{coffee,ts}/*.{js,js.map}'),
+      upath.join(srcRoot, 'scripts/{coffee,ts}/**/*.{js,js.map}'),
       upath.join(srcRoot, 'assets/languages/*.mo')
     ],
 
     // system task: '@build'
     build: buildSet(
       'sass', 'postcss',
-      ['coffeescript', 'javascript'],
+      [buildSet('coffeescript', 'typescript'), 'javascript'],
       'markdown', 'panini', 'twig', 'images', 'copy', 'custom'
     ),
 

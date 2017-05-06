@@ -28,7 +28,7 @@ class BuildSet {
         this._set.push(arg)
       }
       else if (is.Array(arg))
-        this._set.push(new BuildSet(...arg));
+        this._set.push(new BuildSet(arg));
       else if (arg instanceof BuildSet || arg.hasOwnProperty('buildName'))
         this._set.push(arg);
       else

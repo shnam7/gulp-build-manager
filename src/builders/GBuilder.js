@@ -23,7 +23,7 @@ class GBuilder {
   }
 
   OnInitModuleOptions(mopts, defaultModuleOptions, conf) {
-    merge(mopts, pick(defaultModuleOptions, ['gulp','changed', 'livereload']));
+    merge(mopts, pick(defaultModuleOptions, ['gulp','changed','order','livereload']));
     merge(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions));
     merge(mopts, conf.moduleOptions);
   }
@@ -31,9 +31,16 @@ class GBuilder {
   OnBuilderModuleOptions(mopts, defaultModuleOptions, conf) {}
 
   OnInitStream(mopts, defaultModuleOptions, conf) {
-    return conf.src && gulp.src(conf.src, mopts.gulp)
-        .pipe(plumber())
-        .pipe(changed(conf.dest, mopts.changed));
+    let stream = conf.src && gulp.src(conf.src, mopts.gulp);
+    if (conf.order && conf.order.length > 0) {
+      let order = require('gulp-order');
+      stream = stream.pipe(order(conf.order, mopts.order));
+    }
+    if (conf.buildOptions.enablePlumber)
+      stream = stream.pipe(plumber());
+    if (conf.buildOptions.enableChanged)
+      stream = stream.pipe(changed(conf.dest, mopts.changed));
+    return stream;
   }
 
   OnBuild(stream, mopts, conf) { return stream; }

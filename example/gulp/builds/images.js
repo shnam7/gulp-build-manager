@@ -15,7 +15,10 @@ export default module.exports = [
     builder: 'GImagesBuilder',
     src: [upath.join(srcRoot, 'images/**/*')],
     dest: upath.join(destRoot, 'images'),
-    buildOptions: {},
+    buildOptions: {
+      enablePlumber: true,
+      enableChanged: true
+    },
     moduleOptions: {}
   }
 ];
