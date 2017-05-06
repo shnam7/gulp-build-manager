@@ -46,6 +46,10 @@ class BuildSet {
       else if (item instanceof BuildSet)
         resolved.push(item.resolve(customDirs, defaultModuleOptions));
       else if (is.Object(item) && item.hasOwnProperty('buildName')) {
+
+        // convert prop name: outfile-->outFile
+        if (!item.outFile && item.outfile) item.outFile = item.outfile;
+
         let builder = this.getBuilder(item, customDirs);
         if (item.hasOwnProperty('dependencies')) {
           let deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher);

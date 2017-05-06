@@ -19,7 +19,7 @@ class GZipBuilder extends GBuilder {
 
   OnBuild(stream, mopts, conf) {
     return stream
-      .pipe(zip(conf.outfile))
+      .pipe(zip(conf.outFile))
   }
 }
 

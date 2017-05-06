@@ -16,7 +16,7 @@ export default module.exports = [
     src: [upath.join(srcRoot, 'scripts/{coffee,js,ts}/**/*.js')],
     dest: upath.join(destRoot, 'js'),
     order:['js/**/*.js', 'ts/**.*'],
-    outfile: 'sample-script1.js',
+    outFile: 'sample-script1.js',
     buildOptions: {
       enableLint: false,
       enableBabel: true

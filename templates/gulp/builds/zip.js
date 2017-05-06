@@ -9,7 +9,7 @@ export default module.exports = [
     builder: 'GZipBuilder',
     src: ['_build/**/*', 'assets/src/**/*'],
     dest: '_dist',
-    outfile: 'sample.zip',
+    outFile: 'sample.zip',
 
     buildOptions: {},
     moduleOptions: {},

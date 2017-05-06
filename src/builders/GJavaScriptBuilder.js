@@ -21,7 +21,7 @@ class GJavaScriptBuilder extends GBuilder {
 
   OnBuild(stream, mopts, conf) {
     let babel = require(conf.buildOptions.enableBabel ? 'gulp-babel' : 'nop');
-    let concat = require(conf.outfile ? 'gulp-concat' : 'nop');
+    let concat = require(conf.outFile ? 'gulp-concat' : 'nop');
 
     if (conf.buildOptions.enableLint === true) {
       let lint = require('gulp-jshint');
@@ -34,7 +34,7 @@ class GJavaScriptBuilder extends GBuilder {
     let pipeCompressed = stream.pipe(clone())
       .pipe(sourcemaps.init())
       .pipe(babel(mopts.babel))
-      .pipe(concat(conf.outfile))
+      .pipe(concat(conf.outFile))
       .pipe(uglify(mopts.uglify))
       .on('error', (e) => {
         console.log('Uglify:Error on File:', e.fileName);
@@ -47,7 +47,7 @@ class GJavaScriptBuilder extends GBuilder {
     let pipeUncompressed = stream.pipe(clone())
       .pipe(sourcemaps.init())
       .pipe(babel(mopts.babel))
-      .pipe(concat(conf.outfile))
+      .pipe(concat(conf.outFile))
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(conf.dest));
 

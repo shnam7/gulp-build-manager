@@ -90,7 +90,7 @@ export default module.exports = {
     builder: 'GJavaScriptBuilder',
     src: ['scripts/{coffee,ts}/{*,js/*}.js'],
     dest: 'js',
-    outfile: 'sample.js',
+    outFile: 'sample.js',
   }
 ```
 
@@ -104,14 +104,14 @@ export default module.exports = [
     builder: 'GJavaScriptBuilder',
     src: ['scripts/{coffee,ts}/{*,js/*}.js'],
     dest: 'js',
-    outfile: 'sample.js',
+    outFile: 'sample.js',
   },
   {
     buildName: 'javascript:main',
     builder: 'GJavaScriptBuilder',
     src: ['docs/scripts/{coffee,ts}/{*,js/*}.js'],
     dest: 'docs/js',
-    outfile: 'docs.js',
+    outFile: 'docs.js',
    },
    {
      buildName:'javascript',
@@ -210,6 +210,10 @@ Destination path which is to be delivered to gulp.dest()
 
 ##### order:[]
 Specifies ordering of src files. Refer to [gulp-order](https://github.com/sirlantis/gulp-order) for the details.
+This applies to GJavaScriptBuilder and GZipBuilder currently.
+
+##### outFile:string
+Specifies output file for the build result. if multiple files are processed, they will be concatenated.
 
 ##### buildOptions: Object {}
 Builder specific options. Each builders could have their own options sets.
