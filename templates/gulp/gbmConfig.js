@@ -42,7 +42,7 @@ const gbmConfig = {
     // system task: '@build'
     build: buildSet(
       // 'sass', 'postcss',
-      // ['coffeescript', 'javascript'],
+      // [buildSet('coffeescript', 'typescript'), 'javascript'],
       // 'markdown', 'panini', 'twig', 'images',
       'copy', 'custom'
     ),

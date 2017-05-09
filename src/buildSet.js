@@ -99,7 +99,7 @@ class BuildSet {
           return new builderClass;
         }
         catch (e) {
-          if (e.code !== 'MODULE_NOT_FOUND') throw e;
+          if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(builder) < 0) throw e;
         }
       }
     }
@@ -111,7 +111,7 @@ class BuildSet {
       return new builderClass;
     }
     catch (e) {
-      if (e.code !== 'MODULE_NOT_FOUND') throw e;
+      if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(builder) < 0) throw e;
       console.log(`builder '${builder}' not found:`, e);
     }
     throw Error('Builder not found: ' + builder + ', or check for modules imported from ' + builder);
