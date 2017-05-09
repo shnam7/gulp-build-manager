@@ -5,7 +5,6 @@
 'use strict';
 import GBuilder from './GBuilder';
 import gulp from 'gulp';
-import plumber from 'gulp-plumber';
 import zip from 'gulp-zip';
 
 
@@ -14,7 +13,11 @@ class GZipBuilder extends GBuilder {
 
   OnInitStream(mopts, defultModuleOptions, conf) {
     // zip should not check for 'changed' to zip everything
-    return gulp.src(conf.src, mopts.gulp).pipe(plumber())
+    let stream = gulp.src(conf.src, mopts.gulp);
+    if (conf.buildOptions.enablePlumber) {
+      let plumber = require('gulp-plumber');
+      return stream.pipe(plumber());
+    }
   }
 
   OnBuild(stream, mopts, conf) {

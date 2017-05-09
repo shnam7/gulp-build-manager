@@ -58,8 +58,6 @@
   },
   "devDependencies": {
     "chai": "^3.5.0",
-    "gulp-changed": "^3.1.0",
-    "gulp-plumber": "^1.1.0",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-babel": "^6.1.2",
     "gulp-cleanhtml": "^1.0.3",

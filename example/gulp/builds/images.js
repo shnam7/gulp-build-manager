@@ -16,8 +16,8 @@ export default module.exports = [
     src: [upath.join(srcRoot, 'images/**/*')],
     dest: upath.join(destRoot, 'images'),
     buildOptions: {
-      enablePlumber: true,
-      enableChanged: true
+      enablePlumber: false,
+      enableChanged: false
     },
     moduleOptions: {}
   }

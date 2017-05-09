@@ -4,8 +4,6 @@
 
 'use strict';
 import gulp from 'gulp';
-import plumber from 'gulp-plumber';
-import changed from 'gulp-changed';
 import merge from 'lodash.merge';
 import pick from 'lodash.pick';
 
@@ -38,8 +36,14 @@ class GBuilder {
     }
 
     if (conf.buildOptions) {
-      if (conf.buildOptions.enablePlumber) stream = stream.pipe(plumber());
-      if (conf.buildOptions.enableChanged) stream = stream.pipe(changed(conf.dest, mopts.changed));
+      if (conf.buildOptions.enablePlumber) {
+        let plumber = require('gulp-plumber');
+        stream = stream.pipe(plumber());
+      }
+      if (conf.buildOptions.enableChanged) {
+        let changed = require('gulp-changed');
+        stream = stream.pipe(changed(conf.dest, mopts.changed));
+      }
     }
     return stream;
   }
