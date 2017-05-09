@@ -94,24 +94,25 @@ class BuildSet {
     if (customDirs) {
       // console.log(`Trying custom builders in '${customDirs}'`);
       for (const customDir of customDirs) {
+        let pathName = upath.join(process.cwd(), customDir, builder);
         try {
-          let builderClass = require(upath.join(process.cwd(), customDir, builder));
+          let builderClass = require(pathName);
           return new builderClass;
         }
         catch (e) {
-          if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(builder) < 0) throw e;
+          if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(pathName) < 0) throw e;
         }
       }
     }
 
     // if custom builder is not available, then try default builder
+    let pathName = upath.join(__dirname, './builders', buildItem.builder);
     try {
-      // console.log('trying system builder: ', upath.join(__dirname, './builders', buildItem.builder));
-      let builderClass = require(upath.join(__dirname, './builders', buildItem.builder));
+      let builderClass = require(pathName);
       return new builderClass;
     }
     catch (e) {
-      if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(builder) < 0) throw e;
+      if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(pathName) < 0) throw e;
       console.log(`builder '${builder}' not found:`, e);
     }
     throw Error('Builder not found: ' + builder + ', or check for modules imported from ' + builder);
