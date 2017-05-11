@@ -20,8 +20,8 @@ class GJavaScriptBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    let babel = require(conf.buildOptions.enableBabel ? 'gulp-babel' : 'nop');
-    let concat = require(conf.outFile ? 'gulp-concat' : 'nop');
+    let babel = require(conf.buildOptions.enableBabel ? 'gulp-babel' : 'gulp-nop');
+    let concat = require(conf.outFile ? 'gulp-concat' : 'gulp-nop');
 
     if (conf.buildOptions.enableLint === true) {
       let lint = require('gulp-jshint');
