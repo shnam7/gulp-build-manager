@@ -22,26 +22,26 @@ class GSassBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    if (conf.buildOptions.enableLint === true) {
+    stream.constructor.prototype.processLint = function() {
+      if (!conf.buildOptions.enableLint) return this;
       let lint = require('gulp-sass-lint');
       let stylish = require('gulp-scss-lint-stylish');
-      stream.pipe(lint()) // bug:CRLF causes error
+      return this.pipe(lint()) // bug:CRLF causes error
         .pipe(lint({customReport: stylish}))
         .pipe(lint.format())
         .pipe(lint.failOnError())
-    }
-    stream = stream
-      .pipe(sourcemaps.init())
-      .pipe(sass(mopts.sass).on('error', sass.logError));
-
-    if (conf.buildOptions.enablePostCSS) {
+    };
+    stream.constructor.prototype.processPostCSS = function(mopts) {
+      if (!conf.buildOptions.enablePostCSS) return this.pipe(autoprefixer(mopts.autoprefixer));
       let postcss = require('gulp-postcss');
       let plugins = conf.buildOptions.postcss ? conf.buildOptions.postcss.plugins : [];
-      stream = stream.pipe(postcss(plugins, mopts.postcss))
-    }
-    else
-        stream = stream.pipe(autoprefixer(mopts.autoprefixer));
+      return this.pipe(postcss(plugins, mopts.postcss));
+    };
 
+    stream = stream.processLint()
+      .pipe(sourcemaps.init())
+      .pipe(sass(mopts.sass).on('error', sass.logError))
+      .processPostCSS(mopts);
     let pipeUncompressed = stream.pipe(clone())
       .pipe(sourcemaps.write('.'))
       .pipe(gulp.dest(conf.dest));

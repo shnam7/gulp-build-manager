@@ -18,7 +18,7 @@ export default module.exports = [
     order:['js/**/*.js', 'ts/**.*'],
     outFile: 'sample-script.js',
     buildOptions: {
-      enableLint: false,
+      // enableLint: true,
       enableBabel: true,
     },
     moduleOptions: {},

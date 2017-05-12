@@ -69,7 +69,6 @@
     "gulp-html-prettify": "0.0.1",
     "gulp-imagemin": "^3.2.0",
     "gulp-markdown": "^1.2.0",
-    "gulp-nop": "0.0.3",
     "gulp-order": "^1.1.1",
     "gulp-postcss": "^7.0.0",
     "gulp-rename": "^1.2.2",
