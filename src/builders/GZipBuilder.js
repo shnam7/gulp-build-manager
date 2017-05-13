@@ -14,7 +14,7 @@ class GZipBuilder extends GBuilder {
   OnInitStream(mopts, defultModuleOptions, conf) {
     // zip should not check for 'changed' to zip everything
     let stream = gulp.src(conf.src, mopts.gulp);
-    if (conf.buildOptions.enablePlumber) {
+    if (conf.buildOptions && conf.buildOptions.enablePlumber) {
       let plumber = require('gulp-plumber');
       return stream.pipe(plumber());
     }

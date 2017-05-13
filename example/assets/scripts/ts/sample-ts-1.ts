@@ -5,5 +5,3 @@ class Greeter {
       return `Hello, TypeScript! num=${square(2)}}`;
     }
 }
-
-console.log(new Greeter("").greet());

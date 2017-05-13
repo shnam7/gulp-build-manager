@@ -30,20 +30,21 @@ class GBuilder {
 
   OnInitStream(mopts, defaultModuleOptions, conf) {
     let stream = conf.src && gulp.src(conf.src, mopts.gulp);
+
+    // check input file ordering
     if (conf.order && conf.order.length > 0) {
       let order = require('gulp-order');
       stream = stream.pipe(order(conf.order, mopts.order));
     }
-
-    if (conf.buildOptions) {
-      if (conf.buildOptions.enablePlumber) {
-        let plumber = require('gulp-plumber');
-        stream = stream.pipe(plumber());
-      }
-      if (conf.buildOptions.enableChanged) {
-        let changed = require('gulp-changed');
-        stream = stream.pipe(changed(conf.dest, mopts.changed));
-      }
+    // check plumber
+    if (conf.buildOptions && conf.buildOptions.enablePlumber) {
+      let plumber = require('gulp-plumber');
+      stream = stream.pipe(plumber());
+    }
+    // check changed
+    if (conf.buildOptions && conf.buildOptions.enableChanged) {
+      let changed = require('gulp-changed');
+      stream = stream.pipe(changed(conf.dest, mopts.changed));
     }
     return stream;
   }

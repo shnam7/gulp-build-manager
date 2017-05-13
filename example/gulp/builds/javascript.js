@@ -13,13 +13,13 @@ export default module.exports = [
   {
     buildName: 'javascript',
     builder: 'GJavaScriptBuilder',
-    src: [upath.join(srcRoot, 'scripts/{coffee,ts,js}/**/*.js')],
+    src: [upath.join(srcRoot, 'scripts/{coffee,js}/**/*.js')],
     dest: upath.join(destRoot, 'js'),
-    order:['js/**/*.js', 'ts/**.*'],
+    order:['coffee/**.*','js/**/*.js'],
     outFile: 'sample-script.js',
     buildOptions: {
       // enableLint: true,
-      enableBabel: true,
+      // enableBabel: true,
     },
     moduleOptions: {},
     watch: {livereload:true}

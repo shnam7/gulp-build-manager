@@ -7,6 +7,7 @@ import gbmConfig from '../gbmconfig';
 import upath from 'upath';
 
 const srcRoot = gbmConfig.srcRoot;
+const destRoot = gbmConfig.destRoot;
 
 export default module.exports = [
   {
@@ -14,9 +15,8 @@ export default module.exports = [
     builder: 'GTypeScriptBuilder',
     src: [upath.join(srcRoot, 'scripts/ts/**/*.ts')],
     dest: (file)=>file.base,
+    outFile:upath.join(destRoot, 'js/sample-ts.js'),
     buildOptions: {
-      enableLint: false,
-
       // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
       // tsConfig: upath.join(srcRoot, 'scripts/ts/tsconfig.json')
     },
