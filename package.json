@@ -54,6 +54,8 @@
     "gulp-livereload": "^3.8.1",
     "lodash.merge": "^4.6.0",
     "lodash.pick": "^4.4.0",
+    "gulp-save": "^1.2.1",
+    "gulp-sourcemaps": "^2.6.0",
     "upath": "^1.0.0"
   },
   "devDependencies": {
@@ -72,15 +74,13 @@
     "gulp-postcss": "^7.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
-    "gulp-save": "^1.2.1",
-    "gulp-sourcemaps": "^2.6.0",
     "gulp-twig": "^0.7.0",
     "gulp-typescript": "^3.1.6",
     "gulp-uglify": "^2.1.2",
     "gulp-zip": "^4.0.0",
     "lost": "^8.0.0",
     "panini": "^1.4.0",
-    "postcss-cssnext": "^2.10.0",
+    "postcss-cssnext": "^2.11.0",
     "postcss-easings": "^1.0.0",
     "postcss-mixins": "^6.0.0",
     "postcss-nested": "^2.0.2",
@@ -89,6 +89,7 @@
     "precss": "^1.4.0",
     "should": "^11.2.1",
     "twig-markdown": "^0.1.2",
-    "typescript": "^2.3.2"
+    "typescript": "^2.3.2",
+    "webpack-stream": "^3.2.0"
   }
 }

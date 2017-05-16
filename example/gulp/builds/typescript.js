@@ -11,7 +11,7 @@ const destRoot = gbmConfig.destRoot;
 
 export default module.exports = [
   {
-    buildName: 'typescript',
+    buildName: 'typescript:compile',
     builder: 'GTypeScriptBuilder',
     src: [upath.join(srcRoot, 'scripts/ts/**/*.ts')],
     dest: (file)=>file.base,
@@ -19,6 +19,7 @@ export default module.exports = [
     buildOptions: {
       // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
       // tsConfig: upath.join(srcRoot, 'scripts/ts/tsconfig.json')
+      webpack: upath.join(srcRoot, 'scripts/webpack.config.js')
     },
     moduleOptions: {
       // this will override the tsConfig settings in buildOptions
@@ -30,5 +31,11 @@ export default module.exports = [
       }
     },
     watch: {livereload:true}
+  },
+  {
+    buildName: 'typescript',
+    builder: 'GWebPackBuilder',
+    buildOptions: { webpack: './webpack.config.js' },
+    dependencies: 'typescript:compile'
   },
 ];

@@ -16,13 +16,13 @@ class GZipBuilder extends GBuilder {
     let stream = gulp.src(conf.src, mopts.gulp);
     if (conf.buildOptions && conf.buildOptions.enablePlumber) {
       let plumber = require('gulp-plumber');
-      return stream.pipe(plumber());
+      stream = stream.pipe(plumber());
     }
+    return stream;
   }
 
   OnBuild(stream, mopts, conf) {
-    return stream
-      .pipe(zip(conf.outFile))
+    return stream && stream.pipe(zip(conf.outFile))
   }
 }
 

@@ -6,6 +6,12 @@ import upath from 'upath';
 import merge from 'lodash.merge';
 
 // BuildSet items are processed in gulp parallel task by default
+/**
+ *  BuildSet args can be one of followings:
+ *    - {string} Name of gulp task
+ *    - {BuildSet} Another BuildSet Object
+ *    - {Object} Build definition object with mandatory property 'buildName'
+ */
 class BuildSet {
   constructor(...args) {
     this._set = [];
@@ -36,8 +42,15 @@ class BuildSet {
     }
   }
 
-  // convert build items(this._set) into strings,functions or arrays of them
-  // for build config objects, it generates gulp tasks and returns the task names
+  /**
+   *  Converts build items in this._set[] into:
+   *    - gulp task name, which is created automatically
+   *    - return value of gulp.series() or gulp.parallel()
+   *  @param customDirs Path for customer builders
+   *  @param defaultModuleOptions Default module options
+   *  @param watcher Watcher class
+   *  @returns {*} Gulp task name if gulp task is created. Or, gulp.series() or gulp.parallel()
+   */
   resolve(customDirs, defaultModuleOptions, watcher) {
     let resolved = [];
     for (const item of this._set) {
@@ -46,15 +59,13 @@ class BuildSet {
       else if (item instanceof BuildSet)
         resolved.push(item.resolve(customDirs, defaultModuleOptions));
       else if (is.Object(item) && item.hasOwnProperty('buildName')) {
-
         // convert prop name: outfile-->outFile
         if (!item.outFile && item.outfile) item.outFile = item.outfile;
 
         let builder = this.getBuilder(item, customDirs);
         if (item.hasOwnProperty('dependencies')) {
           let deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher);
-          if (!is.Function(deps)) deps = gulp.parallel(deps);
-          gulp.task(item.buildName, gulp.parallel(deps), (done)=>builder.build(defaultModuleOptions, item, done));
+          gulp.task(item.buildName, gulp.series(deps, (done)=>builder.build(defaultModuleOptions, item, done)));
         }
         else
           gulp.task(item.buildName, (done)=>builder.build(defaultModuleOptions, item, done));
@@ -84,7 +95,7 @@ class BuildSet {
     if (is.Function(builder)) return {build: builder};
     if (!builder) return {
       build: function (conf, moduleOptions, done) {
-        console.log(`BuildName:${buildItem.buildName}: No builder specified.`);
+        // console.log(`BuildName:${buildItem.buildName}: No builder specified.`);
         done();
       }
     };
