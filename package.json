@@ -1,6 +1,6 @@
 {
   "name": "gulp-build-manager",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Gulp build manager using babel/es6. Gulp task made easy with configuration support",
   "files": [
     "lib",
