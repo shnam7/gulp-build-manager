@@ -20,9 +20,12 @@ class GPostCSSBuilder extends GBuilder {
 
   OnBuild(stream, mopts, conf) {
     let plugins = [];
-    if (conf.buildOptions.postcss && conf.buildOptions.postcss.plugins)
+    if (conf.buildOptions
+      && conf.buildOptions.postcss
+      && conf.buildOptions.postcss.plugins) {
       for (let plugin of conf.buildOptions.postcss.plugins)
         plugins.push(plugin);
+    }
 
     return stream
       .pipe(sourcemaps.init())

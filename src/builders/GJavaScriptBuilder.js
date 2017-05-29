@@ -18,16 +18,16 @@ class GJavaScriptBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    stream = stream.pipe(sourcemaps.init());
-
     // check lint
-    if (conf.buildOptions.enableLint) {
+    if (conf.buildOptions && conf.buildOptions.enableLint) {
       let lint = require('gulp-jshint');
       let stylish = require('jshint-stylish');
       stream = stream.pipe(lint('.jshintrc')).pipe(lint.reporter(stylish));
     }
+    stream = stream.pipe(sourcemaps.init());
+
     // check babel
-    if (conf.buildOptions.enableBabel) {
+    if (conf.buildOptions && conf.buildOptions.enableBabel) {
       let babel = require('gulp-babel');
       stream = stream.pipe(babel(mopts.babel));
     }

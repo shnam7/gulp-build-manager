@@ -73,7 +73,7 @@ class BuildSet {
         // resolve watch
         let watch = {
           name: item.buildName,
-          watched: is.Array(item.src) ? item.src.slice() : [],
+          watched: is.Array(item.src) ? item.src.slice() : [item.src],
           task: [item.buildName],
           livereload: false
         };

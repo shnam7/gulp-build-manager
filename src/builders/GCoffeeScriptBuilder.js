@@ -17,14 +17,13 @@ class GCoffeeScriptBuilder extends GBuilder {
   }
 
   OnBuild(stream, mopts, conf) {
-    stream.constructor.prototype.processLint = function() {
-      if (!conf.buildOptions.enableLint) return this;
+    if (conf.buildOptions && conf.buildOptions.enableLint) {
       let lint = require('gulp-coffeelint');
       let stylish = require('coffeelint-stylish');
-      return this.pipe(lint()).pipe(lint.reporter(stylish));
-    };
+      stream = stream.pipe(lint()).pipe(lint.reporter(stylish));
+    }
 
-    return stream.processLint()
+    return stream
       .pipe(sourcemaps.init())
       .pipe(coffee(mopts.coffee))
       .on('error', (e) => {

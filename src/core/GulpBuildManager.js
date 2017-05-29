@@ -92,8 +92,9 @@ export default class GulpBuildManager {
     if (config.moduleOptions) merge(this._defaultModuleOptions, config.moduleOptions);
     if (config.builds) {
       for (let buildItem of config.builds) {
-        let bs = buildSet(require(upath.join(process.cwd(), basePath, buildItem)));
-        let customBuildDir = upath.join(basePath, config.customBuilderDir);
+        if (is.String(buildItem)) buildItem = require(upath.join(process.cwd(), basePath, buildItem));
+        let bs = buildSet(buildItem);
+        let customBuildDir = upath.join(basePath, config.customBuilderDir || "");
         bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher);
       }
     }

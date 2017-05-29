@@ -3,3 +3,4 @@ node_modules
 /lib
 example/_build
 _trash
+!/samples/

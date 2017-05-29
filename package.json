@@ -37,7 +37,8 @@
     "coffeescript",
     "typescript",
     "markdown",
-    "panini"
+    "panini",
+    "webpack"
   ],
   "author": "Robin Soo-hyuk Nam",
   "license": "MIT",
