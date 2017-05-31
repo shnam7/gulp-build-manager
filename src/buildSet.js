@@ -63,12 +63,24 @@ class BuildSet {
         if (!item.outFile && item.outfile) item.outFile = item.outfile;
 
         let builder = this.getBuilder(item, customDirs);
-        if (item.hasOwnProperty('dependencies')) {
-          let deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher);
-          gulp.task(item.buildName, gulp.series(deps, (done)=>builder.build(defaultModuleOptions, item, done)));
+        let task = (done)=>builder.build(defaultModuleOptions, item, done);
+        let deps = undefined;
+        let triggers = undefined;
+
+        if (item.hasOwnProperty('dependencies'))
+          deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher);
+
+        if (item.hasOwnProperty('triggers'))
+          triggers = new BuildSet(item.triggers).resolve(customDirs, defaultModuleOptions, watcher);
+
+        if (deps || triggers) {
+          let taskList = [task];
+          if (deps) taskList.unshift(deps);
+          if (triggers) taskList.push(triggers);
+          gulp.task(item.buildName, gulp.series.apply(null, taskList));
         }
         else
-          gulp.task(item.buildName, (done)=>builder.build(defaultModuleOptions, item, done));
+          gulp.task(item.buildName, task);
 
         // resolve watch
         let watch = {

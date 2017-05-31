@@ -5,13 +5,20 @@
 
 import gbmConfig from '../gbmconfig';
 import upath from 'upath';
+import buildSet from '../../../src/buildSet';
 
 const srcRoot = gbmConfig.srcRoot;
 const destRoot = gbmConfig.destRoot;
 
 export default module.exports = [
   {
-    buildName: 'typescript:compile',
+    buildName: 'webpack',
+    builder: 'GWebPackBuilder',
+    buildOptions: { webpack: './webpack.config.js' },
+    watch: {livereload:true}
+  },
+  {
+    buildName: 'typescript',
     builder: 'GTypeScriptBuilder',
     src: [upath.join(srcRoot, 'scripts/ts/**/*.ts')],
     dest: (file)=>file.base,
@@ -30,12 +37,6 @@ export default module.exports = [
         "noEmitOnError": true
       }
     },
-    watch: {livereload:true}
-  },
-  {
-    buildName: 'typescript',
-    builder: 'GWebPackBuilder',
-    buildOptions: { webpack: './webpack.config.js' },
-    dependencies: 'typescript:compile'
+    triggers: 'webpack'
   },
 ];

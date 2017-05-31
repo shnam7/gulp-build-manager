@@ -1,6 +1,6 @@
 # gulp-build-manager
 Gulp Build Manager enables gulp task to be created or customized easily and quickly by using simple configurations.
-It provides the convenience lisk grunt with flexibility of gulp.
+It provides the convenience like grunt with flexibility of gulp.
 
 ### Installation
 gulp-build-manager is using gulp 4.x with babel support. If you install it following the commands below, core dependent modules including gulp 4.x and babel will be automatically installed as part of dependency.
