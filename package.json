@@ -60,7 +60,7 @@
     "upath": "^1.0.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.0.0",
     "gulp-autoprefixer": "^4.0.0",
     "gulp-babel": "^6.1.2",
     "gulp-cleanhtml": "^1.0.3",
@@ -76,8 +76,8 @@
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
     "gulp-twig": "^0.7.0",
-    "gulp-typescript": "^3.1.6",
-    "gulp-uglify": "^2.1.2",
+    "gulp-typescript": "^3.1.7",
+    "gulp-uglify": "^3.0.0",
     "gulp-zip": "^4.0.0",
     "lost": "^8.0.0",
     "panini": "^1.4.0",
@@ -90,7 +90,7 @@
     "precss": "^1.4.0",
     "should": "^11.2.1",
     "twig-markdown": "^0.1.2",
-    "typescript": "^2.3.2",
+    "typescript": "^2.3.3",
     "webpack-stream": "^3.2.0"
   }
 }

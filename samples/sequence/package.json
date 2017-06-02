@@ -1,0 +1,11 @@
+{
+  "name": "sequence",
+  "version": "1.0.0",
+  "description": "Gulp Build Manager Sample - sequence",
+  "main": "gulpfile.babel.js",
+  "author": "Robin Soo-hyuk Nam",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp-build-manager": "^1.5.2"
+  }
+}

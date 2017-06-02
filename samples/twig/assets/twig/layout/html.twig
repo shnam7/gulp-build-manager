@@ -1,0 +1,32 @@
+{#
+/**
+ *  Template: html (top-level layout)
+ *
+ */
+#}
+<!DOCTYPE html>
+<head>
+  <title>{{ site.name }}</title>
+  <meta charset="{{ site.charset }}">
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/normalize/5.0.0/normalize.css" type="text/css" />
+  {% block html_head %}{% endblock %}
+</head>
+<body class="{{ body_class }}">
+{% block l_site_container %}
+  <div id="l-site-container">
+  {% block l_header %}{% include 'region/header.twig' ignore missing %}{% endblock %}
+  {% block l_content_wrapper %}
+    <div id="l-content-wrapper">
+      {% block l_content %}{% include 'region/content.twig' ignore missing %}{% endblock %}
+      {% block l_sidebar %}{% include 'region/sidebar.twig' ignore missing %}{% endblock %}
+    </div>
+  {% endblock %}
+  {% block l_footer %}{% include 'region/footer.twig' ignore missing %}{% endblock %}
+  {% block l_offcanvas %}{% include 'region/offcanvas.twig' ignore missing %}{% endblock %}
+  </div>
+{% endblock %}
+</body>
+<script src="https://cdn.jsdelivr.net/jquery/3.2.1/jquery.min.js"></script>
+</html>
