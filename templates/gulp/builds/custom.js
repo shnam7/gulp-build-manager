@@ -3,6 +3,8 @@
  *
  */
 
+import GBuilder from 'gulp-build-manager/lib/builders/GBuilder';
+
 class MyBuilder extends GBuilder {
   constructor() { super()}
   build(defaultModuleOptions, conf, done) {

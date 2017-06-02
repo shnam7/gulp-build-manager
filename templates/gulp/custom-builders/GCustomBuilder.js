@@ -5,7 +5,7 @@
 
 'use strict';
 
-import GBuilder from '../../../lib/builders/GBuilder';
+import GBuilder from 'gulp-build-manager/lib/builders/GBuilder';
 
 class GCustomBuilder extends GBuilder {
   constructor() { super(); }
