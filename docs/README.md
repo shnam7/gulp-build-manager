@@ -321,7 +321,7 @@ and the type of dependencies(series or parallel)
 ### PostCSS support in GSassBuilder
 Built-in default sass builder, GSassBuilder supports PostCSS, which means we can use sass/scss with postcss features such as postcss-cssnext, postcss-utilities, lost grid systems, etc.
 This makes style sheet development much fun and efficient.
-For the details, please refer to the example code in [github](https://github.com/shnam7/gulp-build-manager/tree/master/example).
+For the details, please refer to the samples in [github](https://github.com/shnam7/gulp-build-manager/tree/master/samples).
 Here's a sample sass build definition:
 ```javascript
 /**

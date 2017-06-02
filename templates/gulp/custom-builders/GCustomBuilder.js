@@ -5,9 +5,9 @@
 
 'use strict';
 
-import GBuilder from 'gulp-build-manager/lib/builders/GBuilder';
+import GBuilder from '../../../lib/builders/GBuilder';
 
-class GCustomTestBuilder extends GBuilder {
+class GCustomBuilder extends GBuilder {
   constructor() { super(); }
 
   build(defaultModuleOptions, conf, done) {
@@ -41,5 +41,5 @@ class GCustomTestBuilder extends GBuilder {
   }
 }
 
-export default GCustomTestBuilder;
-module.exports = GCustomTestBuilder;
+export default GCustomBuilder;
+module.exports = GCustomBuilder;

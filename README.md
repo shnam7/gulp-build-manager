@@ -35,4 +35,4 @@ For more information, please follow the documentation link below:<br>
 
 ### Working Example
 To see a working example with various build definitions and custom builders,
-please refer to the github [example](https://github.com/shnam7/gulp-build-manager/tree/master/example)
+please refer to the github [samples](https://github.com/shnam7/gulp-build-manager/tree/master/samples)

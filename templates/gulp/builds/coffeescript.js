@@ -12,11 +12,13 @@ export default module.exports = [
   {
     buildName: 'coffeescript',
     builder: 'GCoffeeScriptBuilder',
-    // builder: 'GCustomTestBuilder',
     src: [upath.join(srcRoot, 'scripts/coffee/**/*.coffee')],
     dest: (file) => file.base,
-    buildOptions: {enableLint: false},
-    moduleOptions: {},
+
+    // To enable lint, uncomment below block
+    // buildOptions: {
+    //   enableLint: true
+    // }
 
     // watcher is enabled by default. To disable it, set watched property to empty or null
     watch: {

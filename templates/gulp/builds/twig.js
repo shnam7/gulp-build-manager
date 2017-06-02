@@ -48,7 +48,7 @@ export default module.exports = [
     },
     watch: {
       // include sub directories to detect changes of the file which are not in src list.
-      watched: [upath.join(srcRoot, 'docs/twig/**/*.twig')],
+      watched: [upath.join(srcRoot, 'docs/twig/**/*.{twig,md}')],
       livereload:true
     }
   },
