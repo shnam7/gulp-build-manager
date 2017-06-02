@@ -4,6 +4,7 @@ import is from './utils/is';
 import gulp from 'gulp';
 import upath from 'upath';
 import merge from 'lodash.merge';
+import GBuilder from './builders/GBuilder';
 
 // BuildSet items are processed in gulp parallel task by default
 /**
@@ -105,6 +106,7 @@ class BuildSet {
   getBuilder(buildItem, customDirs) {
     let builder = buildItem.builder;
     if (is.Function(builder)) return {build: builder};
+    if (builder instanceof GBuilder) return builder;
     if (!builder) return {
       build: function (conf, moduleOptions, done) {
         // console.log(`BuildName:${buildItem.buildName}: No builder specified.`);
