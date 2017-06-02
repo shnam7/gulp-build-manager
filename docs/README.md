@@ -1,4 +1,36 @@
-## Gulp Build Manager version 1.x
+## New in version 1.6
+
+Creating gulp task is now simplified. A minimal form can be like this:
+```javascript
+import gbm from 'gulp-build-manager';
+process.chdir(__dirname);
+
+let simpleTask = {
+  buildName: 'simpleTask',
+  builder: (conf, mopts, done)=>{
+    console.log('simpleTask executed');
+    done(); // signal end of task
+  }
+};
+
+// create gbmConfig object
+const gbmConfig = {
+  builds: [
+    simpleTask
+  ],
+
+  systemBuilds: {
+    default: 'simpleTask'
+  }
+};
+
+gbm.loadBuilders(gbmConfig);
+```
+Please refer to the [samples](https://github.com/shnam7/gulp-build-manager/tree/master/samples) in github, for various usage.  
+
+
+
+## Gulp Build Manager version 1.5
 
 ### Preparing gulpfile with babel support
 To enable babel in Gulp 4.x, create 'gulpfile.babel.js' instead of 'gulpfile.js' with contents below.
