@@ -7,6 +7,6 @@
   "license": "MIT",
   "devDependencies": {
     "gulp-build-manager": "file:../..",
-    "twig-markdown": "^0.1.2"
+    "gulp-markdown": "^1.2.0"
   }
 }

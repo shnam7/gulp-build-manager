@@ -7,6 +7,9 @@
   "license": "MIT",
   "devDependencies": {
     "gulp-build-manager": "file:../..",
+    "gulp-cleanhtml": "^1.0.3",
+    "gulp-html-prettify": "0.0.1",
+    "gulp-twig": "^0.7.0",
     "twig-markdown": "^0.1.2"
   }
 }

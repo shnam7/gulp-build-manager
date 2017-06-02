@@ -6,6 +6,8 @@
   "author": "Robin Soo-hyuk Nam",
   "license": "MIT",
   "devDependencies": {
-    "gulp-build-manager": "^1.5.2"
+    "gulp-build-manager": "file:../..",
+    "gulp-imagemin": "^3.3.0",
+    "gulp-zip": "^4.0.0"
   }
 }
