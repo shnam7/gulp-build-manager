@@ -1,7 +1,7 @@
 'use strict';
 
-// import gulp-build-manager
 import gbm from 'gulp-build-manager';
+
 process.chdir(__dirname);
 
 let simpleTask = {
@@ -9,7 +9,7 @@ let simpleTask = {
   builder: (conf, mopts, done)=>{
     console.log('simpleTask executed');
     done(); // signal end of task
-  }
+  },
 };
 
 // create gbmConfig object
@@ -19,7 +19,7 @@ const gbmConfig = {
   ],
 
   systemBuilds: {
-    default: 'simpleTask'
+    default: 'simpleTask',
   }
 };
 

@@ -10,10 +10,10 @@
 'use strict';
 import buildSet from '../buildSet';
 import GWatcher from './GWatcher';
+import GCleaner from './GCleaner';
 import gulp from 'gulp';
 import is from '../utils/is';
 import upath from 'upath';
-import del from 'del';
 import merge from 'lodash.merge';
 
 export default class GulpBuildManager {
@@ -78,8 +78,11 @@ export default class GulpBuildManager {
         indent_char: ' ',
         indent_size: 4
       },
+
+      del: {}
     };
     this._watcher = new GWatcher();
+    this._cleaner = new GCleaner();
   }
 
   loadBuilders(config) {
@@ -90,31 +93,27 @@ export default class GulpBuildManager {
     }
 
     if (config.moduleOptions) merge(this._defaultModuleOptions, config.moduleOptions);
+
+    // add system level clean here, so that build definitions can overload it later.
+    if (config.systemBuilds && config.systemBuilds.clean)
+      this._cleaner.add(config.systemBuilds.clean);
+
     if (config.builds) {
       for (let buildItem of config.builds) {
         if (is.String(buildItem)) buildItem = require(upath.join(process.cwd(), basePath, buildItem));
         let bs = buildSet(buildItem);
         let customBuildDir = upath.join(basePath, config.customBuilderDir || "");
-        bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher);
+        bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher, this._cleaner);
       }
     }
 
     if (config.systemBuilds) {
       let sysBuilds = config.systemBuilds.build;
       if (sysBuilds) gulp.task('@build', gulp.parallel(buildSet(sysBuilds).resolve()), (done)=>done());
-      let clean = config.systemBuilds.clean;
-      if (clean) {
-        gulp.task('@clean', (done)=>{
-          del(clean, this._defaultModuleOptions.del).then(()=>done());
-        });
-      }
-      if (config.systemBuilds.watch)
-        gulp.task('@watch', (done)=>{this.watch(config.systemBuilds.watch); done()});
-
+      this._cleaner.createTask(this._defaultModuleOptions.del);
+      this._watcher.createTask(config.systemBuilds.watch);
       let defaultBuild = config.systemBuilds.default;
       if (defaultBuild) gulp.task('default', gulp.parallel(buildSet(defaultBuild).resolve()), (done)=>done());
     }
   }
-
-  watch(watchOptions) { this._watcher.watch(watchOptions); }
 }

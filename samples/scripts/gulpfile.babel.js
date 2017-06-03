@@ -3,8 +3,6 @@
 // import gulp-build-manager
 import gbm from 'gulp-build-manager';
 import buildSet from 'gulp-build-manager/lib/buildSet';
-// import gbm from '../../src/core/GulpBuildManager';
-// import buildSet from '../../src/buildSet';
 import upath from 'upath';
 
 process.chdir(__dirname);

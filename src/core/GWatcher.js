@@ -13,11 +13,16 @@ class GWatcher {
   }
 
   watch(watchOptions) {
-    if (watchOptions.livereload) livereload(watchOptions.livereload);
+    if (watchOptions && watchOptions.livereload) livereload(watchOptions.livereload);
     for (let item of this._watchMap) {
       console.log(`Watching ${item.name}: ${item.watched}...`);
       gulp.watch(item.watched, gulp.parallel(item.task));
     }
+  }
+
+  createTask(watchOptions, taskName='@watch') {
+    if (this._watchMap.length <=0) return;
+    gulp.task(taskName, (done)=>{this.watch(watchOptions); done()});
   }
 }
 

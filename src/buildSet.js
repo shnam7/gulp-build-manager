@@ -52,7 +52,7 @@ class BuildSet {
    *  @param watcher Watcher class
    *  @returns {*} Gulp task name if gulp task is created. Or, gulp.series() or gulp.parallel()
    */
-  resolve(customDirs, defaultModuleOptions, watcher) {
+  resolve(customDirs, defaultModuleOptions, watcher, cleaner) {
     let resolved = [];
     for (const item of this._set) {
       if (is.String(item) || is.Function(item))
@@ -83,10 +83,13 @@ class BuildSet {
         else
           gulp.task(item.buildName, task);
 
+        // resolve clean targets
+        if (item.hasOwnProperty('clean')) cleaner.add(item.clean);
+
         // resolve watch
         let watch = {
           name: item.buildName,
-          watched: is.Array(item.src) ? item.src.slice() : [item.src],
+          watched: is.Array(item.src) ? item.src.slice() : item.src ? [item.src] : [],
           task: [item.buildName],
           livereload: false
         };
