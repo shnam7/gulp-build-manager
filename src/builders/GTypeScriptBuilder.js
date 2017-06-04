@@ -21,14 +21,16 @@ class GTypeScriptBuilder extends GBuilder {
 
   OnBuild(stream, mopts, conf) {
     let tsProject = undefined;
-    try {
-      tsProject = typescript.createProject(conf.buildOptions.tsConfig, mopts.typescript);
+    if (conf.buildOptions && conf.buildOptions.tsConfig) {
+      try {
+        tsProject = typescript.createProject(conf.buildOptions.tsConfig, mopts.typescript);
+      }
+      catch (e) {
+        if (e.code !== 'ENOENT') throw e;
+        console.log('WARN: buildOptions.tsConfig specified but not found:', upath.resolve(conf.buildOptions.tsConfig));
+      }
     }
-    catch (e) {
-      if (e.code !== 'ENOENT') throw e;
-      console.log('WARN: buildOptions.tsConfig specified but not found:', upath.resolve(conf.buildOptions.tsConfig));
-      tsProject = typescript.createProject(mopts.typescript);
-    }
+    if (!tsProject) tsProject = typescript.createProject(mopts.typescript);
 
     // create unique cache name to avoid colision with other parallel tasks
     let cacheJS = conf.src + 'jsFiles';

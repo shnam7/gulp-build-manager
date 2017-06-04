@@ -58,7 +58,7 @@ class BuildSet {
       if (is.String(item) || is.Function(item))
         resolved.push(item);
       else if (item instanceof BuildSet)
-        resolved.push(item.resolve(customDirs, defaultModuleOptions));
+        resolved.push(item.resolve(customDirs, defaultModuleOptions, watcher, cleaner));
       else if (is.Object(item) && item.hasOwnProperty('buildName')) {
         // convert prop name: outfile-->outFile
         if (!item.outFile && item.outfile) item.outFile = item.outfile;
@@ -69,10 +69,10 @@ class BuildSet {
         let triggers = undefined;
 
         if (item.hasOwnProperty('dependencies'))
-          deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher);
+          deps = new BuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
 
         if (item.hasOwnProperty('triggers'))
-          triggers = new BuildSet(item.triggers).resolve(customDirs, defaultModuleOptions, watcher);
+          triggers = new BuildSet(item.triggers).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
 
         if (deps || triggers) {
           let taskList = [task];

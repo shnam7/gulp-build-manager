@@ -91,6 +91,7 @@ export default class GulpBuildManager {
       basePath = upath.dirname(config);
       config = require(upath.join(process.cwd(), config))
     }
+    let customBuildDir = upath.join(basePath, config.customBuilderDir || "");
 
     if (config.moduleOptions) merge(this._defaultModuleOptions, config.moduleOptions);
 
@@ -102,18 +103,23 @@ export default class GulpBuildManager {
       for (let buildItem of config.builds) {
         if (is.String(buildItem)) buildItem = require(upath.join(process.cwd(), basePath, buildItem));
         let bs = buildSet(buildItem);
-        let customBuildDir = upath.join(basePath, config.customBuilderDir || "");
         bs.resolve(customBuildDir, this._defaultModuleOptions, this._watcher, this._cleaner);
       }
     }
 
     if (config.systemBuilds) {
       let sysBuilds = config.systemBuilds.build;
-      if (sysBuilds) gulp.task('@build', gulp.parallel(buildSet(sysBuilds).resolve()), (done)=>done());
+      if (sysBuilds) {
+        gulp.task('@build', gulp.parallel(buildSet(sysBuilds).resolve(
+          customBuildDir, this._defaultModuleOptions, this._watcher, this._cleaner)), (done) => done());
+      }
       this._cleaner.createTask(this._defaultModuleOptions.del);
       this._watcher.createTask(config.systemBuilds.watch);
       let defaultBuild = config.systemBuilds.default;
-      if (defaultBuild) gulp.task('default', gulp.parallel(buildSet(defaultBuild).resolve()), (done)=>done());
+      if (defaultBuild) {
+        gulp.task('default', gulp.parallel(buildSet(defaultBuild).resolve(
+          customBuildDir, this._defaultModuleOptions, this._watcher, this._cleaner)), (done)=>done());
+      }
     }
   }
 }
