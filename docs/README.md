@@ -79,7 +79,7 @@ Single build definition object creates a single task. The 'buildName' of each bu
 Each build definition can have 'dependencies' property which is playing the same role of gulp.series()
 or gulp.parallel() for the gulp.task(name [, deps] [, fn]) 'deps' parameter.
 If necessary, Build definition can be 
-Basuically, Array of build definitions creates series task. To have parallel tasks, embrace the buildname's
+Basically, array of build definitions creates series task. To have parallel tasks, embrace the buildname's
 or build definitions with buildSet().
 For more details on buildSet(), please refer to the buildSet section.
 

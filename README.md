@@ -34,5 +34,5 @@ For more information, please follow the documentation link below:<br>
 
 
 ### Working Example
-To see a working example with various build definitions and custom builders,
+To see working examples and learn how to use various features of gulp-build-manager,
 please refer to the github [samples](https://github.com/shnam7/gulp-build-manager/tree/master/samples)
