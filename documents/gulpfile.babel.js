@@ -3,7 +3,7 @@
  *
  */
 
-import gbm from '../../src';
+import gbm from '../src';
 import upath from 'upath';
 import twigMarkdown from 'twig-markdown';
 
