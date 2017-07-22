@@ -16,9 +16,6 @@
     "prepublish": "npm run build",
     "test": "mocha --compilers js:babel-core/register --reporter spec"
   },
-  "bin": {
-    "gbm": "./bin/gbm.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/shnam7/gulp-build-manager.git"
