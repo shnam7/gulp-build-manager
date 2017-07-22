@@ -1,8 +1,11 @@
+/**
+ *  GWatcher - Gulp watch list manager
+ */
+
 'use strict';
 import gulp from 'gulp';
-import livereload from 'gulp-livereload';
 
-class GWatcher {
+export default class GWatcher {
   constructor() {
     this._watchMap = [];
   }
@@ -13,7 +16,9 @@ class GWatcher {
   }
 
   watch(watchOptions) {
-    if (watchOptions && watchOptions.livereload) livereload(watchOptions.livereload);
+    if (watchOptions && watchOptions.livereload)
+      require('gulp-livereload')(watchOptions.livereload);
+
     for (let item of this._watchMap) {
       console.log(`Watching ${item.name}: ${item.watched}...`);
       gulp.watch(item.watched, gulp.parallel(item.task));
@@ -26,5 +31,4 @@ class GWatcher {
   }
 }
 
-export default GWatcher;
 module.exports = GWatcher;

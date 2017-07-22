@@ -1,23 +1,19 @@
 /**
- *  Images Builder
+ *  Image Optimization Builder
  */
 
 'use strict';
 import GBuilder from './GBuilder';
-import imagemin from 'gulp-imagemin';
 
-
-class GImagesBuilder extends GBuilder {
+export default class GImagesBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions) {
-    return this.pick(defaultModuleOptions, ['images']);
+    return this.pick(defaultModuleOptions, ['imagemin']);
   }
 
   OnBuild(stream, mopts, conf) {
-    return stream.pipe(imagemin(mopts.imagemin))
+    return stream.pipe(require('gulp-imagemin')(mopts.imagemin))
   }
 }
-
-export default GImagesBuilder;
 module.exports = GImagesBuilder;

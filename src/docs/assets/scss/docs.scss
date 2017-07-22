@@ -1,0 +1,114 @@
+// main stylesheet
+@import "base";
+@import "markdown";
+@import "prettyprint";
+@import "layout";
+
+#l-header {
+  padding: 0.5rem 1rem;
+  .logo {
+    float: left;
+    margin:0;
+    a {
+      color: gray(85%);
+      text-decoration: none;
+    }
+  }
+  color: #fff;
+  text-align: center;
+  background-color: #159957;
+  background-image: linear-gradient(120deg, #155799, #159957);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#l-banner {
+  margin:0;
+  padding: 2rem 1rem;
+  color: gray(85%);
+  text-align: center;
+  background-color: #159957;
+  background-image: linear-gradient(120deg, #155799, #159957);
+
+  .title {
+    font-size: 2rem;
+    color: white;
+  }
+  .tagline {
+    font-weight: normal;
+    padding:0;
+    margin-bottom:0.5rem;
+  }
+  .version {
+    margin-bottom:0.5rem;
+    padding:0.5rem;
+  }
+  .btn, .btn:visited {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  .btn {
+    display: inline-block;
+    text-decoration: none;
+    margin-bottom: 1rem;
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.3rem;
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.9rem;
+    &:visited {
+      text-decoration: none;
+    }
+  }
+}
+
+#l-content {
+  border-top: 1px solid gray(60%, 0.3);
+  @media (--medium) {
+    border-top: none;
+  }
+
+  em { color:#b90c38;}
+  pre {
+    padding: 0.5rem;
+    margin:0.5rem;
+    border-radius: 4px;
+  }
+  h4 {
+    margin:0.2rem 0;
+  }
+}
+
+#l-sidebar {
+  @media (--medium) {
+    position: sticky;
+    top:0;
+  }
+  &>h3 {
+    text-align: center;
+  }
+  ul {
+    list-style-position: inside;
+    margin:0;
+    padding:0;
+    ul {
+      padding: 0rem 1rem 0.5rem 1rem;
+    }
+    li {
+      margin:0;
+    }
+  }
+}
+
+#l-footer {
+  .logo {
+    //width: 100%;
+    //height: 2rem;
+    //background: #fff inline('gbm.svg') 30% 30% no-repeat;
+    //background: svg-load("../../assets/images/gbm.svg", fill=#ef5350) no-repeat;
+    //background-size: 50%;
+  //.logo {
+  //
+  //  background-size: size('../../assets/images/100.svg');
+  //  background-image: svg-load('../../assets/images/100.svg');
+     }
+}

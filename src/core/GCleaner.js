@@ -1,10 +1,13 @@
-'use strict';
+/**
+ *  GCleaner - Gulp task clean list manager
+ */
 
+'use strict';
 import gulp from 'gulp';
 import del from 'del';
 import is from '../utils/is';
 
-class GCleaner {
+export default class GCleaner {
   constructor() {
     this._cleanList = [];
   }
@@ -27,5 +30,4 @@ class GCleaner {
   }
 }
 
-export default GCleaner;
 module.exports = GCleaner;

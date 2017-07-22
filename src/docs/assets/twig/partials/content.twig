@@ -1,0 +1,7 @@
+{% block l_content %}
+<div id="l-content">
+  {% if filename %}
+    {% markdown 'markdown/'~filename %}{% endmarkdown %}
+  {% endif %}
+</div>
+{% endblock %}

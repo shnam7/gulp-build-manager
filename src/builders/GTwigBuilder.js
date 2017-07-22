@@ -1,27 +1,19 @@
 /**
- *  Markdown Builder
+ *  Twig Builder
  */
 
 'use strict';
-import GBuilder from './GBuilder';
-import twig from 'gulp-twig';
-import cleanHtml from 'gulp-cleanhtml';
-import htmlPrettify from 'gulp-html-prettify';
+import gbm from '../';
 
-class GTwigBuilder extends GBuilder {
+export default class GTwigBuilder extends gbm.GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions) {
-    return this.pick(defaultModuleOptions, ['twig', 'htmlPrettify']);
+    return this.pick(defaultModuleOptions, ['twig', 'htmlmin', 'htmiPrettify']);
   }
 
-  OnBuild(stream, mopts, conf) {
-    return stream
-      .pipe(twig(mopts.twig))
-      .pipe(cleanHtml())
-      .pipe(htmlPrettify(mopts.htmlPrettify))
+  OnPreparePlugins(mopts, conf) {
+    this.addPlugins(new gbm.TwigPlugin());
   }
 }
-
-export default GTwigBuilder;
 module.exports = GTwigBuilder;

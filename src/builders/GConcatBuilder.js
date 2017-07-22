@@ -1,26 +1,18 @@
 /**
- *  JavaScript Builder
+ *  Concatenation Builder
  */
 
-'use strict';
-import GBuilder from './GBuilder';
-import sourcemaps from 'gulp-sourcemaps';
-import upath from 'upath';
-import is from './../utils/is';
+import gbm from '../';
 
-class GConcatBuilder extends GBuilder {
+export default class GConcatBuilder extends gbm.GBuilder {
   constructor() { super(); }
 
-  OnBuild(stream, mopts, conf) {
-    stream = stream.pipe(sourcemaps.init());
-    let concat = require('gulp-concat');
-    let dest = is.String(conf.dest) ? conf.dest : process.cwd();
+  OnBuilderModuleOptions(mopts, defaultModuleOptions) {
+    return this.pick(defaultModuleOptions, ['concat']);
+  }
 
-    return stream
-      .pipe(concat(upath.resolve(dest, conf.outFile)))
-      .pipe(sourcemaps.write('.'))
+  OnPreparePlugins(mopts, conf) {
+    this.addPlugins(new gbm.ConcatPlugin());
   }
 }
-
-export default GConcatBuilder;
 module.exports = GConcatBuilder;

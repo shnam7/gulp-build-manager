@@ -4,25 +4,18 @@
 
 'use strict';
 import GBuilder from './GBuilder';
-import markdown from 'gulp-markdown';
-import panini from 'panini';
 
-
-class GPaniniBuilder extends GBuilder {
+export default class GPaniniBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions) {
-    return this.pick(defaultModuleOptions, ['panini', 'markdown'])
+    return this.pick(defaultModuleOptions, ['panini'])
   }
 
-  OnBuild(stream, mopts, conf) {
+  OnPreparePlugins(mopts, conf) {
+    const panini = require('panini');
     panini.refresh();
-
-    return stream
-      .pipe(markdown(mopts.markdown))
-      .pipe(panini(mopts.panini))
+    this.addPlugins(stream=>stream.pipe(panini(mopts.panini)));
   }
 }
-
-export default GPaniniBuilder;
 module.exports = GPaniniBuilder;

@@ -1,0 +1,33 @@
+{#
+/**
+ *  Template: html (top-level layout)
+ */
+#}
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width initial-scale=1 shrink-to-fit=no user-scalable=yes">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+  <title>{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}</title>
+  <meta name="description" content="{{ site.description }}">
+  {% block html_head %}{% include 'partials/html_head.twig' ignore missing %}{% endblock %}
+</head>
+<body class="{{ body_class }}">
+{% block l_site_container %}
+  <div id="l-site-container">
+  {% block l_header %}{% include 'partials/header.twig' ignore missing %}{% endblock %}
+  {% block l_content_wrapper %}
+    {% block l_banner %}{% endblock %}
+    <div id="l-content-wrapper" class="markdown-body">
+      {% block l_content %}{% include 'partials/content.twig' ignore missing %}{% endblock %}
+      {% block l_sidebar %}{% include 'partials/sidebar.twig' ignore missing %}{% endblock %}
+    </div>
+  {% endblock %}
+  {% block l_footer %}{% include 'partials/footer.twig' ignore missing %}{% endblock %}
+  {% block l_offcanvas %}{% include 'partials/offcanvas.twig' ignore missing %}{% endblock %}
+  </div>
+{% endblock %}
+</body>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<script src="js/docs.min.js"></script>
+</html>

@@ -1,23 +1,36 @@
 /**
- *  Default Builder
+ *  Builder Base Class
  */
 
 'use strict';
 import gulp from 'gulp';
 import merge from 'lodash.merge';
 import pick from 'lodash.pick';
+import GPlugin from '../core/GPlugin';
 
-class GBuilder {
-  constructor() {}
+export default class GBuilder {
+  constructor() {
+    this._plugins = [];
+  }
 
-  // defaultModuleOptions: this is from GulpBuilderManager config with updates from each buildItem config
-  // In this callback, custom builder class can add bui
   build(defaultModuleOptions, conf, done) {
     let mopts = {};
     merge(mopts, this.OnInitModuleOptions(mopts, defaultModuleOptions, conf));
+
+    // reset plugins
+    this._plugins = []; // caution: if not cleared here, added plugins can be accumulated
+    let ret = this.OnPreparePlugins(mopts, conf);
+    if (ret) this._plugins = ret;
+
     // console.log(`'mopts for:${conf.buildName}:`, mopts);
     let stream = this.OnInitStream(mopts, defaultModuleOptions, conf);
-    return this.OnWatch(this.OnDest(this.OnBuild(stream, mopts, conf), mopts, conf), mopts, conf) || done();
+    let plugins = conf.plugins ? this._plugins.concat(conf.plugins) : this._plugins;
+    let processPlugins = GPlugin.processPlugins;
+    stream = processPlugins(plugins, stream, mopts, conf, 'initStream');
+    stream = processPlugins(plugins, this.OnBuild(stream, mopts, conf), mopts, conf, 'build');
+    stream = processPlugins(plugins, this.OnDest(stream, mopts, conf), mopts, conf, 'dest');
+    stream = processPlugins(plugins, this.OnWatch(stream, mopts, conf), mopts, conf, 'watch');
+    return stream || done();
   }
 
   OnInitModuleOptions(mopts, defaultModuleOptions, conf) {
@@ -25,6 +38,8 @@ class GBuilder {
     merge(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions));
     merge(mopts, conf.moduleOptions);
   }
+
+  OnPreparePlugins(mopts, conf) { return []; }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions, conf) {}
 
@@ -36,17 +51,7 @@ class GBuilder {
       let order = require('gulp-order');
       stream = stream.pipe(order(conf.order, mopts.order));
     }
-    // check plumber
-    if (conf.buildOptions && conf.buildOptions.enablePlumber) {
-      let plumber = require('gulp-plumber');
-      stream = stream.pipe(plumber());
-    }
-    // check changed
-    if (conf.buildOptions && conf.buildOptions.enableChanged) {
-      let changed = require('gulp-changed');
-      stream = stream.pipe(changed(conf.dest, mopts.changed));
-    }
-    return stream;
+    return GPlugin.initSourceMaps(stream, conf.buildOptions, mopts);
   }
 
   OnBuild(stream, mopts, conf) { return stream; }
@@ -63,9 +68,17 @@ class GBuilder {
     return stream;
   }
 
+  /**
+   *
+   * Add builder plugins
+   * @param plugins can be GPlugin, {}, or plugin function with arguments(stream,conf, builder)
+   */
+  addPlugins(plugins) {
+    this._plugins = GPlugin.addPlugins(this._plugins, plugins);
+  }
+
   pick(...arg) { return pick(...arg); }
   merge(...arg) { return merge(...arg); }
 }
 
-export default GBuilder;      // interface for import statement
 module.exports = GBuilder;    // interface for require() call

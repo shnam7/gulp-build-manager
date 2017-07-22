@@ -1,3 +1,7 @@
+/**
+ * Utility - is
+ */
+
 'use strict';
 
 const is = {

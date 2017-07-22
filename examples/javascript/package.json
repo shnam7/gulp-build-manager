@@ -1,0 +1,15 @@
+{
+  "name": "javascript",
+  "version": "1.0.0",
+  "description": "Gulp Build Manager Sample - javascript",
+  "main": "gulpfile.babel.js",
+  "author": "Robin Soo-hyuk Nam",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp-build-manager": "file:../..",
+    "gulp-rename": "^1.2.2",
+    "gulp-typescript": "^3.1.7",
+    "gulp-uglify": "^3.0.0",
+    "typescript": "^2.3.4"
+  }
+}
