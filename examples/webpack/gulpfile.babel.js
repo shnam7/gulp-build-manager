@@ -22,7 +22,7 @@ const webpack = {
   // // use order property to set outFile orders
   // order: ['*ts-2.ts'],
   dest: upath.join(destRoot, 'scripts/js'),
-  // outFile: upath.join(destRoot, 'js/sample-ts.js'),
+  outFile: upath.join(destRoot, 'js/sample-ts.js'),
   buildOptions: {
     sourceMap: true,
     minify: true,

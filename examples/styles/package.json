@@ -6,13 +6,6 @@
   "author": "Robin Soo-hyuk Nam",
   "license": "MIT",
   "devDependencies": {
-    "gulp-build-manager": "file:../..",
-    "gulp-cssnano": "^2.1.2",
-    "gulp-postcss": "^7.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "lost": "^8.0.0",
-    "postcss-cssnext": "^2.11.0",
-    "postcss-utilities": "^0.7.0"
+    "gulp-build-manager": "file:../.."
   }
 }

@@ -3,8 +3,6 @@
  */
 
 import GPlugin from '../core/GPlugin';
-import merge from 'lodash.merge';
-import pick from 'lodash.pick';
 
 export default class CSSPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }

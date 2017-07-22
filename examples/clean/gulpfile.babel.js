@@ -5,17 +5,17 @@ import upath from 'upath';
 
 process.chdir(__dirname);
 
-let srcRoot = 'assets';
-let destRoot = '_build';
+const srcRoot = 'assets';
+const destRoot = '_build';
 
-let copy = {
+const copy = {
   buildName: 'copy',
   builder: 'GBuilder',
   src: [upath.join(destRoot, 'do-not-delete/sample.txt')],
   dest: destRoot
 };
 
-let task1 = {
+const task1 = {
   buildName: 'task1',
   builder: (conf, mopts, done)=>{
     console.log(`task1 executed: src=${conf.src}, clean=${conf.clean}`);
@@ -26,7 +26,7 @@ let task1 = {
   clean: [upath.join(srcRoot, 'task1/**/*.txt')]
 };
 
-let task2 = {
+const task2 = {
   buildName: 'task2',
   builder: (conf, mopts, done)=>{
     console.log(`task1 executed: src=${conf.src}, clean=${conf.clean}`);
