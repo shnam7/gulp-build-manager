@@ -13,7 +13,7 @@ export default class GTypeScriptBuilder extends gbm.GBuilder {
   }
 
   OnPreparePlugins(mopts, conf) {
-    const opts = conf.buildOptions;
+    const opts = conf.buildOptions || {};
     this.addPlugins([
       new gbm.TypeScriptPlugin(),
       (opts.minify || opts.minifyOnly) ? new gbm.UglifyPlugin() : undefined,

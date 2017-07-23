@@ -8,7 +8,7 @@ export default class TwigPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
   process(stream, mopts, conf, slot) {
-    const opts = conf.buildOptions;
+    const opts = conf.buildOptions || {};
     const minify = this.options.minify || opts.minify;
     const prettify = this.options.prettify || opts.prettify;
 

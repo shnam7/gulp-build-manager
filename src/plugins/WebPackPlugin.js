@@ -14,7 +14,7 @@ export default class WebPackPlugin extends GPlugin {
     const filter = this.options.filter || ['**', '!**/*.map'];
     if (filter) stream = stream.pipe(require('gulp-filter')(filter));
 
-    const opts = conf.buildOptions;
+    const opts = conf.buildOptions || {};
     const configFile = this.options.configFile || opts.configFile;
     const wpOpts = merge(
       { output: {path: upath.resolve(conf.dest), filename:'[name].bundle.js'}},         // default

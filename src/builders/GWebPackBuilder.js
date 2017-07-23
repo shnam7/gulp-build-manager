@@ -12,7 +12,7 @@ export default class GWebPackBuilder extends gbm.GBuilder {
   constructor() { super(); }
 
   // OnInitStream(mopts, defaultModuleOptions, conf) {
-  //   // let buildOptions = conf.buildOptions;
+  //   // let buildOptions = conf.buildOptions || {;
   //   // let opts = merge({},
   //   //   conf.dest ? {output:{path:upath.resolve(conf.dest)}} : {},
   //   //   buildOptions.configFile ? require(upath.resolve(buildOptions.configFile)) : {},

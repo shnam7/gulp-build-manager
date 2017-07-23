@@ -15,7 +15,7 @@ export default class GCSSBuilder extends gbm.GBuilder {
   }
 
   OnPreparePlugins(mopts, conf) {
-    const opts = conf.buildOptions;
+    const opts = conf.buildOptions || {};
     this.addPlugins([
       new gbm.CSSPlugin(),
       (opts.minify || opts.minifyOnly) ? new gbm.CSSNanoPlugin() : undefined

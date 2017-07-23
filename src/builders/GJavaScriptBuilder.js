@@ -12,7 +12,7 @@ export default class GJavaScriptBuilder extends gbm.GBuilder {
   }
 
   OnPreparePlugins(mopts, conf) {
-    const opts = conf.buildOptions;
+    const opts = conf.buildOptions || {};
     this.addPlugins([
       new gbm.JavaScriptPlugin(),
       (conf.outFile) ? new gbm.ConcatPlugin() : undefined,

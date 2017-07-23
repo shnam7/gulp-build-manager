@@ -12,7 +12,7 @@ export default class TypeScriptPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
   process(stream, mopts, conf, slot) {
-    const opts = conf.buildOptions;
+    const opts = conf.buildOptions || {};
     const lint = this.options.lint || opts.lint;
     const tsConfig = this.options.tsConfig || opts.tsConfig;
     const tsOpts = this.options.typescript || mopts.typescript || {};

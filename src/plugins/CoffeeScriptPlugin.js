@@ -8,7 +8,7 @@ export default class CoffeeScriptPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
   process(stream, mopts, conf, slot) {
-    const opts = conf.buildOptions;
+    const opts = conf.buildOptions || {};
     const lint = this.options.lint || opts.lint;
     const lintOpt = this.options.coffeelint || mopts.coffeelint;
     const coffeeOpts = this.options.coffeescript || mopts.coffeescript;
