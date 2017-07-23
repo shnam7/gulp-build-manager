@@ -9,7 +9,8 @@
   "scripts": {
     "build": "rimraf lib && babel src --presets babel-preset-es2015 --out-dir lib",
     "watch-build": "npm run build -- --watch",
-    "prepublish": "npm run test && npm run build",
+    "prepublish": "npm run test",
+    "prepare": "npm run build",
     "test": "mocha --compilers js:babel-core/register --reporter spec"
   },
   "repository": {
@@ -40,7 +41,7 @@
   "homepage": "https://github.com/shnam7/gulp-build-manager#readme",
   "dependencies": {
     "babel-core": "^6.25.0",
-    "babel-preset-latest": "^6.24.1",
+    "babel-preset-es2015": "^6.24.1",
     "del": "^3.0.0",
     "glob": "^7.1.2",
     "gulp": "github:gulpjs/gulp#4.0",
