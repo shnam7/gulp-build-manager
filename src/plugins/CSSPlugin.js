@@ -34,8 +34,9 @@ export default class CSSPlugin extends GPlugin {
 
     // check CSS processor option
     if (sourceType && sourceType !== 'css') {
-      const processor = require('gulp-' + (sourceType==='scss' ? 'sass' : sourceType));
-      stream = stream.pipe(processor(this.options[sourceType] || mopts[sourceType]));
+      const index = sourceType==='scss' ? 'sass' : sourceType;
+      const processor = require('gulp-' + index);
+      stream = stream.pipe(processor(this.options[index] || mopts[index]));
     }
 
     // check postcss option
