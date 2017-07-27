@@ -47,14 +47,8 @@ const buildItem4 = {
 
 // create gbmConfig object
 gbm({
-  builds: [
-    buildItem1,
-    buildItem2,
-    buildItem3,
-    buildItem4,
-  ],
-
   systemBuilds: {
+    build: [buildItem1, buildItem2, buildItem3, buildItem4],
     default: ['series', 'parallel']
   }
 });

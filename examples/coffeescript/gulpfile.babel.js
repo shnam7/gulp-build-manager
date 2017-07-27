@@ -33,10 +33,8 @@ const coffeeScript = {
  * Create gbmConfig object
  */
 gbm({
-  builds: [coffeeScript],
   systemBuilds: {
-    // 'copy' and 'images' will be executed in paralle, and then zip will be executed in series
-    build: 'coffeeScript',
+    build: [coffeeScript],
     clean: [destRoot],
     default: ['@clean', '@build'],
   }

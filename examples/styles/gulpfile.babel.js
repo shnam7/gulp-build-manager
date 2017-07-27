@@ -77,7 +77,7 @@ const less = {
   watch: {livereload: true}
 };
 
-const postCSS = {
+const postcss = {
   buildName: 'postcss',
   builder: 'GCSSBuilder',
   src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
@@ -98,17 +98,10 @@ const postCSS = {
   watch: {livereload:true}
 };
 
-// create gbmConfig object
-gbm({
-  builds: [
-    sass,
-    less,
-    postCSS,
-    copyHtml
-  ],
 
+gbm({
   systemBuilds: {
-    build: gbm.parallel('sass', 'less', 'postcss', 'copyHtml'),
+    build: gbm.parallel(sass, less, postcss, copyHtml),
     clean: [destRoot],
     default: ['@clean', '@build'],
     watch: {livereload:{start:true}}

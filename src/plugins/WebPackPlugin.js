@@ -26,8 +26,6 @@ export default class WebPackPlugin extends GPlugin {
     if (!conf.src) conf.src = wpOpts.entry;
     if (!conf.dest) conf.dest = wpOpts.output.path;
 
-    console.log('111', wpOpts);
-
     return stream.pipe(require('webpack-stream')(wpOpts));
   }
 }

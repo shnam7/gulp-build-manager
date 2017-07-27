@@ -41,62 +41,11 @@ const typeScript = {
   //     // "noEmitOnError": true
   //   }
   // },
-  plugins: [
-    // new gbm.DebugPlugin({title:'msg:'}, ['init', 'dest']),
-  ]
 };
 
-//
-// let minify = require('gulp-minify');
-// gulp.task('compress', function() {
-//   let sourcemaps = require('gulp-sourcemaps');
-//   return gulp.src(upath.join(destRoot, 'js/sample-ts.js'), {sourcemaps:false})
-//     .pipe(sourcemaps.init())
-//     .pipe(minify({
-//       ext:{
-//         // src:'-debug.js',
-//         min:'.min-.js'
-//       },
-//       noSource:true,
-//       // exclude: ['tasks'],
-//       ignoreFiles: ['.combo.js', '.min.js']
-//     }))
-//     // .pipe(sourcemaps.write('.'))
-//     .pipe(gulp.dest('dist'))
-//
-// });
-//
-// class GMinifyBuilder extends GBuilder {
-//   OnBuild(stream, mopts, conf) {
-//     let minify = require('gulp-minify');
-//     return stream.pipe(minify(mopts.minify));
-//   }
-// }
-//
-// let minifyBuild = {
-//   buildName:'minify',
-//   builder: new GMinifyBuilder,
-//   src: upath.join(destRoot, 'js/sample-ts.js'),
-//   dest: 'dist2',
-//   moduleOptions: {
-//     minify: {
-//       ext:{min:'.min.js'},
-//       // mangle:true,
-//       // noSource:true,
-//       exclude:['**/*.map']
-//     }
-//   }
-// };
-
-
-/**
- * Create gbmConfig object
- */
 gbm({
-  builds: [typeScript],
   systemBuilds: {
-    // 'copy' and 'images' will be executed in paralle, and then zip will be executed in series
-    build: 'typeScript',
+    build: typeScript,
     clean: [
       destRoot,
       upath.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}')

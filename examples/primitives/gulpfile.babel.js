@@ -5,28 +5,27 @@ import upath from 'upath';
 
 process.chdir(__dirname);
 
-const parallel = gbm.parallel;
 const srcRoot = 'assets';
 const destRoot = '_build';
 
 /**
  * Define build items
  */
-const copyBuild = {
+const copy = {
   buildName: 'copy',
   builder: 'GBuilder',
   src: upath.join(srcRoot, 'copy-me/**/*.txt'),
   dest: destRoot,
 };
 
-const imagesBuild = {
+const images = {
   buildName: 'images',
   builder: 'GImagesBuilder',
   src: upath.join(srcRoot, 'images/**/*'),
   dest: destRoot,
 };
 
-const zipBuild = {
+const zip = {
   buildName: 'zip',
   builder: 'GZipBuilder',
   src: [
@@ -46,15 +45,8 @@ const zipBuild = {
  * Create gbmConfig object
  */
 gbm({
-  builds: [
-    copyBuild,
-    imagesBuild,
-    zipBuild
-  ],
-
   systemBuilds: {
-    // 'copy' and 'images' will be executed in paralle, and then zip will be executed in series
-    build: [parallel('copy', 'images'), 'zip'],
+    build: [gbm.parallel(copy, images), zip],
     clean: [destRoot, '_dist'],
     default: ['@clean', '@build'],
 

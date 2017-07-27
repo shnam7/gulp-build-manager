@@ -62,13 +62,10 @@ let twig = {
 
 // create gbmConfig object
 gbm({
-  builds: [
-    twig
-  ],
-
   systemBuilds: {
+    build: twig,
     clean: [destRoot],
-    default: 'twig',
+    default: '@build',
     watch: {livereload:{start:true}}
   }
 });

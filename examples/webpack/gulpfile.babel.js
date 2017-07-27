@@ -53,19 +53,6 @@ const webpack = {
         }
       },
     }
-
-  //   // this will override the tsConfig settings in buildOptions
-  //   typescript: {
-  //     // "outFile": "sample-ts.js",
-  //     // "outDir": upath.resolve(destRoot, 'js'),
-  //     // "declarationDir": upath.resolve(destRoot, '@types')
-  //
-  //     // "target": "es5",
-  //     // "module": "none",
-  //     // "noImplicitAny": true,
-  //     // "noEmitOnError": true
-  //   }
-
   },
 };
 
@@ -74,10 +61,8 @@ const webpack = {
  * Create gbmConfig object
  */
 gbm({
-  builds: [webpack],
   systemBuilds: {
-    // 'copy' and 'images' will be executed in paralle, and then zip will be executed in series
-    build: 'webpack',
+    build: [webpack],
     clean: [
       destRoot,
       upath.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}')

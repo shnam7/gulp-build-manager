@@ -47,7 +47,7 @@ const defaultModuleOptions = {
 
   typescript: {},
 
-  babel: { presets:["es2015", "es2016", "es2017"]}
+  babel: { presets:["es2015"]}
   ,
 
   imagemin: {

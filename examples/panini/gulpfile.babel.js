@@ -40,9 +40,8 @@ const panini = {
 
 // create gbmConfig object
 gbm({
-  builds: [panini],
-
   systemBuilds: {
+    build: [panini],
     clean: [destRoot],
     default: ['@clean', 'panini'],
     watch: {livereload:{start:true}}

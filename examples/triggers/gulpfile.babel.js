@@ -39,13 +39,8 @@ let buildItem3 = {
 
 // create gbmConfig object
 gbm({
-  builds: [
-    buildItem1,
-    buildItem2,
-    buildItem3,
-  ],
-
   systemBuilds: {
+    build: [buildItem1, buildItem2, buildItem3],
     default: 'taskMain'
   }
 });

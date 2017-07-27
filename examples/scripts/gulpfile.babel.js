@@ -5,14 +5,11 @@ import upath from 'upath';
 
 process.chdir(__dirname);
 
-const parallel = gbm.parallel;
 const srcRoot = 'assets';
 const destRoot = '_build';
 
 
-/**
- * Define build items
- */
+// build configurations
 
 const __coffeeScript = {
   buildName: '__coffeeScript',
@@ -55,7 +52,7 @@ const javaScript = {
   order:['sample1.js'],
   dest: upath.join(destRoot, 'js'),
   outFile: 'sample.js',
-  dependencies: parallel('__coffeeScript', '__babel'),
+  dependencies: gbm.parallel(__coffeeScript, __babel),
   buildOptions: {
     minify: true,
     sourceMap: true
@@ -64,12 +61,6 @@ const javaScript = {
 };
 
 const typeScript = [
-  // {
-  //   buildName: '__webPack',
-  //   builder: 'GWebPackBuilder',
-  //   moduleOptions: {webpack: './webpack.config.js'},
-  //   watch: {livereload: true}
-  // },
   {
     buildName: 'typeScript',
     builder: 'GTypeScriptBuilder',
@@ -93,24 +84,13 @@ const typeScript = [
         "declaration": true,
       }
     },
-    // triggers: '__webPack'
   }
 ];
 
 
-/**
- * Create gbmConfig object
- */
 gbm({
-  builds: [
-    __coffeeScript,
-    __babel,
-    javaScript,
-    typeScript
-  ],
-
   systemBuilds: {
-    build: parallel('javaScript', 'typeScript'),
+    build: gbm.parallel(javaScript, typeScript),
     clean: [
       destRoot,
       upath.join(srcRoot, '{coffee,es6,ts}/**/*.{js,map}')

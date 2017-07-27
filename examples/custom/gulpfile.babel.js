@@ -34,13 +34,8 @@ const myBuilder = {
 // create gbmConfig object
 gbm({
   customBuilderDir: './custom-builders',
-  builds: [
-    customFunction,
-    customBuilder,
-    myBuilder
-  ],
-
   systemBuilds: {
+    build: [customFunction, customBuilder, myBuilder],
     default: ['customFunction', 'customBuilder', 'myBuilder']
   }
 });

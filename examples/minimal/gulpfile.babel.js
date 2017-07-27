@@ -16,11 +16,8 @@ const simpleTask = {
 };
 
 gbm({
-  builds: [
-    simpleTask
-  ],
-
   systemBuilds: {
-    default: 'simpleTask',
+    build: simpleTask,
+    default: 'simpleTask'
   }
 });

@@ -19,8 +19,8 @@ const concat = {
 
 // create gbmConfig object
 gbm({
-  builds: [concat],
   systemBuilds: {
+    build:[concat],
     clean:[destRoot],
     default: 'concat',
   }

@@ -20,11 +20,8 @@ const markdown = {
 
 // create gbmConfig object
 gbm({
-  builds: [
-    markdown
-  ],
-
   systemBuilds: {
+    build: [markdown],
     clean: [destRoot],
     default: 'markdown',
     watch: {livereload:{start:true}}

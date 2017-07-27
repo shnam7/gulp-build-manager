@@ -46,12 +46,8 @@ const task2 = {
 
 // create gbmConfig object
 gbm({
-  builds: [copy, task1, task2],
-
   systemBuilds: {
-    build: ['copy', 'task1', 'task2'],
-
-    // clean target for systemBuilds
+    build: [copy, task1, task2],
     clean: [destRoot],
     default: ['@clean', '@build']
   }
