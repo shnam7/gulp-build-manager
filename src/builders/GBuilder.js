@@ -29,7 +29,7 @@ export default class GBuilder {
     stream = processPlugins(plugins, stream, mopts, conf, 'initStream');
     stream = processPlugins(plugins, this.OnBuild(stream, mopts, conf), mopts, conf, 'build');
     stream = processPlugins(plugins, this.OnDest(stream, mopts, conf), mopts, conf, 'dest');
-    stream = processPlugins(plugins, this.OnWatch(stream, mopts, conf), mopts, conf, 'watch');
+    stream = processPlugins(plugins, this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild');
     return stream || done();
   }
 
@@ -60,11 +60,9 @@ export default class GBuilder {
     return stream && stream.pipe(gulp.dest(conf.dest));
   }
 
-  OnWatch(stream, mopts, conf) {
-    if (conf.watch && conf.watch.livereload) {
-      let livereload = require('gulp-livereload');
-      stream.pipe(livereload(mopts.livereload));
-    }
+  OnPostBuild(stream, mopts, conf) {
+    if (conf.watch && conf.watch.livereload && stream)
+      stream = stream.pipe(require('gulp-livereload')(mopts.livereload));
     return stream;
   }
 

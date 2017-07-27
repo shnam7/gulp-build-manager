@@ -76,7 +76,6 @@ const defaultModuleOptions = {
 const watcher = new GWatcher();
 const cleaner = new GCleaner();
 
-export function loadBuilderClass(classname) { return require(upath.join('../builders', classname)); }
 export function parallel(...args) { return new GBuildSet(...args); }
 export function series(...args) { return [...args]; }
 
