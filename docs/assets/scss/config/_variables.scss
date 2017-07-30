@@ -1,0 +1,170 @@
+//=========================================================
+//
+//  @package WCL
+//  @module variables
+//
+//=========================================================
+
+//=== globals ===
+$w-site-max-width:              1220px !default;
+$w-page-max-width:              960px !default;
+
+//--- fonts and text
+$w-font-size:                   16px !default;
+$w-font-size-mobile:            15px !default;
+$w-font-sans:                   Arial,Helvetica,Verdana,sans-serif,'Malgun Gothic';
+$w-font-serif:                  Georgia,Times,Times New Roman,serif,'Malgun Gothic';
+$w-font-mono:                   source-code-pro,Consolas,Liberation Mono,Menlo,Courier New,Courier,mono;
+$w-line-height:                 1.5 !default;
+$w-z-index:                     1000 !default;
+
+
+//--- borders
+$w-border-radius:               2px !default;
+
+
+//--- color collection
+// primitive
+$w-color-red:                   #DB2828 !default;
+$w-color-orange:                #F2711C !default;
+$w-color-yellow:                #FBBD08 !default;
+$w-color-olive:                 #B5CC18 !default;
+$w-color-green:                 #21BA45 !default;
+$w-color-teal:                  #00B5AD !default;
+$w-color-blue:                  #2185D0 !default;
+$w-color-violet:                #6435C9 !default;
+$w-color-purple:                #A333C8 !default;
+$w-color-pink:                  #E03997 !default;
+$w-color-brown:                 #A5673F !default;
+$w-color-gray:                  #767676 !default;
+
+// gray scale colors (gray-scale: lightness level from black)
+$w-color-gray-5:                lighten(#000, 5%) !default;   // #0d0d0d !default;
+$w-color-gray-10:               lighten(#000, 10%) !default;  // #1a1a1a
+$w-color-gray-15:               lighten(#000, 15%) !default;  // #262626
+$w-color-gray-20:               lighten(#000, 20%) !default;  // #333333
+$w-color-gray-30:               lighten(#000, 30%) !default;  // #333333
+$w-color-gray-40:               lighten(#000, 40%) !default;  // #333333
+$w-color-gray-50:               lighten(#000, 50%) !default;  // gray
+$w-color-gray-60:               lighten(#000, 60%) !default;  // #333333
+$w-color-gray-70:               lighten(#000, 70%) !default;  // #333333
+$w-color-gray-75:               lighten(#000, 75%) !default;  // #bfbfbf
+$w-color-gray-80:               lighten(#000, 80%) !default;  // #333333
+$w-color-gray-85:               lighten(#000, 85%) !default;  // #333333
+$w-color-gray-90:               lighten(#000, 90%) !default;  // #e6e6e6
+$w-color-gray-95:               lighten(#000, 95%) !default;  // #f2f2f2
+$w-color-gray-98:               lighten(#000, 98%) !default;  // #fafafa
+
+// light and dark colors
+$w-color-light-red:             #FF695E !default;
+$w-color-light-orange:          #FF851B !default;
+$w-color-light-yellow:          #FEFBEC !default; //#FFE21F !default;
+$w-color-light-yellow2:         #FCF8E3 !default; //#FFE21F !default;
+$w-color-light-olive:           #D9E778 !default;
+$w-color-light-green:           #2ECC40 !default;
+$w-color-light-teal:            #6DFFFF !default;
+$w-color-light-blue:            #54C8FF !default;
+$w-color-light-violet:          #A291FB !default;
+$w-color-light-purple:          #DC73FF !default;
+$w-color-light-pink:            #FF8EDF !default;
+$w-color-light-brown:           #D67C1C !default;
+$w-color-light-gray:            lighten(#000, 83%) !default;  // == darkgray: #d3d3d3
+$w-color-light-black:           #545454 !default;
+
+$w-color-dark-red:              #790d0d !default;
+$w-color-dark-gray:             lighten(#000, 66%) !default; // == darkgray: #a9a9a9
+$w-color-dark-green:            #006400 !default;
+$w-color-dark-teal:             #004444 !default;
+$w-color-light-sky-blue:        #85B7D9 !default;   // named in wcl
+$w-color-mild-green:            #4C5830 !default;
+
+//$w-color-black:                 #1B1C1D !default;
+//$w-color-off-white:             #F9FAFB !default;
+//$w-color-dark-white:            #F3F4F5 !default;
+//$w-color-mid-white:             #DCDDDE !default;
+
+// html colors
+$w-color-st-tropaz:             #294E80 !default;
+$w-color-midnight:              #152740 !default;
+$w-color-travertine:            #E5DEC7 !default;
+$w-color-amber:                 #FFBF00 !default;
+$w-color-amber-green:           #AAB05C !default;
+$w-color-claret:                #7F1734 !default;
+$w-color-blue-green:            #00727f !default;   // named in wcl
+$w-color-soft-pink:             #D9A9D9 !default;   // named in wcl
+
+// text colors
+$w-color-text-white:            #EEEEEE !default;
+$w-color-text-black:            #444444 !default;   // recommended color for text reading
+$w-color-text-red:              #BA3925 !default;
+$w-color-text-orange:           #E75C00 !default;
+
+
+//--- color scheme
+$w-color-default:               $w-color-text-black !default;
+//$w-color-primary:               #673888 !default;   // #6B15A1 !default;    // #4d1b7b !default; #6B15A1 !default;
+$w-color-primary:               #004b66 !default;   // #6B15A1 !default;    // #4d1b7b !default; #6B15A1 !default;
+$w-color-secondary:             #249324 !default;
+$w-color-success:               #74BD54 !default;   // (#8cc14c, #5cb85c) !default;
+$w-color-info:                  #00A2E8 !default;
+$w-color-warning:               #FAA732 !default;   // #faa732 !default;
+$w-color-danger:                #DA424D !default;    // mix(#da314b, #d9534f); // !default;
+
+
+//// !-- Project ------------------------------------
+//$blue: #1d78af;
+//$link: $blue;
+//$link-hover: darken($link, 8%);
+//$highlight: #ea4c88;  //Pink
+//
+
+
+//=== module specific variables ===
+
+//--- grid
+$w-grid-max-count:              16 !default;
+$w-grid-gutter-width:           1rem !default;  // 20px
+
+
+//--- breakpoints
+$w-breakpoints-by-size: (
+  // screen based states (foundation-site compatible)
+        mini:                   0,
+        small:                  320px,    // foundation-site small    : 320~
+        medium:                 640px,    // foundation-site medium   : 640~
+        large:                  1024px,   // foundation-site large    : 1024~
+        xlarge:                 1200px,   // foundation-site xlarge   : 1200~
+        xxlarge:                1440px,   // foundation-site xxlarge  : 1440~
+) !default;
+
+$w-breakpoints-by-device-types: (
+  // device based states (semantic-ui compatible)
+        mini:                   0,
+        phone:                  320px,    // semantic-ui mobile   : 320px~ (20em~)
+        tablet:                 768px,    // semantic-ui tablet   : 768px~ (48em~)
+        computer:               992px,    // semantic-ui computer : 992px~ (62em~ )
+        largeMonitor:           1200px,   // semantic-ui largeMonitor : 1200px~ (75em~ )
+        wideMonitor:            1920px,   // semantic-ui wideMonitor  : 1920px~ (120em~ )
+) !default;
+
+$w-breakpoints-generic: (
+  // generic states (UIKit compatible)
+        mini:                   0,         // mini: 0~479 (phone portrait)
+        small:                  480px,     // uikit small(phone landscape):     480~
+        medium:                 768px,     // uikit medium(tablet portrait):    768~
+        large:                  960px,     // uikit large(desktop and tablet landscape):  960~
+        xlarge:                 1220px,    // uikit large(large desktop):       1220~
+) !default;
+
+$w-breakpoints-simple: (
+        mobile:                 0,
+        computer:               960px,
+) !default;
+
+$w-breakpoints-basic: (
+        small:                  0,
+        medium:                 768px,
+        large:                  960px
+) !default;
+
+$w-breakpoints:                 $w-breakpoints-basic !default;  // active breakpoints

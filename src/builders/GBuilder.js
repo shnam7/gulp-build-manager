@@ -11,9 +11,11 @@ import GPlugin from '../core/GPlugin';
 export default class GBuilder {
   constructor() {
     this._plugins = [];
+    this.done = [];
   }
 
   build(defaultModuleOptions, conf, done) {
+    this.done = done;   // save done function.
     let mopts = {};
     merge(mopts, this.OnInitModuleOptions(mopts, defaultModuleOptions, conf));
 
@@ -30,7 +32,7 @@ export default class GBuilder {
     stream = processPlugins(plugins, this.OnBuild(stream, mopts, conf), mopts, conf, 'build');
     stream = processPlugins(plugins, this.OnDest(stream, mopts, conf), mopts, conf, 'dest');
     stream = processPlugins(plugins, this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild');
-    return stream || done();
+    return stream || this.done ? this.done() : undefined;
   }
 
   OnInitModuleOptions(mopts, defaultModuleOptions, conf) {

@@ -1,0 +1,114 @@
+//=========================================================
+//
+//  @package WCL Docs
+//  @file   site layout example configuration
+//
+//=========================================================
+
+@import 'mq';
+
+//=== globals ===
+$w-site-max-width:              1220px !default;
+$w-page-max-width:              960px !default;
+$w-z-index:                     1000 !default;
+
+:root {
+  --l-sidebar-width: 16rem;   // 240px
+}
+
+$l-sidebar-width:                 var(--l-sidebar-width);
+$l-content-width:                 calc(100% - var(--l-sidebar-width));
+$l-content-padding:               0.5rem 0.5rem !default;   // mobile first
+$l-sidebar-padding:               1rem 0.5rem !default;   // mobile first
+$l-content-padding-medium:        1rem 0.5rem 1rem 1rem !default; // medium or bigger
+$l-sidebar-padding-medium:        1rem 1rem 1rem 0.5rem !default; // medium or bigger
+$l-footer-margin:                 1rem auto !default;
+$l-footer-padding:                2rem 1rem !default;
+$l-footer-divider:                1px solid gray(70%, 0.5) !default;
+
+$l-z-index:                       $w-z-index + 100 !default;
+$l-z-index-top:                   $l-z-index + 100 !default;
+
+
+[id^='l-'] {
+  box-sizing: border-box;
+}
+
+#l-site-container {
+  margin: 0;
+  padding: 0;
+}
+
+#l-header {
+  //$gradient-level: gcv($w-navbar-conf, 'gradient/level');
+  //$gradient-direction: gcv($w-navbar-conf, 'gradient/direction');
+
+  position: relative;
+  z-index: $l-z-index;           // header should appear above other layout objects
+  margin: 0 auto;
+  @util clearfix;
+  //background: gradient($w-color-primary, $gradient-level, $gradient-direction);
+
+  &+.l-header-trailer {
+    position: absolute;
+    z-index: $l-z-index - 1;
+    //background: tint($w-color-primary, 80%);
+    width: 100%;
+    padding: 1rem;
+    display: none;
+  }
+}
+
+#l-content-wrapper {
+  max-width: $w-site-max-width;
+  margin: 0 auto;
+  padding: 0.5rem;
+  @util clearfix;
+}
+
+#l-content {
+  width: 100%;
+  padding: $l-content-padding;
+
+  @media (--medium) {
+    float: right;
+    width: $l-content-width;
+    padding: $l-content-padding-medium;
+  }
+  &.single {
+    width: 100%;
+    max-width: $w-page-max-width;
+    @util center;
+  }
+}
+
+#l-sidebar {
+  width: 100%;
+  padding: $l-sidebar-padding;
+  @media (--medium) {
+    float: left;
+    width: $l-sidebar-width;
+    //max-width: $l-sidebar-max-width;
+    padding: $l-sidebar-padding-medium;
+  }
+}
+
+#l-content.single + #l-sidebar {
+  width: 100%;
+  max-width: $w-page-max-width;
+  //@include w-center;
+}
+
+#l-footer {
+  width: 100%;
+  margin: $l-footer-margin;
+  padding: $l-footer-padding;
+
+  //color: $w-color-text-black;
+  text-align: center;
+  border-top: $l-footer-divider;
+}
+
+#l-offcanvas {
+  z-index: $l-z-index-top;
+}

@@ -1,20 +1,27 @@
-# gulp-build-manager 2.0
-Easy to use, flexible gulp task manager. Major
+# Gulp Build Manager
+Gulp Build Manager, gbm in a short name, is an Easy to use, Flexible gulp task manager. It is a tool helping gulp users to create tasks with simple configuration. This provides the convenience of configuration and the flexibility of javascript programming in setting up gulp tasks.
 
-### Installation
-gulp-build-manager is using gulp 4.x with babel support. If you install it following the commands below, core dependent modules including gulp 4.x and babel will be automatically installed as part of dependency.
+gbm provides various built-in builder class objects including:
+  - GBuilder - Base Builder, which work as a Copy Builder.
+  - GCoffeeScriptBuilder
+  - GConcatBuilder
+  - GCSSBuilder - sass/scss/less/postcss builder.
+  - GImagesBuilder - Image optimizer
+  - GJavaScriptBuilder
+  - GJekyllBuilder
+  - GMarkdownBuilder
+  - GPaniniBuilder
+  - GTwigBuilder
+  - GTypeScriptBuilder
+  - GWebPackBuilder
+  - GZipBuilder - File packer for distribution
+  
+Those classes can be extended or modified using class inheritance.
+gbm also provides plugin system that can be plugged into the build processes.
+Builder can also be in the form of function, which is sometimes simpler and convenient.
 
-```bash
-npm install gulp-build-manager --save-dev
-```
+To learn more, see [Documentation][0].<br>
+You can also check out various working [examples][1] in GitHub.
 
-Please be sure to have .babelrc file in the project root directory with the minimum contents below, which enables es6 support. 
-```json
-{
-  "presets": ["es2015"]
-}
-```
-
-
-### Preparing gulpfile with babel support
-To enable babel in Gulp 4.x, just create 'gulpfile.babel.js', instead of 'gulpfile.js'.
+[0]: {{site.url}}
+[1]: {{site.repo}}/examples

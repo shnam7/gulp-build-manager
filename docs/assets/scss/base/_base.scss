@@ -1,0 +1,47 @@
+html {
+  font-size: $w-font-size;
+}
+body {
+  line-height: $w-line-height;
+  word-wrap: break-word;
+}
+
+a,
+.link {
+  //color: #0074bd;
+  color: $w-color-primary;
+  text-decoration: none;
+}
+a:hover,
+.link:hover,
+a:focus,
+.link:focus {
+  //color: $w-color-secondary;
+  color: smart-scale(invert($w-color-primary), 25%);
+  text-decoration: none;  // underline;
+  outline: 0;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  color: #444;
+  font-family: $w-font-sans;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+body,select,input,textarea {
+  color: #444;    // #444 looks better than black: twitter.com/H_FJ/statuses/11800719859
+  font-family: $w-font-sans;  // set base font here, to apply evenly
+}
+
+code,pre {
+  display: block;
+  font-family: $w-font-mono;
+  font-size: 0.85rem;
+  line-height:1.45;
+}
+
+pre {
+  margin: 1em 0;
+}

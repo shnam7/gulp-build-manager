@@ -1,0 +1,23 @@
+// main stylesheet
+@import "config/variables";
+@import "base/base";
+@import "base/layout";
+@import "utils/highlighter";
+@import "utils/pygments-manni";
+@import "copmonents/nav";
+@import "region/header";
+@import "region/banner";
+@import "region/sidebar";
+@import "region/footer";
+
+#l-content {
+  border-top: 1px solid gray(60%, 0.3);
+  @media (--medium) {  border-top: none;  }
+  em {  color: #c30;  }
+  h1,h2,h3,h4,h5,h6 {
+    color: $w-color-primary;
+  }
+  h4,h5,h6 {
+    margin-bottom:0.1rem;
+  }
+}

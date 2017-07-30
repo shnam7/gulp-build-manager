@@ -47,10 +47,6 @@ export default class CSSPlugin extends GPlugin {
     else if (autoPrefixer) {
       stream = stream.pipe(require('gulp-autoprefixer')(this.options.autoprefixer || opts.autoPrefixer));
     }
-
-    // check rename option
-    // if (opts.rename) stream = stream.pipe(require('gulp-rename')(this.options.rename || opts.rename));
-
     return stream;
   }
 }

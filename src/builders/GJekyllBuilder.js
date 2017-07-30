@@ -8,11 +8,11 @@ import gbm from '../';
 export default class GJekyllBuilder extends gbm.GBuilder {
   constructor() { super(); }
 
-
   OnBuilderModuleOptions(mopts, defaultModuleOptions) {
     return this.pick(defaultModuleOptions, ['jekyll']);
   }
 
+  // overload not to create a stream
   OnInitStream(mopts, defaultModuleOptions, conf) {}
 
   OnBuild(stream, mopts, conf) {
@@ -29,12 +29,14 @@ export default class GJekyllBuilder extends gbm.GBuilder {
     };
     jekyll.stdout.on('data', jekyllLogger);
     jekyll.stderr.on('data', jekyllLogger);
-    jekyll.on('close', ()=>{
+    const done = this.done;
+    this.done = undefined;  // delay done until jekyll task is finished
+    jekyll.on('close', (code)=>{
       if (conf.watch && conf.watch.livereload) require('gulp-livereload').changed(conf.src || '.');
+      console.log(`Jekyll process finished(exit code:${code})`);
+      done();
     });
     return stream;
   }
-
-  OnPostBuild(stream, mopts, conf) {}
 }
 module.exports = GJekyllBuilder;
