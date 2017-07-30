@@ -75,7 +75,10 @@ const jekyll = {
   moduleOptions: {
     jekyll: {
       command: 'build',
-      options: ['--incremental']
+      options: [
+        '--incremental',
+        '--baseurl /gulp-build-manager/_gh_pages'
+      ]
     }
   },
   watch: { watched: ['**/*', '!.jekyll-metadata', '!assets/**/*', '!gulpfile.*'], livereload:true },
