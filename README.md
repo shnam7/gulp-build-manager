@@ -23,5 +23,5 @@ Builder can also be in the form of function, which is sometimes simpler and conv
 To learn more, see [Documentation][0].<br>
 You can also check out various working [examples][1] in GitHub.
 
-[0]: {{site.url}}
-[1]: {{site.repo}}/examples
+[0]: docs/index.md
+[1]: ./examples

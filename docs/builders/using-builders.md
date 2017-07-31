@@ -5,8 +5,8 @@ title: Using builders
 # {{page.title}}
 
 ## What is Builder?
-Builder is a set of gulp tasks to achieve project missions. Typhicall, it reads input from source directories, processes them, and write output to destination directory.
-Builder can be a single function or a class object derived from GBuilder class, or it can be a builder class name(string) itself. Builders share a common set of <em>build configurations</em> and sometimes have their own set of additional configuratipns.
+Builder is a set of gulp tasks to achieve project mission. Typically, it reads input from source directories, processes them, and writes output to destination directory.
+Builder can be a single function or a class object derived from GBuilder class. Builders share a common set of <em>build configurations</em> and sometimes have their own set of additional configuratipns.
 
 ## Common Build Configuration Properties
 Typical build configurations look like this:
