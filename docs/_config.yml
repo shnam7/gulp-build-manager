@@ -20,8 +20,7 @@ defaults:
       path:       "" # All files in the scope
     values:
       layout:     "docs"
-plugins:          _plugins
-plugins_dir:      _plugins
+#plugins_dir:      _plugins
 keep_files: [css,js,images]
 
 # Custom variables
