@@ -1,7 +1,7 @@
 // Sample
 
-import gbm from '../../src';
-import upath from 'upath';
+const gbm = require('../../lib');
+const upath = require('upath');
 
 process.chdir(__dirname);
 
@@ -85,16 +85,17 @@ const postcss = {
   buildOptions: {
     lint: true,
     sourceMap: true,
+    minify: true,
+    postcss: true
+  },
+  moduleOptions: {
     postcss:{
       plugins: [
         require('postcss-cssnext'),
         require('postcss-utilities'),
       ]
     },
-    rename: {extname:'.css'},
-    minify: true
   },
-  moduleOptions: {},
   watch: {livereload:true}
 };
 

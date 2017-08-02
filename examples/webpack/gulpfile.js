@@ -1,7 +1,7 @@
 // Sample
 
-import gbm from '../../src';
-import upath from 'upath';
+const gbm = require('../../lib');
+const upath = require('upath');
 
 process.chdir(__dirname);
 
@@ -9,10 +9,7 @@ const srcRoot = 'assets';
 const destRoot = '_build';
 
 
-/**
- * Define build items
- */
-
+// build configuration
 const webpack = {
   buildName: 'webpack',
   builder: 'GWebPackBuilder',
@@ -57,9 +54,7 @@ const webpack = {
 };
 
 
-/**
- * Create gbmConfig object
- */
+// build manager
 gbm({
   systemBuilds: {
     build: [webpack],

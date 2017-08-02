@@ -15,7 +15,6 @@ export default class GCoffeeScriptBuilder extends gbm.GBuilder {
     this.addPlugins([
       new gbm.CoffeeScriptPlugin(),
       (conf.outFile) ? new gbm.ConcatPlugin() : undefined,
-      // new gbm.DebugPlugin(),
       new gbm.UglifyPlugin(),
     ]);
   }

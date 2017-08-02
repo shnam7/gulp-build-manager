@@ -1,7 +1,7 @@
 'use strict';
 
-import gbm from '../../src';
-import gulp from 'gulp';
+const gbm = require('../../lib');
+const gulp = require('gulp');
 
 process.chdir(__dirname);
 
@@ -11,6 +11,9 @@ const simpleTask = {
     console.log('simpleTask executed');
     done(); // signal end of task
   },
+  plugins:[
+    new gbm.DebugPlugin()
+  ],
 
   triggers: gbm.parallel((done)=>{
     console.log('trigger successful.'); done();
@@ -27,7 +30,7 @@ const task2 = {
 };
 
 function task3(done) {
-  console.log('Hello, Gulp Build Manager!');
+  console.log('task3:: Hello, Gulp Build Manager!');
   done();
 }
 
@@ -56,10 +59,7 @@ const buildSetTest = {
 };
 
 gbm({
-  // builds: [simpleTask, buildSetTest],
-  systemBuilds: {
-    build: task3
-  },
+  builds: [simpleTask, buildSetTest],
 });
 
 // gbm({

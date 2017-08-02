@@ -1,7 +1,7 @@
 // Sample
 
-import gbm from '../../src';
-import upath from 'upath';
+const gbm = require('../../lib');
+const upath = require('upath');
 
 process.chdir(__dirname);
 
@@ -10,7 +10,6 @@ const destRoot = '_build';
 
 
 // build configurations
-
 const __coffeeScript = {
   buildName: '__coffeeScript',
   builder: 'GCoffeeScriptBuilder',
@@ -88,6 +87,7 @@ const typeScript = [
 ];
 
 
+// build manager
 gbm({
   systemBuilds: {
     build: gbm.parallel(javaScript, typeScript),

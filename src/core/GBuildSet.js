@@ -117,7 +117,7 @@ export default class GBuildSet {
     if (is.Function(builder)) return {build: builder};
     if (builder instanceof GBuilder) return builder;
     if (!builder) return {
-      build: function (conf, moduleOptions, done) {
+      build: function (mopts, conf, done) {
         // console.log(`BuildName:${buildItem.buildName}: No builder specified.`);
         done();
       }

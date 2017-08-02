@@ -1,6 +1,6 @@
 'use strict';
 
-import gbm from '../../src';
+const gbm = require('../../lib');
 
 process.chdir(__dirname);
 

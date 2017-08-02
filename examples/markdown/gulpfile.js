@@ -1,7 +1,7 @@
 'use strict';
 
-import gbm from '../../src';
-import upath from 'upath';
+const gbm = require('../../lib');
+const upath = require('upath');
 
 process.chdir(__dirname);
 

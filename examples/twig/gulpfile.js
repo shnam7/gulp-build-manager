@@ -1,15 +1,16 @@
 // Sample
 
-import gbm from '../../src';
-import upath from 'upath';
-import twigMarkdown from 'twig-markdown';
+const gbm = require('../../lib');
+const upath = require('upath');
+const twigMarkdown = require('twig-markdown');
 
 process.chdir(__dirname);
 
-let srcRoot = 'assets';
-let destRoot = '_build';
+const srcRoot = 'assets';
+const destRoot = '_build';
 
-let twig = {
+// build configuration
+const twig = {
   buildName: 'twig',
   builder: 'GTwigBuilder',
 
@@ -60,7 +61,7 @@ let twig = {
 };
 
 
-// create gbmConfig object
+// build manager
 gbm({
   systemBuilds: {
     build: twig,

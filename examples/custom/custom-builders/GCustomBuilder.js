@@ -4,7 +4,7 @@
  */
 
 'use strict';
-import gbm from '../../../src';
+const gbm = require('../../../lib');
 
 class GCustomBuilder extends gbm.GBuilder {
   constructor() { super(); }
@@ -45,5 +45,4 @@ class GCustomBuilder extends gbm.GBuilder {
   }
 }
 
-export default GCustomBuilder;
 module.exports = GCustomBuilder;
