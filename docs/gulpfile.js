@@ -3,14 +3,14 @@
  *
  */
 
-import gbm from '../src';
-import upath from 'upath';
+const gbm = require('../lib');
+const upath = require('upath');
 
 process.chdir(__dirname);
 
-const srcRoot = 'assets';
-const destRoot = '.';
 const jkDest = '../_gh_pages';
+const srcRoot = 'assets';
+const destRoot = jkDest;
 
 const scss = {
   buildName: 'assets:scss',

@@ -42,8 +42,12 @@ gbm({
 });
 ```
 
-### Resource
-Check out the [Documentation][0] and [Examples][1] to learn more.
+### Resources
+To learn more, check out the resources below. You are highly recommended to see the examples which shows various usage and practices that can be applied to your work quickly.
+ 
+- [Documentation][0]
+- [Examples][1]
 
-[0]: {{site.url}}
+
+[0]: {{site.baseurl}}
 [1]: {{site.repo}}/examples
