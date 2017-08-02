@@ -107,7 +107,8 @@ export default class GBuildManager {
       cleaner.add(config.systemBuilds.clean);
 
     if (config.builds) {
-      for (let buildItem of config.builds) {
+      const builds = is.Array(config.builds) ? config.builds : [config.builds];
+      for (let buildItem of builds) {
         if (is.String(buildItem)) buildItem = require(upath.join(process.cwd(), basePath, buildItem));
         let bs = new GBuildSet(buildItem);
         bs.resolve(customBuildDir, defaultModuleOptions, watcher, cleaner);

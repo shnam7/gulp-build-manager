@@ -14,7 +14,7 @@ exports = module.exports = gbm;
 
 gbm.loadBuilders = function(config) { GBuildManager.loadBuilders(config); }
 gbm.parallel = function(...args) { return new GBuildSet(...args); };
-gbm.series = function(...args) { return new [...args]; };
+gbm.series = function(...args) { return [...args]; };
 
 function registerModules(exports, path) {
   let files = [];

@@ -19,6 +19,11 @@ class GCustomBuilder extends gbm.GBuilder {
     return super.OnInitModuleOptions(mopts, defaultModuleOptions, conf);
   }
 
+  OnPreparePlugins(mopts, conf) {
+    console.log('GCustomBuilder::OnPreparePlugins() called. continuing the build process...');
+    this.addPlugins(stream=>require('debug')());
+  }
+
   OnBuilderModuleOptions(mopts, defaultModuleOptions, conf) {
     console.log('GCustomBuilder::OnBuilderModuleOptions() called. continuing the build process...');
     return super.OnBuilderModuleOptions(mopts, defaultModuleOptions, conf);
