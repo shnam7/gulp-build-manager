@@ -91,9 +91,9 @@ const jekyll = {
     jekyll: {
       command: 'build',
       options: [
-        // '--safe',   // github runs in safe mode foe security reason. Custom plugins are not supported.
-        '--incremental',
-        '--baseurl /gulp-build-manager/_gh_pages'
+        '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
+        '--baseurl .',  // root folder relative to local server,
+        '--incremental'
       ]
     }
   },

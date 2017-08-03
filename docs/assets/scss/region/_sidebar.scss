@@ -16,6 +16,9 @@
     margin: 0;
     padding: 0;
     list-style: none;
+    a:hover {
+      color: $w-color-text-red;
+    }
     ul {
       margin:0;
       list-style-type: disc;

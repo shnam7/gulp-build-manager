@@ -2,7 +2,6 @@
 title:            Gulp Build Manager
 description:      Easy to use, flexible gulp task manager.
 url:              "https://shnam7.github.io/gulp-build-manager"
-#baseurl:          ""    # root folder relative to local server
 repo:             "https://shnam7.github.io/gulp-build-manager"
 
 # Project settings
@@ -20,17 +19,8 @@ defaults:
       path:       "" # All files in the scope
     values:
       layout:     "docs"
-#keep_files:       [css,js,images]
-
-# Custom variables
 
 # Module settings
 kramdown:
   input: GFM
   auto-ids: false
-
-#redcarpet:
-#  extensions: ["footnotes", "smart", "tables", "autolink", "strikethrough", "space_after_headers", "with_toc_data", "fenced_code_blocks"]
-
-#sass:
-#  style: compressed
