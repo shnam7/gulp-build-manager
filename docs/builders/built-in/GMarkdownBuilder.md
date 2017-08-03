@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GMarkdownBuilder
 ---
 
-# {{page.title}}
+# GMarkdownBuilder
 Converts markdown files into html using gulp-markdonn plugin.
 
 #### Builder specific Options

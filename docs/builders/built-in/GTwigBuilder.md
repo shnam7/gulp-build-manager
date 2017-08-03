@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GTwigBuilder
 ---
 
-# {{page.title}}
+# GTwigBuilder
 Panini project builder.<br>
 See [panini](https://github.com/zurb/panini) to learn more about panini.
 

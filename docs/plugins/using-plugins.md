@@ -1,8 +1,7 @@
 ---
 layout: docs
-title: Using Plugins
 ---
-# {{page.title}}
+# Using Plugins
 
 Plugin is a modularized actions that can be inserted into specific build stages.
 

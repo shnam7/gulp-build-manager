@@ -1,8 +1,7 @@
 ---
 layout: docs
-title: Examples
 ---
-# {{page.title}}
+# Examples
 
 Gulp Build Manager source contains various working examples and you can find them here:
 ### [examples]({{site.repo}}/examples)

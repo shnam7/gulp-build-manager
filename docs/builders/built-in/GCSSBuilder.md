@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GCSSBuilder
 ---
 
-# {{page.title}}
+# GCSSBuilder
 CSS builder. sass/scss/less and postcss are suported. You can use postcss together with sass/scss/less.
 
 #### Builder specific Options

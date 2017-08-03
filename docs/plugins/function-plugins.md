@@ -1,8 +1,7 @@
 ---
 layout: docs
-title: Function Plugins
 ---
-# {{page.title}}
+# Function Plugins
 
 A function can be used as a plugin. This can be sometimes convenient.<br>
 Plugin function prototype has the same parameters as GPlugin.process():

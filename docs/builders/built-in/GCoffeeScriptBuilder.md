@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GCoffeeScriptBuilder
 ---
 
-# {{page.title}}
+# GCoffeeScriptBuilder
 CoffeeScript builder. Compiles coffeescript files into javascript.
 
 #### Builder specific Options

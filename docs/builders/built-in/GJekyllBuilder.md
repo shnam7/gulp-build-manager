@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GJekyllBuilder
 ---
 
-# {{page.title}}
+# GJekyllBuilder
 Jekyll project builder. Internally, it creates child process to run jekyll command.
 
 #### Builder specific Options

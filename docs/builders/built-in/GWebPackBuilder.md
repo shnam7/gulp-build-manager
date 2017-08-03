@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GWebPackBuilder (Experimental)
 ---
 
-# {{page.title}}
+# GWebPackBuilder (Experimental)
 WebPack project builder.<br>
 
 #### Builder specific Options

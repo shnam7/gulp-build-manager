@@ -1,8 +1,7 @@
 ---
 layout: docs
-title: Writing custom plugins
 ---
-# {{page.title}}
+# Writing custom plugins
 
 ## GPlugin interface
 Build process is basically doing something on input stream and generating output sometimes if necessary. This kind of actions can be modularized as plugins. GPlugin is designed based on this concept and provides simple interface to add plugin actions into specific [build stages]({{site.baseurl}}/using-plugins).

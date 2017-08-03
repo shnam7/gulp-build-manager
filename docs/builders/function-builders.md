@@ -1,8 +1,7 @@
 ---
 layout: docs
-title: Function Builders
 ---
-# {{page.title}}
+# Function Builders
 
 To create a simple gulp tasks, you can use functions to simplify the whole process.
 

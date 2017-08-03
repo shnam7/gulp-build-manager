@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GConcatBuilder
 ---
 
-# {{page.title}}
+# GConcatBuilder
 Concatenates input files into a single output file.
 
 #### Builder specific Options

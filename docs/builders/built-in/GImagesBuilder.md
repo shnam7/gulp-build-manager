@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GImagesBuilder
 ---
 
-# {{page.title}}
+# GImagesBuilder
 Image optimizer using 'gulp-imagemin' plugin.
 
 #### Builder specific Options

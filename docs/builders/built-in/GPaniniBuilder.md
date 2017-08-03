@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GPaniniBuilder
 ---
 
-# {{page.title}}
+# GPaniniBuilder
 Panini project builder.<br>
 See [panini](https://github.com/zurb/panini) to learn more about panini.
 

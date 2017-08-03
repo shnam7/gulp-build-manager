@@ -1,8 +1,8 @@
 ---
 layout: docs
-title: Using Builders
 ---
-# {{page.title}}
+
+# Using Builders
 
 ## What is Builder?
 Builder is essentially a gulp tasks to achieve project mission. Typically, it reads input from source directories, processes them, and writes the output to destination directory.

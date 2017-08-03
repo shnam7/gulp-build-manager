@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: Built-in Plugins
 ---
 
-# {{page.title}}
+# Built-in Plugins
 You can get the built-in plugin classes with gbm:
 ```javascript
 const gbm = require('gulp-build-manager');

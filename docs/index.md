@@ -50,5 +50,5 @@ To learn more, check out the resources below. You are highly recommended to see 
 - [Examples][1]
 
 
-[0]: {{site.baseurl}}
+[0]: {{site.url}}
 [1]: {{site.repo}}/examples

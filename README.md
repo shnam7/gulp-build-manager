@@ -2,7 +2,7 @@
 
 Gulp Build Manager, gbm in a short name, is an easy to use, flexible gulp task manager. It is a tool helping gulp users to create tasks with simple configuration. This provides the convenience of configuration and the flexibility of javascript programming in setting up gulp tasks.
 
-##### Reference
+#### Reference
   - [Documentation][0]
   - [Examples][1]
 

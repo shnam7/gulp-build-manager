@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GBuilder
 ---
 
-# {{page.title}}
+# GBuilder
 Base Builder. Base class of all builder classes. It works as a Copy Builder - reads input from conf.src and writes them in conf.dest.
 
 #### Builder specific Options

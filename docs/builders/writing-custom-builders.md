@@ -1,8 +1,8 @@
 ---
 layout: docs
-title: Writing Custom Builders
 ---
-# {{page.title}}
+
+# Writing Custom Builders
 
 ## Writing custom Builder class
 GBuilder provides basic builder interface and all custom builder classes should extends from it. Here's an example overloading each interface functions:

@@ -1,9 +1,8 @@
 ---
 layout: docs
-title: GZipBuilder
 ---
 
-# {{page.title}}
+# GZipBuilder
 File packer for distribution. 
 
 #### Builder specific Options
