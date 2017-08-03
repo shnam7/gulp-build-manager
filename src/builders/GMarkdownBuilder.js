@@ -2,9 +2,10 @@
  *  Markdown Builder
  */
 
-import GBuilder from './GBuilder';
+'use strict';
+import gbm from '../';
 
-export default class GMarkdownBuilder extends GBuilder {
+export default class GMarkdownBuilder extends gbm.GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions) {
@@ -12,7 +13,7 @@ export default class GMarkdownBuilder extends GBuilder {
   }
 
   OnPreparePlugins(mopts, conf) {
-    this.addPlugins(stream=>stream.pipe(require('gulp-markdown')(mopts.markdown)));
+    this.addPlugins(new gbm.MarkdownPlugin());
   }
 }
 module.exports = GMarkdownBuilder;
