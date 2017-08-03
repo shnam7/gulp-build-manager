@@ -5,12 +5,12 @@
 <body>
 <div id="l-site-container">
   <div id="l-header">{% include header.html %}</div>
+  {% if page.frontpage %}<div id="l-banner">{% include banner.html %}</div>{% endif %}
   <div id="l-content-wrapper">
-    <div id="l-sidebar">{% markdown %}{% include sidebar.md %}{% endmarkdown %}</div>
+    <div id="l-sidebar">{% include sidebar.html %}</div>
     <div id="l-content" class="markdown-body">{{ content }}</div>
   </div>
   {% include footer.html %}
-  <!-- include offcanvas.html %}-->
 </div>
 {% include scripts.html %}
 </body>

@@ -10,7 +10,7 @@ process.chdir(__dirname);
 
 const jkDest = '../_gh_pages';
 const srcRoot = 'assets';
-const destRoot = jkDest;
+const destRoot = '.';
 
 const scss = {
   buildName: 'assets:scss',
@@ -62,9 +62,24 @@ const images = {
   watch: {livereload:true}
 };
 
+const incFiles = {
+  buildName: 'incFiles',
+  builder: 'GMarkdownBuilder',
+  src: [upath.join(srcRoot, '_includes/sidebar.md')],
+  dest: upath.join(destRoot, '_includes'),
+  buildOptions: {
+    minify: true,
+    prettify: true
+  },
+  moduleOptions: {
+    htmlPrettify: {indent_char: ' ', indent_size: 2},
+  },
+  clean: [upath.join(destRoot, '_includes/sidebar.html')]
+};
+
 const assets = {
   buildName: 'assets',
-  dependencies: gbm.parallel(scss, typescript, images),
+  dependencies: gbm.parallel(scss, typescript, images, incFiles),
 };
 
 const jekyll = {
@@ -76,6 +91,7 @@ const jekyll = {
     jekyll: {
       command: 'build',
       options: [
+        // '--safe',   // github runs in safe mode foe security reason. Custom plugins are not supported.
         '--incremental',
         '--baseurl /gulp-build-manager/_gh_pages'
       ]

@@ -11,7 +11,7 @@ source:           .
 destination:      ../_gh_pages
 version:          2.0.0.alpha.1
 encoding:         utf-8
-exclude:          [assets, '*.map', 'gulpfile.*']
+exclude:          [assets, '*.map', 'gulpfile.*', 'Gemfile*']
 markdown:         kramdown
 highlighter:      rouge
 permalink:        pretty
@@ -20,8 +20,7 @@ defaults:
       path:       "" # All files in the scope
     values:
       layout:     "docs"
-#plugins_dir:      _plugins
-keep_files: [css,js,images]
+#keep_files:       [css,js,images]
 
 # Custom variables
 

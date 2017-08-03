@@ -32,7 +32,7 @@ See [source code]({{site.repo}}/src/plugins/CSSNanoPlugin.js) for the details.
 Stylesheet processor supporting sass/scss/less with postcss. See source code for the details.<br>
 See [source code]({{site.repo}}/src/plugins/CSSPlugin.js) for the details.
 
-## gbm.DebugPlugin
+## DebugPlugin
 Plugin wrapper for [gulp-debug](https://github.com/sindresorhus/gulp-debug)<br>
 See [source code]({{site.repo}}/src/plugins/DebugPlugin.js) for the details.
 
@@ -43,6 +43,10 @@ See [source code]({{site.repo}}/src/plugins/FilterPlugin.js) for the details.
 ## JavaScriptPlugin
 JavaScript process with babel support. See source code for the details.<br>
 See [source code]({{site.repo}}/src/plugins/JavaScriptPlugin.js) for the details.
+
+## MarkdownPlugin
+Markdown compiler.
+See [source code]({{site.repo}}/src/plugins/MarkdownPlugin.js) for the details.
 
 ## PlumberPlugin
 Plugin wrapper for [gulp-plumber](https://github.com/floatdrop/gulp-plumber)<br>
