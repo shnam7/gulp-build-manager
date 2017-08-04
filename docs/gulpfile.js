@@ -81,7 +81,7 @@ const images = {
 };
 
 const incFiles = {
-  buildName: 'incFiles',
+  buildName: 'assets:incFiles',
   builder: 'GMarkdownBuilder',
   src: [upath.join(srcRoot, '_includes/sidebar.md')],
   dest: upath.join(destRoot, '_includes'),
@@ -116,6 +116,7 @@ const jekyll = {
       ]
     }
   },
+  dependencies: assets,
   watch: { watched: ['**/*', '!.jekyll-metadata', '!assets/**/*', '!gulpfile.*'], livereload:true },
   clean: [jkDest, '.jekyll-metadata'],
 };

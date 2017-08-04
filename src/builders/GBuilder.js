@@ -11,17 +11,19 @@ import GPlugin from '../core/GPlugin';
 export default class GBuilder {
   constructor() {
     this._plugins = [];
-    this.done = undefined;
-    this.promise = [];
+    this._promise = [];
   }
 
+  get promise() { return this._promise; }
+
   build(defaultModuleOptions, conf, done) {
-    this.done = done;   // save done function.
     let mopts = {};
     merge(mopts, this.OnInitModuleOptions(mopts, defaultModuleOptions, conf));
 
-    // reset plugins
+    // reset variables
     this._plugins = []; // caution: if not cleared here, added plugins can be accumulated
+    this._promise = []; // caution: if not cleared here, promises will be accumulated
+
     let ret = this.OnPreparePlugins(mopts, conf);
     if (ret) this._plugins = ret;
 
@@ -33,10 +35,7 @@ export default class GBuilder {
     stream = processPlugins(plugins, this.OnBuild(stream, mopts, conf), mopts, conf, 'build', this);
     stream = processPlugins(plugins, this.OnDest(stream, mopts, conf), mopts, conf, 'dest', this);
     processPlugins(plugins, this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild', this);
-
-    // if (this.promise.length > 0)
     Promise.all(this.promise).then(()=>done());
-    // return stream || this.done ? this.done() : undefined;
   }
 
   OnInitModuleOptions(mopts, defaultModuleOptions, conf) {
@@ -63,7 +62,7 @@ export default class GBuilder {
   OnBuild(stream, mopts, conf) { return stream; }
 
   OnDest(stream, mopts, conf) {
-    return this.dest(stream, mopts, conf)
+    return stream && this.dest(stream, mopts, conf)
   }
 
   OnPostBuild(stream, mopts, conf) {

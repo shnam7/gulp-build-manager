@@ -24,9 +24,7 @@ export default class GCleaner {
 
   createTask(opts, taskName='@clean') {
     if (this._cleanList.length <= 0) return;
-    gulp.task(taskName, (done)=>{
-      this.clean(opts, ()=>done());
-    });
+    gulp.task(taskName, (done)=> this.clean(opts, ()=>done()));
   }
 }
 

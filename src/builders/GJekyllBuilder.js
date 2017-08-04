@@ -29,13 +29,14 @@ export default class GJekyllBuilder extends gbm.GBuilder {
     };
     jekyll.stdout.on('data', jekyllLogger);
     jekyll.stderr.on('data', jekyllLogger);
-    const done = this.done;
-    this.done = undefined;  // delay done until jekyll task is finished
-    jekyll.on('close', (code)=>{
-      if (conf.watch && conf.watch.livereload) require('gulp-livereload').changed(conf.src || '.');
-      console.log(`Jekyll process finished(exit code:${code})`);
-      done();
-    });
+
+    this.promise.push(new Promise((resolve, reject)=>{
+      jekyll.on('close', (code)=>{
+        if (conf.watch && conf.watch.livereload) require('gulp-livereload').changed(conf.src || '.');
+        console.log(`Jekyll process finished(exit code:${code})`);
+        resolve();
+      });
+    }));
     return stream;
   }
 }
