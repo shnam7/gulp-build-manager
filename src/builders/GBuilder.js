@@ -12,6 +12,7 @@ export default class GBuilder {
   constructor() {
     this._plugins = [];
     this.done = undefined;
+    this.promise = [];
   }
 
   build(defaultModuleOptions, conf, done) {
@@ -28,11 +29,14 @@ export default class GBuilder {
     let stream = this.OnInitStream(mopts, defaultModuleOptions, conf);
     let plugins = conf.plugins ? this._plugins.concat(conf.plugins) : this._plugins;
     let processPlugins = GPlugin.processPlugins;
-    stream = processPlugins(plugins, stream, mopts, conf, 'initStream');
-    stream = processPlugins(plugins, this.OnBuild(stream, mopts, conf), mopts, conf, 'build');
-    stream = processPlugins(plugins, this.OnDest(stream, mopts, conf), mopts, conf, 'dest');
-    stream = processPlugins(plugins, this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild');
-    return stream || this.done ? this.done() : undefined;
+    stream = processPlugins(plugins, stream, mopts, conf, 'initStream', this);
+    stream = processPlugins(plugins, this.OnBuild(stream, mopts, conf), mopts, conf, 'build', this);
+    stream = processPlugins(plugins, this.OnDest(stream, mopts, conf), mopts, conf, 'dest', this);
+    processPlugins(plugins, this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild', this);
+
+    // if (this.promise.length > 0)
+    Promise.all(this.promise).then(()=>done());
+    // return stream || this.done ? this.done() : undefined;
   }
 
   OnInitModuleOptions(mopts, defaultModuleOptions, conf) {
@@ -59,7 +63,7 @@ export default class GBuilder {
   OnBuild(stream, mopts, conf) { return stream; }
 
   OnDest(stream, mopts, conf) {
-    return stream && stream.pipe(gulp.dest(conf.dest));
+    return this.dest(stream, mopts, conf)
   }
 
   OnPostBuild(stream, mopts, conf) {
@@ -79,6 +83,20 @@ export default class GBuilder {
 
   pick(...arg) { return pick(...arg); }
   merge(...arg) { return merge(...arg); }
+  dest(stream, mopts, conf, path) {
+    if (stream) {
+      const opts = mopts.gulp;
+      if (conf.flushStream)
+        this.promise.push(new Promise((resolve, reject)=>{
+          stream.pipe(gulp.dest(path||conf.dest, opts.dest))
+            .on('end', resolve)
+            .on('error', reject);
+        }));
+      else
+        return stream.pipe(gulp.dest(path||conf.dest, opts.dest));
+    }
+    return stream;
+  }
 }
 
 module.exports = GBuilder;    // interface for require() call

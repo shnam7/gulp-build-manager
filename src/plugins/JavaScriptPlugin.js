@@ -9,7 +9,7 @@ import pick from 'lodash.pick';
 export default class JavaScriptPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
-  process(stream, mopts, conf, slot) {
+  process(stream, mopts, conf, slot, builder) {
     let opts = merge(pick(conf.buildOptions, ['lint', 'rename']), this.options);
 
     // check lint option

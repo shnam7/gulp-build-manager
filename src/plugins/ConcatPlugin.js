@@ -8,7 +8,7 @@ export default class ConcatPlugin extends GPlugin {
   constructor(options={}, slots='build') {
     super(options, slots); }
 
-  process(stream, mopts, conf, slot) {
+  process(stream, mopts, conf, slot, builder) {
     // check for filter option (to remove .map files, etc.)
     const filter = this.options.filter || ['**', '!**/*.map'];
     if (filter) stream = stream.pipe(require('gulp-filter')(filter));

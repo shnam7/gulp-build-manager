@@ -78,6 +78,11 @@ Output path string. In implementation perspective, this property value is passed
 <i>default: undefined</i><br>
 Output file name. This property can be optionally specified if the output of the build process is to be a single file. For example, javascript builder can concatenate all the files in input stream into a single output file in conf.dest directory.
 
+#### conf.flushStream
+<i>type: boolean</i><br>
+<i>default: false</i><br>
+Gulp tasks run in parallel. Sometimes, they are finishes even though file writing is still in progress. If this option is set to true, the gulp task running this build configuration will not finish until it finishes all the file writings are finishes. If one task depends on output files of another task, this is where it plays in.
+
 #### conf.buildOptions
 <i>type: Object</i><br>
 <i>default: {}</i><br>

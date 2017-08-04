@@ -11,7 +11,7 @@ import is from '../utils/is';
 export default class TypeScriptPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
-  process(stream, mopts, conf, slot) {
+  process(stream, mopts, conf, slot, builder) {
     const opts = conf.buildOptions || {};
     const lint = this.options.lint || opts.lint;
     const tsConfig = this.options.tsConfig || opts.tsConfig;
@@ -48,11 +48,29 @@ export default class TypeScriptPlugin extends GPlugin {
     // process dts stream/ output directory is from tsconfig.json settings or conf.dest
     let dtsDir = tsStream.project.options.declationDir || conf.dest;
 
-    // process js stream
-    return require('merge-stream')([
-      tsStream.dts.pipe(gulp.dest(dtsDir)),
-      tsStream.js
-    ]);
+
+    builder.promise.push(new Promise((resolve, reject)=>{
+      tsStream.dts.pipe(gulp.dest(dtsDir))
+        .on('end', resolve)
+        .on('error', reject);
+    }));
+    return tsStream.js;
+
+    //
+    // tsStream.dts.pipe(gulp.dest(dtsDir))
+    //
+    //
+    // // process js stream
+    // return require('merge-stream')([
+    //   conf.flushStream
+    //     ? this.promise.push(new Promise((resolve, reject)=>{
+    //       tsStream.dts.pipe(gulp.dest(dtsDir))
+    //         .on('end', resolve)
+    //         .on('error', reject);
+    //     }))
+    //     : tsStream.dts.pipe(gulp.dest(dtsDir)),
+    //   tsStream.js
+    // ]);
   }
 }
 module.exports = TypeScriptPlugin;

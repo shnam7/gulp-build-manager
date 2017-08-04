@@ -81,6 +81,7 @@ const typeScript = [
         "noImplicitAny": true,
         "noEmitOnError": true,
         "declaration": true,
+        "lib": ['DOM','ES6','DOM.Iterable','ScriptHost']
       }
     },
   }

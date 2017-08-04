@@ -9,7 +9,7 @@ import gulp from 'gulp';
 export default class UglifyPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
-  process(stream, mopts, conf, slot) {
+  process(stream, mopts, conf, slot, builder) {
     const opts = conf.buildOptions || {};
 
     const minitfy = this.options.minify || opts.minify;
@@ -17,7 +17,7 @@ export default class UglifyPlugin extends GPlugin {
     if (!minitfy && !minifyOnly) return stream;
 
     // flush previous build results before minify
-    if (!minifyOnly) stream = stream.pipe(gulp.dest(conf.dest));
+    if (!minifyOnly) stream = builder.dest(stream, mopts, conf);
 
     // check for filter option (to remove .map files, etc.)
     const filter = this.options.filter || ['**', '!**/*.{map,d.ts}'];

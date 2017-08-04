@@ -18,9 +18,9 @@ export default class GPlugin {
 
   get className() { return this.constructor.name; }
 
-  processPlugin(stream, mopts, conf, slot) {
+  processPlugin(stream, mopts, conf, slot, builder) {
     if (!stream || this.slots.indexOf(slot) === -1) return stream;
-    stream = this.process(stream, mopts, conf, slot);
+    stream = this.process(stream, mopts, conf, slot, builder);
     return GPlugin.processSourceMaps(stream, this.options, conf.buildOptions, mopts);
   }
 
@@ -32,7 +32,7 @@ export default class GPlugin {
    * @param slot is the callback location name currently activated
    * @returns {*} stream
    */
-  process(stream, mopts, conf, slot) { return stream; }
+  process(stream, mopts, conf, slot, builder) { return stream; }
 
 
   static addPlugins(pluginList, plugins) {
@@ -43,16 +43,16 @@ export default class GPlugin {
     return pluginList;
   }
 
-  static processPlugins(plugins, stream, mopts, conf, slot) {
+  static processPlugins(plugins, stream, mopts, conf, slot, builder) {
     if (!stream || plugins.length<=0) return stream;
 
     for (let plugin of plugins) {
       if (plugin instanceof GPlugin)
-        stream = plugin.processPlugin(stream, mopts, conf, slot);
+        stream = plugin.processPlugin(stream, mopts, conf, slot, builder);
       else if (is.Function(plugin) && slot==='build')
-        stream = plugin(stream, mopts, conf, slot);
+        stream = plugin(stream, mopts, conf, slot, builder);
       else if (plugin && plugin[slot])
-        stream = plugin[slot](stream, mopts, conf, slot);
+        stream = plugin[slot](stream, mopts, conf, slot, builder);
     }
     return stream;
   }

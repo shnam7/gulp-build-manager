@@ -18,6 +18,7 @@ Defaule stot for the plugins to be plugged in is 'build', but it can be changed 
 <i>mopts</i>: module options used in build process
 <i>conf</i>: build configuration object
 <i>slot</i>: name of current build stage
+<i>builder</i>: Builder object currently running
 You may noticed that the parameters are almost the same as GBuilder interfaces except the slot. With slot parameter, you can see in what stage the plugin is called.
 
 Now, let's see an example:
@@ -25,7 +26,7 @@ Now, let's see an example:
 class DebugPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
-  process(stream, mopts, conf, slot) {
+  process(stream, mopts, conf, slot, builder) {
     let debug = require('gulp-debug');
     let title = this.options ? this.options.title : "";
     title = title ? title+':' : "";

@@ -8,7 +8,7 @@ import merge from 'lodash.merge';
 export default class DebugPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
-  process(stream, mopts, conf, slot) {
+  process(stream, mopts, conf, slot, builder) {
     let debug = require('gulp-debug');
     let title = this.options ? this.options.title : "";
     title = title ? title+':' : "";

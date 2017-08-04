@@ -39,18 +39,34 @@ const scss = {
   watch: {livereload:true}
 };
 
-const typescript = {
-  buildName: 'assets:typescript',
+const scripts = {
+  buildName: 'assets:scripts',
   builder: 'GTypeScriptBuilder',
 
-  src: [upath.join(srcRoot, 'scripts/ts/**/*.ts')],
+  src: [upath.join(srcRoot, 'scripts/**/*.ts')],
   dest: upath.join(destRoot, 'js'),
   buildOptions: {
     minifyOnly: true,
-    tsConfig: './assets/scripts/tsconfig.json'
+    // tsConfig: './assets/scripts/tsconfig.json'
   },
   clean:[upath.join(destRoot, 'js')],
   watch: {livereload:true},
+  flushStream: true,
+
+  moduleOptions: {
+    // this will override the tsConfig settings in buildOptions
+    typescript: {
+      // "outFile": "sample-ts.js",
+      // "outDir": upath.resolve(destRoot, 'js'),
+      // "declarationDir": upath.resolve(destRoot, '@types')
+
+      "target": "es5",
+      // "module": "none",
+      "noImplicitAny": false,
+      "noEmitOnError": true,
+      "lib": ['DOM','ES6','DOM.Iterable','ScriptHost']
+    }
+  },
 };
 
 const images = {
@@ -58,6 +74,8 @@ const images = {
   builder: 'GImagesBuilder',
   src: [upath.join(srcRoot, 'images/**/*.*')],
   dest: upath.join(destRoot, 'images'),
+  flushStream: true,
+
   clean:[upath.join(destRoot, 'images')],
   watch: {livereload:true}
 };
@@ -67,6 +85,7 @@ const incFiles = {
   builder: 'GMarkdownBuilder',
   src: [upath.join(srcRoot, '_includes/sidebar.md')],
   dest: upath.join(destRoot, '_includes'),
+  flushStream: true,
   buildOptions: {
     minify: true,
     prettify: true
@@ -79,7 +98,7 @@ const incFiles = {
 
 const assets = {
   buildName: 'assets',
-  dependencies: gbm.parallel(scss, typescript, images, incFiles),
+  dependencies: gbm.parallel(scss, scripts, images, incFiles),
 };
 
 const jekyll = {

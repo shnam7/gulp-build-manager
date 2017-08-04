@@ -11,7 +11,7 @@ export default class FilterPlugin extends GPlugin {
     this._filter = undefined;
   }
 
-  process(stream, mopts, conf, builder, slot) {
+  process(stream, mopts, conf, slot, builder) {
     this._filter = require('gulp-filter');
     return stream.pipe(this._filter(this.patterns, this.options));
   }
