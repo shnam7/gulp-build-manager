@@ -111,7 +111,7 @@ const jekyll = {
       command: 'build',
       options: [
         '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
-        '--baseurl .',  // root folder relative to local server,
+        '--baseurl http://localhost:63342/gulp-build-manager/_gh_pages',  // root folder relative to local server,
         '--incremental'
       ]
     }
