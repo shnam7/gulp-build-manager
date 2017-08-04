@@ -11,7 +11,7 @@ import GPlugin from '../core/GPlugin';
 export default class GBuilder {
   constructor() {
     this._plugins = [];
-    this.done = [];
+    this.done = undefined;
   }
 
   build(defaultModuleOptions, conf, done) {
