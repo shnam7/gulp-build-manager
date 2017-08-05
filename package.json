@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shnam7/gulp-build-manager.git"
+    "url": "https://github.com/shnam7/gulp-build-manager"
   },
   "keywords": [
     "gulp",

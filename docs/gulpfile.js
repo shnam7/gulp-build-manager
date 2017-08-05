@@ -80,25 +80,9 @@ const images = {
   watch: {livereload:true}
 };
 
-const incFiles = {
-  buildName: 'assets:incFiles',
-  builder: 'GMarkdownBuilder',
-  src: [upath.join(srcRoot, '_includes/sidebar.md')],
-  dest: upath.join(destRoot, '_includes'),
-  flushStream: true,
-  buildOptions: {
-    minify: true,
-    prettify: true
-  },
-  moduleOptions: {
-    htmlPrettify: {indent_char: ' ', indent_size: 2},
-  },
-  clean: [upath.join(destRoot, '_includes/sidebar.html')]
-};
-
 const assets = {
   buildName: 'assets',
-  dependencies: gbm.parallel(scss, scripts, images, incFiles),
+  dependencies: gbm.parallel(scss, scripts, images),
 };
 
 const jekyll = {
@@ -116,7 +100,6 @@ const jekyll = {
       ]
     }
   },
-  dependencies: assets,
   watch: { watched: ['**/*', '!.jekyll-metadata', '!assets/**/*', '!gulpfile.*'], livereload:true },
   clean: [jkDest, '.jekyll-metadata'],
 };
