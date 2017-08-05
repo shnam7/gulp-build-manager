@@ -12,10 +12,10 @@
     "build-docs": "gulp --cwd docs",
     "clean": "rimraf lib",
     "clean-docs": "rimraf _gh_pages docs/.jekyll-metadata",
-    "prepare": "npm run test && npm run build-all",
     "test": "mocha --compilers js:babel-core/register --reporter spec",
     "build-all": "npm run build && npm run build-docs",
-    "clean-all": "npm run clean && npm run clean-docs"
+    "clean-all": "npm run clean && npm run clean-docs",
+    "prepublish": "babel src --presets babel-preset-es2015 --out-dir lib"
   },
   "repository": {
     "type": "git",
@@ -54,7 +54,6 @@
     "upath": "^1.0.0"
   },
   "devDependencies": {
-    "@types/jquery": "^3.2.10",
     "babel-preset-es2015": "^6.24.1",
     "chai": "^4.1.0",
     "child_process": "^1.0.2",
