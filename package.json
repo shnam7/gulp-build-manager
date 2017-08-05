@@ -12,8 +12,7 @@
     "build-docs": "gulp --cwd docs",
     "clean": "rimraf lib",
     "clean-docs": "rimraf _gh_pages docs/.jekyll-metadata",
-    "prepublish": "npm run test",
-    "prepare": "npm run build-all",
+    "prepare": "npm run test && npm run build-all",
     "test": "mocha --compilers js:babel-core/register --reporter spec",
     "build-all": "npm run build && npm run build-docs",
     "clean-all": "npm run clean && npm run clean-docs"
