@@ -62,5 +62,5 @@ yarn add babel-core babel-preset-es2015 --dev
 ```json
 { "presets": ["es2015"] }
 ```
-And then, just create <em>gulpfile.babel.js</em> instead of gulpfile.js.
+And then, just create *gulpfile.babel.js* instead of gulpfile.js.
 Now, you can use es6 features in gulpfile.babel.js.

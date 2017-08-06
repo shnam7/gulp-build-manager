@@ -1,16 +1,21 @@
 ---
 layout: docs
 ---
+{% assign srcurl = site.repo | append: '/tree/master' %}
 
 # GJekyllBuilder
-Jekyll project builder. Internally, it creates child process to run jekyll command.
+Jekyll project builder. Internally, it creates child process to run jekyll command.<br>
+To learn more about Jekyll, visit [Jekyll website](https://jekyllrb.com/){:target='_blank'}.
 
 #### Builder specific Options
-  - <em>conf.src</em> (<i>type:string, default:undefined</i>)<br>
+  - *conf.src* (<i>type:string, default:undefined</i>)<br>
     If this is set to a directory path, it will be used to override default jekyll source directory.
-  - <em>conf.dest</em> (<i>type:string, default:undefined</i>)<br>
+  - *conf.dest* (<i>type:string, default:undefined</i>)<br>
     If this is set to a directory path, it will be used to override default jekyll desitination directory.
 
+#### Notes
+  - *conf.flushStream* (<i>type:boolean, default:false</i>)<br>
+    If this is set to true, build task will not finish until external jekyll command finishes.
 
 #### Example
 ```javascript
@@ -36,6 +41,6 @@ const jekyll = {
 ```
 
 #### Resources
-  - This documents was built with GJekyllBuilder and CCSSBuilder.
-  - See [docs]({{site.repo}}/docs) for more details.
+  - This document site was built with GJekyllBuilder and CCSSBuilder.
+  - See [docs build configuration]({{srcurl}}/docs/gulpfile.js){:target="_blank"} for more details.
 

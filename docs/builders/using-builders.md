@@ -7,7 +7,7 @@ layout: docs
 ## What is Builder?
 Builder is essentially a gulp tasks to achieve project mission. Typically, it reads input from source directories, processes them, and writes the output to destination directory.
 Builder can be a single function or a class object derived from GBuilder class.
-To use builders, <em>Build Configuration</em> need to be created first. 
+To use builders, *Build Configuration* need to be created first. 
 
 ## Build Configuration
 Typical build configuration looks like this:
@@ -45,7 +45,8 @@ Build Configuration has a common set of pre-defined properties, but users can ad
 Builder is specified in conf.builder property. See below for mre details.
 
 
-### Pre-defined Build Configuration Options
+### Build Configuration Options
+{:#buildConfigurationOptions}
 
 #### conf.buildName
 <i>type: string</i><br>
@@ -79,6 +80,7 @@ Output path string. In implementation perspective, this property value is passed
 Output file name. This property can be optionally specified if the output of the build process is to be a single file. For example, javascript builder can concatenate all the files in input stream into a single output file in conf.dest directory.
 
 #### conf.flushStream
+{:#flushStream}
 <i>type: boolean</i><br>
 <i>default: false</i><br>
 Gulp tasks run in parallel. Sometimes, they are finishes even though file writing is still in progress. If this option is set to true, the gulp task running this build configuration will not finish until it finishes all the file writings are finishes. If one task depends on output files of another task, this is where it plays in.
@@ -129,8 +131,8 @@ List of glob string referencing watch targets. Default value is set to conf.src.
 Enable or disable livereload. The value can be options object to gulp-livereload module.
 
 
-<a name="BuildSet"></a>
 ### BuildSet
+{: #BuildSet}
 BuildSet is a collection of build configurations with series or parallel dependency relationships. BuildSet can be any of the following:
   1. conf.buildName: string
   2. conf: Build configuration object itself

@@ -5,7 +5,8 @@ layout: docs
 
 Plugin is a modularized actions that can be inserted into specific build stages.
 
-##### Build stages currently available are:
+#### Build stages currently available are:
+{:#buildStages}
   - initStream: after GBuilder.OnInitStream()
   - build: after GBuilder.OnBuild()
   - dest: after GBuilder.OnDest()

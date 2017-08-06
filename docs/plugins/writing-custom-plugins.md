@@ -4,7 +4,7 @@ layout: docs
 # Writing custom plugins
 
 ## GPlugin interface
-Build process is basically doing something on input stream and generating output sometimes if necessary. This kind of actions can be modularized as plugins. GPlugin is designed based on this concept and provides simple interface to add plugin actions into specific [build stages]({{site.baseurl}}/using-plugins).
+Build process is basically doing something on input stream and generating output sometimes if necessary. This kind of actions can be modularized as plugins. GPlugin is designed based on this concept and provides simple interface to add plugin actions into specific [build stages]({{site.baseurl}}/plugins/using-plugins#buildStages).
 
 
 #### GPlugin.constructor(options = {}, slots='build')
@@ -21,7 +21,7 @@ Defaule stot for the plugins to be plugged in is 'build', but it can be changed 
 <i>builder</i>: Builder object currently running
 You may noticed that the parameters are almost the same as GBuilder interfaces except the slot. With slot parameter, you can see in what stage the plugin is called.
 
-Now, let's see an example:
+Now, let's see an example, a snippet from gbm.DebugPlugin source codes:
 ```javascript
 class DebugPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
@@ -36,4 +36,3 @@ class DebugPlugin extends GPlugin {
   }
 }
 ```
-This is the snippet from gbm.DebugPlugin source codes.

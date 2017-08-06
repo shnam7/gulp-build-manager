@@ -4,12 +4,12 @@ layout: docs
 
 # GTwigBuilder
 Panini project builder.<br>
-See [panini](https://github.com/zurb/panini) to learn more about panini.
+See [twig](https://twig.symfony.com){:target='_blank'} to learn more about twig.
 
 #### Builder specific Options
-  - <em>conf.buildOptions.minify</em> (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>
     If set to true, output html files are minimized.
-  - <em>conf.buildOptions.prettify</em> (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.prettify* (<i>type:boolean, default:false</i>)<br>
     If set to true, output html files are prettified.
 
 ### Notes

@@ -90,6 +90,7 @@ const jekyll = {
   builder: 'GJekyllBuilder',
   src: '.',
   dest: jkDest,
+  // flushStream: true,
   moduleOptions: {
     jekyll: {
       command: 'build',

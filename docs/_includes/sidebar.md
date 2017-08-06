@@ -1,10 +1,9 @@
-# [Documentation]({{site.baseurl}}/)
+## [Contents]({{site.baseurl}}/)
+{:class="title"}
 * [Getting Started]({{site.baseurl}}/getting-started)
 * [Build Manager]({{site.baseurl}}/build-manager)
 * [Builders]({{site.baseurl}}/builders/using-builders)
   - [Using Builders]({{site.baseurl}}/builders/using-builders)
-  - [Writing Custom Builders]({{site.baseurl}}/builders/writing-custom-builders)
-  - [Function Builders]({{site.baseurl}}/builders/function-builders)
   - [Built-in Builders]({{site.baseurl}}/builders/built-in-builders)
     - [GBuilder]({{site.baseurl}}/builders/built-in/GBuilder)
     - [GCoffeeScriptBuilder]({{site.baseurl}}/builders/built-in/GCoffeeScriptBuilder)
@@ -19,13 +18,15 @@
     - [GTypeScriptBuilder]({{site.baseurl}}/builders/built-in/GTypeScriptBuilder)
     - [GWebPackBuilder]({{site.baseurl}}/builders/built-in/GWebPackBuilder)
     - [GZipBuilder]({{site.baseurl}}/builders/built-in/GZipBuilder)
-    
+  - [Function Builders]({{site.baseurl}}/builders/function-builders)
+  - [Writing Custom Builders]({{site.baseurl}}/builders/writing-custom-builders)
 
 * [Plugins]({{site.baseurl}}/plugins/using-plugins)
   - [Using Plugins]({{site.baseurl}}/plugins/using-plugins)
-  - [Writing Custom Plugins]({{site.baseurl}}/plugins/writing-custom-plugins)
-  - [Function Plugins]({{site.baseurl}}/plugins/function-plugins)
   - [Built-in Plugins]({{site.baseurl}}/plugins/built-in-plugins)
+  - [Function Plugins]({{site.baseurl}}/plugins/function-plugins)
+  - [Writing Custom Plugins]({{site.baseurl}}/plugins/writing-custom-plugins)
 
 * Resources
   - [Examples]({{site.baseurl}}/resources/examples)
+  - [Task synchronization]({{site.baseurl}}/resources/task-synchronization)

@@ -30,3 +30,9 @@ You can also check out various working [examples][1] in GitHub.
 
 [0]: https://shnam7.github.io/gulp-build-manager/
 [1]: ./examples
+
+
+<div id="l-footer" style="text-align:center">
+  <img class="logo" src="docs/images/gbm.svg" width="36px">
+  <p>Copyright &copy; 2017, under <a href="{{site.repo}}/blob/master/LICENSE">MIT</a></p>
+</div>

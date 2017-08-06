@@ -6,8 +6,7 @@
   }
 
   // title
-  &>h1 {
-    font-size: 1.3rem;
+  &>.title {
     text-align: center;
   }
 
@@ -17,7 +16,7 @@
     padding: 0;
     list-style: none;
     a:hover {
-      color: $w-color-text-red;
+      color: $w-color-dark-red;
     }
     ul {
       margin:0;

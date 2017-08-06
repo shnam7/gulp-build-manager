@@ -6,15 +6,15 @@ layout: docs
 CSS builder. sass/scss/less and postcss are suported. You can use postcss together with sass/scss/less.
 
 #### Builder specific Options
-  - <em>conf.buildOptions.sourceMap</em> (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)<br>
     If set to true, sourceMap files are generated.
-  - <em>conf.buildOptions.lint</em> (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)<br>
     If set to true, linter is activated.
-  - <em>conf.buildOptions.minify</em> (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>
     If set to true, *.min.js files are generated.
-  - <em>conf.buildOptions.minifyOnly</em> (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)<br>
     If set to true, *.min.js files are generated but non-minified files are not created.
-  - <em>conf.buildOptions.babel</em> (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.babel* (<i>type:boolean, default:false</i>)<br>
     If set to true, babel is enabled so that you can use es6 features.
 
 ### Notes

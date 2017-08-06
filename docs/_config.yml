@@ -20,6 +20,8 @@ defaults:
     values:
       layout:     "docs"
 
+# Custom variable
+
 # Module settings
 kramdown:
   input: GFM

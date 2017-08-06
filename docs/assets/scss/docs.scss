@@ -11,6 +11,7 @@
 @import "region/footer";
 
 #l-content {
+  padding-top: 1rem;
   border-top: 1px solid gray(60%, 0.3);
   @media (--medium) {  border-top: none;  }
   em {  color: #c30;  }

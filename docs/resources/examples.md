@@ -1,10 +1,12 @@
 ---
 layout: docs
 ---
+{% assign srcurl = site.repo | append: '/tree/master' %}
+
 # Examples
 
 Gulp Build Manager source contains various working examples and you can find them here:
-### [examples]({{site.repo}}/examples)
+### [examples]({{srcurl}}/examples){:target='_blank'}
 
 #### Running examples inside gulp-build-manager source code
 If you download gulp-build-manager source codes then you can run examples as it is. If you see error messages such as <i>'Cannot find module ...'</i>, then install the required modules using npm or yarn command.

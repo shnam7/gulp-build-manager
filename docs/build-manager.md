@@ -76,7 +76,7 @@ Configures @watch task. All the watch items specified in each build configuratio
 <i>type: Object</i><br>
 <i>default: undefined</i><br>
 Specifies livereload option. By default, it's disabled. To turn on it, set the value here to {livereload:{start:true}}.
- For more options on livereload, see [livereload](https://github.com/vohof/gulp-livereload#options-optional).
+ For more options on livereload, see [livereload](https://github.com/vohof/gulp-livereload#options-optional){:target="_blank"}.
 <br><br>
 
 

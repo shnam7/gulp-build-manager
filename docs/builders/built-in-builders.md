@@ -3,7 +3,7 @@ layout: docs
 ---
 
 # Built-in Builders
-Builder classes share the common set of [build configuration options]({{site.baseurl}}/builders/using-builders).
+Builder classes share the common set of [build configuration options]({{site.baseurl}}/builders/using-builders#buildConfigurationOptions).
 
 You can get the built-in builder classes with gbm:
 ```javascript
