@@ -33,6 +33,6 @@ You can also check out various working [examples][1] in GitHub.
 
 
 <div id="l-footer" style="text-align:center">
-  <img class="logo" src="docs/images/gbm.svg" width="36px">
-  <p>Copyright &copy; 2017, under <a href="{{site.repo}}/blob/master/LICENSE">MIT</a></p>
+  <img class="logo" src="https://github.com/shnam7/gulp-build-manager/blob/master/docs/images/gbm.svg" width="36px">
+  <p>Copyright &copy; 2017, under <a href="./LICENSE">MIT</a></p>
 </div>
