@@ -30,13 +30,21 @@ export default class GJekyllBuilder extends gbm.GBuilder {
     jekyll.stdout.on('data', jekyllLogger);
     jekyll.stderr.on('data', jekyllLogger);
 
-    this.promise.push(new Promise((resolve, reject)=>{
+    if (conf.flushStream) {
+      this.promise.push(new Promise((resolve, reject)=>{
+        jekyll.on('close', (code)=>{
+          if (conf.watch && conf.watch.livereload) require('gulp-livereload').changed(conf.src || '.');
+          console.log(`Jekyll process finished(exit code:${code})`);
+          resolve();
+        });
+      }));
+    }
+    else {
       jekyll.on('close', (code)=>{
         if (conf.watch && conf.watch.livereload) require('gulp-livereload').changed(conf.src || '.');
         console.log(`Jekyll process finished(exit code:${code})`);
-        resolve();
       });
-    }));
+    }
     return stream;
   }
 }
