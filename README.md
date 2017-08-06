@@ -31,8 +31,9 @@ You can also check out various working [examples][1] in GitHub.
 [0]: https://shnam7.github.io/gulp-build-manager/
 [1]: ./examples
 
-
-<div id="l-footer" style="text-align:center">
-  <img class="logo" src="https://github.com/shnam7/gulp-build-manager/blob/master/docs/images/gbm.svg" width="36px">
-  <p>Copyright &copy; 2017, under <a href="./LICENSE">MIT</a></p>
+<br>
+<br>
+<p align="center">
+  <img class="logo" src="https://shnam7.github.io/gulp-build-manager/images/gbm.svg" width="64px">
+  <p align=center>Copyright &copy; 2017, under <a href="./LICENSE">MIT</a></p>
 </div>
