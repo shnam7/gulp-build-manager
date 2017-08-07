@@ -6,8 +6,10 @@ title: Getting started
 
 #### 1. Install Gulp Build Manager(gbm in short):
 ```sh
+npm install gulpjs/gulp#4.0 --save-dev
 npm install gulp-build-manager --save-dev
 # or 
+yarn add gulpjs/gulp#4.0 --dev
 yarn add gulp-build-manager --dev
 ```
 
