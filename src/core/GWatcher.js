@@ -20,7 +20,7 @@ export default class GWatcher {
       require('gulp-livereload')(watchOptions.livereload);
 
     for (let item of this._watchMap) {
-      console.log(`Watching ${item.name}: ${item.watched}...`);
+      console.log(`Watching ${item.name}: [${item.watched}]`);
       gulp.watch(item.watched, gulp.parallel(item.task));
     }
   }
