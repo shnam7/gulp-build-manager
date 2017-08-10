@@ -6,12 +6,18 @@ title: Getting started
 
 #### 1. Install Gulp Build Manager(gbm in short):
 ```sh
-npm install gulpjs/gulp#4.0 --save-dev
 npm install gulp-build-manager --save-dev
 # or 
-yarn add gulpjs/gulp#4.0 --dev
 yarn add gulp-build-manager --dev
 ```
+
+If you have not installed gulp 4.0 yet, install it.
+```sh
+npm install gulpjs/gulp#4.0 --save-dev
+# or 
+yarn add gulpjs/gulp#4.0 --dev
+```
+
 
 #### 2. Create gulpfile at the root of your project:
 Please be sure to have some javascript files in the assets/scripts/js directory to see the build process working.
