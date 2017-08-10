@@ -101,8 +101,10 @@ export default class GBuildSet {
         };
         merge(watch, item.watch);
         if (item.watch && item.watch.watched) watch.watched = item.watch.watched;
-        watcher.addWatch(watch);
+        if (item.watch && item.watch.watchedPlus)
+          watch.watched = watch.watched.concat(watch.watched, item.watch.watchedPlus);
         resolved.push(item.buildName);
+        watcher.addWatch(watch);
       }
       else
         throw Error('Unexpected BuildSet entry type');

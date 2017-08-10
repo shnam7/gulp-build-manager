@@ -125,6 +125,11 @@ Override default Watch configuration.
 <i>default: conf.src</i><br>
 List of glob string referencing watch targets. Default value is set to conf.src. Watch service is enabled by default. You can disable it by setting this value to empty array([]).
 
+#### conf.watch.watchedPlus
+<i>type: string[]</i><br>
+<i>default: undefined</i><br>
+List of glob string referencing additional watch targets. This option can be useful when additional watch target need to be added to default conf.watched value.
+
 #### conf.watch.livereload
 <i>type: boolean | Object</i><br>
 <i>default: false</i><br>
