@@ -14,7 +14,7 @@ In some other cases, you may not create any input stream. For example, builders 
  
 
 ### How to resolve?
-Guilder provides *promise* property which collects all the promises generated during the build process. At the end of the build process, GBuilder waits for all these promises to be finished and then signals the end of task. Let see examples from source codes:<br>
+GBuilder provides *promise* property which collects all the promises generated during the build process. At the end of the build process, it waits for all these promises to be finished and then signals the end of task. Let see examples from source codes:<br>
 
 #### a snippet from [GBuilder]({{srcurl}}/builders/GBuilder.js){:target='_blank'}:
 ```javascript

@@ -25,4 +25,4 @@ defaults:
 # Module settings
 kramdown:
   input: GFM
-  auto-ids: false
+  auto_ids: false
