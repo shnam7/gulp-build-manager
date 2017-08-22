@@ -8,7 +8,7 @@ repo:             "https://github.com/shnam7/gulp-build-manager"
 # source and destination is set by gulpfile.js
 source:           .
 destination:      ../_gh_pages
-version:          2.0.0-alpha.4
+version:          2.0.0-alpha.5
 encoding:         utf-8
 exclude:          [assets, '*.map', 'gulpfile.*', 'Gemfile*']
 markdown:         kramdown
