@@ -41,7 +41,7 @@ export default class TypeScriptPlugin extends GPlugin {
       }
     }
 
-    if (opts.printConfig) console.log('[TypeScript Plugin]tsconfig evaluated:', tsOpts);
+    if (opts.printConfig) console.log(`[TypeScriptPlugin]tsconfig evaluated(buildName:${conf.buildName}):\n`, tsOpts);
     if (!tsProject) tsProject = typescript.createProject(tsOpts);
 
     // transpile .ts files
