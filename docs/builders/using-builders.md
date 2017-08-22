@@ -88,7 +88,7 @@ Gulp tasks run in parallel. Sometimes, they are finishes even though file writin
 #### conf.buildOptions
 <i>type: Object</i><br>
 <i>default: {}</i><br>
-An Object with builder-specific options.
+Builder-specific options. Each builders can have their own options here. For the details, refer to the documentation of relevant builders.
 
 #### moduleOptions
 <i>type: Object</i><br>

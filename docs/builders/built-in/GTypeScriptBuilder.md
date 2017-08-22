@@ -16,6 +16,8 @@ CSS builder. sass/scss/less and postcss are suported. You can use postcss togeth
     If set to true, *.min.js files are generated but non-minified files are not created.
   - *conf.buildOptions.babel* (<i>type:boolean, default:false</i>)<br>
     If set to true, babel is enabled so that you can use es6 features.
+  - *conf.buildOptions.printConfig* (<i>type:boolean, default:false</i>)<br>
+    If set to true, evaluated TypeScript options(tsconfig) will be printed.
 
 ### Notes
   - If conf.outFile is set, it will override the outFile setting of tsconfig.json
@@ -36,7 +38,8 @@ const typeScript = {
     sourceMap: true,
     minify: true,
     // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
-    tsConfig: upath.join(srcRoot, 'scripts/tsconfig.json')
+    tsConfig: upath.join(srcRoot, 'scripts/tsconfig.json'),
+    printConfig: true
   },
   moduleOptions: {
     // this will override the tsConfig settings in buildOptions

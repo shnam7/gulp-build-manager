@@ -48,6 +48,7 @@ const scripts = {
   buildOptions: {
     minifyOnly: true,
     // tsConfig: './assets/scripts/tsconfig.json'
+    printConfig: true
   },
   clean:[upath.join(destRoot, 'js')],
   watch: {livereload:true},
