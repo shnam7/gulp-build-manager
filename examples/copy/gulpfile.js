@@ -7,6 +7,7 @@ process.chdir(__dirname);
 const copy = {
   buildName: 'copy',
   builder: 'GBuilder',
+  flushStream: true,
   plugins: [
     new gbm.CopyPlugin([
       {src: ['path-src1/**/*.*'], dest:'path-dest1'},

@@ -11,7 +11,16 @@ export default class CopyPlugin extends GPlugin {
   process(stream, mopts, conf, slot, builder) {
     for (let copyItem of this.options) {
       console.log(`[CopyPlugin] copying: [${copyItem.src}] => ${copyItem.dest}`);
-      gulp.src(copyItem.src).pipe(gulp.dest(copyItem.dest))
+      let copyStream = gulp.src(copyItem.src);
+      if (conf.flushStream) {
+        builder.promise.push(new Promise((resolve, reject)=>{
+          copyStream.pipe(gulp.dest(copyItem.dest))
+            .on('end', resolve)
+            .on('error', reject);
+        }));
+      }
+      else
+        copyStream.pipe(gulp.dest(copyItem.dest))
     }
     return stream;
   }
