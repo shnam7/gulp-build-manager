@@ -9,9 +9,8 @@ export default class CopyPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
   process(stream, mopts, conf, slot, builder) {
-    console.log('111111');
     for (let copyItem of this.options) {
-      console.log('111', copyItem);
+      console.log(`[CopyPlugin] copying: [${copyItem.src}] => ${copyItem.dest}`);
       gulp.src(copyItem.src).pipe(gulp.dest(copyItem.dest))
     }
     return stream;

@@ -2,8 +2,6 @@
 
 const gbm = require('../../lib');
 
-// const upath = require('upath');
-
 process.chdir(__dirname);
 
 const copy = {
@@ -15,8 +13,6 @@ const copy = {
       {src: ['path-src2/**/*.*'], dest:'path-dest2'}
     ])
   ]
-  // src: [upath.join(destRoot, 'do-not-delete/sample.txt')],
-  // dest: destRoot
 };
 
 // create gbmConfig object
