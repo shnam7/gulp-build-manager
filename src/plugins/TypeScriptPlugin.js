@@ -40,9 +40,10 @@ export default class TypeScriptPlugin extends GPlugin {
         console.log('WARN: tsConfig specified but not found:', upath.resolve(tsConfig));
       }
     }
-
-    if (opts.printConfig) console.log(`[TypeScriptPlugin]tsconfig evaluated(buildName:${conf.buildName}):\n`, tsOpts);
     if (!tsProject) tsProject = typescript.createProject(tsOpts);
+
+    if (opts.printConfig)
+      console.log(`[TypeScriptPlugin]tsconfig evaluated(buildName:${conf.buildName}):\n`, tsProject.config);
 
     // transpile .ts files
     let tsStream = stream.pipe(tsProject());
