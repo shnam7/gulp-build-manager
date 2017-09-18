@@ -19,7 +19,8 @@ export default class GPlugin {
   get className() { return this.constructor.name; }
 
   processPlugin(stream, mopts, conf, slot, builder) {
-    if (!stream || this.slots.indexOf(slot) === -1) return stream;
+    // if (!stream || this.slots.indexOf(slot) === -1) return stream;
+    if (this.slots.indexOf(slot) === -1) return stream;
     stream = this.process(stream, mopts, conf, slot, builder);
     return GPlugin.processSourceMaps(stream, this.options, conf.buildOptions, mopts);
   }
@@ -44,7 +45,8 @@ export default class GPlugin {
   }
 
   static processPlugins(plugins, stream, mopts, conf, slot, builder) {
-    if (!stream || plugins.length<=0) return stream;
+    // if (!stream || plugins.length<=0) return stream;
+    if (plugins.length<=0) return stream;
 
     for (let plugin of plugins) {
       if (plugin instanceof GPlugin)

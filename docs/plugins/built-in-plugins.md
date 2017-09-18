@@ -64,3 +64,6 @@ See [source code]({{srcurl}}/src/plugins/TypeScriptPlugin.js){:target='_blank'} 
 Javascript minifier.<br>
 See [source code]({{srcurl}}/src/plugins/UglifyPlugin.js){:target='_blank'} for the details.
 
+## CopyPlugin
+File copier.<br>
+See [source code]({{srcurl}}/src/plugins/CopyPlugin.js){:target='_blank'} for the details.
