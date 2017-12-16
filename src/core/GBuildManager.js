@@ -47,8 +47,7 @@ const defaultModuleOptions = {
 
   typescript: {},
 
-  babel: { presets:["es2015"]}
-  ,
+  // babel: {presets:["env"]},
 
   imagemin: {
     progressive: true,
