@@ -91,6 +91,7 @@ Gulp tasks run in parallel. Sometimes, they are finishes even though file writin
 Builder-specific options. Each builders can have their own options here. For the details, refer to the documentation of relevant builders.
 
 #### moduleOptions
+{: #moduleOptions}
 <i>type: Object</i><br>
 <i>default: {}</i><br>
 Builders are typically using one or more gulp plugin modules. This property is used to set options for those modules. The property name of the module options should be the same as the module name without 'gulp-' prefix. If module name is including hyphens, then Camel Case should be used in place of the hyphen. For example, options for 'gulp-html-prettify' will be conf.moduleOptions.htmlPrettify'. Options to 'gulp' itself is set to 'conf.moduleOptions.gulp'. 

@@ -115,17 +115,18 @@ export default class GBuildManager {
     }
 
     if (config.systemBuilds) {
+      let mopts = Object.assign({}, defaultModuleOptions, config.systemBuilds.moduleOptions);
       let sysBuilds = config.systemBuilds.build;
       if (sysBuilds) {
         gulp.task('@build', gulp.parallel(new GBuildSet(sysBuilds).resolve(
-          customBuildDir, defaultModuleOptions, watcher, cleaner)), (done) => done());
+          customBuildDir, mopts, watcher, cleaner)), (done) => done());
       }
-      cleaner.createTask(defaultModuleOptions.del);
-      watcher.createTask(config.systemBuilds.watch);
+      cleaner.createTask(mopts.del);
+      watcher.createTask(Object.assign({}, {livereload: mopts.livereload}, config.systemBuilds.watch));
       let defaultBuild = config.systemBuilds.default;
       if (defaultBuild) {
         gulp.task('default', gulp.parallel(new GBuildSet(defaultBuild).resolve(
-          customBuildDir, defaultModuleOptions, watcher, cleaner)), (done)=>done());
+          customBuildDir, mopts, watcher, cleaner)), (done)=>done());
       }
     }
   }

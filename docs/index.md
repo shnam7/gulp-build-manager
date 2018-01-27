@@ -8,7 +8,7 @@ Gulp Build Manager, gbm in a short name, is an Easy to use, Flexible gulp task m
 
 
 ### Peer dependencies
-Gulp 4.0 is required as a peer dependency of gbm. Currently, it not officially released in npm repository, but can be installed from [Guithub](https://github.com/gulpjs/gulp/tree/4.0):
+Gulp 4.0 is required as a peer dependency of gbm. Currently, it not officially released in npm repository, but can be installed from [Github](https://github.com/gulpjs/gulp/tree/4.0):
 
 ```jshint
 npm install gulpjs/gulp#4.0 --save-dev

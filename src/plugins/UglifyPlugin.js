@@ -17,7 +17,7 @@ export default class UglifyPlugin extends GPlugin {
     if (!minitfy && !minifyOnly) return stream;
 
     // flush previous build results before minify
-    if (!minifyOnly) builder.dest(stream.pipe(require('gulp-clone')()), mopts, conf);
+    if (!minifyOnly) stream = builder.dest(stream, mopts, conf);
 
     // check for filter option (to remove .map files, etc.)
     const filter = this.options.filter || ['**', '!**/*.{map,d.ts}'];

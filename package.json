@@ -1,6 +1,6 @@
 {
   "name": "gulp-build-manager",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Easy to use, flexible gulp task manager",
   "files": [
     "lib"
@@ -15,7 +15,7 @@
     "test": "mocha --compilers js:babel-core/register --reporter spec",
     "build-all": "npm run build && npm run build-docs",
     "clean-all": "npm run clean && npm run clean-docs",
-    "prepublish": "babel src --presets env --out-dir lib"
+    "prepare": "babel src --presets env --out-dir lib"
   },
   "repository": {
     "type": "git",
@@ -54,6 +54,7 @@
     "upath": "^1.0.2"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "chai": "^4.1.2",
     "child_process": "^1.0.2",

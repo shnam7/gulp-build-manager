@@ -61,14 +61,14 @@ If you want, you can use babel with gulp. Just, install babel packages and creat
 
 ##### Installing babel
 ```sh
-npm install babel-core babel-preset-es2015 --save-dev
+npm install babel-core babel-preset-env --save-dev
 # or
-yarn add babel-core babel-preset-es2015 --dev
+yarn add babel-core babel-preset-env --dev
 ```
 
 ##### .babelrc
 ```json
-{ "presets": ["es2015"] }
+{ "presets": ["env"] }
 ```
 And then, just create *gulpfile.babel.js* instead of gulpfile.js.
 Now, you can use es6 features in gulpfile.babel.js.

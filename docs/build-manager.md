@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Using Build Manager
+title: Build Manager
 ---
 # {{page.title}}
 gbm, the build manager, creates gulp tasks according to the options given to it.<br>
@@ -59,6 +59,8 @@ Configures @build task. Typically, this is the main build task that builds every
 <i>type: string[]</i><br>
 <i>default: []</i><br>
 Configures @clean task. Glob is allowed. All the clean targets specified here will be cleaned/removed. The clean targets specified in each build configurations will be cleaned independently of this. If no clean targets are specified both here and in build configurations, then @clean task will not be created.
+To delete files outside of project scope, set 'moduleOptions.del.force' option to true.
+See [moduleOptions](#moduleOptions) below
 
 ##### gbmConfig.systemBuilds.default
 <i>type: BuildSet</i><br>
