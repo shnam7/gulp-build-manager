@@ -18,7 +18,7 @@ const webpack = {
   //
   // // use order property to set outFile orders
   // order: ['*ts-2.ts'],
-  dest: upath.join(destRoot, 'scripts/js'),
+  dest: upath.resolve(__dirname, 'scripts/js'),
   outFile: upath.join(destRoot, 'js/sample-ts.js'),
   buildOptions: {
     sourceMap: true,
@@ -32,25 +32,29 @@ const webpack = {
       //   extensions: ["", ".webpack.js", ".web.js", ".ts", ".js"]
       // },
       module: {
-        preLoaders: [
-          { test: /\.ts$/, loader: 'tslint-loader' }
+        rules: [
+          {
+            enforce: 'pre',
+            test: /\.ts$/,
+            loader: 'tslint-loader'
+          }
         ],
         loaders: [
-          { test: /\.ts$/, loader: 'ts-loader' }
+          {test: /\.ts$/, loader: 'ts-loader'}
         ]
       },
-      tslint: {
-        failOnHint: true,
-        // configuration: require('./tslint.json')
-        configuration: {
-          "extends": "tslint:recommended",
-          rules: {
-            "new-parens": true,
-          }
+    },
+    tslint: {
+      failOnHint: true,
+      // configuration: require('./tslint.json')
+      configuration: {
+        "extends": "tslint:recommended",
+        rules: {
+          "new-parens": true,
         }
-      },
-    }
-  },
+      }
+    },
+  }
 };
 
 

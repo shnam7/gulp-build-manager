@@ -7,6 +7,6 @@ module.exports = {
   entry: upath.resolve(destRoot, 'js/sample-ts.js'),
   output: {
     filename: 'bundle.js',
-    path: upath.resolve(destRoot, '')
+    path: upath.join(destRoot, '')
   },
 };

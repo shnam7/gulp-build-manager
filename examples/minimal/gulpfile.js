@@ -55,6 +55,10 @@ const set09 = gbm.parallel(
 
 const buildSetTest = {
   buildName: 'buildSetTest',
+  builder: (mopts, conf, done)=>{
+    console.log('This is the main task: buildSetTest\n');
+    done();
+  },
   dependencies: gbm.parallel(set01, set02, set03, set04, set05, set06, set07, set08, set09)
 };
 

@@ -1,6 +1,5 @@
-import chai from 'chai';
-import {expect} from 'chai';
-import gbm from '../src/';
+const chai = require('chai');
+const gbm = require('../lib');
 
 let should = chai.should();
 let parallel = gbm.parallel;

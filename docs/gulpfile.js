@@ -25,13 +25,13 @@ const scss = {
   moduleOptions: {
     postcss: {
       plugins:[
-        require('postcss-cssnext')({features:{rem: false}}),
-        require('postcss-utilities')(),
-        require('lost')(),
+        // require('postcss-cssnext')({features:{rem: false}}),
+        // require('postcss-utilities')(),
+        // require('lost')(),
         // require('postcss-assets')({
         //   loadPaths:[upath.join(srcRoot, 'images')],
         // }),
-        require('postcss-inline-svg')({path:upath.join(srcRoot, 'images')}),
+        // require('postcss-inline-svg')({path:upath.join(srcRoot, 'images')}),
       ]
     },
   },

@@ -3,7 +3,6 @@
  *
  */
 
-'use strict';
 const gbm = require('../../../lib');
 
 class GCustomBuilder extends gbm.GBuilder {
@@ -21,7 +20,9 @@ class GCustomBuilder extends gbm.GBuilder {
 
   OnPreparePlugins(mopts, conf) {
     console.log('GCustomBuilder::OnPreparePlugins() called. continuing the build process...');
-    this.addPlugins(stream=>require('debug')());
+
+    // Note: be sure to check if stream is valid in plugin function
+    this.addPlugins(stream=> stream && require('debug')());
   }
 
   OnBuilderModuleOptions(mopts, defaultModuleOptions, conf) {

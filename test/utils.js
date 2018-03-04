@@ -1,5 +1,5 @@
-import {assert} from 'chai';
-import is from '../src/utils/is';
+let assert = require('chai').assert;
+let is = require('../lib/core/utils').is;
 
 module.exports = function () {
   describe('utils', function() {

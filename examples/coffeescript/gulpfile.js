@@ -27,6 +27,14 @@ const coffeeScript = {
     minifyOnly:true,
     sourceMap: true
   },
+  moduleOptions: {
+    // to enable uglify, coffee output need to be transpiled to es5 using babel by passing the options below
+    coffee: {
+      transpile: {
+        "presets": ["env"]
+      },
+    }
+  }
 };
 
 /**
