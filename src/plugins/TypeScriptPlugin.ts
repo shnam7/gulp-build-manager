@@ -3,11 +3,10 @@
  */
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {deepmerge, is} from '../core/utils';
+import {is} from '../core/utils';
 import {Options, Slot, Stream} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import ChangedPlugin from "./ChangedPlugin";
 
 export class TypeScriptPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
@@ -19,8 +18,8 @@ export class TypeScriptPlugin extends GPlugin {
     let tsOpts = this.options.typescript || mopts.typescript || {};
 
     // conf setting will override module settings(mopts)
-    if (conf.outFile) tsOpts = deepmerge(tsOpts, {outFile:upath.resolve(conf.outFile)});
-    if (conf.outFile && is.String(conf.dest)) tsOpts = deepmerge(tsOpts, {outDir:upath.resolve(conf.dest)});
+    if (conf.outFile) Object.assign(tsOpts, {outFile:upath.resolve(conf.outFile)});
+    if (conf.outFile && is.String(conf.dest)) Object.assign(tsOpts, {outDir:upath.resolve(conf.dest)});
 
     // check lint option
     if (lint) {

@@ -40,7 +40,6 @@ export class GPlugin {
    */
   process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) { return stream; }
 
-
   static addPlugins(pluginList: Plugin[], plugins:Plugin | Plugin[]) {
     // filter invalid plugin entries
     if (is.Array(plugins))

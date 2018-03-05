@@ -3,18 +3,7 @@
  */
 
 import * as gulp from 'gulp';
-import * as Undertaker from "undertaker";
-
-export interface WatchItem {
-  name: string;
-  task: Undertaker.Task;
-  watched: string[];
-  livereload: boolean;
-}
-
-export interface WatchOptions {
-  livereload: any;
-}
+import {WatchItem, WatchOptions} from "./types";
 
 export class GWatcher {
   watchMap: WatchItem[] = [];

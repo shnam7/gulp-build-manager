@@ -3,7 +3,7 @@
  */
 import {GBuilder} from "../core/builder";
 import {Options} from "../core/types";
-import {deepmerge, pick} from "../core/utils";
+import {pick} from "../core/utils";
 import {CoffeeScriptPlugin} from "../plugins/CoffeeScriptPlugin";
 import {ConcatPlugin} from "../plugins/ConcatPlugin";
 import {UglifyPlugin} from "../plugins/UglifyPlugin";
@@ -12,8 +12,8 @@ export class GCoffeeScriptBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
-    mopts = deepmerge(mopts, pick(defaultModuleOptions, 'coffee', 'coffeeLint', 'uglify'));
-    mopts = deepmerge(mopts, {changed:{extension: '.js'}});
+    Object.assign(mopts, pick(defaultModuleOptions, 'coffee', 'coffeeLint', 'uglify'));
+    Object.assign(mopts, {changed:{extension: '.js'}});
     return mopts;
   }
 

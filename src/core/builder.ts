@@ -4,8 +4,8 @@
 
 
 import * as gulp from 'gulp';
-import {deepmerge, pick} from "../core/utils";
-import {Options, Plugin, Stream, TaskDoneFunction} from "../core/types";
+import {pick} from "../core/utils";
+import {BuildConfig, Options, Plugin, Stream, TaskDoneFunction} from "../core/types";
 import {GPlugin} from "./plugin";
 
 export class GBuilder {
@@ -14,7 +14,7 @@ export class GBuilder {
 
   constructor() {}
 
-  build(defaultModuleOptions:Options, conf:Options, done:TaskDoneFunction) {
+  build(defaultModuleOptions:Options, conf:BuildConfig, done:TaskDoneFunction) {
     let mopts = this.OnInitModuleOptions({}, defaultModuleOptions || {}, conf || {});
 
     // reset variables
@@ -35,19 +35,19 @@ export class GBuilder {
     Promise.all(this.promises).then(()=>done());
   }
 
-  OnInitModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:Options={}) {
-    mopts = deepmerge(mopts, pick(defaultModuleOptions, 'gulp','changed','order','livereload'));
-    mopts = deepmerge(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions, conf));
-    mopts = deepmerge(mopts, conf.moduleOptions || {});
+  OnInitModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {
+    Object.assign(mopts, pick(defaultModuleOptions, 'gulp','changed','order','livereload'));
+    Object.assign(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions, conf))
+    Object.assign(mopts, conf.moduleOptions);
     return mopts;
   }
 
-  OnPreparePlugins(mopts:Options={}, conf:Options={}): void {}
+  OnPreparePlugins(mopts:Options={}, conf:BuildConfig): void {}
 
-  OnBuilderModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:Options={}) { return {}; }
+  OnBuilderModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) { return {}; }
 
-  OnInitStream(mopts:Options={}, defaultModuleOptions:Options={}, conf:Options={}) {
-    let stream = conf.src && gulp.src(conf.src, mopts.gulp);
+  OnInitStream(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {
+    let stream = conf.src ? gulp.src(conf.src, mopts.gulp) : undefined;
 
     // check input file ordering
     if (conf.order && conf.order.length > 0) {
@@ -57,13 +57,13 @@ export class GBuilder {
     return GPlugin.initSourceMaps(stream, conf.buildOptions, mopts);
   }
 
-  OnBuild(stream:Stream, mopts:Options={}, conf:Options={}) { return stream; }
+  OnBuild(stream:Stream, mopts:Options={}, conf:BuildConfig) { return stream; }
 
-  OnDest(stream:Stream, mopts:Options={}, conf:Options={}) {
+  OnDest(stream:Stream, mopts:Options={}, conf:BuildConfig) {
     return stream && this.dest(stream, mopts, conf)
   }
 
-  OnPostBuild(stream:Stream, mopts:Options={}, conf:Options={}) {
+  OnPostBuild(stream:Stream, mopts:Options={}, conf:BuildConfig) {
     if (conf.watch && conf.watch.livereload && stream)
       stream = stream.pipe(require('gulp-livereload')(mopts.livereload));
     return stream;
@@ -78,12 +78,12 @@ export class GBuilder {
     this.plugins = GPlugin.addPlugins(this.plugins, plugins);
   }
 
-  dest(stream:Stream, mopts:Options={}, conf:Options={}, path?:string) {
+  dest(stream:Stream, mopts:Options={}, conf:BuildConfig, path?:string) {
     if (stream) {
       const opts = mopts.gulp;
       if (conf.flushStream)
         this.promises.push(new Promise((resolve, reject)=>{
-          stream.pipe(gulp.dest(path||conf.dest, opts.dest))
+          stream.pipe(gulp.dest(path || conf.dest || '.', opts.dest))
             .on('finish', resolve)
             .on('error', reject);
         }));

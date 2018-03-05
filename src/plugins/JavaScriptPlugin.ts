@@ -5,14 +5,13 @@
 import {Options, Slot, Stream} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {deepmerge, pick} from "../core/utils";
-import ChangedPlugin from "./ChangedPlugin";
+import {pick} from "../core/utils";
 
 export class JavaScriptPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
 
   process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) {
-    let opts = deepmerge(pick(conf.buildOptions, 'lint', 'rename'), this.options);
+    let opts = Object.assign({}, pick(conf.buildOptions, 'lint', 'rename'), this.options);
 
     // check lint option
     if (opts.lint) {

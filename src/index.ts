@@ -6,18 +6,20 @@ import * as upath from 'upath';
 import {registerPropertiesFromFiles} from "./core/utils";
 import {GBuildManager} from "./core/buildManager";
 import {GBuildSet} from "./core/buildSet";
-import {Options} from "./core/types";
+import {BuildConfig, BuildSet, Options} from "./core/types";
 import {GBuilder as GBuilderClass} from "./core/builder";
 import {GPlugin as GPluginClass} from "./core/plugin";
 
-function gbm(config: Options) {
-  if (config) GBuildManager.loadBuilders(config);
+let bm = new GBuildManager();
+
+function gbm(config: BuildConfig) {
+  if (config) bm.loadBuilders(config);
 }
 
 namespace gbm {
-  export function loadBuilders(config:Options) { GBuildManager.loadBuilders(config); }
-  export function parallel(...args: any[]) { return new GBuildSet(...args); };
-  export function series(...args:any[]) { return [...args]; };
+  export function loadBuilders(config:BuildConfig) { bm.loadBuilders(config); }
+  export function parallel(...args: BuildSet[]) { return new GBuildSet(...args); };
+  export function series(...args:BuildSet[]) { return [...args]; };
   export let GBuilder = GBuilderClass;
   export let GPlugin = GPluginClass;
 }

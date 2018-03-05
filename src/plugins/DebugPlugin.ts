@@ -5,8 +5,6 @@
 import {Options, Slot, Stream} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {deepmerge} from "../core/utils";
-import ChangedPlugin from "./ChangedPlugin";
 
 export class DebugPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
@@ -16,7 +14,7 @@ export class DebugPlugin extends GPlugin {
     let title = this.options ? this.options.title : "";
     title = title ? title+':' : "";
     title = '[DebugPlugin]' + slot + ':' + title;
-    let opts = deepmerge(this.options, {title: title});
+    let opts = Object.assign({}, this.options, {title: title});
     return stream && stream.pipe(debug(opts));
   }
 }

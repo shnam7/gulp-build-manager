@@ -4,9 +4,8 @@
 
 import * as gulp from 'gulp';
 import * as del from 'del';
-import { is } from './utils';
-
-type CleanTarget = string | string[];
+import {is} from './utils';
+import {CleanTarget} from "./types";
 
 export class GCleaner {
   cleanList:string[] = [];

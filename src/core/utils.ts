@@ -1,8 +1,6 @@
 /** deepmerge */
-import * as _deepmerge from 'deepmerge';
-import * as upath from 'upath';
 import * as glob from 'glob';
-export let deepmerge = _deepmerge;
+import * as upath from 'upath';
 
 /** pick */
 export function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {

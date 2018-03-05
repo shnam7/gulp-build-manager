@@ -5,11 +5,12 @@
 
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {deepmerge, is} from './utils';
-import {Options, TaskDoneFunction} from "./types";
-import {GWatcher, WatchItem} from "./watcher";
+import {is} from './utils';
+import {BuildConfig, BuildSet, Options, TaskDoneFunction, WatchItem} from "./types";
+import {GWatcher} from "./watcher";
 import {GCleaner} from "./cleaner";
 import {GBuilder} from "./builder";
+import {TaskFunction} from "gulp";
 
 // BuildSet items are processed in gulp parallel task by default
 /**
@@ -19,25 +20,25 @@ import {GBuilder} from "./builder";
  *    - {Object} Build definition object with mandatory property 'buildName'
  */
 export class GBuildSet {
-  set:any[] = [];
+  set:BuildSet[] = [];
   isSeries:boolean = false;
 
-  constructor(...args:any[]) {
+  constructor(...args:BuildSet[]) {
     if (args.length === 1) {
       if (is.Array(args[0])) { // mark arrays as series task
-        args = args[0];
+        args = args[0] as BuildSet[];
         this.isSeries = true;
       }
       else if (args[0] instanceof GBuildSet) { // strip off dummy BuildSet class wrapper
-        this.isSeries = args[0].isSeries;
-        args = args[0].set;
+        this.isSeries = (args[0] as GBuildSet).isSeries;
+        args = (args[0] as GBuildSet).set;
       }
     }
 
-    for (const arg of args as any[]) {
+    for (const arg of args as BuildSet[]) {
       if (is.String(arg) ) {
-        if(arg.length<=0) throw Error('Null string is not allowed');
-        this.set.push(arg as any)
+        if((arg as string).length<=0) throw Error('Null string is not allowed');
+        this.set.push(arg as string)
       }
       else if (is.Function(arg) ) {
         this.set.push(arg)
@@ -60,14 +61,15 @@ export class GBuildSet {
    *  @param watcher Watcher class
    *  @returns {*} Gulp task name if gulp task is created. Or, gulp.series() or gulp.parallel()
    */
-  resolve(customDirs: string | string[], defaultModuleOptions:Options, watcher:GWatcher, cleaner:GCleaner):any {
+  resolve(customDirs: string | string[], defaultModuleOptions: Options, watcher: GWatcher, cleaner: GCleaner): string | TaskFunction {
     let resolved = [];
-    for (const item of this.set) {
+    for (let item of this.set) {
       if (is.String(item) || is.Function(item))
         resolved.push(item);
       else if (item instanceof GBuildSet)
         resolved.push(item.resolve(customDirs, defaultModuleOptions, watcher, cleaner));
       else if (is.Object(item) && item.hasOwnProperty('buildName')) {
+        item = item as BuildConfig;
         // convert prop name: outfile-->outFile
         if (!item.outFile && item.outfile) item.outFile = item.outfile;
 
@@ -76,14 +78,14 @@ export class GBuildSet {
         let deps = undefined;
         let triggers = undefined;
 
-        if (item.hasOwnProperty('dependencies'))
-          deps = new GBuildSet(item.dependencies).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
+        if (item.dependencies)
+          deps = new GBuildSet(item.dependencies as BuildSet).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
 
-        if (item.hasOwnProperty('triggers'))
-          triggers = new GBuildSet(item.triggers).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
+        if (item.triggers)
+          triggers = new GBuildSet(item.triggers as BuildSet).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
 
         if (deps || triggers) {
-          let taskList = [task];
+          let taskList:(string | TaskFunction)[] = [task];
           if (deps) taskList.unshift(deps);
           if (triggers) taskList.push(triggers);
           gulp.task(item.buildName, gulp.series.apply(null, taskList));
@@ -92,16 +94,16 @@ export class GBuildSet {
           gulp.task(item.buildName, task);
 
         // resolve clean targets
-        if (item.hasOwnProperty('clean')) cleaner.add(item.clean);
+        if (item.clean) cleaner.add(item.clean);
 
         // resolve watch
         let watch: WatchItem = {
           name: item.buildName,
-          watched: is.Array(item.src) ? item.src.slice() : item.src ? [item.src] : [],
+          watched: item.src ? (is.Array(item.src) ? (item.src as string[]).slice(): [item.src as string]) : [],
           task: item.buildName,
           livereload: false
         };
-        watch = deepmerge(watch, item.watch || {});
+        Object.assign(watch, item.watch || {});
         if (item.watch && item.watch.watched) watch.watched = item.watch.watched;
         if (item.watch && item.watch.watchedPlus)
           watch.watched = watch.watched.concat(watch.watched, item.watch.watchedPlus);
@@ -112,11 +114,11 @@ export class GBuildSet {
         throw Error('Unexpected BuildSet entry type');
     }
 
-    if (resolved.length===1) return resolved[0];
+    if (resolved.length===1) return resolved[0] as (string | TaskFunction);
     return (this.isSeries) ? gulp.series.apply(null, resolved) : gulp.parallel.apply(null, resolved);
   }
 
-  getBuilder(buildItem:any, customDirs:string|string[]) {
+  getBuilder(buildItem:BuildConfig, customDirs:string|string[]) {
     let builder = buildItem.builder;
     if (is.Function(builder)) return {build: builder};
 
