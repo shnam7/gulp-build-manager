@@ -11,10 +11,10 @@
     "clean": "rimraf lib",
     "watch": "watch \"npm run build\" src",
     "docs:build": "gulp --cwd docs",
-    "docs:clean": "rimraf _gh_pages docs/.jekyll-metadata",
+    "docs:clean": "gulp --cwd docs @clean",
     "test": "mocha --reporter spec",
     "build-all": "npm run build && npm run test && npm run docs:build",
-    "clean-all": "npm run clean && npm run docs:clean",
+    "clean-all": "npm run docs:clean && npm run clean",
     "prepare": "npm run clean && npm run build",
     "--deprecated-build-babel": "babel src --presets env --out-dir lib",
     "--deprecated-test-babel": "mocha --require babel-core/register --reporter spec"

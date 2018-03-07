@@ -1,13 +1,13 @@
-/** deepmerge */
 import * as glob from 'glob';
 import * as upath from 'upath';
+import {GulpStream} from "./types";
 
 /** pick */
 export function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
   const ret: any = {};
   keys.forEach(key => {
     ret[key] = obj[key];
-  })
+  });
   return ret;
 }
 
@@ -54,4 +54,14 @@ export function registerPropertiesFromFiles(obj: any, globPattern: string, callb
 
   glob.sync(globPattern).forEach(file => files.push(cb(file)));
   files.forEach(file=>addProperty(obj, upath.basename(file), ()=>require(file).default));
+}
+
+/** stream to promise */
+export function toPromise<T>(stream:GulpStream|undefined): Promise<T> {
+  if (!stream) return new Promise<T>((resolve)=>resolve());
+  return new Promise<T>((resolve, reject)=>{
+    stream.on('end', resolve)  // event for read stream
+    .on('finish', resolve)    // event for write stream
+    .on('error', reject).resume();
+  })
 }
