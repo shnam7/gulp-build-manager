@@ -9,10 +9,12 @@ import {BuildConfig, Options, Plugin, Stream, TaskDoneFunction} from "../core/ty
 import {GPlugin} from "./plugin";
 import {PluginFunction, PluginObject, Slot, WatchOptions} from "./types";
 import {is, toPromise} from "./utils";
+import {GReloader} from "./reloader";
 
 export class GBuilder {
   plugins: Plugin[] = [];
   promises: Promise<void>[] = [];
+  reloader: undefined | GReloader = undefined;
 
   constructor() {}
 
@@ -32,8 +34,9 @@ export class GBuilder {
     stream = this.processPlugins(this.OnBuild(stream, mopts, conf), mopts, conf, 'build');
     stream = this.processPlugins(this.OnDest(stream, mopts, conf), mopts, conf, 'dest');
     stream = this.processPlugins(this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild');
+    stream = this.reload(stream, conf, mopts);
     this.promises.push(toPromise(stream));
-    Promise.all(this.promises).then(()=>this.watchReload(stream, conf.watch, mopts, done));
+    Promise.all(this.promises).then(()=>done());
   }
 
   OnInitModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {
@@ -118,28 +121,9 @@ export class GBuilder {
     return stream;
   }
 
-  watchReload(stream: Stream, wopts:Options={}, mopts:Options={}, done?:TaskDoneFunction) {
-    if (stream) {
-      if (wopts.livereload) stream = stream.pipe(require('gulp-livereload')(mopts.livereload));
-      if (wopts.browserSync) {
-        let browserSync = require('browser-sync');
-        if (browserSync.has('gbm')) {
-          let bs = browserSync.get('gbm');
-          if (bs && stream) stream = stream.pipe(bs.stream(mopts.browserSync));
-        }
-      }
-      if (stream && done) stream.on('end', done).on('finish', done).resume();
-    }
-    else {
-      if (wopts.livereload) require('gulp-livereload')(mopts.livereload);
-      if (wopts.browserSync) {
-        let browserSync = require('browser-sync');
-        if (browserSync.has('gbm')) {
-          browserSync.get('gbm').reload(mopts.browserSync);
-        }
-      }
-      if (done) done();
-    }
+  reload(stream: Stream, buildOptions:Options, mopts:Options={}) {
+    if (buildOptions.reload === false) return stream;
+    if (this.reloader) return this.reloader.reload(stream, mopts, buildOptions.watch);
     return stream;
   }
 }

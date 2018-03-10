@@ -20,7 +20,8 @@ const scss = {
   dest: upath.join(destRoot, 'css'),
   buildOptions: {
     minifyOnly: true,
-    postcss: true
+    postcss: true,
+    sourceMap: true
   },
   moduleOptions: {
     postcss: {
@@ -36,7 +37,6 @@ const scss = {
     },
   },
   clean:[upath.join(destRoot, 'css')],
-  watch: {livereload:true}
 };
 
 const scripts = {
@@ -51,7 +51,6 @@ const scripts = {
     printConfig: true
   },
   clean:[upath.join(destRoot, 'js')],
-  watch: {livereload:true},
   flushStream: true,
 
   moduleOptions: {
@@ -78,7 +77,6 @@ const images = {
   flushStream: true,
 
   clean:[upath.join(destRoot, 'images')],
-  watch: {livereload:true}
 };
 
 const assets = {
@@ -104,9 +102,7 @@ const jekyll = {
     }
   },
   watch: {
-    watched: ['**/*', '!.jekyll-metadata', '!assets/**/*', '!gulpfile.*'],
-    livereload: true,
-    browserSync: true
+    watched: ['**/*', '!.jekyll-metadata', '!assets/**/*', '!gulpfile.*']
   },
   clean: [jkDest, '.jekyll-metadata'],
 };
@@ -121,8 +117,8 @@ gbm({
       // livereload:{start:true},
       browserSync: {
         server: '../_gh_pages',
-        open: 'local',
-        reloadDelay: 0
+        // open: 'local',
+        // reloadDelay: 0
       }
     }
   },

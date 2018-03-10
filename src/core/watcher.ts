@@ -4,9 +4,11 @@
 
 import * as gulp from 'gulp';
 import {WatchItem, WatchOptions} from './types';
+import {GReloader} from "./reloader";
 
 export class GWatcher {
   watchMap: WatchItem[] = [];
+  reloader: GReloader = new GReloader();
 
   constructor() {
     this.watchMap = [];
@@ -18,19 +20,11 @@ export class GWatcher {
   }
 
   watch(watchOptions: WatchOptions={}) {
-    if (watchOptions.livereload)
-      require('gulp-livereload')(watchOptions.livereload);
-    if (watchOptions.browserSync) {
-      let browserSync = require('browser-sync');
-      let bs = browserSync.has('gbm') ? browserSync.get('gbm') : browserSync.create('gbm');
-      bs.init(watchOptions.browserSync,
-        ()=>console.log('browserSync server started with options:', watchOptions.browserSync)
-      );
-    }
-
+    this.reloader.init(watchOptions);
     for (let item of this.watchMap) {
       console.log(`Watching ${item.name}: [${item.watched}]`);
-      gulp.watch(item.watched, gulp.parallel(item.task));
+      let watcher = gulp.watch(item.watched, gulp.parallel(item.task));
+      if (this.reloader.browserSync) watcher.on('change', this.reloader.browserSync.reload);
     }
   }
 

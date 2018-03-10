@@ -74,7 +74,8 @@ export class GBuildSet {
         if (!item.outFile && item.outfile) item.outFile = item.outfile;
 
         let builder = this.getBuilder(item, customDirs);
-        let task = (done:TaskDoneFunction)=>builder.build(defaultModuleOptions, item, done);
+        builder.reloader = watcher.reloader;
+        let task = (done:TaskDoneFunction)=>builder.build(defaultModuleOptions, item, done, watcher.reloader);
         let deps = undefined;
         let triggers = undefined;
 
@@ -97,17 +98,17 @@ export class GBuildSet {
         if (item.clean) cleaner.add(item.clean);
 
         // resolve watch
-        let watch: WatchItem = {
+        let watchItem: WatchItem = {
           name: item.buildName,
           watched: item.src ? (is.Array(item.src) ? (item.src as string[]).slice(): [item.src as string]) : [],
           task: item.buildName,
         };
-        Object.assign(watch, item.watch || {});
-        if (item.watch && item.watch.watched) watch.watched = item.watch.watched;
+        Object.assign(watchItem, item.watch || {});
+        if (item.watch && item.watch.watched) watchItem.watched = item.watch.watched;
         if (item.watch && item.watch.watchedPlus)
-          watch.watched = watch.watched.concat(watch.watched, item.watch.watchedPlus);
+          watchItem.watched = watchItem.watched.concat(watchItem.watched, item.watch.watchedPlus);
         resolved.push(item.buildName);
-        watcher.addWatch(watch);
+        watcher.addWatch(watchItem);
       }
       else
         throw Error('Unexpected BuildSet entry type');

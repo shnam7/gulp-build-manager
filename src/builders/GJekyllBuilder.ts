@@ -43,7 +43,7 @@ export default class GJekyllBuilder extends GBuilder {
     else {
       jekyll.on('close', (code:any)=>{
         console.log(`Jekyll process finished(exit code:${code})`);
-        this.watchReload(stream, conf.watch, mopts)
+        this.reload(stream, conf, mopts)
       });
     }
     return stream;
