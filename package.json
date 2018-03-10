@@ -45,6 +45,9 @@
     "url": "https://github.com/shnam7/gulp-build-manager/issues"
   },
   "homepage": "https://github.com/shnam7/gulp-build-manager#readme",
+  "stylelint": {
+    "extends": "stylelint-config-recommended"
+  },
   "peerDependencies": {
     "gulp": ">=4.0"
   },
@@ -54,11 +57,13 @@
     "upath": "^1.0.4"
   },
   "devDependencies": {
+    "@types/browser-sync": "0.0.38",
     "@types/del": "^3.0.0",
     "@types/glob": "^5.0.35",
     "@types/gulp": "^4.0.5",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.1",
+    "browser-sync": "^2.23.6",
     "chai": "^4.1.2",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.1",
@@ -84,12 +89,13 @@
     "gulp-uglify": "^3.0.0",
     "gulp-zip": "^4.1.0",
     "lost": "^8.2.1",
-    "mocha": "^5.0.1",
+    "mocha": "^5.0.4",
     "panini": "^1.6.2",
     "postcss-cssnext": "^3.1.0",
     "postcss-reporter": "^5.0.0",
     "postcss-utilities": "^0.8.0",
     "stylelint": "^9.1.1",
+    "stylelint-config-recommended": "^2.1.0",
     "twig-markdown": "^0.1.2",
     "typescript": "^2.7.2",
     "watch": "^1.0.2",

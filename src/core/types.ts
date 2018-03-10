@@ -55,10 +55,12 @@ export interface WatchItem {
   watched: string[];
   watchedPlus?: string[];
   livereload?: boolean;
+  browserSync?: boolean;
 }
 
 export interface WatchOptions {
-  livereload: any;
+  livereload?: Options;
+  browserSync?: Options; // browserSync.Options is not used to remove unnecessary dependency when browserSync is not used
 }
 
 

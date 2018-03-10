@@ -3,8 +3,8 @@
  */
 
 
-import {is} from './utils';
-import {Options, Plugin, PluginFunction, PluginObject, Slot, Stream} from "./types";
+import {is} from "./utils";
+import {Options, Slot, Stream} from "./types";
 import {GBuilder} from "./builder";
 
 export class GPlugin {

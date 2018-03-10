@@ -2,10 +2,10 @@
  *  GCleaner - Gulp task clean list manager
  */
 
-import * as gulp from 'gulp';
-import * as del from 'del';
-import {is} from './utils';
+import {is} from "./utils";
 import {CleanTarget} from "./types";
+import gulp = require("gulp");
+import del = require("del");
 
 export class GCleaner {
   cleanList:string[] = [];
@@ -28,7 +28,7 @@ export class GCleaner {
 
   createTask(opts: del.Options, taskName = '@clean') {
     if (this.cleanList.length <= 0) return;
-    this,this.options = opts;
+    this.options = opts;
     gulp.task(taskName, (done) => this.clean(()=>done()));
   }
 }

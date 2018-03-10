@@ -60,8 +60,10 @@ export function registerPropertiesFromFiles(obj: any, globPattern: string, callb
 export function toPromise<T>(stream:GulpStream|undefined): Promise<T> {
   if (!stream) return new Promise<T>((resolve)=>resolve());
   return new Promise<T>((resolve, reject)=>{
-    stream.on('end', resolve)  // event for read stream
-    .on('finish', resolve)    // event for write stream
-    .on('error', reject).resume();
+    stream
+      .on('end', resolve)       // event for read stream
+      .on('finish', resolve)    // event for write stream
+      .on('error', reject)
+      .resume();
   })
 }

@@ -33,9 +33,8 @@ export default class GJekyllBuilder extends GBuilder {
     jekyll.stderr.on('data', jekyllLogger);
 
     if (conf.flushStream) {
-      this.promises.push(new Promise((resolve, reject)=>{
+      this.promises.push(new Promise((resolve)=>{
         jekyll.on('close', (code:any)=>{
-          if (conf.watch && conf.watch.livereload) require('gulp-livereload').changed(conf.src || '.');
           console.log(`Jekyll process finished(exit code:${code})`);
           resolve();
         });
@@ -43,8 +42,8 @@ export default class GJekyllBuilder extends GBuilder {
     }
     else {
       jekyll.on('close', (code:any)=>{
-        if (conf.watch && conf.watch.livereload) require('gulp-livereload').changed(conf.src || '.');
         console.log(`Jekyll process finished(exit code:${code})`);
+        this.watchReload(stream, conf.watch, mopts)
       });
     }
     return stream;

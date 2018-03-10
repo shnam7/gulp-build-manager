@@ -25,7 +25,7 @@ const scss = {
   moduleOptions: {
     postcss: {
       plugins:[
-        // require('postcss-cssnext')({features:{rem: false}}),
+        require('postcss-cssnext')({features:{rem: false}}),
         // require('postcss-utilities')(),
         // require('lost')(),
         // require('postcss-assets')({
@@ -97,12 +97,17 @@ const jekyll = {
       command: 'build',
       options: [
         '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
-        '--baseurl http://localhost:63342/gulp-build-manager/_gh_pages',  // root folder relative to local server,
+        // '--baseurl http://localhost:63342/gulp-build-manager/_gh_pages',  // root folder relative to local server,
+        '--baseurl http://localhost:3000',  // root folder relative to local server,
         '--incremental'
       ]
     }
   },
-  watch: { watched: ['**/*', '!.jekyll-metadata', '!assets/**/*', '!gulpfile.*'], livereload:true },
+  watch: {
+    watched: ['**/*', '!.jekyll-metadata', '!assets/**/*', '!gulpfile.*'],
+    livereload: true,
+    browserSync: true
+  },
   clean: [jkDest, '.jekyll-metadata'],
 };
 
@@ -112,7 +117,14 @@ gbm({
     build: [assets, jekyll],
     clean: [],
     default: ['@clean', '@build'],
-    watch: {livereload:{start:true}}
+    watch: {
+      // livereload:{start:true},
+      browserSync: {
+        server: '../_gh_pages',
+        open: 'local',
+        reloadDelay: 0
+      }
+    }
   },
   moduleOptions: {del: {force:true}}  // enable files outside of this project to be deleted
 });

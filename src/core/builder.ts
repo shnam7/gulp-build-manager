@@ -7,7 +7,7 @@ import * as gulp from 'gulp';
 import {pick} from "../core/utils";
 import {BuildConfig, Options, Plugin, Stream, TaskDoneFunction} from "../core/types";
 import {GPlugin} from "./plugin";
-import {PluginFunction, PluginObject, Slot} from "./types";
+import {PluginFunction, PluginObject, Slot, WatchOptions} from "./types";
 import {is, toPromise} from "./utils";
 
 export class GBuilder {
@@ -33,7 +33,7 @@ export class GBuilder {
     stream = this.processPlugins(this.OnDest(stream, mopts, conf), mopts, conf, 'dest');
     stream = this.processPlugins(this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild');
     this.promises.push(toPromise(stream));
-    Promise.all(this.promises).then(()=>done());
+    Promise.all(this.promises).then(()=>this.watchReload(stream, conf.watch, mopts, done));
   }
 
   OnInitModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {
@@ -64,11 +64,7 @@ export class GBuilder {
     return stream && this.dest(stream, mopts, conf)
   }
 
-  OnPostBuild(stream:Stream, mopts:Options={}, conf:BuildConfig) {
-    if (conf.watch && conf.watch.livereload && stream)
-      stream = stream.pipe(require('gulp-livereload')(mopts.livereload));
-    return stream;
-  }
+  OnPostBuild(stream:Stream, mopts:Options={}, conf:BuildConfig) { return stream; }
 
   /**
    *
@@ -76,18 +72,6 @@ export class GBuilder {
    * @param plugins can be GPlugin, {}, or plugin function with arguments(stream,conf, builder)
    */
   dest(stream:Stream, mopts:Options={}, conf:BuildConfig, path?:string) {
-    // if (stream) {
-    //   const opts = mopts.gulp;
-    //   if (conf.flushStream)
-    //     this.promises.push(new Promise((resolve, reject)=>{
-    //       stream.pipe(gulp.dest(path || conf.dest || '.', opts.dest))
-    //         .on('finish', resolve)
-    //         .on('error', reject);
-    //     }));
-    //   else {
-    //     return stream.pipe(gulp.dest(path || conf.dest || '.', opts.dest));
-    //   }
-    // }
     let opts = mopts.gulp || {};
     if (stream) stream.pipe(gulp.dest(path || conf.dest || '.', opts.dest));
     if (conf.flushStream) this.promises.push(toPromise(stream));
@@ -95,16 +79,15 @@ export class GBuilder {
   }
 
   addPlugins(plugins:Plugin | Plugin[]) {
-    // filter invalid plugin entries
     if (is.Array(plugins))
-      return this.plugins.concat((plugins as Plugin[]).filter(el=>el && !(el.constructor.name==='NullPlugin')));
-    if (plugins) this.plugins.push(plugins as Plugin);
+      this.plugins = this.plugins.concat((plugins as Plugin[])
+        .filter(el=>el && !(el.constructor.name==='NullPlugin')));  // filter invalid plugin entries
+    else if (plugins)
+      this.plugins.push(plugins as Plugin);
   }
 
   processPlugins(stream:Stream, mopts:Options, conf:Options, slot:Slot) {
     let plugins = conf.plugins ? this.plugins.concat(conf.plugins) : this.plugins;
-
-    // if (!stream || plugins.length<=0) return stream;
     if (plugins.length<=0) return stream;
 
     for (let plugin of plugins) {
@@ -132,6 +115,31 @@ export class GBuilder {
     const sourceMap = pluginOptions.sourceMap || buildOptions.sourceMap;
     const smOpts = pluginOptions.sourcemaps || mopts.sourcemaps || {};
     if (sourceMap && stream) stream = stream.pipe(require('gulp-sourcemaps').write(smOpts.dest || '.', smOpts.write));
+    return stream;
+  }
+
+  watchReload(stream: Stream, wopts:Options={}, mopts:Options={}, done?:TaskDoneFunction) {
+    if (stream) {
+      if (wopts.livereload) stream = stream.pipe(require('gulp-livereload')(mopts.livereload));
+      if (wopts.browserSync) {
+        let browserSync = require('browser-sync');
+        if (browserSync.has('gbm')) {
+          let bs = browserSync.get('gbm');
+          if (bs && stream) stream = stream.pipe(bs.stream(mopts.browserSync));
+        }
+      }
+      if (stream && done) stream.on('end', done).on('finish', done).resume();
+    }
+    else {
+      if (wopts.livereload) require('gulp-livereload')(mopts.livereload);
+      if (wopts.browserSync) {
+        let browserSync = require('browser-sync');
+        if (browserSync.has('gbm')) {
+          browserSync.get('gbm').reload(mopts.browserSync);
+        }
+      }
+      if (done) done();
+    }
     return stream;
   }
 }

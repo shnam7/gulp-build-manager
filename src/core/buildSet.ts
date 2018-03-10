@@ -101,7 +101,6 @@ export class GBuildSet {
           name: item.buildName,
           watched: item.src ? (is.Array(item.src) ? (item.src as string[]).slice(): [item.src as string]) : [],
           task: item.buildName,
-          livereload: false
         };
         Object.assign(watch, item.watch || {});
         if (item.watch && item.watch.watched) watch.watched = item.watch.watched;

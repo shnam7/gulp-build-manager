@@ -3,7 +3,7 @@
  */
 
 import * as gulp from 'gulp';
-import {WatchItem, WatchOptions} from "./types";
+import {WatchItem, WatchOptions} from './types';
 
 export class GWatcher {
   watchMap: WatchItem[] = [];
@@ -17,9 +17,16 @@ export class GWatcher {
     this.watchMap.push(watchItem);
   }
 
-  watch(watchOptions: WatchOptions) {
-    if (watchOptions && watchOptions.livereload)
+  watch(watchOptions: WatchOptions={}) {
+    if (watchOptions.livereload)
       require('gulp-livereload')(watchOptions.livereload);
+    if (watchOptions.browserSync) {
+      let browserSync = require('browser-sync');
+      let bs = browserSync.has('gbm') ? browserSync.get('gbm') : browserSync.create('gbm');
+      bs.init(watchOptions.browserSync,
+        ()=>console.log('browserSync server started with options:', watchOptions.browserSync)
+      );
+    }
 
     for (let item of this.watchMap) {
       console.log(`Watching ${item.name}: [${item.watched}]`);
