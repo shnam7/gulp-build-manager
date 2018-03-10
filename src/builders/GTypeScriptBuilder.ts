@@ -20,7 +20,7 @@ export class GTypeScriptBuilder extends GBuilder {
     const opts = conf.buildOptions || {};
     this.addPlugins([
       new TypeScriptPlugin(),
-      (opts.minify || opts.minifyOnly) ? new UglifyPlugin() : undefined,
+      new UglifyPlugin(),
     ]);
   }
 }

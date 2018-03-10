@@ -67,6 +67,7 @@
     "chai": "^4.1.2",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "^7.0.1",
+    "gulp-clone": "^2.0.1",
     "gulp-coffee": "^3.0.2",
     "gulp-coffeelint": "^0.6.0",
     "gulp-concat": "^2.6.1",

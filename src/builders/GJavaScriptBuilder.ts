@@ -21,7 +21,7 @@ export default class GJavaScriptBuilder extends GBuilder {
     this.addPlugins([
       new JavaScriptPlugin(),
       (conf.outFile) ? new ConcatPlugin() : undefined,
-      (opts.minify || opts.minifyOnly) ? new UglifyPlugin() : undefined,
+      new UglifyPlugin(),
     ]);
   }
 }

@@ -1,12 +1,12 @@
 # Changelog
 
 ## v2.1 - 2018-03-06
-- source converted to typescript
-- Dependencies to lodash.pick, lodash.merge is removed 
+- convert source codes into typescript
+- Remove lodash.pick and lodash.merge 
+- Add browser-sync support
 
 ## 2.0.1 - 2018-01-06
-- moduleOptions supported in systemBuilds
-//TODO: update docs on using sourceRoot option
+- Add moduleOptions support in systemBuilds
 
 ## v2.0.0 - 2017-12-19
-- UglifyPlugin fixed to have correct to generate non-minified output.
+- Fix: UglifyPlugin to generate non-minified output correctly.

@@ -47,6 +47,7 @@ const scripts = {
   dest: upath.join(destRoot, 'js'),
   buildOptions: {
     minifyOnly: true,
+    sourceMap: true,
     // tsConfig: './assets/scripts/tsconfig.json',
     printConfig: true
   },

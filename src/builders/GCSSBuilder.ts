@@ -18,7 +18,7 @@ export class GCSSBuilder extends GBuilder {
     const opts = conf.buildOptions || {};
     this.addPlugins([
       new CSSPlugin(),
-      (opts.minify || opts.minifyOnly) ? new CSSNanoPlugin() : undefined
+      new CSSNanoPlugin(opts)
     ]);
   }
 
