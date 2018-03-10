@@ -21,12 +21,20 @@ Defaule stot for the plugins to be plugged in is 'build', but it can be changed 
 <i>builder</i>: Builder object currently running
 You may noticed that the parameters are almost the same as GBuilder interfaces except the slot. With slot parameter, you can see in what stage the plugin is called.
 
+#### GPlugin.OnStream(stream, mopts, conf, slot), requires v2.1+
+<i>stream</i>:input stream to be processed
+<i>mopts</i>: module options used in build process
+<i>conf</i>: build configuration object
+<i>slot</i>: name of current build stage
+<i>builder</i>: Builder object currently running
+This is called from GPlugin.process only if the stream is valid gulp stream. You are recommended to overload this function unless you are going to process undefined stream argument.
+
 Now, let's see an example, a snippet from gbm.DebugPlugin source codes:
 ```javascript
 class DebugPlugin extends GPlugin {
   constructor(options={}, slots='build') { super(options, slots); }
 
-  process(stream, mopts, conf, slot, builder) {
+  OnStream(stream, mopts, conf, slot, builder) {
     let debug = require('gulp-debug');
     let title = this.options ? this.options.title : "";
     title = title ? title+':' : "";

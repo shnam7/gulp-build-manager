@@ -89,7 +89,7 @@ export class GBuilder {
       this.plugins.push(plugins as Plugin);
   }
 
-  processPlugins(stream:Stream, mopts:Options, conf:Options, slot:Slot) {
+  processPlugins(stream:Stream, mopts:Options, conf:BuildConfig, slot:Slot) {
     let plugins = conf.plugins ? this.plugins.concat(conf.plugins) : this.plugins;
     if (plugins.length<=0) return stream;
 

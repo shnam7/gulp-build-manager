@@ -2,7 +2,7 @@
  *  gbm Plugin - Concatenation
  */
 import {GPlugin} from "../core/plugin";
-import {Options, Slot, Stream} from "../core/types";
+import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 
 export class ConcatPlugin extends GPlugin {
@@ -10,7 +10,7 @@ export class ConcatPlugin extends GPlugin {
     super(options, slots);
   }
 
-  process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) {
+  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
     // check for filter option (to remove .map files, etc.)
     const filter = this.options.filter || ['**', '!**/*.map'];
     if (filter && stream) stream = stream.pipe(require('gulp-filter')(filter));

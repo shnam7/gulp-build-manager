@@ -97,7 +97,7 @@ const jekyll = {
       options: [
         '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
         // '--baseurl http://localhost:63342/gulp-build-manager/_gh_pages',  // root folder relative to local server,
-        '--baseurl http://localhost:3000',  // root folder relative to local server,
+        '--baseurl http://localhost:3100',  // root folder relative to local server,
         '--incremental'
       ]
     }
@@ -118,7 +118,7 @@ gbm({
       // livereload:{start:true},
       browserSync: {
         server: '../_gh_pages',
-        // open: 'local',
+        port: 3100,
         // reloadDelay: 0
       }
     }

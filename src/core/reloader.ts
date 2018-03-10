@@ -5,15 +5,17 @@ import {Options, Stream, TaskDoneFunction} from "./types";
 
 export class GReloader {
   livereload: any = undefined;
-  browserSync: any = undefined
+  browserSync: any = undefined;
 
   constructor(options?: Options) {
     if (options) this.init(options);
   }
 
   init(opts: Options) {
-    if (!this.livereload && opts.livereload)
-      this.livereload = require('gulp-livereload')(opts.livereload);
+    if (!this.livereload && opts.livereload) {
+      this.livereload = require('gulp-livereload');
+      this.livereload(opts.livereload);
+    }
     if (!this.browserSync && opts.browserSync) {
       let browserSync = require('browser-sync');
       this.browserSync = browserSync.has('gbm') ? browserSync.get('gbm') : browserSync.create('gbm');

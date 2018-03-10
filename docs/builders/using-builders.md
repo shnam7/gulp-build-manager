@@ -133,8 +133,14 @@ List of glob string referencing additional watch targets. This option can be use
 
 #### conf.watch.livereload
 <i>type: boolean | Object</i><br>
-<i>default: false</i><br>
+<i>default: true (v2.1 or later)</i><br>
 Enable or disable livereload. The value can be options object to gulp-livereload module.
+
+
+#### conf.watch.browserSync
+<i>type: boolean</i><br>
+<i>default: true</i><br>
+Enable or disable browserSync. Options to browser-sync module can be set in conf.modulesOptions.browserSync.
 
 
 ### BuildSet
@@ -146,7 +152,7 @@ BuildSet is a collection of build configurations with series or parallel depende
   4. gulp task name (string)
   5. Another BuildSet object
   6. array of the above.
-  7. gbm.series(any list of the above): this returns 5(Another BuildSet)
+  7. gbm.series(any list of the above): this returns #5(Another BuildSet)
   8. gbm.parallel(any list of the above): this returns 5(Another BuildSet)
 
 #### Examples

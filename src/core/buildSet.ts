@@ -71,7 +71,10 @@ export class GBuildSet {
       else if (is.Object(item) && item.hasOwnProperty('buildName')) {
         item = item as BuildConfig;
         // convert prop name: outfile-->outFile
-        if (!item.outFile && item.outfile) item.outFile = item.outfile;
+        if (!item.outFile && item.outfile) {
+          console.log(`[GBM][buildName=${item.buildName}] BuildConfig.outfile is deprecated. Please use outFile instead.`);
+          item.outFile = item.outfile;
+        }
 
         let builder = this.getBuilder(item, customDirs);
         builder.reloader = watcher.reloader;

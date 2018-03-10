@@ -2,16 +2,15 @@
  *  gbm Plugin - Uglify
  */
 
-import {BuildConfig, Options, Slot, Stream} from "../core/types";
+import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import ChangedPlugin from "./ChangedPlugin";
 import {toPromise} from "../core/utils";
 
 export class UglifyPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
 
-  process(stream:Stream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
+  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
     const opts = conf.buildOptions || {};
 
     const minitfy = this.options.minify || opts.minify;
@@ -26,10 +25,10 @@ export class UglifyPlugin extends GPlugin {
 
     // check for filter option (to remove .map files, etc.)
     const filter = this.options.filter || ['**', '!**/*.{map,d.ts}'];
-    if (filter && stream) stream = stream.pipe(require('gulp-filter')(filter));
+    if (filter) stream = stream.pipe(require('gulp-filter')(filter));
 
     // minify
-    stream = stream && stream
+    stream = stream
       .pipe(require('gulp-uglify')(this.options.uglify || mopts.uglify))
       .on('error', (e:any) => {
         console.log('Uglify:Error on File:', e.fileName);
@@ -37,7 +36,7 @@ export class UglifyPlugin extends GPlugin {
       });
 
     // check rename option
-    return stream && stream.pipe(require('gulp-rename')(this.options.rename || {extname:'.min.js'}));
+    return stream.pipe(require('gulp-rename')(this.options.rename || {extname:'.min.js'}));
   }
 }
 

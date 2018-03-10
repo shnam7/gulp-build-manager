@@ -2,7 +2,7 @@
   "name": "javascript",
   "version": "1.0.0",
   "description": "Gulp Build Manager Sample - javascript",
-  "main": "gulpfile.babel.js",
+  "main": "gulpfile.js",
   "author": "Robin Soo-hyuk Nam",
   "license": "MIT",
   "devDependencies": {

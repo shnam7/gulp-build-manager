@@ -4,7 +4,7 @@
 
 
 import {is} from "./utils";
-import {Options, Slot, Stream} from "./types";
+import {BuildConfig, GulpStream, Options, Slot, Stream} from "./types";
 import {GBuilder} from "./builder";
 
 export class GPlugin {
@@ -22,7 +22,7 @@ export class GPlugin {
 
   // get className() { return this.constructor.name; }
 
-  processPlugin(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) {
+  processPlugin(stream:Stream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
     // if (!stream || this.slots.indexOf(slot) === -1) return stream;
     if (this.slots.indexOf(slot) === -1) return stream;
     stream = this.process(stream, mopts, conf, slot, builder);
@@ -36,5 +36,9 @@ export class GPlugin {
    * @param slot is the callback location name currently activated
    * @returns {*} stream
    */
-  process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) { return stream; }
+  process(stream:Stream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
+    return stream ? this.OnStream(stream, mopts, conf, slot, builder) : stream;
+  }
+
+  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) { return stream; }
 }

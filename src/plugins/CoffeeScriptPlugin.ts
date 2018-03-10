@@ -1,15 +1,14 @@
 /**
  *  gbm Plugin - CoffeeScript
  */
-import {Options, Slot, Stream} from "../core/types";
+import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import ChangedPlugin from "./ChangedPlugin";
 
 export class CoffeeScriptPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
 
-  process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) {
+  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
     const opts = conf.buildOptions || {};
     const lint = this.options.lint || opts.lint;
     const lintOpt = this.options.coffeelint || mopts.coffeelint;

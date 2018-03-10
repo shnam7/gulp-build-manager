@@ -4,6 +4,7 @@
 - convert source codes into typescript
 - Remove lodash.pick and lodash.merge 
 - Add browser-sync support
+- Add GPlugin.OnStream()
 
 ## 2.0.1 - 2018-01-06
 - Add moduleOptions support in systemBuilds

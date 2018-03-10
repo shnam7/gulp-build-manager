@@ -2,10 +2,9 @@
  *  gbm Plugin - Filter
  */
 
-import {Options, Slot, Stream} from "../core/types";
+import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import ChangedPlugin from "./ChangedPlugin";
 
 export class FilterPlugin extends GPlugin {
   filter:any = undefined;
@@ -14,13 +13,13 @@ export class FilterPlugin extends GPlugin {
     super(options, slots);
   }
 
-  process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) {
+  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
     this.filter = require('gulp-filter');
     return stream && stream.pipe(this.filter(this.patterns, this.options));
   }
 
-  restore(stream:Stream) {
-    return stream && stream.pipe(this.filter.restore);
+  restore(stream:GulpStream) {
+    return stream.pipe(this.filter.restore);
   }
 }
 

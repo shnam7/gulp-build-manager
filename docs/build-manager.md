@@ -77,8 +77,15 @@ Configures @watch task. All the watch items specified in each build configuratio
 ##### gbmConfig.systemBuilds.watch.livereload
 <i>type: Object</i><br>
 <i>default: undefined</i><br>
-Specifies livereload option. By default, it's disabled. To turn on it, set the value here to {livereload:{start:true}}.
+Specifies livereload options. By default, it's disabled. To turn it on, set the value here to {livereload:{start:true}} with other options as necessary.
  For more options on livereload, see [livereload](https://github.com/vohof/gulp-livereload#options-optional){:target="_blank"}.
+<br><br>
+
+##### gbmConfig.systemBuilds.watch.browserSync
+<i>type: Object</i><br>
+<i>default: undefined</i><br>
+Specifies browser-sync options. By default, it's disabled. To turn it on, set the options here such as {:{server:'../_gh_pages'}}.
+ For more options on livereload, see [Browsersync](https://browsersync.io/docs/options){:target="_blank"}.
 <br><br>
 
 

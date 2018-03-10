@@ -3,17 +3,17 @@
  */
 
 import * as upath from 'upath';
-import {Options, Slot, Stream} from "../core/types";
+import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
 
 export class WebPackPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
 
-  process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) {
+  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
     // check for filter option (to remove .map files, etc.)
     const filter = this.options.filter || ['**', '!**/*.map'];
-    if (filter && stream) stream = stream.pipe(require('gulp-filter')(filter));
+    if (filter) stream = stream.pipe(require('gulp-filter')(filter));
 
     const opts = conf.buildOptions || {};
     const configFile = this.options.configFile || opts.configFile;
@@ -25,7 +25,7 @@ export class WebPackPlugin extends GPlugin {
     if (!conf.src) conf.src = wpOpts.entry;
     if (!conf.dest) conf.dest = wpOpts.output.path;
 
-    return stream && stream.pipe(require('webpack-stream')(wpOpts));
+    return stream.pipe(require('webpack-stream')(wpOpts));
   }
 }
 

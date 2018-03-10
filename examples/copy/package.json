@@ -2,7 +2,7 @@
   "name": "copy",
   "version": "1.0.0",
   "description": "Gulp Build Manager Sample - copy",
-  "main": "gulpfile.babel.js",
+  "main": "gulpfile.js",
   "author": "Robin Soo-hyuk Nam",
   "license": "MIT",
   "devDependencies": {

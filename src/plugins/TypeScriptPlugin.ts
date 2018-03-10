@@ -3,15 +3,15 @@
  */
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {is} from '../core/utils';
-import {Options, Slot, Stream} from "../core/types";
+import {is, toPromise} from '../core/utils';
+import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
 
 export class TypeScriptPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
 
-  process(stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) {
+  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
     const opts = conf.buildOptions || {};
     const lint = this.options.lint || opts.lint;
     const tsConfig = this.options.tsConfig || opts.tsConfig;
@@ -26,7 +26,7 @@ export class TypeScriptPlugin extends GPlugin {
       const tsLint = require('gulp-tslint');
       const tsLintOpts = this.options.tslint || mopts.tslint;
       const tsLintExtra = this.options.tslintExtra || mopts.tslintExtra || {};
-      stream = stream && stream.pipe(tsLint(tsLintOpts)).pipe(tsLint.report(tsLintExtra.report));
+      stream = stream.pipe(tsLint(tsLintOpts)).pipe(tsLint.report(tsLintExtra.report));
     }
 
     const typescript = require('gulp-typescript');
@@ -50,36 +50,15 @@ export class TypeScriptPlugin extends GPlugin {
         console.log(`[TypeScriptPlugin]tsconfig evaluated(buildName:${conf.buildName}):\n`, {"compilerOptions":tsOpts});
     }
 
-
     // transpile .ts files
-    let tsStream = stream && stream.pipe(tsProject());
+    let tsStream = stream.pipe(tsProject());
 
     // process dts stream/ output directory is from tsconfig.json settings or conf.dest
     let dtsDir = tsStream.project.options.declationDir || conf.dest;
+    builder.promises.push(toPromise(tsStream.dts.pipe(gulp.dest(dtsDir))));
 
-
-    builder.promises.push(new Promise((resolve, reject)=>{
-      tsStream.dts.pipe(gulp.dest(dtsDir))
-        .on('end', resolve)
-        .on('error', reject);
-    }));
+    // continue with transpiled javascript files
     return tsStream.js;
-
-    //
-    // tsStream.dts.pipe(gulp.dest(dtsDir))
-    //
-    //
-    // // process js stream
-    // return require('merge-stream')([
-    //   conf.flushStream
-    //     ? this.promise.push(new Promise((resolve, reject)=>{
-    //       tsStream.dts.pipe(gulp.dest(dtsDir))
-    //         .on('end', resolve)
-    //         .on('error', reject);
-    //     }))
-    //     : tsStream.dts.pipe(gulp.dest(dtsDir)),
-    //   tsStream.js
-    // ]);
   }
 }
 

@@ -86,7 +86,10 @@ Default action does nothing but returns the stream.
 Closes the stream. Default action just calls stream.pipe()gulp.dest()) and returns the stream.
 
 #### OnPostBuild(stream, mopts, conf)
-Post build actions. Default action calls stream.pipe(livereload()) if livereload is enabled by conf.watch.livereload property, and Returns the stream.
+Post build actions. Default action is just returns the stream.
+
+#### reload(stream, mopts, conf)
+Reload the changed contents into web browsers. This is called automatically at the end of the build process.
 
 
 ### Example: adding debug() function to GSassBuilder stream

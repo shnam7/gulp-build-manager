@@ -1,7 +1,7 @@
 {
-  "name": "minimal",
+  "name": "reloader",
   "version": "1.0.0",
-  "description": "Gulp Build Manager Sample - minimal",
+  "description": "Gulp Build Manager Sample - reloader",
   "main": "gulpfile.js",
   "author": "Robin Soo-hyuk Nam",
   "license": "MIT",
