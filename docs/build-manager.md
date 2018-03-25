@@ -110,7 +110,7 @@ returns the built-in builder class with the name \<builderName\>. Currently avai
   - gbm.GPaniniBuilder
   - gbm.GTwigBuilder
   - gbm.GTypeScriptBuilder
-  - gbm.GWebPackBuilder
+  - gbm.GWebpackBuilder
   - gbm.GZipBuilder - File packer for distribution
 
 #### gbm.\<pluginName\>
@@ -127,5 +127,5 @@ returns the built-in plugin class with the name \<pluginName\>. Currently availa
   - gbm.TwigPlugin
   - gbm.TypeScriptPlugin
   - gbm.UglifyPlugin
-  - gbm.WebPackPlugin
+  - gbm.WebpackPlugin
   

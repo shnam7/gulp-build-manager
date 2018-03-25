@@ -5,7 +5,7 @@ import {Options, Stream} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {pick} from "../core/utils";
 
-export default class GImagesBuilder extends GBuilder {
+export class GImagesBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
@@ -16,3 +16,5 @@ export default class GImagesBuilder extends GBuilder {
     return stream && stream.pipe(require('gulp-imagemin')(mopts.imagemin))
   }
 }
+
+export default GImagesBuilder;

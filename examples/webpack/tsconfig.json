@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "rootDir": "assets/scripts/ts",
+    "outDir": ".",
+    "declaration": true,
+    "noEmitOnError": true,
+    "sourceMap": true
+  },
+  "include": ["assets/**/*.ts"],
+  "exclude": []
+}

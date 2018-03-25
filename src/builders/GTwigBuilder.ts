@@ -6,7 +6,7 @@ import {GBuilder} from "../core/builder";
 import TwigPlugin from "../plugins/TwigPlugin";
 import {pick} from "../core/utils";
 
-export default class GTwigBuilder extends GBuilder {
+export class GTwigBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
@@ -17,3 +17,5 @@ export default class GTwigBuilder extends GBuilder {
     this.addPlugins(new TwigPlugin());
   }
 }
+
+export default GTwigBuilder;

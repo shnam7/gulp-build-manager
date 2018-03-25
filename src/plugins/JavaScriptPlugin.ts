@@ -16,9 +16,9 @@ export class JavaScriptPlugin extends GPlugin {
     // check lint option
     if (opts.lint) {
       const esLint = require('gulp-eslint');
-      let lintExtra = mopts.eslintExtra || {};
+      let lintProps = mopts.eslintProps || mopts.eslintPropsExtra || {};
       stream = stream.pipe(esLint(mopts.eslint))
-        .pipe(esLint.format(lintExtra.format))
+        .pipe(esLint.format(lintProps.format))
         .pipe(esLint.failAfterError());
     }
     return stream.pipe(require('gulp-babel')(mopts.babel));

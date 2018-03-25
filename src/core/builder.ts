@@ -41,7 +41,7 @@ export class GBuilder {
 
   OnInitModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {
     Object.assign(mopts, pick(defaultModuleOptions, 'gulp','changed','order'));
-    Object.assign(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions, conf))
+    Object.assign(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions, conf));
     Object.assign(mopts, conf.moduleOptions);
     return mopts;
   }

@@ -83,11 +83,11 @@ export class GBuildManager {
     let basePath = "";
     if (is.String(config)) {
       basePath = upath.dirname(config as string);
-      config = require(upath.join(process.cwd(), config))
+      config = require(upath.join(process.cwd(), config as string))
     }
 
     config = config as Options;
-    let customBuildDir = upath.join(basePath, config.customBuilderDir || "");
+    let customBuildDir = upath.join(basePath, config.customBuilderDir as string || "");
 
     if (config.moduleOptions) Object.assign(this.defaultModuleOptions, config.moduleOptions);
 
@@ -98,7 +98,7 @@ export class GBuildManager {
     if (config.builds) {
       const builds = is.Array(config.builds) ? config.builds : [config.builds];
       for (let buildItem of builds) {
-        if (is.String(buildItem)) buildItem = require(upath.join(process.cwd(), basePath, buildItem));
+        if (is.String(buildItem)) buildItem = require(upath.join(process.cwd(), basePath, buildItem as string));
         let bs = new GBuildSet(buildItem as BuildSet);
         bs.resolve(customBuildDir, this.defaultModuleOptions, this.watcher, this.cleaner);
       }

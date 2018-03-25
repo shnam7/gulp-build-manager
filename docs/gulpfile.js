@@ -21,7 +21,7 @@ const scss = {
   buildOptions: {
     minifyOnly: true,
     postcss: true,
-    sourceMap: true
+    // sourceMap: true
   },
   moduleOptions: {
     postcss: {
@@ -47,7 +47,7 @@ const scripts = {
   dest: upath.join(destRoot, 'js'),
   buildOptions: {
     minifyOnly: true,
-    sourceMap: true,
+    // sourceMap: true,
     // tsConfig: './assets/scripts/tsconfig.json',
     printConfig: true
   },
@@ -94,7 +94,7 @@ const jekyll = {
   moduleOptions: {
     jekyll: {
       command: 'build',
-      options: [
+      args: [
         '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
         // '--baseurl http://localhost:63342/gulp-build-manager/_gh_pages',  // root folder relative to local server,
         '--baseurl http://localhost:3100',  // root folder relative to local server,

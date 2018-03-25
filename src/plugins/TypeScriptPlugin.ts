@@ -19,14 +19,14 @@ export class TypeScriptPlugin extends GPlugin {
 
     // conf setting will override module settings(mopts)
     if (conf.outFile) Object.assign(tsOpts, {outFile:upath.resolve(conf.outFile)});
-    if (conf.outFile && is.String(conf.dest)) Object.assign(tsOpts, {outDir:upath.resolve(conf.dest)});
+    if (conf.outFile && is.String(conf.dest)) Object.assign(tsOpts, {outDir:upath.resolve(conf.dest as string)});
 
     // check lint option
     if (lint) {
       const tsLint = require('gulp-tslint');
       const tsLintOpts = this.options.tslint || mopts.tslint;
-      const tsLintExtra = this.options.tslintExtra || mopts.tslintExtra || {};
-      stream = stream.pipe(tsLint(tsLintOpts)).pipe(tsLint.report(tsLintExtra.report));
+      const tsLintProps = this.options.tslintProps || this.options.tslintExtra || mopts.tslintExtra || {};
+      stream = stream.pipe(tsLint(tsLintOpts)).pipe(tsLint.report(tsLintProps.report));
     }
 
     const typescript = require('gulp-typescript');

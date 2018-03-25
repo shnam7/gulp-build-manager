@@ -1,6 +1,6 @@
 console.log('This is sample1');
 
-class Greeter {
+export class Greeter {
     constructor(public greeting: string) { }
     greet() {
       let square = (x:number)=>x*x;

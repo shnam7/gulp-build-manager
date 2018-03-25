@@ -36,6 +36,7 @@ gbm({
   customBuilderDir: './custom-builders',
   systemBuilds: {
     build: [customFunction, customBuilder, myBuilder],
+    clean: [""],  // dummy to create '@close' task to make main gulpfile not to fail with error
     default: ['customFunction', 'customBuilder', 'myBuilder']
   }
 });

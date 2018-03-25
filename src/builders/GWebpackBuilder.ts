@@ -1,22 +1,23 @@
 /**
- *  Panini Builder
+ *  Webpack Builder
  */
 import {GBuilder} from "../core/builder";
 import {Options} from "../core/types";
 import {pick} from "../core/utils";
+import {WebpackPlugin} from "../plugins/WebpackPlugin";
 
-export class GPaniniBuilder extends GBuilder {
+export class GWebpackBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
-    return pick(defaultModuleOptions, 'panini');
+    return pick(defaultModuleOptions, 'webpack');
   }
 
   OnPreparePlugins(mopts:Options, conf:Options) {
-    const panini = require('panini');
-    panini.refresh();
-    this.addPlugins(stream=>stream && stream.pipe(panini(mopts.panini)));
+    this.addPlugins([
+      new WebpackPlugin()
+    ]);
   }
 }
 
-export default GPaniniBuilder;
+export default GWebpackBuilder;

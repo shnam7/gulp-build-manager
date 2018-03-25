@@ -26,10 +26,12 @@ export class CSSPlugin extends GPlugin {
       const stylelint = require('stylelint');
       const syntax = (sourceType && sourceType!=='css') ? require('postcss-'+sourceType) : undefined;
       const lintOpts = this.options.stylelint || mopts.stylelint || {rules:{}};
-      const lintExtra = this.options.stylelintExtra || mopts.stylelintExtra || {reporter:{clearMessages:true, throwError:true}};
+      const lintProps = this.options.stylelintProps || mopts.stylelintProps
+        || this.options.stylelintExtra || mopts.stylelintExtra
+        || {reporter:{clearMessages:true, throwError:true}};
       stream = stream.pipe(pcss([
         stylelint(lintOpts),
-        reporter(lintExtra.reporter)
+        reporter(lintProps.reporter)
       ], {syntax:syntax}));
     }
 

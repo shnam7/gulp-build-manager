@@ -11,6 +11,7 @@ gbm provides various built-in builder classes including:
   - GCoffeeScriptBuilder
   - GConcatBuilder
   - GCSSBuilder - sass/scss/less/postcss builder.
+  - GExternalBuilder - builder to run external commands.
   - GImagesBuilder - Image optimizer
   - GJavaScriptBuilder
   - GJekyllBuilder
@@ -18,7 +19,7 @@ gbm provides various built-in builder classes including:
   - GPaniniBuilder
   - GTwigBuilder
   - GTypeScriptBuilder
-  - GWebPackBuilder
+  - GWebpackckBuilder
   - GZipBuilder - File packer for distribution
 
 Those classes can be extended or modified using class inheritance.<br>

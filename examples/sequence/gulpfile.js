@@ -49,6 +49,7 @@ const buildItem4 = {
 gbm({
   systemBuilds: {
     build: [buildItem1, buildItem2, buildItem3, buildItem4],
+    clean: [""],  // dummy to create '@close' task to make main gulpfile not to fail with error
     default: ['series', 'parallel']
   }
 });

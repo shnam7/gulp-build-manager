@@ -2,6 +2,13 @@ import * as glob from 'glob';
 import * as upath from 'upath';
 import {GulpStream} from "./types";
 
+// export function removeExt(fileName: string, ext: string) {
+//   if (!ext) return fileName;
+//   ext = (ext[0] === '.') ? ext : '.' + ext;
+//   return (fileName.slice(-ext.length) === ext) ? fileName.slice(0, -ext.length) : fileName;
+// }
+
+
 /** pick */
 export function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
   const ret: any = {};
@@ -50,7 +57,7 @@ export function addProperty(obj: any, propName: string, propValue: any) {
 
 export function registerPropertiesFromFiles(obj: any, globPattern: string, callback?:(file:string)=>string ) {
   let files: string[] = [];
-  let cb = callback ? callback : (file:string)=>upath.removeExt(file, '.js')
+  let cb = callback ? callback : (file:string)=>upath.removeExt(file, '.js');
 
   glob.sync(globPattern).forEach(file => files.push(cb(file)));
   files.forEach(file=>addProperty(obj, upath.basename(file), ()=>require(file).default));

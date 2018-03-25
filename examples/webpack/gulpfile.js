@@ -1,7 +1,7 @@
 // Sample
 
 const gbm = require('../../lib');
-const upath = require('upath');
+const path = require('path');
 
 process.chdir(__dirname);
 
@@ -12,51 +12,37 @@ const destRoot = '_build';
 // build configuration
 const webpack = {
   buildName: 'webpack',
-  builder: 'GWebPackBuilder',
-  src: [upath.join(srcRoot, 'scripts/ts/main.ts')],
-  // src: [upath.join(srcRoot, 'scripts/ts/**/!(*.d).ts')],
-  //
-  // // use order property to set outFile orders
-  // order: ['*ts-2.ts'],
-  dest: upath.resolve(__dirname, 'scripts/js'),
-  outFile: upath.join(destRoot, 'js/sample-ts.js'),
+  builder: 'GWebpackBuilder',
+  // src: [path.join(srcRoot, 'scripts/ts/app.ts')],
+  // dest: path.join(destRoot, 'jss'),
+  // outFile: 'sample-ts.js',
   buildOptions: {
-    sourceMap: true,
-    minify: true,
-    // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
-    tsConfig: upath.join(srcRoot, 'scripts/tsconfig.json')
+    webpackConfig: 'webpack.config.js'
   },
   moduleOptions: {
     webpack: {
-      // resolve: {
-      //   extensions: ["", ".webpack.js", ".web.js", ".ts", ".js"]
-      // },
-      module: {
-        rules: [
-          {
-            enforce: 'pre',
-            test: /\.ts$/,
-            loader: 'tslint-loader'
-          }
-        ],
-        loaders: [
-          {test: /\.ts$/, loader: 'ts-loader'}
-        ]
-      },
-    },
-    tslint: {
-      failOnHint: true,
-      // configuration: require('./tslint.json')
-      configuration: {
-        "extends": "tslint:recommended",
-        rules: {
-          "new-parens": true,
-        }
-      }
+      // entry: path.resolve(srcRoot, 'scripts/ts/app.ts'),
+    //   mode: 'production',
+    //   devtool: 'source-map',
+    //   module: {
+    //     rules: [
+    //       {
+    //         test: /\.tsx?$/,
+    //         use: 'ts-loader',
+    //         exclude: /node_modules/
+    //       }
+    //     ],
+    //   },
+    //   resolve: {
+    //     extensions: ['.tsx', '.ts', '.js']
+    //   },
+    //   output: {
+    //     filename: 'bundle-1.js',
+    //     path: path.resolve(destRoot, 'js-1')
+    //   },
     },
   }
 };
-
 
 // build manager
 gbm({
@@ -64,7 +50,8 @@ gbm({
     build: [webpack],
     clean: [
       destRoot,
-      upath.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}')
+      path.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}'),
+      'node_modules'    // clean up temporary files in node_modules
     ],
     default: ['@clean', '@build'],
   }

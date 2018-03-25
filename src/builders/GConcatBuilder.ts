@@ -7,7 +7,7 @@ import {GBuilder} from "../core/builder";
 import {ConcatPlugin} from "../plugins/ConcatPlugin";
 import {pick} from "../core/utils";
 
-export default class GConcatBuilder extends GBuilder {
+export class GConcatBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
@@ -18,3 +18,5 @@ export default class GConcatBuilder extends GBuilder {
     this.addPlugins(new ConcatPlugin());
   }
 }
+
+export default GConcatBuilder;

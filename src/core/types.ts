@@ -2,6 +2,7 @@ import {GBuilder} from "./builder";
 import {GPlugin} from "./plugin";
 import {GBuildSet} from "./buildSet";
 import * as Undertaker from "undertaker";
+import {SpawnOptions} from "child_process";
 
 export type GulpStream = NodeJS.ReadWriteStream;
 export type Stream = GulpStream | undefined;
@@ -26,9 +27,15 @@ export type Plugin = PluginFunction | PluginObject | GPlugin | undefined;
 /** BuildSet */
 export type BuilderFuncion = (mopts:Options, conf:Options, done:TaskDoneFunction)=>void;
 
+export interface ExternalBuilder {
+  command: string;
+  args?: string[];
+  options?: SpawnOptions;
+}
+
 export interface BuildConfig {
   buildName: string;    // mandatory
-  builder?: string | GBuilder;
+  builder?: string | GBuilder | ExternalBuilder;
   src?: string | string[];
   order?: string[];
   dest?: string;

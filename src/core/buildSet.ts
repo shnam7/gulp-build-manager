@@ -6,11 +6,12 @@
 import * as gulp from 'gulp';
 import * as upath from 'upath';
 import {is} from './utils';
-import {BuildConfig, BuildSet, Options, TaskDoneFunction, WatchItem} from "./types";
+import {BuildConfig, BuildSet, ExternalBuilder, Options, TaskDoneFunction, WatchItem} from "./types";
 import {GWatcher} from "./watcher";
 import {GCleaner} from "./cleaner";
 import {GBuilder} from "./builder";
 import {TaskFunction} from "gulp";
+import GExternalBuilder from "../builders/GExternalBuilder";
 
 // BuildSet items are processed in gulp parallel task by default
 /**
@@ -132,13 +133,22 @@ export class GBuildSet {
         done();
       }
     };
+    if (is.Object(builder)) {
+      if (!builder.hasOwnProperty('command'))
+        throw Error(`[buildName:${buildItem.buildName}]builder.command is not specified.`);
+      return new GExternalBuilder(
+        (builder as ExternalBuilder).command,
+        (builder as ExternalBuilder).args,
+        (builder as ExternalBuilder).options
+      );
+    }
 
     // try custom dir first to give a chance to overload default builder
     if (is.String(customDirs)) customDirs = [customDirs as string];
     if (customDirs) {
       // console.log(`Trying custom builders in '${customDirs}'`);
       for (const customDir of customDirs) {
-        let pathName = upath.join(process.cwd(), customDir, builder);
+        let pathName = upath.join(process.cwd(), customDir, builder as string);
         try {
           let builderClass = require(pathName);
           return new builderClass;
@@ -150,8 +160,8 @@ export class GBuildSet {
     }
 
     // if custom builder is not available, then try default builder
-    if (buildItem.builder === 'GBuilder') return new GBuilder();
-    let pathName = upath.join(__dirname, '../builders', buildItem.builder);
+    if (builder === 'GBuilder') return new GBuilder();
+    let pathName = upath.join(__dirname, '../builders', builder as string);
     try {
       let builderClass = require(pathName);
       return new builderClass.default();

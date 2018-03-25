@@ -6,7 +6,7 @@ import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {MarkdownPlugin} from "../plugins/MarkdownPlugin";
 
-export default class GMarkdownBuilder extends GBuilder {
+export class GMarkdownBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
@@ -17,3 +17,5 @@ export default class GMarkdownBuilder extends GBuilder {
     this.addPlugins(new MarkdownPlugin());
   }
 }
+
+export default GMarkdownBuilder;

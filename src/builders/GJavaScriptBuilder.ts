@@ -9,11 +9,11 @@ import JavaScriptPlugin from "../plugins/JavaScriptPlugin";
 import {ConcatPlugin} from "../plugins/ConcatPlugin";
 import {UglifyPlugin} from "../plugins/UglifyPlugin";
 
-export default class GJavaScriptBuilder extends GBuilder {
+export class GJavaScriptBuilder extends GBuilder {
   constructor() { super(); }
 
   OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
-    return pick(defaultModuleOptions, 'babel', 'uglify', 'eslint', 'eslintExtra');
+    return pick(defaultModuleOptions, 'babel', 'uglify', 'eslint', 'eslintExtra', 'eslintProps');
   }
 
   OnPreparePlugins(mopts:Options, conf:Options) {
@@ -25,3 +25,5 @@ export default class GJavaScriptBuilder extends GBuilder {
     ]);
   }
 }
+
+export default GJavaScriptBuilder;
