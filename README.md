@@ -5,6 +5,7 @@ Gulp Build Manager, gbm in a short name, is an easy to use, flexible gulp task m
 ### References
   - [Documentation][0]
   - [Examples][1]
+  - [ChangeLog][2]
 
 gbm provides various built-in builder classes including:
   - GBuilder - Base Builder, which work as a Copy Builder.
@@ -31,6 +32,7 @@ You can also check out various working [examples][1] in GitHub.
 
 [0]: https://shnam7.github.io/gulp-build-manager/
 [1]: ./examples
+[2]: ./CHANGELOG.md
 
 <br>
 <br>

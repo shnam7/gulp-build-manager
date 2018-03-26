@@ -1,5 +1,5 @@
 # Changelog
-## 2.2 - 2018-03-25
+## v2.2 - 2018-03-25
 - Add GExternalBuilder and exmaples/external (Sec docs)
 - Add GWebpackBuilder, WebpackPlugin (See docs)
 - Simplify GJekyllBuilder with improved error handling by extending from GExternalBuilder.
