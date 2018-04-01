@@ -2,7 +2,7 @@
  *  Jekyll Builder
  */
 import {Options, Stream} from "../core/types";
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 import GExternalBuilder from "./GExternalBuilder";
 
 export class GJekyllBuilder extends GExternalBuilder {

@@ -6,7 +6,7 @@ import * as gulp from 'gulp';
 import {GPlugin} from "../core/plugin";
 import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
-import {toPromise} from "../core/utils";
+import {toPromise} from "../utils/utils";
 
 export interface CopyTarget {
   src: string[];

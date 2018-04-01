@@ -5,7 +5,7 @@
 
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {is} from './utils';
+import {is} from '../utils/utils';
 import {BuildConfig, BuildSet, ExternalBuilder, Options, TaskDoneFunction, WatchItem} from "./types";
 import {GWatcher} from "./watcher";
 import {GCleaner} from "./cleaner";

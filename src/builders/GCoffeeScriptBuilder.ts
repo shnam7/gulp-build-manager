@@ -3,7 +3,7 @@
  */
 import {GBuilder} from "../core/builder";
 import {Options} from "../core/types";
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 import {CoffeeScriptPlugin} from "../plugins/CoffeeScriptPlugin";
 import {ConcatPlugin} from "../plugins/ConcatPlugin";
 import {UglifyPlugin} from "../plugins/UglifyPlugin";

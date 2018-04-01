@@ -3,7 +3,7 @@
  */
 
 
-import {is} from "./utils";
+import {is} from "../utils/utils";
 import {BuildConfig, GulpStream, Options, Slot, Stream} from "./types";
 import {GBuilder} from "./builder";
 

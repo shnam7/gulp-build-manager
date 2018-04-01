@@ -1,6 +1,6 @@
 import * as glob from 'glob';
 import * as upath from 'upath';
-import {GulpStream} from "./types";
+import {GulpStream} from "../core/types";
 
 // export function removeExt(fileName: string, ext: string) {
 //   if (!ext) return fileName;
@@ -67,10 +67,32 @@ export function registerPropertiesFromFiles(obj: any, globPattern: string, callb
 export function toPromise<T>(stream:GulpStream|undefined): Promise<T> {
   if (!stream) return new Promise<T>((resolve)=>resolve());
   return new Promise<T>((resolve, reject)=>{
-    stream
+    return stream
       .on('end', resolve)       // event for read stream
       .on('finish', resolve)    // event for write stream
       .on('error', reject)
       .resume();
   })
 }
+
+export let wait = (msec: number) => new Promise(res => setTimeout(res, msec));
+
+// export function npmInstallGuard(func:()=>void, options: Options={}) {
+//   let errorCount = 0;
+//   let promise = new Promise<void>((res)=>res());  // initially resolved promise
+//   while (true) {
+//     try {
+//       promise.then(func);
+//       break;  // exit loop if no exception occurred
+//     }
+//     catch (e) {
+//       if (e.code !== 'MODULE_NOT_FOUND') throw e;
+//       if (errorCount++ === 1) throw e;  // just try installation once
+//       let moduleName = e.message.slice(e.message.indexOf("'")+1, e.message.lastIndexOf("'"));
+//       if (moduleName.startsWith('.')) throw e;  // not referring to node_modules
+//       console.log(chalk.yellow(`** Installing node package:${moduleName}...`));
+//       promise = npmInstall(moduleName);
+//     }
+//     errorCount = 0;
+//   }
+// }

@@ -3,7 +3,7 @@
  */
 import {Options, Stream} from "../core/types";
 import {GBuilder} from "../core/builder";
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 
 export class GImagesBuilder extends GBuilder {
   constructor() { super(); }

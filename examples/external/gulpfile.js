@@ -7,7 +7,7 @@ process.chdir(__dirname);
 
 const cmd1 = {
   buildName: 'external-command1',
-  builder: new gbm.GExternalBuilder('dir', ['.'], {shell:true, env:process.env}),
+  builder: new gbm.GExternalBuilder('dir', ['.'], {shell:true}),
   flushStream: true
 };
 

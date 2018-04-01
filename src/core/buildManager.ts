@@ -13,7 +13,7 @@ import {GWatcher} from './watcher';
 import {GCleaner} from './cleaner';
 import {GBuildSet} from "./buildSet";
 import {BuildSet, GBMConfig, Options} from "./types";
-import {is} from "./utils";
+import {is} from "../utils/utils";
 
 export class GBuildManager {
   watcher = new GWatcher();

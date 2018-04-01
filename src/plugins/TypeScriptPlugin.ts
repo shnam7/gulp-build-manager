@@ -3,7 +3,7 @@
  */
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {is, toPromise} from '../core/utils';
+import {is, toPromise} from '../utils/utils';
 import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";

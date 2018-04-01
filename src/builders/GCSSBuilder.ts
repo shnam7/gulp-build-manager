@@ -2,7 +2,7 @@
  *  CSS Builder with support for Sass/Scss, Less and PostCSS
  */
 import {GBuilder} from "../core/builder";
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 import {BuildConfig, Options, Stream} from "../core/types";
 import {CSSPlugin} from "../plugins/CSSPlugin";
 import {CSSNanoPlugin} from "../plugins/CSSNanoPlugin";

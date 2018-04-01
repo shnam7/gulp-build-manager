@@ -1,7 +1,7 @@
 /**
  *  TypeScript Builder
  */
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {TypeScriptPlugin} from "../plugins/TypeScriptPlugin";

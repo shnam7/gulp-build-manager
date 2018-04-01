@@ -7,6 +7,6 @@
   "license": "MIT",
   "devDependencies": {
     "gulp-build-manager": "file:../..",
-    "panini": "^1.4.0"
+    "panini": "^1.6.2"
   }
 }

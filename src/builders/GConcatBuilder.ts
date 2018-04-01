@@ -5,7 +5,7 @@
 import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {ConcatPlugin} from "../plugins/ConcatPlugin";
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 
 export class GConcatBuilder extends GBuilder {
   constructor() { super(); }

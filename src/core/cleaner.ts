@@ -2,7 +2,7 @@
  *  GCleaner - Gulp task clean list manager
  */
 
-import {is} from "./utils";
+import {is} from "../utils/utils";
 import {CleanTarget} from "./types";
 import gulp = require("gulp");
 import del = require("del");

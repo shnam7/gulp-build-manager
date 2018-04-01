@@ -5,7 +5,7 @@
 import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {toPromise} from "../core/utils";
+import {toPromise} from "../utils/utils";
 
 export class UglifyPlugin extends GPlugin {
   constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }

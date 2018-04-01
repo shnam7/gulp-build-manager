@@ -4,11 +4,11 @@
 
 
 import * as gulp from 'gulp';
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 import {BuildConfig, Options, Plugin, Stream, TaskDoneFunction} from "../core/types";
 import {GPlugin} from "./plugin";
 import {PluginFunction, PluginObject, Slot, WatchOptions} from "./types";
-import {is, toPromise} from "./utils";
+import {is, toPromise} from "../utils/utils";
 import {GReloader} from "./reloader";
 
 export class GBuilder {
@@ -36,7 +36,7 @@ export class GBuilder {
     stream = this.processPlugins(this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild');
     stream = this.reload(stream, conf, mopts);
     this.promises.push(toPromise(stream));
-    Promise.all(this.promises).then(()=>done());
+    Promise.all(this.promises).then(() => done());
   }
 
   OnInitModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {

@@ -4,7 +4,7 @@
 import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import TwigPlugin from "../plugins/TwigPlugin";
-import {pick} from "../core/utils";
+import {pick} from "../utils/utils";
 
 export class GTwigBuilder extends GBuilder {
   constructor() { super(); }

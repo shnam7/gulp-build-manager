@@ -3,7 +3,7 @@
  */
 
 import * as upath from 'upath';
-import {registerPropertiesFromFiles} from "./core/utils";
+import {registerPropertiesFromFiles} from "./utils/utils";
 import {GBuildManager} from "./core/buildManager";
 import {GBuildSet} from "./core/buildSet";
 import {BuildConfig, BuildSet, Options} from "./core/types";

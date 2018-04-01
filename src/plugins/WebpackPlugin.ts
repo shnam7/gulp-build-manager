@@ -7,7 +7,7 @@ import * as upath from 'upath';
 import {BuildConfig, Options, Slot, Stream} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {is} from "../core/utils";
+import {is} from "../utils/utils";
 
 export class WebpackPlugin extends GPlugin {
 

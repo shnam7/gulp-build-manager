@@ -12,7 +12,7 @@ export class CoffeeScriptPlugin extends GPlugin {
     const opts = conf.buildOptions || {};
     const lint = this.options.lint || opts.lint;
     const lintOpt = this.options.coffeelint || mopts.coffeelint;
-    const coffeeOpts = this.options.coffees || mopts.coffee;
+    const coffeeOpts = this.options.coffee || mopts.coffee;
 
     if (lint) {
       const coffeeLint = require('gulp-coffeelint');
