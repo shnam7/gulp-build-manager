@@ -1,7 +1,7 @@
 // const expect = require('chai').expect;
 let assert = require('assert');
 const gbm = require('../lib');
-const pick = require('../lib/core/utils').pick;
+const pick = require('../lib/utils/utils').pick;
 
 module.exports = function () {
   describe('GBuilder', function () {
