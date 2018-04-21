@@ -17,6 +17,7 @@ const GCSSBuilder = gbm.GCSSBuilder;
   - [GBuilder]({{site.baseurl}}/builders/built-in/GBuilder)
   - [GCoffeeScriptBuilder]({{site.baseurl}}/builders/built-in/GCoffeeScriptBuilder)
   - [GConcatBuilder]({{site.baseurl}}/builders/built-in/GConcatBuilder)
+  - [GCopyBuilder]({{site.baseurl}}/builders/built-in/GCopyBuilder)
   - [GCSSBuilder]({{site.baseurl}}/builders/built-in/GCSSBuilder)
   - [GExternalBuilder]({{site.baseurl}}/builders/built-in/GExternalBuilder)
   - [GImagesBuilder]({{site.baseurl}}/builders/built-in/GImagesBuilder)

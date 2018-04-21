@@ -2,128 +2,114 @@
  *  Builder Base Class
  */
 
-
 import * as gulp from 'gulp';
-import {pick} from "../utils/utils";
-import {BuildConfig, Options, Plugin, Stream, TaskDoneFunction} from "../core/types";
+import {BuildConfig, BuildFunction, BuildFunctionObject, Options, Plugin, Stream} from "./types";
 import {GPlugin} from "./plugin";
-import {PluginFunction, PluginObject, Slot, WatchOptions} from "./types";
 import {is, toPromise} from "../utils/utils";
 import {GReloader} from "./reloader";
 
 export class GBuilder {
-  plugins: Plugin[] = [];
-  promises: Promise<void>[] = [];
+  stream: Stream;
+  conf: BuildConfig = {buildName: ''};
+  buildOptions: Options = {};
+  moduleOptions: Options = {};
   reloader: undefined | GReloader = undefined;
 
-  constructor() {}
+  protected customBuildFunc = (builder: GBuilder) => {
+    this.src().dest();
+  };
 
-  build(defaultModuleOptions:Options, conf:BuildConfig, done:TaskDoneFunction) {
-    let mopts = this.OnInitModuleOptions({}, defaultModuleOptions || {}, conf || {});
+  constructor(buildFunc?: BuildFunction) {
+    if (buildFunc) this.customBuildFunc = buildFunc;
+  }
 
+  protected _run(action?: BuildFunction | BuildFunctionObject) {
+    if (is.Function(action)) return (action as BuildFunction)(this);
+    if (is.Object(action)) return (action as BuildFunctionObject)
+      .func(this, ...(action as BuildFunctionObject).args);
+  }
+
+
+  /**----------------------------------------------------------------
+   * Build sequence functions: Return value should be void or Promise
+   *-----------------------------------------------------------------*/
+
+  async _build(conf: BuildConfig) {    //: Promise<void | GulpStream | this>
     // reset variables
-    this.plugins = []; // caution: if not cleared here, added plugins can be accumulated
-    this.promises = []; // caution: if not cleared here, promises will be accumulated
+    this.conf = conf;
+    this.buildOptions = conf.buildOptions || {};
+    this.moduleOptions = conf.moduleOptions || {};
 
-    let ret = this.OnPreparePlugins(mopts, conf);
-    if (ret) this.plugins = ret;
-
-    // console.log(`'mopts for:${conf.buildName}:`, mopts);
-    let stream = this.OnInitStream(mopts, defaultModuleOptions, conf);
-    stream = this.processPlugins(stream, mopts, conf, 'initStream');
-    stream = this.processPlugins(this.OnBuild(stream, mopts, conf), mopts, conf, 'build');
-    stream = this.processPlugins(this.OnDest(stream, mopts, conf), mopts, conf, 'dest');
-    stream = this.processPlugins(this.OnPostBuild(stream, mopts, conf), mopts, conf, 'postBuild');
-    stream = this.reload(stream, conf, mopts);
-    this.promises.push(toPromise(stream));
-    Promise.all(this.promises).then(() => done());
+    await this._run(this.conf.preBuild);
+    await this.build();
+    await this.reload();
+    await this._run(this.conf.postBuild);
+    if (this.conf.flushStream) return toPromise(this.stream);
   }
 
-  OnInitModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {
-    Object.assign(mopts, pick(defaultModuleOptions, 'gulp','changed','order'));
-    Object.assign(mopts, this.OnBuilderModuleOptions(mopts, defaultModuleOptions, conf));
-    Object.assign(mopts, conf.moduleOptions);
-    return mopts;
+  build(): void | Promise<this | void> {
+    return this.customBuildFunc(this);
   }
 
-  OnPreparePlugins(mopts:Options={}, conf:BuildConfig): void {}
 
-  OnBuilderModuleOptions(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) { return {}; }
+  /**----------------------------------------------------------------
+   * Build utility functions: Returns value should be 'this'
+   *----------------------------------------------------------------*/
 
-  OnInitStream(mopts:Options={}, defaultModuleOptions:Options={}, conf:BuildConfig) {
-    let stream = conf.src ? gulp.src(conf.src, mopts.gulp) : undefined;
+  src(src?: string | string[]) {
+    if (!src) src = this.conf.src;
+    if (!src) return this;
+
+    this.stream = gulp.src(src, this.moduleOptions.gulp);
 
     // check input file ordering
-    if (conf.order && conf.order.length > 0) {
+    if (this.conf.order && this.conf.order.length > 0) {
       let order = require('gulp-order');
-      stream = stream && stream.pipe(order(conf.order, mopts.order));
+      this.pipe(order(this.conf.order, this.moduleOptions.order));
     }
-    return this.initSourceMaps(stream, conf.buildOptions, mopts);
+
+    // check sourceMap option
+    return this.sourceMaps({init: true});
   }
 
-  OnBuild(stream:Stream, mopts:Options={}, conf:BuildConfig) { return stream; }
-
-  OnDest(stream:Stream, mopts:Options={}, conf:BuildConfig) {
-    return stream && this.dest(stream, mopts, conf)
+  dest(path?: string) {
+    let opts = this.moduleOptions.gulp || {};
+    this.pipe(gulp.dest(path || this.conf.dest || '.', opts.dest));
+    return this;
   }
 
-  OnPostBuild(stream:Stream, mopts:Options={}, conf:BuildConfig) { return stream; }
-
-  /**
-   *
-   * Add builder plugins
-   * @param plugins can be GPlugin, {}, or plugin function with arguments(stream,conf, builder)
-   */
-  dest(stream:Stream, mopts:Options={}, conf:BuildConfig, path?:string) {
-    let opts = mopts.gulp || {};
-    if (stream) stream.pipe(gulp.dest(path || conf.dest || '.', opts.dest));
-    if (conf.flushStream) this.promises.push(toPromise(stream));
-    return stream;
+  pipe(destination: NodeJS.WritableStream, options?: { end?: boolean; }): this {
+    if (this.stream)
+      this.stream = this.stream.pipe(destination as NodeJS.WritableStream, options) as Stream;
+    return this;
   }
 
-  addPlugins(plugins:Plugin | Plugin[]) {
-    if (is.Array(plugins))
-      this.plugins = this.plugins.concat((plugins as Plugin[])
-        .filter(el=>el && !(el.constructor.name==='NullPlugin')));  // filter invalid plugin entries
-    else if (plugins)
-      this.plugins.push(plugins as Plugin);
+  on(event: string | symbol, listener: (...args: any[]) => void): this {
+    if (this.stream) this.stream = this.stream.on(event, listener);
+    return this;
   }
 
-  processPlugins(stream:Stream, mopts:Options, conf:BuildConfig, slot:Slot) {
-    let plugins = conf.plugins ? this.plugins.concat(conf.plugins) : this.plugins;
-    if (plugins.length<=0) return stream;
-
-    for (let plugin of plugins) {
-      if (plugin instanceof GPlugin)
-        stream = plugin.processPlugin(stream, mopts, conf, slot, this);
-      else if (is.Function(plugin) && slot==='build')
-        stream = (plugin as PluginFunction)(stream, mopts, conf, slot, this);
-      else {
-        let func = (plugin as PluginObject)[slot];
-        if (func) stream = func(stream, mopts, conf, slot, this);
-      }
-    }
-    return stream;
+  chain(action: Plugin, ...args: any[]): this {
+    action instanceof GPlugin
+      ? (action as GPlugin).process(this, ...args)
+      : action(this, ...args);
+    return this;
   }
 
-  initSourceMaps(stream:Stream, buildOptions:Options={}, mopts:Options={}) {
-    if (buildOptions.sourceMap && stream) {
-      const smOpts = mopts.sourcemaps || {};
-      stream = stream.pipe(require('gulp-sourcemaps').init(smOpts.init));
-    }
-    return stream;
+  sourceMaps(options: Options = {}) {
+    if (!this.buildOptions.sourceMap) return this;
+
+    const smOpts = options.sourcemaps || this.moduleOptions.sourcemaps || {};
+    if (options.init)
+      this.pipe(require('gulp-sourcemaps').init(smOpts.init));
+    else
+      this.pipe(require('gulp-sourcemaps').write(smOpts.dest || '.', smOpts.write));
+    return this;
   }
 
-  processSourceMaps(stream:Stream, pluginOptions:Options={}, buildOptions:Options={}, mopts:Options={}) {
-    const sourceMap = pluginOptions.sourceMap || buildOptions.sourceMap;
-    const smOpts = pluginOptions.sourcemaps || mopts.sourcemaps || {};
-    if (sourceMap && stream) stream = stream.pipe(require('gulp-sourcemaps').write(smOpts.dest || '.', smOpts.write));
-    return stream;
-  }
-
-  reload(stream: Stream, buildOptions:Options, mopts:Options={}) {
-    if (buildOptions.reload === false) return stream;
-    if (this.reloader) return this.reloader.reload(stream, mopts, buildOptions.watch);
-    return stream;
+  reload() {
+    if (this.buildOptions.reload !== false && this.reloader)
+      this.reloader.reload(this.stream, this.moduleOptions, this.buildOptions.watch);
+    return this;
   }
 }

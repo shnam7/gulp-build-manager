@@ -105,6 +105,7 @@ gbm({
     build: gbm.parallel(sass, less, postcss, copyHtml),
     clean: [destRoot],
     default: ['@clean', '@build'],
-    watch: {livereload:{start:true}}
+    // watch: {livereload:{start:true}}
+    watch: {browserSync:{server: '_build'}}
   }
 });

@@ -1,4 +1,14 @@
 # Changelog
+## v3.0.0-alpha.1
+- Redesign architecture utilizing Promise
+  - Change GBuilder and GPlugin interface
+  - Remove inline user plugin(BuildConf.plugins) support
+  - Add preBuild and postBuild entries to BuildConfig
+  - Full control on synchronous and asynchronous build actions
+  - Change gulp-uglify to uglify-es to support es6
+  - Remove DebugPlugin, FilterPlugin, ConcatPlugin, CopyPlugin, CSSNanoPlugin, UglifyPlugin, which are supported by GPlugin plugin functions (GPlugin.debug, etc)
+- Update examples using new interfaces
+
 ## v2.2 - 2018-03-25
 - Add GExternalBuilder and exmaples/external (Sec docs)
 - Add GWebpackBuilder, WebpackPlugin (See docs)

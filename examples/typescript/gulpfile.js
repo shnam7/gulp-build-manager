@@ -19,6 +19,7 @@ const typeScript = {
   order: ['*ts-2.ts'],
   dest: (file) => file.base,
   outFile: upath.join(destRoot, 'js/sample-ts.js'),
+  flushStream: true,
   buildOptions: {
     sourceMap: true,
     minify: true,

@@ -11,7 +11,7 @@ npm install gulp-build-manager --save-dev
 yarn add gulp-build-manager --dev
 ```
 
-If you have not installed gulp 4.0 yet, install it.
+If you have not installed gulp 4.0 yet, install it first.
 ```sh
 npm install gulpjs/gulp#4.0 --save-dev
 # or 

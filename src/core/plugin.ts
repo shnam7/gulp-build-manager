@@ -2,43 +2,119 @@
  *  GPlugin - Plugin management systems
  */
 
-
-import {is} from "../utils/utils";
-import {BuildConfig, GulpStream, Options, Slot, Stream} from "./types";
-import {GBuilder} from "./builder";
+import * as gulp from 'gulp';
+import * as path from 'path';
+import {Options} from './types';
+import {GBuilder} from './builder';
+import {toPromise, pick} from '../utils/utils';
+import {exec, ProcessOutput} from "../utils/process";
 
 export class GPlugin {
-  options: Options;
-  slots: Slot[];
+  constructor(public options: Options = {}) {}
 
   /**
-   * @param options:Object={}, is plugin options
-   * @param slots, string || [], is callback locations in build process. one or array of :'initStream, build, 'dest'
+   * Main routine of the plugin.
+   *
+   * @param {GBuilder} builder is a GBuilder object currently calling the plugin function
+   * @param {args} args plugin specific arguments.
+   * @returns void or Promise<any>. If Promise is returned, it weill be awaited by the builder
    */
-  constructor(options:Options = {}, slots:Slot | Slot[]='build') {
-    this.options = options;
-    this.slots = is.String(slots) ? [slots as Slot] : slots as Slot[];
+  process(builder: GBuilder, ...args: any[]): void | Promise<any> {}
+
+
+  /***** Ready-made plugin functions *****/
+
+  static debug(builder: GBuilder, options: Options={}) {
+    let title = options.title ? options.title : '';
+    title = `[debugPlugin${title ? ':' + title : ''}]`;
+    let opts = Object.assign({}, builder.moduleOptions.debug, options, {title});
+    builder.pipe(require('gulp-debug')(opts));
+    return toPromise(builder.stream);
   }
 
-  // get className() { return this.constructor.name; }
+  static filter(builder: GBuilder, pattern:string[], options: Options={}) {
+    let opts = Object.assign({}, builder.moduleOptions.filter, options);
+    builder.pipe(require('gulp-filter')(pattern, opts))
+  }
 
-  processPlugin(stream:Stream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
-    // if (!stream || this.slots.indexOf(slot) === -1) return stream;
-    if (this.slots.indexOf(slot) === -1) return stream;
-    stream = this.process(stream, mopts, conf, slot, builder);
-    return builder.processSourceMaps(stream, this.options, conf.buildOptions, mopts);
+  static concat(builder: GBuilder, options: Options = {}) {
+    // check for filter option (to remove .map files, etc.)
+    const filter = options.filter || ['**', '!**/*.map'];
+    if (filter) builder.pipe(require('gulp-filter')(filter));
+
+    const outFile = options.outFile || builder.conf.outFile;
+    if (!outFile) {
+      if (options.verbose) console.log('[concatPlugin] Missing conf.outFile. No output generated.');
+      return;
+    }
+
+    let opts = Object.assign({}, builder.moduleOptions.concat, options.concat);
+    builder.pipe(require('gulp-concat')(outFile, opts.concat));
+  }
+
+  static rename(builder: GBuilder, options: Options={}) {
+    let opts = Object.assign({}, builder.moduleOptions.concat, options.concat || options);
+    builder.pipe(require('gulp-rename')(opts))
   }
 
   /**
-   * @param stream is input stream to be processed, which has been created by gulp.src()
-   * @param mopts is moduleOptions property of build definition object
-   * @param conf is build definition object
-   * @param slot is the callback location name currently activated
-   * @returns {*} stream
+   * Copy files supporting multiple src/dest pairs
+   *  {
+   *    src: ['*.txt'],
+   *    dest: './text',
+   *    targets: [
+   *      {src: ['*.js'], dest: './js'},
+   *      {src: ['*.ts'], dest: './ts'}
+   *      //...
+   *    ]
+   *  }
    */
-  process(stream:Stream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
-    return stream ? this.OnStream(stream, mopts, conf, slot, builder) : stream;
+  static copy(builder:GBuilder, options:Options={}) {
+    let targets = [];
+    if (options.src && options.dest)
+      targets.unshift({src: options.src, dest: options.dest});
+    if (options.targets) targets = targets.concat(options.targets);
+
+    let promiseQ: Promise<any>[] = [];
+    for (const target of targets) {
+      console.log(`[copyPlugin] copying: [${target.src}] => ${target.dest}`);
+      promiseQ.push(toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest))));
+    }
+    return Promise.all(promiseQ).then(()=>Promise.resolve());
   }
 
-  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) { return stream; }
+  // minify javascripts
+  static uglify(builder: GBuilder, options: Options={}) {
+    // check for filter option (to remove .map files, etc.)
+    const filter = options.filter || ['**', '!**/*.{map,d.ts}'];
+    builder.pipe(require('gulp-filter')(filter));
+
+    // minify
+    const uglifyES = Object.assign({}, builder.moduleOptions.uglifyES, options.uglifyES);
+    builder.pipe(require('gulp-uglify-es').default(uglifyES));
+
+    // check rename option
+    const rename = Object.assign({}, builder.moduleOptions.cssnano, options.rename);
+    if (!rename.extname) rename.extname = '.min.js';
+    builder.pipe(require('gulp-rename')(rename)).sourceMaps(builder);
+  }
+
+  static cssnano(builder: GBuilder, options: Options={}) {
+    // check for filter option (to remove .map files, etc.)
+    const filter = options.filter || ['**', '!**/*.map'];
+    builder.pipe(require('gulp-filter')(filter));
+
+    // minify
+    const cssnano = Object.assign({}, builder.moduleOptions.cssnano, options.cssnano);
+    builder.pipe(require('gulp-cssnano')(cssnano));
+
+    // check rename option
+    const rename = Object.assign({}, builder.moduleOptions.cssnano, options.rename);
+    if (!rename.extname) rename.extname = '.min.css';
+    builder.pipe(require('gulp-rename')(rename)).sourceMaps(builder);
+  }
+
+  static exec(builder: GBuilder, cmd: string, args: string[]=[], options: Options={}) {
+    return exec(cmd, args, options);
+  }
 }

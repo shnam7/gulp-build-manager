@@ -8,6 +8,12 @@ process.chdir(__dirname);
 const srcRoot = 'assets';
 const destRoot = '_build';
 
+class MyPlugin extends gbm.GPlugin {
+  process(builder) {
+    console.log(`This is custom plugin. buildName=${builder.conf.buildName}`)
+  }
+}
+
 const copy = {
   buildName: 'copy',
   builder: 'GBuilder',
@@ -17,9 +23,12 @@ const copy = {
 
 const task1 = {
   buildName: 'task1',
-  builder: (conf, mopts, done)=>{
-    console.log(`task1 executed: src=${conf.src}, clean=${conf.clean}`);
-    done(); // signal end of task
+  builder: (builder)=>{
+    builder
+      .chain(new MyPlugin())
+      .chain((builder)=>console.log(`custom plugin#1, buildName=${builder.conf.buildName}`))
+      .chain(()=>console.log('custom plugin'));
+    console.log(`task1 executed: src=${builder.conf.src}, clean=${builder.conf.clean}`);
   },
 
   // add clean targets for task1
@@ -28,9 +37,8 @@ const task1 = {
 
 const task2 = {
   buildName: 'task2',
-  builder: (conf, mopts, done)=>{
-    console.log(`task1 executed: src=${conf.src}, clean=${conf.clean}`);
-    done(); // signal end of task
+  builder: (builder)=>{
+    console.log(`task2 executed: src=${builder.conf.src}, clean=${builder.conf.clean}`);
   },
 
   // add clean targets for task2

@@ -1,27 +1,23 @@
 /**
  *  TypeScript Builder
  */
-import {pick} from "../utils/utils";
-import {Options} from "../core/types";
+
 import {GBuilder} from "../core/builder";
 import {TypeScriptPlugin} from "../plugins/TypeScriptPlugin";
-import {UglifyPlugin} from "../plugins/UglifyPlugin";
+import {GPlugin} from "../core/plugin";
 
 export class GTypeScriptBuilder extends GBuilder {
   constructor() { super(); }
 
-  OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
-    Object.assign(mopts, pick(defaultModuleOptions, 'typescript'));
-    Object.assign(mopts, {changed:{extension: '.js'}});
-    return mopts;
-  }
+  async build() {
+    this.src();
+    let promise = (new TypeScriptPlugin()).process(this); // get promise for dts
+    if (this.conf.flushStream) await promise;  // flush dts files
+    if (!this.buildOptions.minifyOnly) this.dest();
 
-  OnPreparePlugins(mopts:Options, conf:Options) {
-    const opts = conf.buildOptions || {};
-    this.addPlugins([
-      new TypeScriptPlugin(),
-      new UglifyPlugin(),
-    ]);
+    // note: concat is not require, which will be done by typescript if buildOptions.outFile is set
+    if (this.buildOptions.minify || this.buildOptions.minifyOnly) this.chain(GPlugin.uglify);
+    return this.dest();
   }
 }
 

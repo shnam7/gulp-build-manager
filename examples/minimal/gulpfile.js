@@ -7,17 +7,22 @@ process.chdir(__dirname);
 
 const simpleTask = {
   buildName: 'simpleTask',
-  builder: (conf, mopts, done)=>{
+  builder: ()=>{
     console.log('simpleTask executed');
-    done(); // signal end of task
   },
-  plugins:[
-    new gbm.DebugPlugin()
-  ],
-
+  pretBuild: (builder)=>console.log(`preBuild called, customVar1=${builder.conf.customVar1}`),
+  postBuild: {
+    func: (builder, arg1, arg2)=>console.log(`postBuild called,`
+    + `customVar1=${builder.conf.customVar2}, arg1=${arg1}, arg2=${arg2}`),
+    args: ['arg1', 'arg2']
+  },
   triggers: gbm.parallel((done)=>{
-    console.log('trigger successful.'); done();
-  })
+    console.log(`trigger successful. buildName`);
+    done();
+  }),
+
+  customVar1: 'customer variable#1',
+  customVar2: 'customer variable#2'
 };
 
 
@@ -55,9 +60,8 @@ const set09 = gbm.parallel(
 
 const buildSetTest = {
   buildName: 'buildSetTest',
-  builder: (mopts, conf, done)=>{
+  builder: (builder)=>{
     console.log('This is the main task: buildSetTest\n');
-    done();
   },
   dependencies: gbm.parallel(set01, set02, set03, set04, set05, set06, set07, set08, set09)
 };

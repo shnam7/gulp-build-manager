@@ -1,6 +1,6 @@
 {
   "name": "gulp-build-manager",
-  "version": "2.2.0",
+  "version": "3.0.0-alpha.1",
   "description": "Easy to use, flexible gulp task manager",
   "files": [
     "lib"
@@ -16,8 +16,9 @@
     "ex-clean": "npm run gulp @ex-clean-all",
     "build-all": "npm run build && npm run gulp-build",
     "clean-all": "npm run gulp-clean && npm run clean",
-    "test": "mocha --reporter spec && npm run gulp-test",
+    "test": "npm run build && mocha --reporter spec && npm run gulp-test",
     "prepare": "npm run clean && npm run build",
+    "prepare-to-release": "npm run clean && npm run build && npm run docs-build && npm run ex-clean ",
     "gulp": "gulp",
     "gulp-build": "npm run gulp @build",
     "gulp-clean": "npm run gulp @clean",
@@ -65,7 +66,7 @@
     "upath": "latest"
   },
   "devDependencies": {
-    "@types/browser-sync": "latest",
+    "@types/browser-sync": "0.0.39",
     "@types/del": "latest",
     "@types/glob": "latest",
     "@types/gulp": "^4.0.5",
@@ -92,25 +93,27 @@
     "gulp-order": "latest",
     "gulp-postcss": "latest",
     "gulp-rename": "latest",
-    "gulp-sass": "latest",
+    "gulp-sass": "^4.0.1",
+    "gulp-tslint": "^8.1.3",
     "gulp-twig": "latest",
     "gulp-typescript": "^4.0.2",
-    "gulp-uglify": "latest",
+    "gulp-uglify-es": "^1.0.1",
     "gulp-zip": "latest",
     "lost": "latest",
-    "mocha": "latest",
+    "mocha": "^5.1.1",
     "panini": "^1.6.2",
     "postcss-cssnext": "latest",
     "postcss-reporter": "latest",
     "postcss-utilities": "latest",
     "stylelint": "^9.2.0",
-    "stylelint-config-recommended": "latest",
     "ts-loader": "latest",
+    "tslint": "^5.9.1",
     "tslint-loader": "latest",
     "twig-markdown": "latest",
     "typescript": "^2.8.3",
+    "uglify-es": "^3.3.10",
     "watch": "latest",
     "webpack": "^4.6.0",
-    "webpack-stream": "latest"
+    "webpack-stream": "^4.0.3"
   }
 }

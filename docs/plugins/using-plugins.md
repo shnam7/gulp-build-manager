@@ -3,15 +3,12 @@ layout: docs
 ---
 # Using Plugins
 
-Plugin is a modularized actions that can be inserted into specific build stages.
+Plugin is a modularized build action that can be implemented as a function or class object.
 
-#### Build stages currently available are:
-{:#buildStages}
-  - initStream: after GBuilder.OnInitStream()
-  - build: after GBuilder.OnBuild()
-  - dest: after GBuilder.OnDest()
-  - postBuild: after GBuilder.OnPostBuild()
-
+### Plugin function
+prototype: (builder: GBuilder, ...args: any[]) =\> void | Promise<any>
+@param builder is builder object running this plugin
+@param args is an optional arguments list specific to each plugins. This can be passed by GBuilder.chain() or direct call to the plugin function.
 Let's see an example:
 
 ```javascript
@@ -22,9 +19,13 @@ const sass = {
   builder: 'GCSSBuilder',
   src: ['scss/**/*.scss'],
   dest: 'css',
-  plugins: [
-    new gbm.DebugPlugin()
-  ]
+  preBuild: (builder)=>{
+    // call GPlugin.copy with args={src:..., dest:...}
+    builder.chain(gbm.GPlugin.copy, {
+      src:['*.txt'],
+      dest:'text'
+    })
+  }
 };
 
 gbm({
@@ -32,18 +33,44 @@ gbm({
 });
 ```
 
-Here, a DebugPlugin object is created and inserted into default slot, 'build'. This means that the plugin will be executed after OnBuild() from GBuilder's build process. So, you'd able to see a debug message after GBuilder.OnBuild() call.
-If you want to see the input stream files before starting OnBuild(), you can do like this:
+### Plugin class
+Plugin classes should derive from GPlugin and must implement process() member function. If process() returns a promise, then it is finished before the build process. Typical plugin class looks like this:
+```javascript
+export class SamplePlugin extends gbm.GPlugin {
+  constructor(options:Options={}) { super(options); }
+
+  process(builder: GBuilder) {
+    //...
+  }
+}
+```
+
+### invoking plugins
+Plugins can be invoked by GBuilder.chain() or it can be directly called with GBuilder as fist argument.
 ```javascript
 const sass = {
   buildName: 'sass',
   builder: 'GCSSBuilder',
   src: ['scss/**/*.scss'],
   dest: 'css',
-  plugins: [
-    new gbm.DebugPlugin({}, 'initStream')
-  ]
+  preBuild: (builder)=>{
+    // call GPlugin.copy with args={src:..., dest:...}
+    builder.chain(gbm.GPlugin.copy, {
+      src:['*.txt'],
+      dest:'text'
+    });
+    
+    // this is equivalent copy call    
+    gbm.GPlugin.copy(builder, {
+      src:['*.txt'],
+      dest:'text'
+    })
+    
+    // calling Plugin class
+    builder.src().chain(new gbm.GPlugin.TypeScriptPlugin()).dest();
+  }
 };
 ```
 
-Note that plugins are available only for GBuilder class and its derivatives. You cannot ust it with function builders.
+### Resources
+To learn more how to use plugins, see the [builder source codes]({{site.repo}}/src/builders)

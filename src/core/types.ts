@@ -2,56 +2,45 @@ import {GBuilder} from "./builder";
 import {GPlugin} from "./plugin";
 import {GBuildSet} from "./buildSet";
 import * as Undertaker from "undertaker";
-import {SpawnOptions} from "child_process";
+import {ExecOptions} from "child_process";
 
 export type GulpStream = NodeJS.ReadWriteStream;
 export type Stream = GulpStream | undefined;
 export type Options = { [key: string]: any; }
-export type Slot = 'initStream' | 'build' | 'dest' | 'postBuild';
 export type TaskDoneFunction = (error?: any) => void;
 export type CleanTarget = string | string[];
 
-// Plugin types
-export type PluginFunction = (stream:Stream, mopts:Options, conf:Options, slot:Slot, builder:GBuilder) => Stream;
-
-export interface PluginObject {
-  initStream?: PluginFunction;
-  build?: PluginFunction;
-  dest?: PluginFunction;
-  postBuild?: PluginFunction;
-}
-
-export type Plugin = PluginFunction | PluginObject | GPlugin | undefined;
-
+export type BuildFunction = (builder: GBuilder, ...args: any[]) => void | Promise<any>
+export type BuildFunctionObject = { func: BuildFunction; args: any[] }
+export type Plugin = BuildFunction | GPlugin;
 
 /** BuildSet */
-export type BuilderFuncion = (mopts:Options, conf:Options, done:TaskDoneFunction)=>void;
-
 export interface ExternalBuilder {
   command: string;
   args?: string[];
-  options?: SpawnOptions;
+  options?: ExecOptions;
 }
 
 export interface BuildConfig {
   buildName: string;    // mandatory
-  builder?: string | GBuilder | ExternalBuilder;
+  builder?: string | GBuilder | ExternalBuilder | BuildFunction;
   src?: string | string[];
   order?: string[];
   dest?: string;
   outFile?: string;
   outfile?: string;     // for backward compatibility
   flushStream?: boolean;
-  plugins?: Plugin[];
   clean?: CleanTarget;
   watch?: WatchItem;
+  preBuild?: BuildFunction | BuildFunctionObject;
+  postBuild?: BuildFunction | BuildFunctionObject;
   dependencies?: BuildSet;
   triggers?: BuildSet;
   buildOptions?: Options;
   moduleOptions?: Options;
 }
 
-type BuildSetType = string | BuilderFuncion | BuildConfig | GBuildSet;
+type BuildSetType = string | BuildFunction | BuildConfig | GBuildSet;
 export type BuildSet = BuildSetType | BuildSetType[];
 
 

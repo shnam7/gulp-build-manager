@@ -4,43 +4,42 @@ layout: docs
 # Writing custom plugins
 
 ## GPlugin interface
-Build process is basically doing something on input stream and generating output sometimes if necessary. This kind of actions can be modularized as plugins. GPlugin is designed based on this concept and provides simple interface to add plugin actions into specific [build stages]({{site.baseurl}}/plugins/using-plugins#buildStages).
+Build process is basically executing a sequence of actions, and those actions can be modularized as plugins for reuse and simplification. GPlugin is designed based on this concept and has very simple interface.
 
-
-#### GPlugin.constructor(options = {}, slots='build')
-<i>options</i>: plugin specific options
-<i>slots</i>: slot name or an array of slot names
-Plugins basically use build configuration settings and module options that are available in builder classes, because it's part of build process. But it may need some plugin specific options. The first parameter is for this.<br>
-Defaule stot for the plugins to be plugged in is 'build', but it can be changed using the seconed parameter. If necessary, slots can be an array of slot names. In this case, the plugin will be invoked on each build stages.
-
-#### GPlugin.process(stream, mopts, conf, slot)
-<i>stream</i>:input stream to be processed
-<i>mopts</i>: module options used in build process
-<i>conf</i>: build configuration object
-<i>slot</i>: name of current build stage
-<i>builder</i>: Builder object currently running
-You may noticed that the parameters are almost the same as GBuilder interfaces except the slot. With slot parameter, you can see in what stage the plugin is called.
-
-#### GPlugin.OnStream(stream, mopts, conf, slot), requires v2.1+
-<i>stream</i>:input stream to be processed
-<i>mopts</i>: module options used in build process
-<i>conf</i>: build configuration object
-<i>slot</i>: name of current build stage
-<i>builder</i>: Builder object currently running
-This is called from GPlugin.process only if the stream is valid gulp stream. You are recommended to overload this function unless you are going to process undefined stream argument.
-
-Now, let's see an example, a snippet from gbm.DebugPlugin source codes:
 ```javascript
-class DebugPlugin extends GPlugin {
-  constructor(options={}, slots='build') { super(options, slots); }
+export class GPlugin {
+  constructor(public options: Options = {}) {}
+  
+  process(builder: GBuilder, ...args: any[]): void | Promise<any> {}
+}
+```
 
-  OnStream(stream, mopts, conf, slot, builder) {
-    let debug = require('gulp-debug');
-    let title = this.options ? this.options.title : "";
-    title = title ? title+':' : "";
-    title = '[DebugPlugin]' + slot + ':' + title;
-    let opts = merge({}, this.options, {title: title});
-    return stream.pipe(debug(opts));
+#### GPlugin.constructor(options = {})
+*options*: plugin specific options
+
+#### GPlugin.process(builder: GBuilder)
+*builder*: Builder object currently running
+If returns a Promise, then the promise will be finished before proceeding next build actions.
+
+Now, let's see an example, a snippet from gbm.MarkdownPlugin source codes:
+```javascript
+export class MarkdownPlugin extends GPlugin {
+  constructor(options:Options={}) { super(options); }
+
+  process(builder: GBuilder) {
+    builder.pipe(require('gulp-markdown')(builder.moduleOptions.markdown));
+    if (builder.buildOptions.minify) builder.pipe(require('gulp-htmlclean')(builder.moduleOptions.htmlmin));
+    if (builder.buildOptions.prettify) builder.pipe(require('gulp-html-prettify')(builder.moduleOptions.htmlPrettify));
   }
 }
+```
+
+## GPlugin function
+Any function with following prototype can be used as custom plugin function:<br>
+*Prototype*: (builder: GBuilder) =\> void | Promise\<any\>
+```javascript
+builder
+  .chain(GPlugin.concat)
+  .chain((builder)=>console.log(builder.conf.buildName))  // custom plugin using builder argument
+  .chain(()=>console.log('Hello!!'))  // custom plugin with no argument
 ```

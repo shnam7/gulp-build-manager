@@ -1,69 +1,124 @@
 ---
 layout: docs
 ---
-{% assign srcurl = site.repo | append: '/tree/master' %}
+
 
 # Built-in Plugins
 You can get the built-in plugin classes with gbm:
 ```javascript
 const gbm = require('gulp-build-manager');
 
-const DebugPlugin = gbm.DebugPlugin;
+const CoffeeScriptPlugin = gbm.CoffeeScriptPlugin;
 // ...
 ```
 
-### ChangedPlugin
-Plugin wrapper for [gulp-changed](https://github.com/sindresorhus/gulp-changed){:target='_blank'}<br>
-See [source code]({{srcurl}}/src/plugins/ChangedPlugin.js){:target='_blank'} for the details.
+## Built-in plugin functions
+See [source code]({{site.srcurl}}/src/core/plugin.ts){:target='_blank'} for the details.
+Built-in plugin functions searches BuildConfig.moduleOptions to find options for gulp plugin modules. And then, overrides it with the settings in 'options' argument. For example, for gulp-debug module,
+  - First search builder.conf.modulesOptions.debug
+  - And then, override(merge not replace) it with options.debug
 
-## CoffeeScriptPlugin
+#### gbm.debug
+gulp-debug plugin.<br>
+*Prototype*: GPlugin.debug(builder: GBuilder, options: Options={})<br>
+For convenience, options itself is used an an argument to gulp-debug if options.debug is not found
+```javascript
+builder.chain(gbm.GPlugin.debug, {title: 'title-test'})
+```
+
+#### gbm.filter
+gulp-filter plugin.<br>
+*Prototype*: GPlugin.filter(builder: GBuilder, pattern:string[], options: Options={})
+```javascript
+builder.pipe(require('gulp-filter')(['**', '!**/*.map'], options.filter));
+```
+
+#### gbm.concat
+gulp-concat plugin.<br>
+Concatenates the files in gulp stream of the current builder. For output file name, builder.conf.outFile is checked first and then options.outFile is checked to override it.<br>
+*Prototype*: GPlugin.concat(builder: GBuilder, options: Options = {})<br>
+*options.filter*: pattern to filter the gulp stream<br>
+*options.outFile*: output path name to override builder.conf.outFile.<br>
+*options.concat*: module options to gulp-concat, which will override builder.moduleOptions.concat
+```javascript
+builder.chain(GPlugin.concat);
+```
+
+
+#### gbm.rename
+gulp-rename plugin.<br>
+If both builder.moduleOptions.rename and options.rename are missing, then options itself is used for convenience.
+*Prototype*: GPlugin.rename(builder: GBuilder, options: Options = {})<br>
+  
+```javascript
+builder.chain(GPlugin.rename, {extname: '.html'});
+```
+
+#### gbm.copy
+{:#copy}
+Copy files from multiple sources to multiple destinations.
+*prototype*: GPlugin.copy(builder:GBuilder, options:Options={})
+*options.src*: Optional glob string or an array of glob strings
+*options.dest*: Optional string of destination directory
+*options.targets*: Optional array of src/dest pairs.
+If both options.src and options.dest exist, they are process before processing targets. Or, they are ignored.
+See the usage below:
+```javascript
+const copyOptions = {
+  src: ['*.txt'],
+  dest: './text',
+  targets: [
+    {src: ['*.js'], dest: './js'},
+    {src: ['*.ts'], dest: './ts'}
+    //...
+  ]
+}
+
+builder.chain(GPlugin.copy, copyOptions);
+``` 
+   
+#### gbm.uglify
+gulp-uglify-es plugin.<br>
+*Prototype*: GPlugin.uglify(builder: GBuilder, options: Options = {})<br>
+*options.filter*: pattern to filter the gulp stream<br>
+*options.uglifyES*: module options to gulp-uglify-es, which will override builder.moduleOptions.uglifyES
+*options.rename*: rename options. default is { extname: '.min.js' } 
+```javascript
+builder.chain(GPlugin.uglify);
+```
+
+#### gbm.cssnano
+gulp-uglify-es plugin.<br>
+*Prototype*: GPlugin.cssnano(builder: GBuilder, options: Options = {})<br>
+*options.filter*: pattern to filter the gulp stream<br>
+*options.cssnano*: module options to gulp-uglify-es, which will override builder.moduleOptions.cssnano
+*options.rename*: rename options. default is { extname: '.min.css' }
+```javascript
+builder.chain(GPlugin.cssnano);
+```
+
+
+## Built-in plugin classes
+#### CoffeeScriptPlugin
 CoffeeScript transpiler.<br>
-See [source code]({{srcurl}}/src/plugins/CoffeeScriptPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.srcurl}}/src/plugins/CoffeeScriptPlugin.js){:target='_blank'} for the details.
 
-## ConcatPlugin
-File concatenator. See source code for the details.<br>
-See [source code]({{srcurl}}/src/plugins/ConcatPlugin.js){:target='_blank'} for the details.
-
-## CSSNanoPlugin
-CSS minifier. See source code for the details.<br>
-See [source code]({{srcurl}}/src/plugins/CSSNanoPlugin.js){:target='_blank'} for the details.
-
-## CSSPlugin
+#### CSSPlugin
 Stylesheet processor supporting sass/scss/less with postcss. See source code for the details.<br>
-See [source code]({{srcurl}}/src/plugins/CSSPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.srcurl}}/src/plugins/CSSPlugin.js){:target='_blank'} for the details.
 
-## DebugPlugin
-Plugin wrapper for [gulp-debug](https://github.com/sindresorhus/gulp-debug){:target='_blank'}<br>
-See [source code]({{srcurl}}/src/plugins/DebugPlugin.js){:target='_blank'} for the details.
-
-## FilterPlugin
-Plugin wrapper for [gulp-filter](https://github.com/sindresorhus/gulp-filter){:target='_blank'}<br>
-See [source code]({{srcurl}}/src/plugins/FilterPlugin.js){:target='_blank'} for the details.
-
-## JavaScriptPlugin
+#### JavaScriptPlugin
 JavaScript process with babel support. See source code for the details.<br>
-See [source code]({{srcurl}}/src/plugins/JavaScriptPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.srcurl}}/src/plugins/JavaScriptPlugin.js){:target='_blank'} for the details.
 
-## MarkdownPlugin
+#### MarkdownPlugin
 Markdown compiler.
-See [source code]({{srcurl}}/src/plugins/MarkdownPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.srcurl}}/src/plugins/MarkdownPlugin.js){:target='_blank'} for the details.
 
-## PlumberPlugin
-Plugin wrapper for [gulp-plumber](https://github.com/floatdrop/gulp-plumber){:target='_blank'}<br>
-See [source code]({{srcurl}}/src/plugins/PlumberPlugin.js){:target='_blank'} for the details.
-
-## TwigPlugin
+#### TwigPlugin
 Twig builder. See source code for the details.<br>
-See [source code]({{srcurl}}/src/plugins/TwigPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.srcurl}}/src/plugins/TwigPlugin.js){:target='_blank'} for the details.
 
-## TypeScriptPlugin
+#### TypeScriptPlugin
 TypeScript transpiler. See source code for the details.<br>
-See [source code]({{srcurl}}/src/plugins/TypeScriptPlugin.js){:target='_blank'} for the details.
-
-## UglifyPlugin
-Javascript minifier.<br>
-See [source code]({{srcurl}}/src/plugins/UglifyPlugin.js){:target='_blank'} for the details.
-
-## CopyPlugin
-File copier.<br>
-See [source code]({{srcurl}}/src/plugins/CopyPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.srcurl}}/src/plugins/TypeScriptPlugin.js){:target='_blank'} for the details.

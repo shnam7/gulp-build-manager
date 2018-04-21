@@ -2,26 +2,23 @@
  *  gbm Plugin - JavaScript
  */
 
-import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
+import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {pick} from "../utils/utils";
 
 export class JavaScriptPlugin extends GPlugin {
-  constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
+  constructor(options:Options={}) { super(options); }
 
-  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
-    let opts = Object.assign({}, pick(conf.buildOptions || {}, 'lint', 'rename'), this.options);
-
+  process(builder:GBuilder) {
     // check lint option
-    if (opts.lint) {
-      const esLint = require('gulp-eslint');
-      let lintProps = mopts.eslintProps || mopts.eslintPropsExtra || {};
-      stream = stream.pipe(esLint(mopts.eslint))
-        .pipe(esLint.format(lintProps.format))
-        .pipe(esLint.failAfterError());
+    if (builder.buildOptions.lint) {
+      const eslint = require('gulp-eslint');
+      const eslintOpts = builder.moduleOptions.eslint || {};
+      builder.pipe(eslint(eslintOpts.eslint || eslintOpts))
+        .pipe(eslint.format(eslintOpts.format))
+        .pipe(eslint.failAfterError());
     }
-    return stream.pipe(require('gulp-babel')(mopts.babel));
+    builder.pipe(require('gulp-babel')(builder.moduleOptions.babel)).sourceMaps();
   }
 }
 

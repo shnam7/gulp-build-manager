@@ -15,7 +15,7 @@ const webpack = {
   builder: 'GWebpackBuilder',
   // src: [path.join(srcRoot, 'scripts/ts/app.ts')],
   // dest: path.join(destRoot, 'jss'),
-  // outFile: 'sample-ts.js',
+  outFile: 'sample-ts.js',
   buildOptions: {
     webpackConfig: 'webpack.config.js'
   },

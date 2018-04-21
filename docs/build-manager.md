@@ -2,6 +2,7 @@
 layout: docs
 title: Build Manager
 ---
+
 # {{page.title}}
 gbm, the build manager, creates gulp tasks according to the options given to it.<br>
 
@@ -102,7 +103,9 @@ returns the built-in builder class with the name \<builderName\>. Currently avai
   - gbm.GBuilder - Base Builder, which work as a Copy Builder.
   - gbm.GCoffeeScriptBuilder
   - gbm.GConcatBuilder
+  - gbm.GCopyBuilder - copy multiple sources to multiple destinations
   - gbm.GCSSBuilder - sass/scss/less/postcss builder.
+  - gbm.GExternalBulder - executes external commands to build
   - gbm.GImagesBuilder - Image optimizer
   - gbm.GJavaScriptBuilder
   - gbm.GJekyllBuilder
@@ -115,9 +118,7 @@ returns the built-in builder class with the name \<builderName\>. Currently avai
 
 #### gbm.\<pluginName\>
 returns the built-in plugin class with the name \<pluginName\>. Currently available built-in plugins are:
-  - gbm.ChangedPlugin
   - gbm.CoffeeScriptPlugin
-  - gbm.ConcatPlugin
   - gbm.CSSNanoPlugin
   - gbm.CSSPlugin
   - gbm.DebugPlugin
@@ -128,4 +129,14 @@ returns the built-in plugin class with the name \<pluginName\>. Currently availa
   - gbm.TypeScriptPlugin
   - gbm.UglifyPlugin
   - gbm.WebpackPlugin
-  
+
+Ready-made plugins functions ar also available:
+  - gbm.debug
+  - gbm.filter
+  - gbm.concat
+  - gbm.rename
+  - gbm.copy
+  - gbm.uglify
+  - gbm.cssnano
+
+Refer to [Plugin]({{site.baseurl}}/plugins/using-plugins) section for more information.

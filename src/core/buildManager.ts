@@ -19,12 +19,6 @@ export class GBuildManager {
   watcher = new GWatcher();
   cleaner = new GCleaner();
   defaultModuleOptions: Options = {
-    gulp: {},
-
-    changed: {
-      // hasChanged: require('gulp-changed').compareSha1Digest
-    },
-
     sass: {
       outputStyle: 'compact',
       // outputStyle: 'compressed',
@@ -44,35 +38,18 @@ export class GBuildManager {
 
     cssnano: {discardUnused: false},
 
-    coffeescript: {
-      // {bare:true},
-    },
-
-    typescript: {},
-
     // babel: {presets:["env"]},
 
     imagemin: {
       progressive: true,
       optimizationLevel: 5
     },
-
-    panini: {
-      root: 'docs/pages/',
-      layouts: 'docs/layouts/',
-      partials: 'docs/partials/',
-      data: 'docs/data/',
-      helpers: 'docs/helpers/'
-    },
-
     htmlPrettify: {
       indent_char: ' ',
       indent_size: 4
     },
 
     eslint: {"extends": "eslint:recommended", "rules": {"strict": 1}},
-
-    del: {}
   };
 
   constructor(config?: GBMConfig) {

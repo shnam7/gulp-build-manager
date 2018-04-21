@@ -1,7 +1,6 @@
 ---
 layout: docs
 ---
-{% assign srcurl = site.repo | append: '/tree/master' %}
 
 # GJekyllBuilder
 Jekyll project builder. Internally, it creates child process to run jekyll command.<br>
@@ -43,5 +42,5 @@ const jekyll = {
 
 #### Resources
   - This document site was built with GJekyllBuilder and CCSSBuilder.
-  - See [docs build configuration]({{srcurl}}/docs/gulpfile.js){:target="_blank"} for more details.
+  - See [docs build configuration]({{site.srcurl}}/docs/gulpfile.js){:target="_blank"} for more details.
 

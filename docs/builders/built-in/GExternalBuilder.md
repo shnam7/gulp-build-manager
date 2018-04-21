@@ -1,7 +1,6 @@
 ---
 layout: docs
 ---
-{% assign srcurl = site.repo | append: '/tree/master' %}
 
 # GExternalBuilder
 Creates child process running external commands. It uses Node.js Child Process spawn() function.<br>
@@ -49,6 +48,6 @@ gbm({
 ```
 
 #### Resources
-  - Main gulpfile of this project is using GExternalBuilder features. See [docs build configuration]({{srcurl}}/gulpfile.js){:target="_blank"} for more details.
-  - You can also refer to an example at [examples/external]({{srcurl}}/examples/external/gulpfile.js))
+  - Main gulpfile of this project is using GExternalBuilder features. See [docs build configuration]({{site.srcurl}}/gulpfile.js){:target="_blank"} for more details.
+  - You can also refer to an example at [examples/external]({{site.srcurl}}/examples/external/gulpfile.js))
 

@@ -15,9 +15,10 @@ const __coffeeScript = {
   builder: 'GCoffeeScriptBuilder',
   src: [upath.join(srcRoot, 'coffee/**/*.coffee')],
   dest: (file) => file.base,
+  flushStream: true,
   buildOptions: {
     lint: true,
-    // sourceMap: true,
+    sourceMap: true,
     // minify: true
   }
 };
@@ -27,6 +28,7 @@ const __babel = {
   builder: 'GJavaScriptBuilder',
   src: [upath.join(srcRoot, 'es6/**/*.es6')],
   dest: (file) => file.base,
+  flushStream: true,
   buildOptions: {
     babel: true,
     lint: true,
@@ -68,7 +70,9 @@ const typeScript = [
     dest: upath.resolve(destRoot, 'js'),
     outFile: 'sample-ts.js',
     buildOptions: {
-      minify:true,
+      // lint: true,
+      // printConfig: true,
+      minifyOnly:true,
       sourceMap: true,
       // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
       // tsConfig: upath.join(srcRoot, 'ts/tsconfig.json')
@@ -82,6 +86,15 @@ const typeScript = [
         "noEmitOnError": true,
         "declaration": true,
         "lib": ['DOM','ES6','DOM.Iterable','ScriptHost']
+      },
+      tslint: {
+        configuration: {
+          "extends": "tslint:recommended"
+        }
+      },
+      uglifyES: {
+        // mangle: false,
+        ecma: 6
       }
     },
   }

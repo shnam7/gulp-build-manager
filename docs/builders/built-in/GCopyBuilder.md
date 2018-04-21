@@ -1,9 +1,15 @@
-// Sample
+---
+layout: docs
+---
 
-const gbm = require('../../lib');
+# GConcatBuilder
+Copy files from multiple sources to multiple destinations.
 
-process.chdir(__dirname);
+#### Builder specific Options
+buildOptions.targets
 
+#### Example
+```javascript
 const copy = {
   buildName: 'copy',
   builder: 'GCopyBuilder',
@@ -17,12 +23,6 @@ const copy = {
     ],
   },
 };
+```
 
-// create gbmConfig object
-gbm({
-  systemBuilds: {
-    build: [copy],
-    clean: ['path-dest*'],
-    default: ['@clean', '@build']
-  }
-});
+See [GPlugin.copy]({{site.siteurl}}/plugins/built-in-plugins#copy) for the details.

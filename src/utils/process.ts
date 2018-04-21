@@ -5,37 +5,50 @@
 import * as child_process from 'child_process';
 import chalk from 'chalk';
 import {SpawnOptions} from "child_process";
+import {wait} from "./utils";
 
 interface ExecOptions {
+  spawn?: SpawnOptions;
+  stopOnMatch?: RegExp;
   silent?: boolean;
-  spawnOptions?: SpawnOptions;
+  captureOutput?: boolean;
 }
 
-export function exec(cmd: string, args: string[]=[], options: ExecOptions={}): Promise<void> {
+export type ProcessOutput = {
+  stdout: string;
+  stderr: string;
+}
+
+export function exec(cmd: string, args: string[]=[], options: ExecOptions={}): Promise<ProcessOutput> {
+  let stdout = '';
+  let stderr = '';
   const cwd = process.cwd();
-  console.log(`==========================================================================================`);
+  // console.log(`==========================================================================================`);
 
   args = args.filter(x => x !== undefined);
   const flags = [
     options.silent && 'silent',
+    options.stopOnMatch && `matching(${options.stopOnMatch})`
   ]
     .filter(x => !!x)  // Remove false and undefined.
     .join(', ')
     .replace(/^(.+)$/, ' [$1]');  // Proper formatting.
 
-  console.log(chalk.blue(`Running \`${cmd} ${args.map(x => `"${x}"`).join(' ')}\`${flags}...`));
+  console.log(chalk.blue(`Running \`${cmd} ${args.join(' ')}\`${flags}...`));
   console.log(chalk.blue(`CWD: ${cwd}`));
-  const spawnOptions: SpawnOptions = options.spawnOptions || {};
-  // if (!spawnOptions.cwd) spawnOptions.cwd = cwd;
+  const spawnOptions: SpawnOptions = options.spawn || {shell: true};
+  if (!spawnOptions.cwd) spawnOptions.cwd = cwd;
 
   if (process.platform.startsWith('win')) {
-    args.unshift('/c', cmd);
-    cmd = 'cmd.exe';
+    // args.unshift('/c', cmd);
+    // cmd = 'cmd.exe';
     if (!spawnOptions.stdio) spawnOptions['stdio'] = 'pipe';
   }
 
   const childProcess = child_process.spawn(cmd, args, spawnOptions);
+
   childProcess.stdout.on('data', (data: Buffer) => {
+    if (options.captureOutput) stdout += data.toString('utf-8');
     if (options.silent) return;
     data.toString('utf-8')
       .split(/[\n\r]+/)
@@ -43,6 +56,7 @@ export function exec(cmd: string, args: string[]=[], options: ExecOptions={}): P
       .forEach(line => console.log('  ' + line));
   });
   childProcess.stderr.on('data', (data: Buffer) => {
+    if (options.captureOutput) stderr += data.toString('utf-8');
     if (options.silent) return;
     data.toString('utf-8')
       .split(/[\n\r]+/)
@@ -53,13 +67,26 @@ export function exec(cmd: string, args: string[]=[], options: ExecOptions={}): P
   // Create the error here so the stack shows who called this function.
   const err = new Error(`Running "${cmd} ${args.join(' ')}" returned error code `);
   return new Promise((resolve, reject) => {
-    childProcess.on('exit', (code: number) => {
-      if (code) {
+    childProcess.on('exit', (error: any) => {
+      if (error) {
+        // err.message += `${error}...\n\nSTDOUT:\n${stdout}\n\nSTDERR:\n${stderr}\n`;
         reject(err);
       } else {
-        resolve();
+        resolve({stdout, stderr});
       }
     });
+    if (options.stopOnMatch) {
+      childProcess.stdout.on('data', (data: Buffer) => {
+        if (data.toString().match(options.stopOnMatch as RegExp)) {
+          resolve({ stdout, stderr });
+        }
+      });
+      childProcess.stderr.on('data', (data: Buffer) => {
+        if (data.toString().match(options.stopOnMatch as RegExp)) {
+          resolve({ stdout, stderr });
+        }
+      });
+    }
   });
 }
 

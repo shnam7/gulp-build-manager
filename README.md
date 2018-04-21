@@ -6,11 +6,12 @@ Gulp Build Manager, gbm in a short name, is an easy to use, flexible gulp task m
   - [Documentation][0]
   - [Examples][1]
   - [ChangeLog][2]
-
+  
 gbm provides various built-in builder classes including:
   - GBuilder - Base Builder, which work as a Copy Builder.
   - GCoffeeScriptBuilder
   - GConcatBuilder
+  - GCopyBuilder - Copy files from multiple sources to multiple destinations
   - GCSSBuilder - sass/scss/less/postcss builder.
   - GExternalBuilder - builder to run external commands.
   - GImagesBuilder - Image optimizer
@@ -27,12 +28,14 @@ Those classes can be extended or modified using class inheritance.<br>
 gbm also provides plugin system, which enables users to add custom functions or plugin objects into specific stages of the build process.
 Builders can also be in the form of function, which is sometimes simpler and convenient.
 
-To learn more, see [Documentation][0].<br>
-You can also check out various working [examples][1] in GitHub.
+
+### Documentations for previous versions
+  - [Dcoumentation - v2.2][3]
 
 [0]: https://shnam7.github.io/gulp-build-manager/
 [1]: ./examples
 [2]: ./CHANGELOG.md
+[3]: https://github.com/shnam7/gulp-build-manager/tree/v2.2.0/docs
 
 <br>
 <br>

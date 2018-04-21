@@ -119,7 +119,7 @@ gbm({
       browserSync: {
         server: '../_gh_pages',
         port: 3100,
-        // reloadDelay: 0
+        // reloadDelay: 500
       }
     }
   },

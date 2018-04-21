@@ -5,7 +5,7 @@ layout: docs
 # Using Builders
 
 ## What is Builder?
-Builder is essentially a gulp tasks to achieve project mission. Typically, it reads input from source directories, processes them, and writes the output to destination directory.
+Builder is essentially a set of gulp tasks to achieve project mission. Typically, it reads input from source directories, processes them, and writes the output to destination directory.
 Builder can be a single function or a class object derived from GBuilder class.
 To use builders, *Build Configuration* need to be created first. 
 
@@ -27,22 +27,19 @@ const conf = {
   moduleOptions: {
     // ...
   },
-  plugins:[
-    stream=>stream.pipe(require('gulp-debug')())
-  ],
+  preBuild: (builder)=>console.log('preBuild is called before build process.'),
+  postBuild: (builder)=>console.log('postBuild is called after build process.'),
   dependencies: ['task1', 'task2'], // [...] is equivalent to gbm.series(...)
   triggers: gbm.parallel('task3', 'task4'),
   clean:['_build/js'],
-  watch:{
-    watched:[
-      // ...
-    ],
-    livereload: true
+  watch: {
+    // livereload:{start:true},
+    browserSync: { server: '_build' }
   }
 };
 ```
+
 Build Configuration has a common set of pre-defined properties, but users can add custom properties which are to be consumed by custom builders.
-Builder is specified in conf.builder property. See below for mre details.
 
 
 ### Build Configuration Options
@@ -96,10 +93,34 @@ Builder-specific options. Each builders can have their own options here. For the
 <i>default: {}</i><br>
 Builders are typically using one or more gulp plugin modules. This property is used to set options for those modules. The property name of the module options should be the same as the module name without 'gulp-' prefix. If module name is including hyphens, then Camel Case should be used in place of the hyphen. For example, options for 'gulp-html-prettify' will be conf.moduleOptions.htmlPrettify'. Options to 'gulp' itself is set to 'conf.moduleOptions.gulp'. 
 
-#### conf.plugins
-<i>type: array of plugin objects</i><br>
-<i>default: []</i><br>
-List of plugins. Refer to [Using Plugins]({{site.baseurl}}/plugins/using-plugins) section to learn about plugins.
+#### conf.preBuild
+{: #preBuild}
+<i>type: (builder: GBuilder)=\>void | Promise\<any\><br>
+or object with below prototype<br>
+  {<br>
+    &ensp;func: (builder: GBuilder)=\>void | Promise\<any\><br>
+    &ensp;args: \[...\]<br>
+  }<br>
+<i>default: undefined</i><br>
+preBuild function is invoked before build process starts but ready for build with proper build config setting. GBuilder object running this buildConfig is passed as first argument, and it can return a promise which is to be completed before starting build process. To pass user arguments, use object form with properties 'func' and 'args'.
+```javascript
+const simpleTask = {
+  buildName: 'simpleTask',
+  builder: ()=>{
+    console.log('simpleTask executed');
+  },
+  pretBuild: (builder)=>console.log(`preBuild called, customVar1=${builder.conf.customVar1}`),
+  postBuild: {
+    func: (builder, arg1, arg2)=>console.log(`postBuild called,`
+    + `customVar1=${builder.conf.customVar2}, arg1=${arg1}, arg2=${arg2}`),
+    args: ['arg1', 'arg2']
+  },
+  customVar1: 'customer variable#1',
+  customVar2: 'customer variable#2'
+};
+```
+#### conf.postBuild
+postBuild works exactly the same as preBuild except it's invoked after build process is finished.
 
 #### conf.dependencies
 <i>type: BuildSet</i><br>
@@ -201,6 +222,3 @@ gbm({
   }
 });
 ```
- 
- 
- 

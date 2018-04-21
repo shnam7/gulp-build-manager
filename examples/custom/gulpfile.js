@@ -6,17 +6,15 @@ process.chdir(__dirname);
 
 class MyBuilder extends gbm.GBuilder {
   constructor() { super()}
-  build(defaultModuleOptions, conf, done) {
+  build() {
     console.log('MyBuilder loaded. default operation will be bypassed. Bye!');
-    done();
   }
 }
 
 const customFunction = {
   buildName: 'customFunction',
-  builder: (defaultModuleOptions, conf, done) => {
-    console.log('Custom builder using function(): Hello!!!', conf.buildName);
-    done();
+  builder: (builder) => {
+    console.log('Custom builder using function(): Hello!!!', builder.conf.buildName);
   }
 };
 

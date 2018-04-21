@@ -5,7 +5,7 @@ layout: docs
 
 To create a simple gulp tasks, you can use functions to simplify the whole process.
 
-## Function as a builder in build configuration
+## Using function as a builder in build configuration
 A function can be assigned to builder property in build configuration.<br>
 Let's see an example: 
 ```javascript
@@ -13,9 +13,8 @@ const gbm = require('gulp-build-manager');
 
 const simpleTask = {
   buildName: 'simpleTask',
-  builder: (mopts, conf, done)=>{
-    console.log('simpleTask executed');
-    done(); // signal end of task
+  builder: (builder)=>{
+    console.log(`simpleTask executed. buildName=${build.conf.buildName}`);
   }
 };
 
@@ -23,13 +22,8 @@ gbm({
   builds: simpleTask
 });
 ```
-The function here can have three parameters:
-  - mopts: default module options (gbm.defaultModuleOptions) 
-  - conf: build configuration itself
-  - done: gulp task done function
 
-
-## Function as an independent Builder
+## Function as an independent Build task
 Function can be used as a builder itself that can be used as part of BuildSet task dependencies. In this case, an unnamed gulp task will be created.<br>
 Let's see an example:
 ```javascript

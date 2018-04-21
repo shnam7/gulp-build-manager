@@ -9,7 +9,14 @@ export class GConcatBuilder extends GBuilder {
   constructor() { super(); }
 
   build() {
-    this.src().chain(GPlugin.concat).dest();
+    let opts = {
+      src: this.conf.src,
+      dest: this.conf.dest,
+      targets: this.buildOptions.targets
+    };
+
+    let promise = GPlugin.copy(this, opts);
+    if (this.conf.flushStream) return promise;
   }
 }
 

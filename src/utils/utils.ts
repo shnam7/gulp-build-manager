@@ -1,6 +1,6 @@
 import * as glob from 'glob';
 import * as upath from 'upath';
-import {GulpStream} from "../core/types";
+import {GulpStream, Stream} from "../core/types";
 
 // export function removeExt(fileName: string, ext: string) {
 //   if (!ext) return fileName;
@@ -64,14 +64,16 @@ export function registerPropertiesFromFiles(obj: any, globPattern: string, callb
 }
 
 /** stream to promise */
-export function toPromise<T>(stream:GulpStream|undefined): Promise<T> {
-  if (!stream) return new Promise<T>((resolve)=>resolve());
-  return new Promise<T>((resolve, reject)=>{
+export function toPromise(stream: Stream): Promise<Stream> {
+  if (!stream) return Promise.resolve(stream);
+  return new Promise<Stream>((resolve, reject) => {
     return stream
-      .on('end', resolve)       // event for read stream
-      .on('finish', resolve)    // event for write stream
+      .on('end', ()=>resolve(stream))       // event for read stream
+      .on('finish', ()=>resolve(stream))    // event for write stream
+      // .on('end', ()=>{console.log('read stream end'); resolve(stream)})       // event for read stream
+      // .on('finish', ()=>{console.log('write stream finish'); resolve(stream)})       // event for write stream
       .on('error', reject)
-      .resume();
+      // .resume()
   })
 }
 

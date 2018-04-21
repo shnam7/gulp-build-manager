@@ -1,5 +1,3 @@
-'use strict';
-
 const gbm = require('../../lib');
 const gulp = require('gulp');
 

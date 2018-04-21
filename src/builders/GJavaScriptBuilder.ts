@@ -2,27 +2,19 @@
  *  JavaScript Builder
  */
 
-import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
-import {pick} from "../utils/utils";
 import JavaScriptPlugin from "../plugins/JavaScriptPlugin";
-import {ConcatPlugin} from "../plugins/ConcatPlugin";
-import {UglifyPlugin} from "../plugins/UglifyPlugin";
+import {GPlugin} from "../core/plugin";
 
 export class GJavaScriptBuilder extends GBuilder {
   constructor() { super(); }
 
-  OnBuilderModuleOptions(mopts:Options, defaultModuleOptions:Options) {
-    return pick(defaultModuleOptions, 'babel', 'uglify', 'eslint', 'eslintExtra', 'eslintProps');
-  }
-
-  OnPreparePlugins(mopts:Options, conf:Options) {
-    const opts = conf.buildOptions || {};
-    this.addPlugins([
-      new JavaScriptPlugin(),
-      (conf.outFile) ? new ConcatPlugin() : undefined,
-      new UglifyPlugin(),
-    ]);
+  async build() {
+    this.src().chain(new JavaScriptPlugin());
+    if (!this.buildOptions.minifyOnly) await this.dest();
+    if (this.conf.outFile) this.chain(GPlugin.concat);
+    if (this.buildOptions.minify || this.buildOptions.minifyOnly) this.chain(GPlugin.uglify);
+    return this.dest();
   }
 }
 

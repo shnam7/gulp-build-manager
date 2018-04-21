@@ -1,20 +1,19 @@
 /**
  *  gbm Plugin - CSS
  */
-import {BuildConfig, GulpStream, Options, Slot} from "../core/types";
+
+import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
 
 export class CSSPlugin extends GPlugin {
-  constructor(options:Options={}, slots: Slot|Slot[]='build') { super(options, slots); }
+  constructor(options:Options={}) { super(options); }
 
-  OnStream(stream:GulpStream, mopts:Options, conf:BuildConfig, slot:Slot, builder:GBuilder) {
-    const opts = conf.buildOptions || {};
-    const lint = this.options.lint || opts.lint;
-    const postcss = this.options.postcss || opts.postcss;
-    const sourceType = this.options.sourceType || opts.sourceType || 'scss';
-    const autoPrefixer = this.options.autoPrefixer || opts.autoPrefixer || opts.autoPrefixer===undefined;
-    // const rename = this.options.autoPrefixer || opts.autoPrefixer || opts.autoPrefixer===undefined;
+  process(builder: GBuilder) {
+    const lint = builder.buildOptions.lint;
+    const postcss = builder.buildOptions.postcss;
+    const sourceType = builder.buildOptions.sourceType || 'scss';
+    const autoPrefixer = builder.buildOptions.autoPrefixer !== false;
 
     if (lint && !postcss)
       console.log('CSSPlugin:Notice: postcss will be enabled to run stylelint.');
@@ -25,32 +24,30 @@ export class CSSPlugin extends GPlugin {
       const reporter = require('postcss-reporter');
       const stylelint = require('stylelint');
       const syntax = (sourceType && sourceType!=='css') ? require('postcss-'+sourceType) : undefined;
-      const lintOpts = this.options.stylelint || mopts.stylelint || {rules:{}};
-      const lintProps = this.options.stylelintProps || mopts.stylelintProps
-        || this.options.stylelintExtra || mopts.stylelintExtra
-        || {reporter:{clearMessages:true, throwError:true}};
-      stream = stream.pipe(pcss([
-        stylelint(lintOpts),
-        reporter(lintProps.reporter)
+      const lintOpts = Object.assign({}, builder.moduleOptions.stylelint, {rules:{}});
+      const reporterOpts = Object.assign({}, lintOpts.reporter,
+        {reporter:{clearMessages:true, throwError:true}});
+      builder.pipe(pcss([
+        stylelint(lintOpts.stylelint || lintOpts),
+        reporter(reporterOpts)
       ], {syntax:syntax}));
     }
 
     // check CSS processor option
     if (sourceType && sourceType !== 'css') {
-      const index = sourceType==='scss' ? 'sass' : sourceType;
-      const processor = require('gulp-' + index);
-      stream = stream.pipe(processor(this.options[index] || mopts[index]));
+      const moduleName = sourceType==='scss' ? 'sass' : sourceType;
+      const processor = require('gulp-' + moduleName);
+      builder.pipe(processor(this.options[moduleName] || builder.moduleOptions[moduleName]));
     }
 
     // check postcss option
     if (postcss) {
-      const pcssOpts = this.options.postcss || mopts.postcss || {};
-      stream = stream.pipe(pcss(pcssOpts.plugins || [], pcssOpts.options));
+      const pcssOpts = this.options.postcss || builder.moduleOptions.postcss || {};
+      builder.pipe(pcss(pcssOpts.plugins || [], pcssOpts.options));
     }
     else if (autoPrefixer) {
-      stream = stream.pipe(require('gulp-autoprefixer')(this.options.autoprefixer || opts.autoPrefixer));
+      builder.pipe(require('gulp-autoprefixer')(builder.moduleOptions.autoPrefixer));
     }
-    return stream;
   }
 }
 

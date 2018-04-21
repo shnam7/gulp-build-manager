@@ -6,7 +6,7 @@
 import * as gulp from 'gulp';
 import * as upath from 'upath';
 import {is} from '../utils/utils';
-import {BuildConfig, BuildSet, ExternalBuilder, Options, TaskDoneFunction, WatchItem} from "./types";
+import {BuildConfig, BuildFunction, BuildSet, ExternalBuilder, Options, TaskDoneFunction, WatchItem} from "./types";
 import {GWatcher} from "./watcher";
 import {GCleaner} from "./cleaner";
 import {GBuilder} from "./builder";
@@ -79,7 +79,8 @@ export class GBuildSet {
 
         let builder = this.getBuilder(item, customDirs);
         builder.reloader = watcher.reloader;
-        let task = (done:TaskDoneFunction)=>builder.build(defaultModuleOptions, item, done, watcher.reloader);
+        // let task = (done:TaskDoneFunction)=>builder.build(defaultModuleOptions, item, done, watcher.reloader);
+        let task = (done:TaskDoneFunction)=>builder._build(item);
         let deps = undefined;
         let triggers = undefined;
 
@@ -124,15 +125,15 @@ export class GBuildSet {
 
   getBuilder(buildItem:BuildConfig, customDirs:string|string[]) {
     let builder = buildItem.builder;
-    if (is.Function(builder)) return {build: builder};
+
+    if (is.Function(builder)) return new GBuilder(builder as BuildFunction);
 
     if (builder instanceof GBuilder) return builder;
-    if (!builder) return {
-      build: function (mopts:Options, conf:Options, done:TaskDoneFunction) {
-        // console.log(`BuildName:${buildItem.buildName}: No builder specified.`);
-        done();
-      }
-    };
+    if (!builder) return new GBuilder(()=>{
+      // console.log(`BuildName:${buildItem.buildName}: No builder specified.`);
+      // return Promise.resolve();
+    });
+
     if (is.Object(builder)) {
       if (!builder.hasOwnProperty('command'))
         throw Error(`[buildName:${buildItem.buildName}]builder.command is not specified.`);

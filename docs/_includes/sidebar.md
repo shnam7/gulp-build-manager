@@ -25,7 +25,6 @@
 * [Plugins]({{site.baseurl}}/plugins/using-plugins)
   - [Using Plugins]({{site.baseurl}}/plugins/using-plugins)
   - [Built-in Plugins]({{site.baseurl}}/plugins/built-in-plugins)
-  - [Function Plugins]({{site.baseurl}}/plugins/function-plugins)
   - [Writing Custom Plugins]({{site.baseurl}}/plugins/writing-custom-plugins)
 
 * Resources
