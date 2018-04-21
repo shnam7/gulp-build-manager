@@ -99,6 +99,7 @@
     "gulp-zip": "latest",
     "lost": "latest",
     "mocha": "latest",
+    "panini": "^1.6.2",
     "postcss-cssnext": "latest",
     "postcss-reporter": "latest",
     "postcss-utilities": "latest",
@@ -107,9 +108,9 @@
     "ts-loader": "latest",
     "tslint-loader": "latest",
     "twig-markdown": "latest",
-    "typescript": "^2.8.1",
+    "typescript": "^2.8.3",
     "watch": "latest",
-    "webpack": "^4.5.0",
+    "webpack": "^4.6.0",
     "webpack-stream": "latest"
   }
 }
