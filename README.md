@@ -38,6 +38,9 @@ Those classes can be extended or modified using class inheritance.<br>
 gbm also provides plugin system, which enables users to add custom functions or plugin objects into specific stages of the build process.
 Builders can also be in the form of function, which is sometimes simpler and convenient.
 
+### Migration from v2
+- Some of Build Configuration interface was changed and please refer to the [Examples][1] to find out how to migrate to achieve the same functionality with v3 interface.
+- User plugins inside the Build Configuration are not supported. Instead, consider using 'preBuild' and 'postBuild' options or overload GBuilder methods.
 
 ### Documentations for previous versions
   - [Dcoumentation - v2.2][3]
