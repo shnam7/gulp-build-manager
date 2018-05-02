@@ -1,6 +1,6 @@
 {
   "name": "gulp-build-manager",
-  "version": "3.0.0-alpha.2",
+  "version": "3.0.0-alpha.3",
   "description": "Easy to use, flexible gulp task manager",
   "files": [
     "lib"

@@ -41,14 +41,18 @@ Builders can also be in the form of function, which is sometimes simpler and con
 ### Migration from v2
 - Some of Build Configuration interface was changed and please refer to the [Examples][1] to find out how to migrate to achieve the same functionality with v3 interface.
 - User plugins inside the Build Configuration are not supported. Instead, consider using 'preBuild' and 'postBuild' options or overload GBuilder methods.
+- To keep using v2.x, install it with following command
+  ```bash
+  npm i gulp-build-manager@2 --save-dev
+  ```
 
 ### Documentations for previous versions
   - [Dcoumentation - v2.2][3]
 
 [0]: https://shnam7.github.io/gulp-build-manager/
-[1]: ./examples
-[2]: ./CHANGELOG.md
-[3]: https://github.com/shnam7/gulp-build-manager/tree/v2.2.0/docs
+[1]: https://github.com/shnam7/gulp-build-manager/tree/master/examples
+[2]: https://github.com/shnam7/gulp-build-manager/tree/master/CHANGELOG.md
+[3]: https://github.com/shnam7/gulp-build-manager/tree/master/docs
 
 <br>
 <br>
