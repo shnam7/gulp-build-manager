@@ -48,6 +48,6 @@ gbm({
 ```
 
 #### Resources
-  - Main gulpfile of this project is using GExternalBuilder features. See [docs build configuration]({{site.srcurl}}/gulpfile.js){:target="_blank"} for more details.
-  - You can also refer to an example at [examples/external]({{site.srcurl}}/examples/external/gulpfile.js))
+  - Main gulpfile of this project is using GExternalBuilder features. See [docs build configuration]({{site.repo}}/gulpfile.js){:target="_blank"} for more details.
+  - You can also refer to an example at [examples/external]({{site.repo}}/examples/external/gulpfile.js))
 

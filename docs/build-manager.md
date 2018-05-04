@@ -40,6 +40,7 @@ Single or an aray of top level build configurations. Even though array notation 
 Path or an array of paths to search for custom Builder classes. You can store your custom builders in this directories, and specify its name as a string in conf.builder of build configuration.
 
 #### gbmConfig.moduleOptions
+{: #moduleOptions}
 <i>type: Object</i><br>
 <i>default: {}</i><br>
 Global module options that will override gbm.defaultModuleOptions.

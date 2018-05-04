@@ -78,4 +78,4 @@ gbm({
 ```
 
 #### Resources
-  - You can also refer to an example at [examples/external]({{site.srcurl}}/examples/webpack/)
+  - You can also refer to an example at [examples/external]({{site.repo}}/examples/webpack/)

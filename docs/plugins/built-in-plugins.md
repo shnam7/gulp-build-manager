@@ -13,7 +13,7 @@ const CoffeeScriptPlugin = gbm.CoffeeScriptPlugin;
 ```
 
 ## Built-in plugin functions
-See [source code]({{site.srcurl}}/src/core/plugin.ts){:target='_blank'} for the details.
+See [source code]({{site.repo}}/src/core/plugin.ts){:target='_blank'} for the details.
 Built-in plugin functions searches BuildConfig.moduleOptions to find options for gulp plugin modules. And then, overrides it with the settings in 'options' argument. For example, for gulp-debug module,
   - First search builder.conf.modulesOptions.debug
   - And then, override(merge not replace) it with options.debug
@@ -101,24 +101,24 @@ builder.chain(GPlugin.cssnano);
 ## Built-in plugin classes
 #### CoffeeScriptPlugin
 CoffeeScript transpiler.<br>
-See [source code]({{site.srcurl}}/src/plugins/CoffeeScriptPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.repo}}/src/plugins/CoffeeScriptPlugin.ts){:target='_blank'} for the details.
 
 #### CSSPlugin
 Stylesheet processor supporting sass/scss/less with postcss. See source code for the details.<br>
-See [source code]({{site.srcurl}}/src/plugins/CSSPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.repo}}/src/plugins/CSSPlugin.ts){:target='_blank'} for the details.
 
 #### JavaScriptPlugin
 JavaScript process with babel support. See source code for the details.<br>
-See [source code]({{site.srcurl}}/src/plugins/JavaScriptPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.repo}}/src/plugins/JavaScriptPlugin.ts){:target='_blank'} for the details.
 
 #### MarkdownPlugin
 Markdown compiler.
-See [source code]({{site.srcurl}}/src/plugins/MarkdownPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.repo}}/src/plugins/MarkdownPlugin.ts){:target='_blank'} for the details.
 
 #### TwigPlugin
 Twig builder. See source code for the details.<br>
-See [source code]({{site.srcurl}}/src/plugins/TwigPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.repo}}/src/plugins/TwigPlugin.ts){:target='_blank'} for the details.
 
 #### TypeScriptPlugin
 TypeScript transpiler. See source code for the details.<br>
-See [source code]({{site.srcurl}}/src/plugins/TypeScriptPlugin.js){:target='_blank'} for the details.
+See [source code]({{site.repo}}/src/plugins/TypeScriptPlugin.ts){:target='_blank'} for the details.

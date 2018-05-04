@@ -42,5 +42,5 @@ const jekyll = {
 
 #### Resources
   - This document site was built with GJekyllBuilder and CCSSBuilder.
-  - See [docs build configuration]({{site.srcurl}}/docs/gulpfile.js){:target="_blank"} for more details.
+  - See [docs build configuration]({{site.repo}}/docs/gulpfile.js){:target="_blank"} for more details.
 
