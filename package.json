@@ -111,7 +111,7 @@
     "typescript": "^2.8.3",
     "uglify-es": "^3.3.10",
     "watch": "latest",
-    "webpack": "^4.6.0",
+    "webpack": "^4.7.0",
     "webpack-stream": "^4.0.3"
   }
 }
