@@ -29,7 +29,10 @@ const coffeeScript = {
   },
   moduleOptions: {
     // to enable uglify, coffee output need to be transpiled to es5 using babel by passing the options below
-    coffee: {transpile: {"presets": ["env"]}}
+    // TODO May 6, 2018
+    // If transpile option is given, gulp-coffee fails when sourcemaps are enabled.
+    // No solution found, so this option is blocked until the solution is found.
+    // coffee: {transpile: {"presets": ["env"]}}
   }
 };
 
