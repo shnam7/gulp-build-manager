@@ -1,8 +1,11 @@
 // Sample
 
 const gbm = require('../../lib');
+const upath = require('upath');
 
-process.chdir(__dirname);
+// set base directory to project root
+process.chdir('../../');
+const basePath = upath.relative(process.cwd(), __dirname);
 
 class MyBuilder extends gbm.GBuilder {
   constructor() { super()}
@@ -31,7 +34,7 @@ const myBuilder = {
 
 // create gbmConfig object
 gbm({
-  customBuilderDir: './custom-builders',
+  customBuilderDir: upath.join(basePath, 'custom-builders'),
   systemBuilds: {
     build: [customFunction, customBuilder, myBuilder],
     clean: [""],  // dummy to create '@close' task to make main gulpfile not to fail with error

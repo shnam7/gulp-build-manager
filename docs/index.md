@@ -46,9 +46,8 @@ gbm({
 ### Resources
 To learn more, check out the resources below. You are recommended to see the examples which shows various usage and practices that can be applied to your work quickly.
  
-- [Documentation][0]
-- [Examples][1]
-
+- [Documentation][0]{:target="_blank"}
+- [Examples][1]{:target="_blank"}
 
 [0]: {{site.url}}
 [1]: {{site.repo}}/examples

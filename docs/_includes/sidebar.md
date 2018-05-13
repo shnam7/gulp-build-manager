@@ -30,3 +30,4 @@
 * Resources
   - [Examples]({{site.baseurl}}/resources/examples)
   - [Task synchronization]({{site.baseurl}}/resources/task-synchronization)
+  - [Modular Configuration]({{site.baseurl}}/resources/modular-configuration)

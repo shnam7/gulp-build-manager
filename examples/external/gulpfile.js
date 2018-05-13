@@ -1,7 +1,7 @@
 const gbm = require('../../lib');
-const gulp = require('gulp');
 
-process.chdir(__dirname);
+// set base directory to project root
+process.chdir('../../');
 
 const cmd1 = {
   buildName: 'external-command1',

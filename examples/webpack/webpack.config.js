@@ -1,7 +1,9 @@
 const path = require('path');
 
-let srcRoot = 'assets';
-let destRoot = '_build';
+// set base directory to project root
+const basePath = path.relative(process.cwd(), __dirname);
+const srcRoot = path.join(basePath, 'assets');
+const destRoot = path.join(basePath, '_build');
 
 module.exports = {
   entry: path.resolve(srcRoot, 'scripts/ts/greet.ts'),

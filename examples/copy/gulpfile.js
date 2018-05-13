@@ -1,19 +1,22 @@
 // Sample
 
 const gbm = require('../../lib');
+const upath = require('upath');
 
-process.chdir(__dirname);
+// set base directory to project root
+process.chdir('../../');
+const basePath = upath.relative(process.cwd(), __dirname);
 
 const copy = {
   buildName: 'copy',
   builder: 'GCopyBuilder',
-  src: ['path-src1/**/*.*'],
-  dest:'path-dest1',
+  src: [upath.join(basePath, 'path-src1/**/*.*')],
+  dest: upath.join(basePath, 'path-dest1'),
   flushStream: true,  // task to finish after all the files copies are finished
   buildOptions: {
     targets:[
-      {src: ['path-src1/**/*.*'], dest:'path-dest2'},
-      {src: ['path-src2/**/*.*'], dest:'path-dest3'}
+      {src: [upath.join(basePath, 'path-src1/**/*.*')], dest: upath.join(basePath, 'path-dest2')},
+      {src: [upath.join(basePath, 'path-src2/**/*.*')], dest: upath.join(basePath, 'path-dest3')},
     ],
   },
 };
@@ -22,7 +25,7 @@ const copy = {
 gbm({
   systemBuilds: {
     build: [copy],
-    clean: ['path-dest*'],
+    clean: [upath.join(basePath, 'path-dest*')],
     default: ['@clean', '@build']
   }
 });

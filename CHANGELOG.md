@@ -8,7 +8,9 @@
   - Change gulp-uglify to uglify-es to support es6
   - Remove DebugPlugin, FilterPlugin, ConcatPlugin, CopyPlugin, CSSNanoPlugin, UglifyPlugin, which are supported by GPlugin plugin functions (GPlugin.debug, etc)
 - Update examples using new interfaces
-- Remove default reloader from watcher because Watch does not always mean browser reloads. 
+- Remove default reloader from watcher because Watch does not always mean browser reloads.
+- Change current directory of examples to the project root directory
+- Add modular configuration example (examples/modular)
 
 ## v2.2 - 2018-03-25
 - Add GExternalBuilder and exmaples/external (Sec docs)

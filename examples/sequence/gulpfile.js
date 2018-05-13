@@ -3,16 +3,17 @@
 const gbm = require('../../lib');
 const wait = require('../../lib/utils/utils').wait;
 
-process.chdir(__dirname);
+// set base directory to project root
+process.chdir('../../');
 
 // Create build definition Item #1
 const buildItem1 = {
   buildName: 'task1',
   builder: (builder)=>{
-    console.log('test1 executed - this will take 3 seconds to finish.');
-    return new Promise(resolve=>setTimeout(()=>resolve(), 3000));
+    console.log('test1 executed - this will take 0.3 seconds to finish.');
+    return new Promise(resolve=>setTimeout(()=>resolve(), 300));
   },
-  preBuild: ()=>{console.log('preBuild called. It will take 2 seconds.'); return wait(2000)},
+  preBuild: ()=>{console.log('preBuild called. It will take 0.2 seconds.'); return wait(200)},
   postBuild: ()=>console.log('postBuild called')
 };
 

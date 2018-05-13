@@ -2,14 +2,16 @@
 
 const gbm = require('../../lib');
 
-process.chdir(__dirname);
+// set base directory to project root
+process.chdir('../../');
+
 
 // Create build definition Item #1
 let buildItem1 = {
   buildName: 'task1',
   builder: ()=>{
-    console.log('test1 executed - this will take 3 seconds to finish.');
-    return new Promise(resolve=>setTimeout(()=>resolve(), 3000));
+    console.log('test1 executed - this will take 0.3 seconds to finish.');
+    return new Promise(resolve=>setTimeout(()=>resolve(), 300));
   }
 };
 

@@ -1,13 +1,13 @@
 // Sample
 
 const gbm = require('../../lib');
-const path = require('path');
+const path = require('path');   // use path instead of upath to workaround windows/linux path notation issue
 
-process.chdir(__dirname);
-
-const srcRoot = 'assets';
-const destRoot = '_build';
-
+// set base directory to project root
+process.chdir('../../');
+const basePath = path.relative(process.cwd(), __dirname);
+const srcRoot = path.join(basePath, 'assets');
+const destRoot = path.join(basePath, '_build');
 
 // build configuration
 const webpack = {
@@ -17,7 +17,7 @@ const webpack = {
   // dest: path.join(destRoot, 'jss'),
   outFile: 'sample-ts.js',
   buildOptions: {
-    webpackConfig: 'webpack.config.js'
+    webpackConfig: path.join(basePath, 'webpack.config.js')
   },
   moduleOptions: {
     webpack: {
@@ -51,7 +51,7 @@ gbm({
     clean: [
       destRoot,
       path.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}'),
-      'node_modules'    // clean up temporary files in node_modules
+      path.join(srcRoot, 'node_modules')    // clean up temporary files in node_modules
     ],
     default: ['@clean', '@build'],
   }

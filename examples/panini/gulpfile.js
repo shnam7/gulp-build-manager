@@ -3,11 +3,11 @@
 const gbm = require('../../lib');
 const upath = require('upath');
 
-process.chdir(__dirname);
-
-// Create build definition Item #1
-const srcRoot = 'assets/panini';
-const destRoot = '_build';
+// set base directory to project root
+process.chdir('../../');
+const basePath = upath.relative(process.cwd(), __dirname);
+const srcRoot = upath.join(basePath, 'assets/panini');
+const destRoot = upath.join(basePath, '_build');
 
 const panini = {
   buildName: 'panini',
