@@ -12,7 +12,7 @@ import * as upath from 'upath';
 import {GWatcher} from './watcher';
 import {GCleaner} from './cleaner';
 import {GBuildSet} from "./buildSet";
-import {BuildSet, GBMConfig, Options} from "./types";
+import {BuildSet, GBMConfig, Options, WatchOptions} from "./types";
 import {is} from "../utils/utils";
 
 export class GBuildManager {
@@ -88,8 +88,10 @@ export class GBuildManager {
         gulp.task('@build', gulp.parallel(new GBuildSet(sysBuilds).resolve(
           customBuildDir, mopts, this.watcher, this.cleaner)));
       }
+
       this.cleaner.createTask(mopts.del);
-      this.watcher.createTask(Object.assign({}, {livereload: mopts.livereload}, config.systemBuilds.watch));
+      this.watcher.createTask(config.systemBuilds.watch as WatchOptions);
+
       let defaultBuild = config.systemBuilds.default;
       if (defaultBuild) {
         gulp.task('default', gulp.parallel(new GBuildSet(defaultBuild).resolve(

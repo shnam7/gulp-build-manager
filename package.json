@@ -71,7 +71,7 @@
     "@types/glob": "latest",
     "@types/gulp": "^4.0.5",
     "babel-core": "^6.26.3",
-    "babel-preset-env": "^1.6.1",
+    "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.4",
     "chai": "latest",
     "gulp": "github:gulpjs/gulp#4.0",
@@ -106,14 +106,14 @@
     "postcss-reporter": "latest",
     "postcss-utilities": "latest",
     "stylelint": "^9.2.0",
-    "ts-loader": "latest",
+    "ts-loader": "^4.3.0",
     "tslint": "^5.10.0",
     "tslint-loader": "latest",
     "twig-markdown": "latest",
     "typescript": "^2.8.3",
     "uglify-es": "^3.3.10",
     "watch": "latest",
-    "webpack": "^4.7.0",
+    "webpack": "^4.8.3",
     "webpack-stream": "^4.0.3"
   }
 }
