@@ -12,7 +12,7 @@ import * as upath from 'upath';
 import {GWatcher} from './watcher';
 import {GCleaner} from './cleaner';
 import {GBuildSet} from "./buildSet";
-import {BuildSet, GBMConfig, Options, WatchOptions} from "./types";
+import {BuildSet, GBMConfig, Options} from "./types";
 import {is} from "../utils/utils";
 
 export class GBuildManager {
@@ -90,7 +90,7 @@ export class GBuildManager {
       }
 
       this.cleaner.createTask(mopts.del);
-      this.watcher.createTask(config.systemBuilds.watch as WatchOptions);
+      this.watcher.createTask(config.systemBuilds.watch);
 
       let defaultBuild = config.systemBuilds.default;
       if (defaultBuild) {

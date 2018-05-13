@@ -28,7 +28,7 @@ export class GWatcher {
     }
   }
 
-  createTask(watchOptions: WatchOptions, taskName='@watch') {
+  createTask(watchOptions: WatchOptions={}, taskName='@watch') {
     if (this.watchMap.length <=0) return;
     gulp.task(taskName, (done)=>{this.watch(watchOptions); done()});
   }
