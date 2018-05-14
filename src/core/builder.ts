@@ -54,7 +54,7 @@ export class GBuilder {
 
 
   /**----------------------------------------------------------------
-   * Build utility functions: Returns value should be 'this'
+   * Builder API functions: Returns value should be 'this'
    *----------------------------------------------------------------*/
 
   src(src?: string | string[]) {
@@ -106,9 +106,8 @@ export class GBuilder {
   }
 
   chain(action: Plugin, ...args: any[]): this {
-    action instanceof GPlugin
-      ? (action as GPlugin).process(this, ...args)
-      : action(this, ...args);
+    // note: return value is discarded to keep AIP interface of returning this
+    this.call(action, ...args);
     return this;
   }
 
@@ -127,6 +126,16 @@ export class GBuilder {
     if (this.buildOptions.reload !== false && this.reloader)
       this.reloader.reload(this.stream, this.moduleOptions, this.buildOptions.watch);
     return this;
+  }
+
+
+  /**----------------------------------------------------------------
+   * Builder utility functions: Returns value can be anything
+   *----------------------------------------------------------------*/
+  call(action: Plugin, ...args: any[]): void | Promise<any> {
+    return action instanceof GPlugin
+      ? (action as GPlugin).process(this, ...args)
+      : action(this, ...args);
   }
 
   toPromise(stream: Stream) {
