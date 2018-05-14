@@ -128,4 +128,8 @@ export class GBuilder {
       this.reloader.reload(this.stream, this.moduleOptions, this.buildOptions.watch);
     return this;
   }
+
+  toPromise(stream: Stream) {
+    return toPromise(stream || this.stream);
+  }
 }
