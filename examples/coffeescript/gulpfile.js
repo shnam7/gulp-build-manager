@@ -26,7 +26,8 @@ const coffeeScript = {
     lint: true,
     minify: true,
     // minifyOnly:true,
-    sourceMap: true
+    sourceMap: true,
+    // outFileOnly: false
   },
   moduleOptions: {
     // to enable uglify, coffee output need to be transpiled to es5 using babel by passing the options below

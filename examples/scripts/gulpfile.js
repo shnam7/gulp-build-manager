@@ -33,6 +33,7 @@ const __babel = {
     babel: true,
     lint: true,
     sourceMap: true,
+    // minify: true
   },
   moduleOptions: {
     eslint: {
@@ -56,7 +57,9 @@ const javaScript = {
   dependencies: gbm.parallel(__coffeeScript, __babel),
   buildOptions: {
     minify: true,
-    sourceMap: true
+    // minifyOnly: true,
+    sourceMap: true,
+    outFileOnly: true    // default value of outFileOnly is true
   },
   watch: {livereload: true}
 };

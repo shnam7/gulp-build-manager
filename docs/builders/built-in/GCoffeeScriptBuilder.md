@@ -14,6 +14,9 @@ CoffeeScript builder. Compiles coffeescript files into javascript.
     If set to true, *.min.js files are generated.
   - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)<br>
     If set to true, *.min.js files are generated but non-minified files are not created.
+  - *conf.buildOptions.outFileOnly* (<i>type:boolean, default:*true*</i>)<br>
+    If set to false, each transpiled files are generated before concatenation.<br>
+    This option is valid only when conf.outFile is set.
 
 
 #### Example

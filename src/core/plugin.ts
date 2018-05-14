@@ -49,7 +49,7 @@ export class GPlugin {
     }
 
     let opts = Object.assign({}, builder.moduleOptions.concat, options.concat);
-    builder.pipe(require('gulp-concat')(outFile, opts.concat));
+    builder.pipe(require('gulp-concat')(outFile, opts.concat)).sourceMaps();
   }
 
   static rename(builder: GBuilder, options: Options={}) {

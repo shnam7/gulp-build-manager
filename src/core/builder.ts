@@ -10,6 +10,7 @@ import {GReloader} from "./reloader";
 
 export class GBuilder {
   stream: Stream;
+  streamQ: Stream[] = [];
   conf: BuildConfig = {buildName: ''};
   buildOptions: Options = {};
   moduleOptions: Options = {};
@@ -70,6 +71,21 @@ export class GBuilder {
 
     // check sourceMap option
     return this.sourceMaps({init: true});
+  }
+
+  pushStream() {
+    if (this.stream) {
+      this.streamQ.push(this.stream);
+      this.stream = this.stream.pipe(require('gulp-clone')());
+    }
+    return this;
+  }
+
+  popStream() {
+    if (this.streamQ.length > 0) {
+      this.stream = this.streamQ.pop()
+    }
+    return this;
   }
 
   dest(path?: string) {

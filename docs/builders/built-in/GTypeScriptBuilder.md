@@ -22,6 +22,7 @@ CSS builder. sass/scss/less and postcss are suported. You can use postcss togeth
 ### Notes
   - If conf.outFile is set, it will override the outFile setting of tsconfig.json
   - If conf.outFile and conf.dest is set, conf.dest will override the outDir setting of tsconfig.json
+  - buildOptions.outFileOnly option is not supported. TypeScript compiler always generates outFile only, and if non-concatenated each individual files need to be generated, create another build configuration without outFile option. 
 
 #### Example
 ```javascript

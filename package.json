@@ -1,6 +1,6 @@
 {
   "name": "gulp-build-manager",
-  "version": "3.0.0-alpha.3",
+  "version": "3.0.0",
   "description": "Easy to use, flexible gulp task manager",
   "files": [
     "lib"
@@ -18,7 +18,7 @@
     "clean-all": "npm run gulp-clean && npm run clean",
     "test": "npm run build && mocha --reporter spec && npm run gulp-test",
     "prepare": "npm run clean && npm run build",
-    "prepare-to-release": "npm run clean && npm run build && npm run docs-build && npm run ex-clean ",
+    "prepare-to-commit": "npm run clean && npm run build && npm run docs-build && npm run ex-clean ",
     "gulp": "gulp",
     "gulp-build": "npm run gulp @build",
     "gulp-clean": "npm run gulp @clean",
@@ -76,7 +76,7 @@
     "chai": "latest",
     "gulp": "github:gulpjs/gulp#4.0",
     "gulp-babel": "latest",
-    "gulp-clone": "latest",
+    "gulp-clone": "^2.0.1",
     "gulp-coffee": "latest",
     "gulp-coffeelint": "latest",
     "gulp-concat": "latest",

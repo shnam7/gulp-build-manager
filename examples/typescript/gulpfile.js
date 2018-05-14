@@ -17,12 +17,15 @@ const typeScript = {
 
   // use order property to set outFile orders
   order: ['*ts-2.ts'],
-  dest: (file) => file.base,
+  // dest: (file) => file.base,
+  dest: upath.join(destRoot, 'js'),
   outFile: upath.join(destRoot, 'js/sample-ts.js'),
   flushStream: true,
   buildOptions: {
     sourceMap: true,
     minify: true,
+    // outFileOnly: false, --> this option is not supported in TypeScriptPlugin and TypeScriptBuilder
+
     // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
     tsConfig: upath.join(srcRoot, 'scripts/tsconfig.json')
   },

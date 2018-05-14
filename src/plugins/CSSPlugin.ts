@@ -48,6 +48,7 @@ export class CSSPlugin extends GPlugin {
     else if (autoPrefixer) {
       builder.pipe(require('gulp-autoprefixer')(builder.moduleOptions.autoPrefixer));
     }
+    builder.sourceMaps();
   }
 }
 

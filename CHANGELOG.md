@@ -10,7 +10,11 @@
 - Update examples using new interfaces
 - Remove default reloader from watcher because Watch does not always mean browser reloads.
 - Change current directory of examples to the project root directory
-- Add modular configuration example (examples/modular)
+- Add modular configuration guide(docs) and example(examples/modular)
+- Add outFileOnly option to buildOptions
+- Fix missing sourceMaps() call in GPlugin.concat() and CSSPlugin
+- Fix minify and outFile errors on GCoffeeScriptBuilder, GJavaScriptBuilder, GCSSBuilder
+- Add pushStream() and popStream()to GBuilder
 
 ## v2.2 - 2018-03-25
 - Add GExternalBuilder and exmaples/external (Sec docs)

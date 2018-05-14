@@ -55,7 +55,7 @@ export class TypeScriptPlugin extends GPlugin {
 
     // continue with transpiled javascript files
     builder.stream = tsStream.js;
-    builder.sourceMaps()
+    builder.sourceMaps();
 
     // process dts stream/ output directory is from tsconfig.json settings or conf.dest
     let dtsDir = tsStream.project.options.declationDir || builder.conf.dest;
