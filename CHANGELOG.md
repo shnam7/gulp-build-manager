@@ -15,6 +15,7 @@
 - Fix missing sourceMaps() call in GPlugin.concat() and CSSPlugin
 - Fix minify and outFile errors on GCoffeeScriptBuilder, GJavaScriptBuilder, GCSSBuilder
 - Add pushStream() and popStream()to GBuilder
+- Fix build sequence to handle flushStream just after build() and before reload() 
 
 ## v2.2 - 2018-03-25
 - Add GExternalBuilder and exmaples/external (Sec docs)

@@ -43,9 +43,9 @@ export class GBuilder {
 
     await this._run(this.conf.preBuild);
     await this.build();
+    if (this.conf.flushStream) await toPromise(this.stream);
     await this.reload();
     await this._run(this.conf.postBuild);
-    if (this.conf.flushStream) return toPromise(this.stream);
   }
 
   build(): void | Promise<this | void> {
