@@ -3,7 +3,8 @@
   "version": "3.0.3",
   "description": "Easy to use, flexible gulp task manager",
   "files": [
-    "lib/**/*.js"
+    "lib",
+    "!**/*.map"
   ],
   "main": "lib/index.js",
   "scripts": {
@@ -19,6 +20,7 @@
     "test": "npm run build && mocha --reporter spec && npm run gulp-test",
     "prepare": "npm run clean && npm run build",
     "prepare-to-commit": "npm run clean && npm run build && npm run docs-build && npm run ex-clean ",
+    "npm-dry-run": "npm publish --dry-run",
     "gulp": "gulp",
     "gulp-build": "npm run gulp @build",
     "gulp-clean": "npm run gulp @clean",
@@ -91,7 +93,7 @@
     "gulp-markdown": "latest",
     "gulp-order": "latest",
     "gulp-postcss": "latest",
-    "gulp-rename": "latest",
+    "gulp-rename": "^1.2.3",
     "gulp-sass": "^4.0.1",
     "gulp-tslint": "^8.1.3",
     "gulp-twig": "latest",
