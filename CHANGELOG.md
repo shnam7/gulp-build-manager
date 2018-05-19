@@ -1,4 +1,7 @@
 # Changelog
+### 3.1.0
+- Change gulp 4.0 dependency from github to npm (npm i gulp@next)
+
 ## v3.0.0
 - Redesign architecture utilizing Promise
   - Change GBuilder and GPlugin interface

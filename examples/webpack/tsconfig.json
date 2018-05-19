@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": "assets/scripts/ts",
-    "outDir": ".",
+    "outDir": "_build",
     "declaration": true,
     "noEmitOnError": true,
     "sourceMap": true

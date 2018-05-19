@@ -7,21 +7,19 @@ title: Getting started
 #### 1. Install Gulp Build Manager(gbm in short):
 ```sh
 npm install gulp-build-manager --save-dev
-# or 
-yarn add gulp-build-manager --dev
 ```
 
 If you have not installed gulp 4.0 yet, install it first.
-```sh
-npm install gulpjs/gulp#4.0 --save-dev
-# or 
-yarn add gulpjs/gulp#4.0 --dev
+```bash
+npm install gulpjs@next --save-dev  # gulp v4.0.0
+# or
+npm install gulpjs/gulp#4.0 --save-dev  # latest from github:gulp 4.0 branch
 ```
 
 
 #### 2. Create gulpfile at the root of your project:
 Please be sure to have some javascript files in the assets/scripts/js directory to see the build process working.
-In case you have error messages such as <i>'Cannot find module ...'</i>, then install the required modules using npm or yarn command.
+In case you have error messages such as <i>'Cannot find module ...'</i>, then install the required modules using npm command.
 ```javascript
 const gbm = require('gulp-build-manager');
 
@@ -62,8 +60,6 @@ If you want, you can use babel with gulp. Just, install babel packages and creat
 ##### Installing babel
 ```sh
 npm install babel-core babel-preset-env --save-dev
-# or
-yarn add babel-core babel-preset-env --dev
 ```
 
 ##### .babelrc
