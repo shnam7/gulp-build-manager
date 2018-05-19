@@ -1,0 +1,8 @@
+{
+  "extends": [
+    "tslint-eslint-rules-recommended"
+  ],
+  "rules": {
+    "no-console": false
+  }
+}
