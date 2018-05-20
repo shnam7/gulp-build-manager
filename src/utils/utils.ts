@@ -1,6 +1,6 @@
 import * as glob from 'glob';
 import * as upath from 'upath';
-import {GulpStream, Stream} from "../core/types";
+import {Stream} from "../core/types";
 
 // export function removeExt(fileName: string, ext: string) {
 //   if (!ext) return fileName;
