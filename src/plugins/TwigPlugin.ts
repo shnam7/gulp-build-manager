@@ -11,7 +11,7 @@ export class TwigPlugin extends GPlugin {
 
   process(builder: GBuilder) {
     builder.pipe(require('gulp-twig')(builder.moduleOptions.twig));
-    if (builder.buildOptions.minify) builder.pipe(require('gulp-htmlclean')(builder.moduleOptions.htmlmin));
+    if (builder.buildOptions.minify) builder.pipe(require('gulp-htmlmin')(builder.moduleOptions.htmlmin));
     if (builder.buildOptions.prettify) builder.pipe(require('gulp-html-prettify')(builder.moduleOptions.htmlPrettify));
   }
 }
