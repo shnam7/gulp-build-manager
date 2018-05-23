@@ -57,6 +57,7 @@
     "extends": "stylelint-config-recommended"
   },
   "dependencies": {
+    "gulp": "^4.0.0",
     "chalk": "^2.4.1",
     "del": "^3.0.0",
     "glob": "^7.1.2",
@@ -71,7 +72,6 @@
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.4",
     "chai": "^4.1.2",
-    "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
     "gulp-clone": "^2.0.1",
     "gulp-coffee": "^3.0.2",
