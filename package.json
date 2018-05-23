@@ -18,7 +18,7 @@
     "build-all": "npm run build && npm run gulp-build",
     "clean-all": "npm run gulp-clean && npm run clean",
     "test": "npm run build && mocha --reporter spec && npm run gulp-test",
-    "prepare-to-publish": "npm run clean && npm run build",
+    "prepare": "npm run clean && npm run build",
     "prepare-to-commit": "npm run clean && npm run build && npm run docs-build && npm run ex-clean ",
     "npm-dry-run": "npm publish --dry-run",
     "gulp": "gulp",
