@@ -9,7 +9,7 @@ npm install gulp-build-manager --save-dev
 
 To install the latest version from github:
 ```bash
-npm install github:shnam7/gulp-build-manager#master --save-dev
+npm install github:shnam7/gulp-build-manager --save-dev
 ````
 
 ### References

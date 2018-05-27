@@ -1,6 +1,7 @@
 # Changelog
-### 3.1.0
+### 3.0.5
 - Change gulp 4.0 dependency from github to npm (npm i gulp@next)
+- Move gulp from devDependency to dependency in package.json to have it automatically installed with gbm
 
 ## v3.0.0
 - Redesign architecture utilizing Promise
