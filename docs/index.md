@@ -8,12 +8,12 @@ Gulp Build Manager is an easy to use, flexible gulp task manager. It helps users
 
 
 ### Peer dependencies
-gbm requires gulp 4.0 or higher. To install it, follow the guidelines in [gulpjs](https://github.com/gulpjs/gulp){:target=_blank}:
+gbm requires gulp 4.0 or higher. To install it, follow the instruction below.
 
 ```bash
-npm install gulpjs@next --save-dev  # gulp v4.0.0
+npm install gulp@next --save-dev  # gulp v4.0.0
 # or
-npm install gulpjs/gulp#4.0 --save-dev  # latest from github:gulp 4.0 branch
+npm install gulp@4 --save-dev
 ```
 
 ### Quick Start

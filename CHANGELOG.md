@@ -1,9 +1,5 @@
 # Changelog
-### 3.0.5
-- Change gulp 4.0 dependency from github to npm (npm i gulp@next)
-- Move gulp from devDependency to dependency in package.json to have it automatically installed with gbm
-
-## v3.0.0
+## v3.0
 - Redesign architecture utilizing Promise
   - Change GBuilder and GPlugin interface
   - Remove inline user plugin(BuildConf.plugins) support
@@ -20,6 +16,7 @@
 - Fix minify and outFile errors on GCoffeeScriptBuilder, GJavaScriptBuilder, GCSSBuilder
 - Add pushStream() and popStream()to GBuilder
 - Fix build sequence to handle flushStream just after build() and before reload() 
+- Change gulp 4.0 dependency from github to npm (npm i gulp@next)
 
 ## v2.2 - 2018-03-25
 - Add GExternalBuilder and exmaples/external (Sec docs)

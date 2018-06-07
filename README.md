@@ -4,13 +4,55 @@ Gulp Build Manager, 'gbm' for short, is an easy to use, flexible gulp task manag
 
 ### Installation
 ```bash
+npm install gulp@4    # install gulp version 4
 npm install gulp-build-manager --save-dev
 ```
 
 To install the latest version from github:
 ```bash
+npm install gulp@4    # install gulp version 4
 npm install github:shnam7/gulp-build-manager --save-dev
 ````
+Note that gulp is not automatically installed together with gulp-build-manager. It should be installed of its own.
+
+### Quick Start
+Creating gulp task is simple and easy.
+
+```javascript
+const gbm = require('gulp-build-manager');
+const srcRoot = 'assets';
+const destRoot = '_build';
+
+const scss = {
+  buildName: 'scss',
+  builder: 'GCSSBuilder',
+  src: [upath.join(srcRoot, 'scss/**/*.scss')],
+  dest: upath.join(destRoot, 'css'),
+  moduleOptions: {
+    sass: { includePaths: [ 'assets/scss' ] },
+  }
+};
+
+const javaScript = {
+  buildName: 'javaScript',
+  builder: 'GJavaScriptBuilder',
+  src: ['assets/scripts/js/**/*.js'],
+  dest: '_build/js',
+  outFile: 'sample.js',
+  buildOptions: {
+    minify: true,
+    sourceMap: true
+  }
+};
+
+gbm({
+  systemBuilds: {
+    build: gbm.parallel(scss, javaScript),
+    clean: ['_build'],
+    default: ['@clean', '@build'],
+  }
+});
+```
 
 ### References
   - [Documentation][0]

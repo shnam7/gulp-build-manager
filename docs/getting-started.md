@@ -9,11 +9,11 @@ title: Getting started
 npm install gulp-build-manager --save-dev
 ```
 
-If you have not installed gulp 4.0 yet, install it first.
+If you have not installed gulp 4.0 yet, install it with following commands.
 ```bash
-npm install gulpjs@next --save-dev  # gulp v4.0.0
+npm install gulp@next --save-dev  # gulp v4.0.0
 # or
-npm install gulpjs/gulp#4.0 --save-dev  # latest from github:gulp 4.0 branch
+npm install gulp@4 --save-dev
 ```
 
 

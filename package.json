@@ -1,6 +1,6 @@
 {
   "name": "gulp-build-manager",
-  "version": "3.0.5",
+  "version": "3.0.6",
   "description": "Easy to use, flexible gulp task manager",
   "files": [
     "lib",
@@ -57,11 +57,13 @@
     "extends": "stylelint-config-recommended"
   },
   "dependencies": {
-    "gulp": "^4.0.0",
     "chalk": "^2.4.1",
     "del": "^3.0.0",
     "glob": "^7.1.2",
     "upath": "^1.1.0"
+  },
+  "peerDependencies": {
+    "gulp": "^4.0.0"
   },
   "devDependencies": {
     "@types/browser-sync": "0.0.40",
@@ -72,6 +74,7 @@
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.4",
     "chai": "^4.1.2",
+    "gulp": "^4.0.0",
     "gulp-babel": "^7.0.1",
     "gulp-clone": "^2.0.1",
     "gulp-coffee": "^3.0.2",
@@ -83,7 +86,7 @@
     "gulp-html-prettify": "^0.0.1",
     "gulp-htmlmin": "^4.0.0",
     "gulp-imagemin": "^4.1.0",
-    "gulp-less": "^3.5.0",
+    "gulp-less": "^4.0.0",
     "gulp-livereload": "^3.8.1",
     "gulp-markdown": "^2.0.1",
     "gulp-order": "^1.1.1",
@@ -102,14 +105,14 @@
     "postcss-reporter": "^5.0.0",
     "postcss-utilities": "^0.8.0",
     "stylelint": "^9.2.1",
-    "ts-loader": "^4.3.0",
+    "ts-loader": "^4.3.1",
     "tslint": "^5.10.0",
     "tslint-eslint-rules-recommended": "^1.1.0",
     "tslint-loader": "^3.6.0",
     "twig-markdown": "^0.1.2",
-    "typescript": "^2.8.3",
+    "typescript": "^2.9.1",
     "uglify-es": "^3.3.10",
-    "webpack": "^4.9.1",
+    "webpack": "^4.11.1",
     "webpack-stream": "^4.0.3"
   }
 }
