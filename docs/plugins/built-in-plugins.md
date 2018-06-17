@@ -77,6 +77,37 @@ const copyOptions = {
 builder.chain(GPlugin.copy, copyOptions);
 ``` 
    
+#### gbm.clean
+{:#clean}
+Delete files specified by BuildConfig.clean or options.clean properties.
+ prototype*: GPlugin.clean(builder:GBuilder, options:Options={})
+*options.clean*: Optional glob string or string[] to delete.
+*options.del*: gulp-del options, which will override BuildConfig.moduleOptions.del.
+All the files specified in BuildConfig.clean and options.clean will be deleted.<br>
+Returns a promise for the delete operation. 
+```javascript
+const clean1 = {
+  buildName: 'myClean1',
+  builder: 'GCleanBuilder',
+  flushStream: true,    // finish clean before the build finishes (sync)
+  clean: ['dir/**/files-to-delete*.*']    // set files to delete here
+};
+
+const clean2 = {
+  buildName: 'myClean2',
+  clean: ['dir/**/files-to-delete*.*'],   // set files to delete here
+
+  preBuild: (builder)=>{
+    // call with builder if sync is not required
+    builder.chain(gbm.GPlugin.clean);
+
+    // or, call from GPlugin if sync is required
+    let promise = gbm.GPlugin.clean(builder);
+    return promise;   // return promise to finish clean before the build finishes (sync)
+  }
+};
+``` 
+   
 #### gbm.uglify
 gulp-uglify-es plugin.<br>
 *Prototype*: GPlugin.uglify(builder: GBuilder, options: Options = {})<br>

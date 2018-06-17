@@ -53,10 +53,31 @@ const task2 = {
   ]
 };
 
+const clean1 = {
+  buildName: 'myClean1',
+  builder: 'GCleanBuilder',
+  flushStream: true,    // finish clean before the build finishes (sync)
+  clean: ['dir/**/files-to-delete*.*']    // set files to delete here
+};
+
+const clean2 = {
+  buildName: 'myClean2',
+  clean: ['dir/**/files-to-delete*.*'],   // set files to delete here
+
+  preBuild: (builder)=>{
+    // call with builder if sync is not required
+    builder.chain(gbm.GPlugin.clean);
+
+    // or, call from GPlugin if sync is required
+    let promise = gbm.GPlugin.clean(builder);
+    return promise;   // return promise to finish clean before the build finishes (sync)
+  }
+};
+
 // create gbmConfig object
 gbm({
   systemBuilds: {
-    build: [copy, task1, task2],
+    build: [copy, task1, task2, clean1, clean2],
     clean: [destRoot],
     default: ['@clean', '@build']
   }

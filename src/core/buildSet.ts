@@ -2,7 +2,6 @@
  *  GBuildSet - Gulp task tree builder and analyzer
  */
 
-
 import * as gulp from 'gulp';
 import * as upath from 'upath';
 import {is} from '../utils/utils';
@@ -79,7 +78,6 @@ export class GBuildSet {
 
         let builder = this.getBuilder(item, customDirs);
         builder.reloader = watcher.reloader;
-        // let task = (done:TaskDoneFunction)=>builder.build(defaultModuleOptions, item, done, watcher.reloader);
         let task = (done:TaskDoneFunction)=>builder._build(item);
         let deps = undefined;
         let triggers = undefined;
@@ -90,17 +88,20 @@ export class GBuildSet {
         if (item.triggers)
           triggers = new GBuildSet(item.triggers as BuildSet).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
 
+        let taskList:(string | TaskFunction)[] = item.builder ? [task] : [];
         if (deps || triggers) {
-          let taskList:(string | TaskFunction)[] = [task];
           if (deps) taskList.unshift(deps);
           if (triggers) taskList.push(triggers);
-          gulp.task(item.buildName, gulp.series.apply(null, taskList));
         }
-        else
-          gulp.task(item.buildName, task);
 
-        // resolve clean targets
+        // if builder is not specified, create task only when there's no deps and triggers to prevent empty taskList
+        if (taskList.length === 0) taskList = [task];
+
+        // resolve clean targets, even in the case taskList is empty
         if (item.clean) cleaner.add(item.clean);
+
+        // create task
+        gulp.task(item.buildName, taskList.length === 1 ? taskList[0] as TaskFunction : gulp.series(taskList));
 
         // resolve watch
         let watchItem: WatchItem = {
@@ -111,7 +112,7 @@ export class GBuildSet {
         Object.assign(watchItem, item.watch || {});
         if (item.watch && item.watch.watched) watchItem.watched = item.watch.watched;
         if (item.watch && item.watch.watchedPlus)
-          watchItem.watched = watchItem.watched.concat(watchItem.watched, item.watch.watchedPlus);
+          watchItem.watched = watchItem.watched.concat(item.watch.watchedPlus);
         resolved.push(item.buildName);
         watcher.addWatch(watchItem);
       }
@@ -119,7 +120,7 @@ export class GBuildSet {
         throw Error('Unexpected BuildSet entry type');
     }
 
-    if (resolved.length===1) return resolved[0] as (string | TaskFunction);
+    if (resolved.length === 1) return resolved[0] as (string | TaskFunction);
     return (this.isSeries) ? gulp.series.apply(null, resolved) : gulp.parallel.apply(null, resolved);
   }
 

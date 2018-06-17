@@ -3,11 +3,10 @@
  */
 
 import * as gulp from 'gulp';
-import * as path from 'path';
 import {Options} from './types';
 import {GBuilder} from './builder';
-import {toPromise, pick} from '../utils/utils';
-import {exec, ProcessOutput} from "../utils/process";
+import {toPromise, is} from '../utils/utils';
+import {exec} from "../utils/process";
 
 export class GPlugin {
   constructor(public options: Options = {}) {}
@@ -81,6 +80,20 @@ export class GPlugin {
       promiseQ.push(toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest))));
     }
     return Promise.all(promiseQ).then(()=>Promise.resolve());
+  }
+
+  static clean(builder:GBuilder, options:Options={}) {
+    let clean1 = builder.conf.clean || [];
+    let clean2 = options.clean || [];
+    if (clean1 && is.String(clean1)) clean1 = [clean1 as string];
+    if (clean2 && is.String(clean2)) clean2 = [clean2 as string];
+    let cleanList = (<string[]>[]).concat(clean1 as string[], clean2 as string[]);
+
+    // check rename option
+    const delOpts = Object.assign({}, builder.moduleOptions.del, options.del);
+
+    if (!options.silent) console.log('Deleting:', cleanList);
+    return require("del")(cleanList, delOpts);
   }
 
   // minify javascripts

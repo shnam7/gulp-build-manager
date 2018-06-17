@@ -1,4 +1,12 @@
 # Changelog
+
+## v3.1
+- Add GCleanBuilder and GPlugin:clean() plugin function
+- Fix to prevent dummy task creation when no builder is set but dependencies or triggers exist in BuildConfig
+- Fix BuildConfig.watchedPlus error of adding BuildConfig.watched data too making ti duplicated
+- Fix faulty build task creation: removed parallel call when there's only one task
+- Improve example/twig 
+
 ## v3.0
 - Redesign architecture utilizing Promise
   - Change GBuilder and GPlugin interface
