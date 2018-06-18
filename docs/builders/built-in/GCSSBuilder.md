@@ -3,9 +3,12 @@ layout: docs
 ---
 
 # GCSSBuilder
-CSS builder. sass/scss/less and postcss are suported. You can use postcss together with sass/scss/less.
+CSS builder. sass/scss/less and postcss are supported. You can use postcss together with sass/scss/less.<br>
+PostCSS is enabled by default (from v3.1) unless it's turned off intentionally.
 
 #### Builder specific Options
+  - *conf.buildOptions.postcss* (<i>type:boolean, default:true</i>)<br>
+    If set to false, PostCSS is disabled. PostCSS automatically handles auto-prefixing without autoPrefixer.<br>
   - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)<br>
     If set to true, sourceMap files are generated.
   - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)<br>
@@ -18,9 +21,12 @@ CSS builder. sass/scss/less and postcss are suported. You can use postcss togeth
     If set to false, each transpiled files are generated before concatenation.<br>
     This option is valid only when conf.outFile is set.
   - *conf.buildOptions.sourceType* (<i>type:string, default:'scss'</i>)<br>
-    pecifies source type from 'css', 'scss', 'sass', 'less'.
-  - *conf.buildOptions.autoPreficxer* (<i>type:boolean, default:false</i>)<br>
-    If postcss is enabled, autoPrefix is enabled by default. If not, ou need to set this option to true to enable autoPrefixer.<br>
+    Specifies input source type. Possible values are 'css', 'scss', 'sass', 'less'.
+  - *conf.buildOptions.autoPrefixer* (<i>type:boolean, default:true</i>)<br>
+    Enable autoPrefixer. If postcss option is enabled(default), this is ignored in preference to auto-prefixing feature of postcss.
+    
+    If postcss option is enabled, this option is ignored and autoPrefixer is not used.<br>
+    See conf.buildOptions.postcss option above.<br>
 
 #### Notes
   - linter is using stylelint with postcss. So, if lint is enabled, postcss is automatically enabled and you need to install the required postcss packages.

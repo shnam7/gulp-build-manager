@@ -4,11 +4,9 @@
 
 import * as child_process from 'child_process';
 import chalk from 'chalk';
-import {SpawnOptions} from "child_process";
-import {wait} from "./utils";
 
-interface ExecOptions {
-  spawn?: SpawnOptions;
+export interface SpawnOptions extends child_process.SpawnOptions {
+  // spawn?: SpawnOptions;
   stopOnMatch?: RegExp;
   silent?: boolean;
   captureOutput?: boolean;
@@ -19,11 +17,10 @@ export type ProcessOutput = {
   stderr: string;
 }
 
-export function exec(cmd: string, args: string[]=[], options: ExecOptions={}): Promise<ProcessOutput> {
+export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}): Promise<ProcessOutput> {
   let stdout = '';
   let stderr = '';
   const cwd = process.cwd();
-  // console.log(`==========================================================================================`);
 
   args = args.filter(x => x !== undefined);
   const flags = [
@@ -34,9 +31,12 @@ export function exec(cmd: string, args: string[]=[], options: ExecOptions={}): P
     .join(', ')
     .replace(/^(.+)$/, ' [$1]');  // Proper formatting.
 
-  console.log(chalk.blue(`Running \`${cmd} ${args.join(' ')}\`${flags}...`));
-  console.log(chalk.blue(`CWD: ${cwd}`));
-  const spawnOptions: SpawnOptions = options.spawn || {shell: true};
+  if (!options.silent) {
+    console.log(chalk.blue(`Running \`${cmd} ${args.join(' ')}\`${flags}...`));
+    console.log(chalk.blue(`CWD: ${cwd}`));
+  }
+  // const spawnOptions: SpawnOptions = options.spawn || {shell: true};
+  const spawnOptions: SpawnOptions = Object.assign({}, options);
   if (!spawnOptions.cwd) spawnOptions.cwd = cwd;
 
   if (process.platform.startsWith('win')) {
@@ -90,18 +90,31 @@ export function exec(cmd: string, args: string[]=[], options: ExecOptions={}): P
   });
 }
 
-export function npm(...args: string[]) {
-  return exec('npm', args);
+export function exec(cmd: string, args: string[]=[], options: SpawnOptions={}): Promise<ProcessOutput> {
+  let opts = Object.assign({}, options);
+  if (opts.shell === undefined) opts.shell = true;
+  return spawn(cmd, args, opts);
 }
 
-export function npmInstall(packageName:string, silent:boolean = false) {
-  return exec('npm', ['i', packageName], {silent: silent});
-}
 
-export function node(...args: string[]) {
-  return exec('node', args);
-}
-
-export function gulp(...args: string[]) {
-  return exec('gulp', args);
-}
+// export function npm(args: string[], options: SpawnOptions={silent: true}) {
+//   return exec('npm', args);
+// }
+//
+// export function npmInstall(packageName:string, silent:boolean = false) {
+//   return exec('npm', ['i', packageName], {silent: silent});
+// }
+//
+// export function node(args: string[]) {
+//   return exec('node', args);
+// }
+//
+// export function gulp(args: string[]) {
+//   return exec('gulp', args);
+// }
+//
+// export function which(command: string): Promise<string> {
+//   let whichCmd = process.platform === 'win32' ? 'where' : 'which';
+//   return exec(whichCmd,[command],{silent: true, captureOutput: true})
+//     .then((res)=>res.stdout);
+// }

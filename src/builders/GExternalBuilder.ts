@@ -1,13 +1,13 @@
 /**
- *  Jekyll Builder
+ *  External Builder
  */
 
 import {GBuilder} from "../core/builder";
-import {ExecOptions} from "child_process";
 import {GPlugin} from "../core/plugin";
+import {SpawnOptions} from "../utils/process";
 
 export class GExternalBuilder extends GBuilder {
-  constructor(public command: string, public args: string[] = [], public options: ExecOptions = {}) {
+  constructor(public command: string, public args: string[] = [], public options: SpawnOptions = {}) {
     super();
   }
 

@@ -5,8 +5,8 @@
 import * as gulp from 'gulp';
 import {Options} from './types';
 import {GBuilder} from './builder';
-import {toPromise, is} from '../utils/utils';
-import {exec} from "../utils/process";
+import {toPromise, is, SpawnOptions} from '../utils/utils';
+import {exec, spawn} from "../utils/process";
 
 export class GPlugin {
   constructor(public options: Options = {}) {}
@@ -127,7 +127,11 @@ export class GPlugin {
     builder.pipe(require('gulp-rename')(rename)).sourceMaps(builder);
   }
 
-  static exec(builder: GBuilder, cmd: string, args: string[]=[], options: Options={}) {
+  static spawn(builder: GBuilder, cmd: string, args: string[]=[], options: SpawnOptions={}) {
+    return spawn(cmd, args, options);
+  }
+
+  static exec(builder: GBuilder, cmd: string, args: string[]=[], options: SpawnOptions={}) {
     return exec(cmd, args, options);
   }
 }

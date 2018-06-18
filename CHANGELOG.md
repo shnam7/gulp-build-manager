@@ -5,7 +5,10 @@
 - Fix to prevent dummy task creation when no builder is set but dependencies or triggers exist in BuildConfig
 - Fix BuildConfig.watchedPlus error of adding BuildConfig.watched data too making ti duplicated
 - Fix faulty build task creation: removed parallel call when there's only one task
-- Improve example/twig 
+- Improve example/twig
+- Add utils property to gbm namespace. usage example: gbm.index.wait()
+- Add util function spawn(), which does not use shell by default. exec() now calls spawn() with shell enable option
+- Change default value of BuildConfig.buildOptions.postcss to true (enable postcss by default)
 
 ## v3.0
 - Redesign architecture utilizing Promise

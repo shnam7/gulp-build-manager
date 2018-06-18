@@ -6,10 +6,13 @@ import GExternalBuilder from "./GExternalBuilder";
 
 export class GJekyllBuilder extends GExternalBuilder {
   constructor() {
-    super(process.platform === 'win32' ? 'jekyll.bat' : 'jekyll');
+    if (process.platform.startsWith('win'))
+      super('jekyll.bat', [], {shell: true});
+    else
+      super('jekyll', []);
   }
 
-  build() {
+  async build() {
     const opts = this.moduleOptions.jekyll || {};
     this.args =[opts.subcommand || 'build'];
     if (this.conf.src) this.args.push('-s ' + this.conf.src);

@@ -11,7 +11,7 @@ export class CSSPlugin extends GPlugin {
 
   process(builder: GBuilder) {
     const lint = builder.buildOptions.lint;
-    const postcss = builder.buildOptions.postcss;
+    const postcss = builder.buildOptions.postcss !== false;   // enable postcss by default
     const sourceType = builder.buildOptions.sourceType || 'scss';
     const autoPrefixer = builder.buildOptions.autoPrefixer !== false;
 
