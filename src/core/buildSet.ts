@@ -113,6 +113,10 @@ export class GBuildSet {
         if (item.watch && item.watch.watched) watchItem.watched = item.watch.watched;
         if (item.watch && item.watch.watchedPlus)
           watchItem.watched = watchItem.watched.concat(item.watch.watchedPlus);
+
+        // if user provided the task to run, enable it
+        if (item.watch && item.watch.task) watchItem.task = item.watch.task;
+
         resolved.push(item.buildName);
         watcher.addWatch(watchItem);
       }

@@ -20,6 +20,10 @@ namespace gbm {
   export function loadBuilders(config:BuildConfig) { bm.loadBuilders(config); }
   export function parallel(...args: BuildSet[]) { return new GBuildSet(...args); }
   export function series(...args:BuildSet[]) { return [...args]; }
+
+  export let watcher = bm.watcher;
+  export let cleaner = bm.cleaner;
+
   export let GBuilder = GBuilderClass;
   export let GPlugin = GPluginClass;
   export let utils = require('./utils/utils');

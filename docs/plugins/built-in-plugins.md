@@ -18,7 +18,7 @@ Built-in plugin functions searches BuildConfig.moduleOptions to find options for
   - First search builder.conf.modulesOptions.debug
   - And then, override(merge not replace) it with options.debug
 
-#### gbm.debug
+#### GPlugin.debug
 gulp-debug plugin.<br>
 *Prototype*: GPlugin.debug(builder: GBuilder, options: Options={})<br>
 For convenience, options itself is used an an argument to gulp-debug if options.debug is not found
@@ -26,14 +26,14 @@ For convenience, options itself is used an an argument to gulp-debug if options.
 builder.chain(gbm.GPlugin.debug, {title: 'title-test'})
 ```
 
-#### gbm.filter
+#### GPlugin.filter
 gulp-filter plugin.<br>
 *Prototype*: GPlugin.filter(builder: GBuilder, pattern:string[], options: Options={})
 ```javascript
 builder.pipe(require('gulp-filter')(['**', '!**/*.map'], options.filter));
 ```
 
-#### gbm.concat
+#### GPlugin.concat
 gulp-concat plugin.<br>
 Concatenates the files in gulp stream of the current builder. For output file name, builder.conf.outFile is checked first and then options.outFile is checked to override it.<br>
 *Prototype*: GPlugin.concat(builder: GBuilder, options: Options = {})<br>
@@ -45,7 +45,7 @@ builder.chain(GPlugin.concat);
 ```
 
 
-#### gbm.rename
+#### GPlugin.rename
 gulp-rename plugin.<br>
 If both builder.moduleOptions.rename and options.rename are missing, then options itself is used for convenience.
 *Prototype*: GPlugin.rename(builder: GBuilder, options: Options = {})<br>
@@ -54,7 +54,7 @@ If both builder.moduleOptions.rename and options.rename are missing, then option
 builder.chain(GPlugin.rename, {extname: '.html'});
 ```
 
-#### gbm.copy
+#### GPlugin.copy
 {:#copy}
 Copy files from multiple sources to multiple destinations.
 *prototype*: GPlugin.copy(builder:GBuilder, options:Options={})
@@ -77,7 +77,7 @@ const copyOptions = {
 builder.chain(GPlugin.copy, copyOptions);
 ``` 
    
-#### gbm.clean
+#### GPlugin.clean
 {:#clean}
 Delete files specified by BuildConfig.clean or options.clean properties.
  prototype*: GPlugin.clean(builder:GBuilder, options:Options={})
@@ -108,7 +108,7 @@ const clean2 = {
 };
 ``` 
    
-#### gbm.uglify
+#### GPlugin.uglify
 gulp-uglify-es plugin.<br>
 *Prototype*: GPlugin.uglify(builder: GBuilder, options: Options = {})<br>
 *options.filter*: pattern to filter the gulp stream<br>
@@ -118,7 +118,7 @@ gulp-uglify-es plugin.<br>
 builder.chain(GPlugin.uglify);
 ```
 
-#### gbm.cssnano
+#### GPlugin.cssnano
 gulp-uglify-es plugin.<br>
 *Prototype*: GPlugin.cssnano(builder: GBuilder, options: Options = {})<br>
 *options.filter*: pattern to filter the gulp stream<br>

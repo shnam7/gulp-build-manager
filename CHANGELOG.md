@@ -9,6 +9,8 @@
 - Add utils property to gbm namespace. usage example: gbm.index.wait()
 - Add util function spawn(), which does not use shell by default. exec() now calls spawn() with shell enable option
 - Change default value of BuildConfig.buildOptions.postcss to true (enable postcss by default)
+- Add watcher and cleaner to gbm namespace
+- Fix BuildConfig.watch.task option to override task to run on watch
 
 ## v3.0
 - Redesign architecture utilizing Promise
