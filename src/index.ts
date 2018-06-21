@@ -2,7 +2,7 @@
  *  gbm - Gulp Build Manager
  */
 
-import * as upath from 'upath';
+import * as upath from "upath";
 import {registerPropertiesFromFiles} from "./utils/utils";
 import {GBuildManager} from "./core/buildManager";
 import {GBuildSet} from "./core/buildSet";

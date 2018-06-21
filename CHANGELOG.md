@@ -6,11 +6,13 @@
 - Fix BuildConfig.watchedPlus error of adding BuildConfig.watched data too making ti duplicated
 - Fix faulty build task creation: removed parallel call when there's only one task
 - Improve example/twig
-- Add utils property to gbm namespace. usage example: gbm.index.wait()
+- Add utils to gbm namespace. usage example: gbm.index.wait()
 - Add util function spawn(), which does not use shell by default. exec() now calls spawn() with shell enable option
 - Change default value of BuildConfig.buildOptions.postcss to true (enable postcss by default)
 - Add watcher and cleaner to gbm namespace
 - Fix BuildConfig.watch.task option to override task to run on watch
+- Add loadData() to utils (load yml and json files into a single object)
+- Add data file support for TwigPlugin using gulp-data
 
 ## v3.0
 - Redesign architecture utilizing Promise

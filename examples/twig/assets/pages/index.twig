@@ -1,3 +1,9 @@
 {% extends 'base.twig' %}
 {% block l_content %}<div id="l-content">{% markdown '../markdown/index.md' %}{% endmarkdown %}</div>{% endblock %}
-{% block l_sidebar %}<div id="l-sidebar">Sidebar</div>{% endblock %}
+{% block l_sidebar %}<div id="l-sidebar">
+  <h3>Data loading test</h3>
+  site.name: {{ site.name }}<br>
+  page.title: {{ page.title }}<br>
+  nav[0].title: {{ nav[0].title }}<br>
+  Sidebar</div>
+{% endblock %}

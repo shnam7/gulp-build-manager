@@ -61,7 +61,7 @@ export class GBuilder {
     if (!src) src = this.conf.src;
     if (!src) return this;
 
-    this.stream = gulp.src(src, this.moduleOptions.gulp);
+    this.stream = gulp.src(src, this.moduleOptions.gulp && this.moduleOptions.gulp.src);
 
     // check input file ordering
     if (this.conf.order && this.conf.order.length > 0) {

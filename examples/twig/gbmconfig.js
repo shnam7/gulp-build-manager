@@ -43,13 +43,17 @@ const app = {
     moduleOptions: {
       twig: {
         base: upath.join(srcRoot, 'templates'),
-        data: {
-          site: {
-            name: 'Gulp Build Manager Sample - Twig',
-            charset: 'UTF-8',
-            url:'.'
-          }
-        },
+
+        // data can be a glob string or array of strings or data object
+        // To use live reload on changes in data, yml or json file should be used
+        data:  upath.join(srcRoot, 'data/**/*.{yml,yaml,json}'),
+        //   {
+        //   site: {
+        //     name: 'Gulp Build Manager Sample - Twig',
+        //     charset: 'UTF-8',
+        //     url:'.'
+        //   }
+        // },
         extend: require('twig-markdown'),
         functions:[
           {
@@ -77,7 +81,8 @@ const app = {
       // include sub directories to detect changes of the file which are not in src list.
       watchedPlus: [
         upath.join(srcRoot, 'templates/**/*.twig'),
-        upath.join(srcRoot, 'markdown/**/*.md')
+        upath.join(srcRoot, 'markdown/**/*.md'),
+        upath.join(srcRoot, 'data/**/*.{yml,yaml,json}')
       ],
     }
   },

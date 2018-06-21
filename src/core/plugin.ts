@@ -25,7 +25,7 @@ export class GPlugin {
 
   static debug(builder: GBuilder, options: Options={}) {
     let title = options.title ? options.title : '';
-    title = `[debugPlugin${title ? ':' + title : ''}]`;
+    // title = `[debugPlugin${title ? ':' + title : ''}]`;
     let opts = Object.assign({}, builder.moduleOptions.debug, options, {title});
     builder.pipe(require('gulp-debug')(opts));
     return toPromise(builder.stream);

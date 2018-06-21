@@ -1,13 +1,7 @@
 import * as glob from 'glob';
 import * as upath from 'upath';
 import {Stream} from "../core/types";
-
-// export function removeExt(fileName: string, ext: string) {
-//   if (!ext) return fileName;
-//   ext = (ext[0] === '.') ? ext : '.' + ext;
-//   return (fileName.slice(-ext.length) === ext) ? fileName.slice(0, -ext.length) : fileName;
-// }
-
+import * as fs from "fs";
 
 /** pick */
 export function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
@@ -75,6 +69,24 @@ export function toPromise(stream: Stream): Promise<Stream> {
       .on('error', reject)
       // .resume()
   })
+}
+
+//** load yml and json files
+export function loadData(globPatterns: string | string[]): Object {
+  if (is.String(globPatterns)) globPatterns = [globPatterns as string];
+  let data = {};
+  (globPatterns as string[]).forEach((globPattern: string)=>{
+    glob.sync(globPattern).forEach((file)=>{
+      let ext = upath.extname(file).toLowerCase();
+      if (ext === '.yml' || ext === 'yaml')
+        Object.assign(data, require('js-yaml').safeLoad(fs.readFileSync(file)));
+      else if (ext === '.json')
+        Object.assign(data, JSON.parse(fs.readFileSync(file, 'utf-8')));
+      else
+        throw Error(`Unknown data file extension: ${ext}`);
+    });
+  });
+  return data;
 }
 
 export let wait = (msec: number) => new Promise(res => setTimeout(res, msec));

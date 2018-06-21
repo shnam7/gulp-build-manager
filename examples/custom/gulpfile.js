@@ -14,6 +14,13 @@ class MyBuilder extends gbm.GBuilder {
   }
 }
 
+class MyCSSBuilder extends gbm.GCSSBuilder {
+  src() {
+    // print input files
+    return super.src().chain(gbm.GPlugin.debug, {title:'MyCSSBuilder:'})
+  }
+}
+
 const customFunction = {
   buildName: 'customFunction',
   builder: (builder) => {
@@ -31,12 +38,19 @@ const myBuilder = {
   builder: new MyBuilder(),
 };
 
+const myCSSBuilder = {
+  buildName: 'myCSSBuilder',
+  builder: new MyCSSBuilder(),
+  src: basePath,
+  dest: (file)=>file.base
+};
+
 
 // create gbmConfig object
 gbm({
   customBuilderDir: upath.join(basePath, 'custom-builders'),
   systemBuilds: {
-    build: [customFunction, customBuilder, myBuilder],
+    build: [customFunction, customBuilder, myBuilder, myCSSBuilder],
     clean: [""],  // dummy to create '@close' task to make main gulpfile not to fail with error
     default: ['customFunction', 'customBuilder', 'myBuilder']
   }

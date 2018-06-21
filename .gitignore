@@ -4,3 +4,4 @@ node_modules
 /lib
 /_*
 .jekyll-metadata
+/docs/_site/
