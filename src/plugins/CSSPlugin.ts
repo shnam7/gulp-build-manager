@@ -5,48 +5,107 @@
 import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
+import {dmsg, info} from "../utils/utils";
 
 export class CSSPlugin extends GPlugin {
   constructor(options:Options={}) { super(options); }
 
-  process(builder: GBuilder) {
-    const lint = builder.buildOptions.lint;
-    const postcss = builder.buildOptions.postcss !== false;   // enable postcss by default
-    const sourceType = builder.buildOptions.sourceType || 'scss';
-    const autoPrefixer = builder.buildOptions.autoPrefixer !== false;
+  processPostcss(builder: GBuilder, opts: Options, mopts: Options) {
+    const sourceType = opts.sourceType || 'scss';
+    const pcss = require('gulp-postcss');
+    const pcssOpts = this.options.postcss || mopts.postcss || {};
+    const plugins = pcssOpts.plugins || [];
+    const autoprefixer = opts.autoprefixer !== false;
+    const moduleName = sourceType==='scss' ? 'sass' : sourceType;
+    const parser = sourceType!=='css' ? require('postcss-'+ sourceType) : undefined;
 
-    if (lint && !postcss)
-      console.log('CSSPlugin:Notice: postcss will be enabled to run stylelint.');
-    const pcss = (lint || postcss) ? require('gulp-postcss') : undefined;
-
-    // check lint option
-    if (lint) {
-      const reporter = require('postcss-reporter');
-      const stylelint = require('stylelint');
-      const syntax = (sourceType && sourceType!=='css') ? require('postcss-'+sourceType) : undefined;
-      const lintOpts = Object.assign({}, builder.moduleOptions.stylelint, {rules:{}});
-      const reporterOpts = Object.assign({}, lintOpts.reporter,
-        {reporter:{clearMessages:true, throwError:true}});
-      builder.pipe(pcss([
-        stylelint(lintOpts.stylelint || lintOpts),
-        reporter(reporterOpts)
-      ], {syntax:syntax}));
-    }
-
-    // check CSS processor option
-    if (sourceType && sourceType !== 'css') {
-      const moduleName = sourceType==='scss' ? 'sass' : sourceType;
+    // first, transpile to standard css.
+    // All the scss/less variables should to be evaluated before postcss process starts
+    if (sourceType !== 'css') {
       const processor = require('gulp-' + moduleName);
-      builder.pipe(processor(this.options[moduleName] || builder.moduleOptions[moduleName]));
+      builder.pipe(processor(this.options[moduleName] || mopts[moduleName]));
     }
 
-    // check postcss option
-    if (postcss) {
-      const pcssOpts = this.options.postcss || builder.moduleOptions.postcss || {};
-      builder.pipe(pcss(pcssOpts.plugins || [], pcssOpts.options));
+    // now, transpile postcss statements
+    builder.pipe(pcss(plugins));
+
+    // do some optimization to remove duplicate selectors, and beautify
+    builder.pipe(pcss([require('postcss-clean')({
+      format: 'beautify',
+      level: {2: {mergeSemantically: true}}
+    })]));
+
+    // now run autoprefixer
+    if (autoprefixer) {
+      const prefixer = require('autoprefixer');
+      builder
+        .pipe(pcss([prefixer({add: false, browsers: []})])) // remove outdated prefixed
+        .pipe(pcss([prefixer(mopts.autoprefixer)]));     // now add prefixes
     }
-    else if (autoPrefixer) {
-      builder.pipe(require('gulp-autoprefixer')(builder.moduleOptions.autoPrefixer));
+
+    // lint final css
+    // lint does not understands postcss statements. so,it come after postcss processing
+    if (opts.lint) {
+      const stylelint = require('stylelint');
+      const reporter = require('postcss-reporter');
+      let lintOpts = mopts.stylelint || {};
+      const reporterOpts = lintOpts.reporter || {};
+      builder.pipe(pcss([stylelint(lintOpts.stylelint || lintOpts),reporter(reporterOpts)], {syntax: parser}));
+    }
+  }
+
+  process(builder: GBuilder) {
+    const opts = builder.buildOptions;
+    const mopts = builder.moduleOptions;
+
+    // backward compatibility on autoprefixer options
+    if (opts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
+      opts.autoprefixer = opts.autoPrefixer;
+      info('buildOptions.autoPrefixer is deprecated. Please use autoprefixer.');
+    }
+    if (mopts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
+      mopts.autoprefixer = mopts.autoPrefixer;
+      info('moduleOptions.autoPrefixer is deprecated. Please use autoprefixer.');
+    }
+
+    // basic build options
+    const postcss = opts.postcss !== false;   // enable postcss by default
+    if (postcss) {
+      this.processPostcss(builder, opts, mopts);
+    }
+    else {
+      const sourceType = opts.sourceType || 'scss';
+      const autoprefixer = opts.autoprefixer !== false;
+      const moduleName = sourceType==='scss' ? 'sass' : sourceType;
+
+      // first, transpile to standard css.
+      if (sourceType !== 'css') {
+        const processor = require('gulp-' + moduleName);
+        builder.pipe(processor(this.options[moduleName] || mopts[moduleName]));
+      }
+
+      // do some optimization to remove duplicate selectors, and beautify
+      builder.pipe(require('gulp-clean-css')({
+        format: 'beautify',
+        level: {2: {mergeSemantically: true}}
+      }));
+
+      // now run autoprefixer
+      if (autoprefixer) {
+        const prefixer = require('gulp-autoprefixer');
+        builder
+          .pipe(prefixer({add: false, browsers: []})) // remove outdated prefixed
+          .pipe(prefixer(mopts.autoprefixer));     // now add prefixes
+      }
+
+      // lint final css
+      // lint does not understands postcss statements. so,it come after postcss processing
+      if (opts.lint) {
+        const stylelint = require('gulp-stylelint');
+        let lintOpts = mopts.stylelint || {};
+        if (!lintOpts.reporters) lintOpts["reporters"] = [{formatter: 'verbose', console: true}];
+        builder.pipe(stylelint(lintOpts));
+      }
     }
     builder.sourceMaps();
   }

@@ -5,6 +5,7 @@
 import * as gulp from 'gulp';
 import {WatchItem, WatchOptions} from './types';
 import {GReloader} from "./reloader";
+import {msg} from "../utils/utils";
 
 export class GWatcher {
   watchMap: WatchItem[] = [];
@@ -22,7 +23,7 @@ export class GWatcher {
   watch(watchOptions: WatchOptions={}) {
     this.reloader.init(watchOptions);
     for (let item of this.watchMap) {
-      console.log(`Watching ${item.name}: [${item.watched}]`);
+      msg(`Watching ${item.name}: [${item.watched}]`);
       let watcher = gulp.watch(item.watched, gulp.parallel(item.task));
       if (this.reloader.browserSync) watcher.on('change', this.reloader.browserSync.reload);
     }

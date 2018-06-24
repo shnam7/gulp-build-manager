@@ -1,5 +1,5 @@
 /**
- *  Concatenation Builder
+ *  Clean Builder
  */
 
 import {GBuilder} from "../core/builder";

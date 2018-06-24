@@ -16,7 +16,8 @@ export class GTypeScriptBuilder extends GBuilder {
     if (!this.buildOptions.minifyOnly) this.dest();
 
     // note: concat is not require, which will be done by typescript if buildOptions.outFile is set
-    if (this.buildOptions.minify || this.buildOptions.minifyOnly) this.chain(GPlugin.uglify);
+    if (this.buildOptions.minify || this.buildOptions.minifyOnly)
+      this.chain(GPlugin.uglify).sourceMaps();
     return this.dest();
   }
 }

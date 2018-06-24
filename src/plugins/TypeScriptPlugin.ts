@@ -3,7 +3,7 @@
  */
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {is, toPromise} from '../utils/utils';
+import {is, msg, toPromise, warn} from '../utils/utils';
 import {GulpStream, Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
@@ -24,7 +24,7 @@ export class TypeScriptPlugin extends GPlugin {
     if (builder.buildOptions.lint) {
       const tslint = require('gulp-tslint');
       const tslintOpts = builder.moduleOptions.tslint || {};
-      console.log('tslintOpts =', tslintOpts);
+      msg('tslintOpts =', tslintOpts);
       builder.pipe(tslint(tslintOpts)).pipe(tslint.report(tslintOpts.report));
     }
 
@@ -34,19 +34,19 @@ export class TypeScriptPlugin extends GPlugin {
       try {
         tsProject = typescript.createProject(tsConfig, tsOpts);
         if (builder.buildOptions.printConfig) {
-          console.log(`[TypeScriptPlugin]tsconfig evaluated(buildName:${builder.conf.buildName}):\n`,
+          msg(`[TypeScriptPlugin]tsconfig evaluated(buildName:${builder.conf.buildName}):\n`,
             Object.assign({}, tsProject.config, {"compilerOptions":tsOpts}));
         }
       }
       catch (e) {
         if (e.code !== 'ENOENT') throw e;
-        console.log('WARN: tsConfig specified but not found:', upath.resolve(tsConfig));
+        warn('WARN: tsConfig specified but not found:', upath.resolve(tsConfig));
       }
     }
     if (!tsProject) {
       tsProject = typescript.createProject(tsOpts);
       if (builder.buildOptions.printConfig)
-        console.log(`[TypeScriptPlugin]tsconfig evaluated(buildName:${builder.conf.buildName}):\n`,
+        msg(`[TypeScriptPlugin]tsconfig evaluated(buildName:${builder.conf.buildName}):\n`,
           {"compilerOptions":tsOpts});
     }
 

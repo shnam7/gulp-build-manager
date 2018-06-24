@@ -3,12 +3,13 @@
  */
 
 import * as child_process from 'child_process';
-import chalk from 'chalk';
+import {msg, notice} from "./utils";
 
 export interface SpawnOptions extends child_process.SpawnOptions {
   // spawn?: SpawnOptions;
   stopOnMatch?: RegExp;
   silent?: boolean;
+  verbose?: boolean;
   captureOutput?: boolean;
 }
 
@@ -31,9 +32,9 @@ export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}):
     .join(', ')
     .replace(/^(.+)$/, ' [$1]');  // Proper formatting.
 
-  if (!options.silent) {
-    console.log(chalk.blue(`Running \`${cmd} ${args.join(' ')}\`${flags}...`));
-    console.log(chalk.blue(`CWD: ${cwd}`));
+  if (options.verbose) {
+    msg(`Running \`${cmd} ${args.join(' ')}\`${flags}...`);
+    msg(`CWD: ${cwd}`);
   }
   // const spawnOptions: SpawnOptions = options.spawn || {shell: true};
   const spawnOptions: SpawnOptions = Object.assign({}, options);
@@ -53,7 +54,7 @@ export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}):
     data.toString('utf-8')
       .split(/[\n\r]+/)
       .filter(line => line !== '')
-      .forEach(line => console.log('  ' + line));
+      .forEach(line => msg('  ' + line));
   });
   childProcess.stderr.on('data', (data: Buffer) => {
     if (options.captureOutput) stderr += data.toString('utf-8');
@@ -61,7 +62,7 @@ export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}):
     data.toString('utf-8')
       .split(/[\n\r]+/)
       .filter(line => line !== '')
-      .forEach(line => console.error(chalk.yellow('  ' + line)));
+      .forEach(line => notice('  ' + line));
   });
 
   // Create the error here so the stack shows who called this function.

@@ -5,7 +5,7 @@
 //
 //=========================================================
 
-@import 'mq';
+@import "variables";
 
 //=== globals ===
 $w-site-max-width:              1220px !default;
@@ -69,23 +69,25 @@ $l-z-index-top:                   $l-z-index + 100 !default;
 #l-content {
   width: 100%;
   padding: $l-content-padding;
-
-  @media (--medium) {
-    float: right;
-    width: $l-content-width;
-    padding: $l-content-padding-medium;
-  }
   &.single {
     width: 100%;
     max-width: $w-page-max-width;
     @util center;
+  }
+
+  //@media (--medium) {
+  @media ($mq-medium) {
+    float: right;
+    width: $l-content-width;
+    padding: $l-content-padding-medium;
   }
 }
 
 #l-sidebar {
   width: 100%;
   padding: $l-sidebar-padding;
-  @media (--medium) {
+  //@media (--medium) {
+  @media ($mq-medium) {
     float: left;
     width: $l-sidebar-width;
     //max-width: $l-sidebar-max-width;

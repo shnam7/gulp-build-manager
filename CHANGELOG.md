@@ -13,6 +13,10 @@
 - Fix BuildConfig.watch.task option to override task to run on watch
 - Add loadData() to utils (load yml and json files into a single object)
 - Add data file support for TwigPlugin using gulp-data
+- Add verbose option to spawn() function in utils/process.ts
+- Update CSSPlugin: separate postcss mode and gulp mode, improved lint, improved autoprefixer
+- Deprecate GPlugin.cssnano replacing it with GPlugin.cleancss (gulp-cssnano replaced with gulp-clean-css)
+
 
 ## v3.0
 - Redesign architecture utilizing Promise

@@ -22,9 +22,6 @@
     margin-bottom:0.5rem;
     padding:0.5rem;
   }
-  .btn, .btn:visited {
-    color: rgba(255, 255, 255, 0.7);
-  }
   .btn {
     display: inline-block;
     text-decoration: none;
@@ -35,8 +32,12 @@
     transition: color 0.2s, background-color 0.2s, border-color 0.2s;
     padding: 0.6rem 0.9rem;
     font-size: 0.9rem;
+    &, &:visited {
+      color: rgba(255, 255, 255, 0.7);
+    }
     &:visited {
       text-decoration: none;
     }
   }
+
 }

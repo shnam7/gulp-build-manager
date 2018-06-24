@@ -53,9 +53,6 @@
     "url": "https://github.com/shnam7/gulp-build-manager/issues"
   },
   "homepage": "https://github.com/shnam7/gulp-build-manager#readme",
-  "stylelint": {
-    "extends": "stylelint-config-recommended"
-  },
   "dependencies": {
     "chalk": "^2.4.1",
     "del": "^3.0.0",
@@ -75,7 +72,9 @@
     "babel-preset-env": "^1.7.0",
     "browser-sync": "^2.24.4",
     "chai": "^4.1.2",
+    "gulp-autoprefixer": "^5.0.0",
     "gulp-babel": "^7.0.1",
+    "gulp-clean-css": "^3.9.4",
     "gulp-clone": "^2.0.1",
     "gulp-coffee": "^3.0.2",
     "gulp-coffeelint": "^0.6.0",
@@ -95,6 +94,7 @@
     "gulp-postcss": "^7.0.1",
     "gulp-rename": "^1.3.0",
     "gulp-sass": "^4.0.1",
+    "gulp-stylelint": "^7.0.0",
     "gulp-tslint": "^8.1.3",
     "gulp-twig": "^1.2.0",
     "gulp-typescript": "^5.0.0-alpha.2",
@@ -103,10 +103,12 @@
     "lost": "^8.3.0",
     "mocha": "^5.2.0",
     "panini": "^1.6.2",
+    "postcss-clean": "^1.1.0",
     "postcss-cssnext": "^3.1.0",
     "postcss-reporter": "^5.0.0",
     "postcss-utilities": "^0.8.0",
     "stylelint": "^9.3.0",
+    "stylelint-config-recommended": "^2.1.0",
     "ts-loader": "^4.4.1",
     "tslint": "^5.10.0",
     "tslint-eslint-rules-recommended": "^1.1.0",
@@ -114,7 +116,7 @@
     "twig-markdown": "^0.1.2",
     "typescript": "^2.9.2",
     "uglify-es": "^3.3.10",
-    "webpack": "^4.12.0",
+    "webpack": "^4.12.1",
     "webpack-stream": "^4.0.3"
   }
 }

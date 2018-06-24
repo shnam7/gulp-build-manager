@@ -2,7 +2,7 @@
  *  GCleaner - Gulp task clean list manager
  */
 
-import {is} from "../utils/utils";
+import {is, msg} from "../utils/utils";
 import {CleanTarget} from "./types";
 import gulp = require("gulp");
 import del = require("del");
@@ -20,7 +20,7 @@ export class GCleaner {
   }
 
   clean(callback?:(value:string[])=>void) {
-    console.log('GCleaner::cleanList:', this.cleanList);
+    msg(`GCleaner::cleanList:[${this.cleanList}]`);
     del(this.cleanList, this.options).then(callback);
   }
 

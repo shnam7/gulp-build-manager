@@ -31,7 +31,9 @@ const __babel = {
   flushStream: true,
   buildOptions: {
     babel: true,
-    lint: true,
+
+    // TODO gulp-eslint seems to have bug on dependencies
+    // lint: true,
     sourceMap: true,
     // minify: true
   },

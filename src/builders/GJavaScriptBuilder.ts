@@ -16,14 +16,15 @@ export class GJavaScriptBuilder extends GBuilder {
     if (!this.conf.outFile || this.buildOptions.outFileOnly == false) {
       //---before concat
       if (this.buildOptions.minify || this.buildOptions.minifyOnly)
-        this.pushStream().chain(GPlugin.uglify).dest().popStream();
+        this.pushStream().chain(GPlugin.uglify).sourceMaps().dest().popStream();
       if (!this.buildOptions.minifyOnly) this.dest();
     }
 
     // concat and the next actions
-    if (this.conf.outFile) this.chain(GPlugin.concat);
+    if (this.conf.outFile) this.chain(GPlugin.concat).sourceMaps();
     if (!this.buildOptions.minifyOnly) this.dest();
-    if (this.buildOptions.minify || this.buildOptions.minifyOnly) this.chain(GPlugin.uglify).dest();
+    if (this.buildOptions.minify || this.buildOptions.minifyOnly)
+      this.chain(GPlugin.uglify).sourceMaps().dest();
     return this;
   }
 }

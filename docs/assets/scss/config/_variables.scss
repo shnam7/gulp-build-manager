@@ -12,9 +12,9 @@ $w-page-max-width:              960px !default;
 //--- fonts and text
 $w-font-size:                   16px !default;
 $w-font-size-mobile:            15px !default;
-$w-font-sans:                   Arial,Helvetica,Verdana,sans-serif,'Malgun Gothic';
-$w-font-serif:                  Georgia,Times,Times New Roman,serif,'Malgun Gothic';
-$w-font-mono:                   source-code-pro,Consolas,Liberation Mono,Menlo,Courier New,Courier,mono;
+$w-font-sans:                   Arial,Helvetica,Verdana,'Malgun Gothic',sans-serif;
+$w-font-serif:                  Georgia,Times,'Times New Roman','Malgun Gothic',serif;
+$w-font-mono:                   Consolas,Courier New,Courier,monospace;
 $w-line-height:                 1.5 !default;
 $w-z-index:                     1000 !default;
 

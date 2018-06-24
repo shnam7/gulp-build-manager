@@ -4,7 +4,7 @@
 
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {is} from '../utils/utils';
+import {info, is, warn} from '../utils/utils';
 import {BuildConfig, BuildFunction, BuildSet, ExternalBuilder, Options, TaskDoneFunction, WatchItem} from "./types";
 import {GWatcher} from "./watcher";
 import {GCleaner} from "./cleaner";
@@ -72,7 +72,7 @@ export class GBuildSet {
         item = item as BuildConfig;
         // convert prop name: outfile-->outFile
         if (!item.outFile && item.outfile) {
-          console.log(`[GBM][buildName=${item.buildName}] BuildConfig.outfile is deprecated. Please use outFile instead.`);
+          info(`[GBM][buildName=${item.buildName}] BuildConfig.outfile is deprecated. Please use outFile instead.`);
           item.outFile = item.outfile;
         }
 
@@ -135,8 +135,7 @@ export class GBuildSet {
 
     if (builder instanceof GBuilder) return builder;
     if (!builder) return new GBuilder(()=>{
-      // console.log(`BuildName:${buildItem.buildName}: No builder specified.`);
-      // return Promise.resolve();
+      // dmsg(`BuildName:${buildItem.buildName}: No builder specified.`);
     });
 
     if (is.Object(builder)) {
@@ -152,7 +151,7 @@ export class GBuildSet {
     // try custom dir first to give a chance to overload default builder
     if (is.String(customDirs)) customDirs = [customDirs as string];
     if (customDirs) {
-      // console.log(`Trying custom builders in '${customDirs}'`);
+      // dmsg(`Trying custom builders in '${customDirs}'`);
       for (const customDir of customDirs) {
         let pathName = upath.join(process.cwd(), customDir, builder as string);
         try {
@@ -174,7 +173,7 @@ export class GBuildSet {
     }
     catch (e) {
       if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(pathName) < 0) throw e;
-      console.log(`builder '${builder}' not found:`, e);
+      warn(`builder '${builder}' not found:`, e);
     }
     throw Error('Builder not found: ' + builder + ', or check for modules imported from ' + builder);
   }

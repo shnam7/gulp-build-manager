@@ -1,11 +1,11 @@
 /**
- *  Concatenation Builder
+ *  Copy Builder
  */
 
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
 
-export class GConcatBuilder extends GBuilder {
+export class GCopyBuilder extends GBuilder {
   constructor() { super(); }
 
   build() {
@@ -20,4 +20,4 @@ export class GConcatBuilder extends GBuilder {
   }
 }
 
-export default GConcatBuilder;
+export default GCopyBuilder;

@@ -2,6 +2,7 @@ import * as glob from 'glob';
 import * as upath from 'upath';
 import {Stream} from "../core/types";
 import * as fs from "fs";
+import chalk from "chalk";
 
 /** pick */
 export function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
@@ -64,8 +65,8 @@ export function toPromise(stream: Stream): Promise<Stream> {
     return stream
       .on('end', ()=>resolve(stream))       // event for read stream
       .on('finish', ()=>resolve(stream))    // event for write stream
-      // .on('end', ()=>{console.log('read stream end'); resolve(stream)})       // event for read stream
-      // .on('finish', ()=>{console.log('write stream finish'); resolve(stream)})       // event for write stream
+      // .on('end', ()=>{dmsg('read stream end'); resolve(stream)})       // event for read stream
+      // .on('finish', ()=>{dmsg('write stream finish'); resolve(stream)})       // event for write stream
       .on('error', reject)
       // .resume()
   })
@@ -104,11 +105,31 @@ export let wait = (msec: number) => new Promise(res => setTimeout(res, msec));
 //       if (errorCount++ === 1) throw e;  // just try installation once
 //       let moduleName = e.message.slice(e.message.indexOf("'")+1, e.message.lastIndexOf("'"));
 //       if (moduleName.startsWith('.')) throw e;  // not referring to node_modules
-//       console.log(chalk.yellow(`** Installing node package:${moduleName}...`));
+//       msg(`** Installing node package:${moduleName}...`);
 //       promise = npmInstall(moduleName);
 //     }
 //     errorCount = 0;
 //   }
 // }
+
+export function dmsg(...args:any[]) {
+  console.log(...args);
+}
+
+export function msg(...args:any[]) {
+  console.log(...args);
+}
+
+export function info(...args:any[]) {
+  console.log(chalk.green(...args));
+}
+
+export function notice(...args:any[]) {
+  console.log(chalk.yellow(...args));
+}
+
+export function warn(...args:any[]) {
+  console.log(chalk.red(...args));
+}
 
 export * from './process';

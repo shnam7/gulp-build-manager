@@ -40,10 +40,18 @@ const sass = {
         require('postcss-utilities'),
         require('lost'),
       ]
+    },
+    stylelint: {
+      "extends": [
+        "stylelint-config-recommended",
+        "./.stylelintrc"
+        ],
+      rules: {
+        "function-calc-no-unspaced-operator": null,
+        "no-descending-specificity": null
+      },
+      // "fix": true,
     }
-    // stylelint: {
-    //   configFile: upath.join(srcRoot, '.stylelintrc')
-    // }
   },
   watch: {livereload: true}
 };
@@ -58,7 +66,7 @@ const less = {
     sourceMap: true,
     lint: true,
     minify: true,
-    autoPrefixer: false,
+    autoprefixer: false,
     // postcss: true
   },
   moduleOptions: {

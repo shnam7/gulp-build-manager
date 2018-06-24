@@ -35,7 +35,7 @@ const coffeeScript = {
     // If transpile option is given, gulp-coffee fails when sourcemaps are enabled.
     // No solution found, so this option is blocked until the solution is found.
     // gulp-coffee: v3.0.2, issue #91
-    // coffee: {transpile: {presets: ['env']}}
+    // coffee: {transpile: {presets: ['env']}, sourceMap: true, inlineMap: true}
   }
 };
 

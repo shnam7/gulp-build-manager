@@ -1,6 +1,9 @@
+@import "../base/variables";
+
 #l-sidebar {
   font-size: 0.95rem;
-  @media (--medium) {
+  //@media (--medium) {
+  @media ($mq-medium) {
     position: sticky;
     top: 0;
   }

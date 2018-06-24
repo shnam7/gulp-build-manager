@@ -20,10 +20,16 @@ const docs = {
     src: [upath.join(srcRoot, 'assets/scss/**/*.scss')],
     dest: upath.join(srcRoot, 'css'),
     buildOptions: {
+      lint: true,
       minifyOnly: true,
       sourceMap: sourceMap
     },
+    flushStream: true,
     moduleOptions: {
+      autoprefixer: {
+        // default browserlist is: '> 0.5%, last 2 versions, Firefox ESR, not dead'
+        browsers: ['last 4 version']
+      },
       postcss: {
         plugins:[
           require('postcss-cssnext')({features:{rem: false}}),
@@ -36,7 +42,11 @@ const docs = {
         ]
       },
     },
-    clean: [upath.join(srcRoot, 'css')]
+    postBuild: (builder)=> {
+      // return promise to be sure copy operation is done before the task finishes
+      return gbm.GPlugin.exec(builder, 'echo', ['>>', upath.join(srcRoot, '.scss-triggered')]);
+    },
+    clean: [upath.join(srcRoot, 'css'), upath.join(srcRoot, '.scss-triggered')]
   },
 
   scripts: {
@@ -44,6 +54,7 @@ const docs = {
     builder: 'GTypeScriptBuilder',
     src: [upath.join(srcRoot, 'assets/scripts/**/*.ts')],
     dest: upath.join(srcRoot, 'js'),
+    flushStream: true,
     buildOptions: {
       minifyOnly: true,
       sourceMap: sourceMap,
@@ -64,7 +75,11 @@ const docs = {
         "lib": ['DOM', 'ES6', 'DOM.Iterable', 'ScriptHost']
       }
     },
-    clean: [upath.join(srcRoot, 'js')]
+    postBuild: (builder)=> {
+      // return promise to be sure copy operation is done before the task finishes
+      return gbm.GPlugin.exec(builder, 'echo', ['>>', upath.join(srcRoot, '.js-triggered')]);
+    },
+    clean: [upath.join(srcRoot, 'js'), upath.join(srcRoot, '.js-triggered')]
   },
 
   jekyll: {
@@ -85,18 +100,23 @@ const docs = {
     },
     watch: {
       watched: [
-        upath.join(srcRoot, '**/*'),
-        // TODO glob exclude not working: gulp issue #2192
-        '!' + upath.join(srcRoot, '{assets,assets/**/*}'),
-        '!' + upath.join(srcRoot, '{_site,_site/**/*}'),
+        upath.join(srcRoot, '**/*.{yml,html,md}'),
+        upath.join(srcRoot, '.*-triggered'),
+        '!' + upath.join(srcRoot, '{js,css}'),
         '!' + upath.join(srcRoot, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),
+
+        // TODO glob exclude not working: gulp issue #2192
+        // '!' + upath.join(srcRoot, '{assets,assets/**/*}'),
+        // '!' + upath.join(srcRoot, '{_site,_site/**/*}'),
+        // '!' + upath.join(srcRoot, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),
+        // upath.join(srcRoot, '**/*'),
       ]
     },
     clean: [destRoot, upath.join(srcRoot, '.jekyll-metadata')],
   },
 
   get build() {
-    return gbm.parallel(this.scss, this.scripts, this.jekyll)
+    return [gbm.parallel(this.scss, this.scripts), this.jekyll]
   },
 };
 

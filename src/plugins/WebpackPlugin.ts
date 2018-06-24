@@ -7,7 +7,7 @@ import * as upath from 'upath';
 import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {is} from "../utils/utils";
+import {is, msg} from "../utils/utils";
 
 /**
  * Configuration priorities:
@@ -57,7 +57,7 @@ export class WebpackPlugin extends GPlugin {
     if (!builder.stream) return;
     if (wpOpts.output.path) wpOpts.output.path = resolve(wpOpts.output.path);
 
-    console.log(`Webpack Config=${JSON.stringify(wpOpts)}`);
+    msg(`Webpack Config=${JSON.stringify(wpOpts)}`);
     builder.pipe(require('webpack-stream')(wpOpts, require('webpack')));
   }
 }

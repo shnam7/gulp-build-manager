@@ -1,7 +1,8 @@
 /**
  *  GReloader - Browser reloader
  */
-import {Options, Stream, TaskDoneFunction} from "./types";
+import {Options, Stream} from "./types";
+import {msg} from "../utils/utils";
 
 export class GReloader {
   livereload: any = undefined;
@@ -20,7 +21,7 @@ export class GReloader {
       let browserSync = require('browser-sync');
       this.browserSync = browserSync.has('gbm') ? browserSync.get('gbm') : browserSync.create('gbm');
       this.browserSync.init(opts.browserSync,
-        ()=>console.log('browserSync server started with options:', opts.browserSync)
+        ()=>msg('browserSync server started with options:', opts.browserSync)
       );
     }
   }
