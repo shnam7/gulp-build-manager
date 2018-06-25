@@ -16,6 +16,7 @@
 - Add verbose option to spawn() function in utils/process.ts
 - Update CSSPlugin: separate postcss mode and gulp mode, improved lint, improved autoprefixer
 - Deprecate GPlugin.cssnano replacing it with GPlugin.cleancss (gulp-cssnano replaced with gulp-clean-css)
+- Add common support layer modules and default enabled modules into npm dependency: gulp-clone, gulp-concat, gulp-filter, gulp-order, gulp-rename, gulp-postcss, autoprefixer
 
 
 ## v3.0
