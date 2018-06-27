@@ -17,7 +17,8 @@
 - Update CSSPlugin: separate postcss mode and gulp mode, improved lint, improved autoprefixer
 - Deprecate GPlugin.cssnano replacing it with GPlugin.cleancss (gulp-cssnano replaced with gulp-clean-css)
 - Add common support layer modules and default enabled modules into npm dependency: gulp-clone, gulp-concat, gulp-filter, gulp-order, gulp-rename, gulp-postcss, autoprefixer
-
+- Fix error in TypeScriptPlugin outFile and outDir normalization and config overriding sequence
+- Improve examples/webpack to have simple watchable demo page
 
 ## v3.0
 - Redesign architecture utilizing Promise

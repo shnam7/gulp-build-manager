@@ -6,7 +6,10 @@ $color-bahama-blue:           #285880 !default;
 $sidebar-width:               20rem !default;
 $content-width:               calc(100% - #{$sidebar-width}) !default;
 
-
+html {
+  font-family: "Arial",sans-serif;
+  font-size: 16px;
+}
 
 //--- mixins
 @mixin clearfix() {
@@ -38,24 +41,26 @@ $content-width:               calc(100% - #{$sidebar-width}) !default;
   margin: 0 auto;
   padding: 1rem;
   border: 1px solid rgba(#000, 0.3);
-  #l-content {
+  .content {
+    box-sizing: border-box;
     width: 100%;
     padding: 0;
     border: 1px solid rgba(#000, 0.3);
   }
-  #l-sidebar {
+  .sidebar {
+    box-sizing: border-box;
     width: 100%;
     padding: 0;
     border: 1px solid rgba(#000, 0.3);
   }
 
   @media screen and (min-width: 1024px) {
-    #l-content {
+    .content {
       float: left;
       width: $content-width;
       padding: 0 1.5rem 0 0;
     }
-    #l-sidebar {
+    .sidebar {
       float: right;
       width: $sidebar-width;
       padding: 0 0 0 1.5rem;
@@ -122,5 +127,16 @@ $content-width:               calc(100% - #{$sidebar-width}) !default;
   font-style: italic;
   .logo-text {
     color: rgba(yellow, 0.7);
+  }
+}
+
+.sidebar {
+  & > ul {
+    margin: 0;
+    padding-left: 1rem;
+    &>li {
+    list-style-position: outside;
+      margin: 0;
+    }
   }
 }

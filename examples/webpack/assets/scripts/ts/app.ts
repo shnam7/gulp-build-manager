@@ -1,7 +1,10 @@
-/////<reference path="greet.ts"/>
 
-import {Greeter} from "./greet";
+import Greeter from "./greet";
 
-console.log('This is sample2');
+$(()=>{
+  $('body').append(`<p>${new Greeter().greet()}</p>`);
+});
 
-console.log(new Greeter("").greet());
+export function xx() {
+  return 123;
+}

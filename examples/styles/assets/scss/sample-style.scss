@@ -85,3 +85,16 @@ $test-width: 500px;
   .box4 {
   }
 }
+
+
+//--- for autoprefixer test
+.aaa {
+  transform: scale(0.5);
+}
+
+.example {
+  display: grid;
+  transition: all .5s;
+  user-select: none;
+  background: linear-gradient(to bottom, white, black);
+}

@@ -11,7 +11,7 @@ export class TwigPlugin extends GPlugin {
   constructor(options:Options={}) { super(options); }
 
   process(builder: GBuilder) {
-    let twigOpts =  builder.moduleOptions.twig;
+    let twigOpts =  builder.moduleOptions.twig || {};
     let dataOpts = is.String(twigOpts.data) ? [twigOpts.data] : twigOpts.data;
 
     if (is.Array(dataOpts))

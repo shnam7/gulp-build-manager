@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
-    "rootDir": "assets/scripts/ts",
-    "outDir": "_build",
+    "target": "es5",
+    "module": "amd",
+    "outFile": "app.js",
     "declaration": true,
-    "noEmitOnError": true,
-    "sourceMap": true
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "noEmitOnError": true
   },
-  "include": ["assets/**/*.ts"],
   "exclude": []
 }

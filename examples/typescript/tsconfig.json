@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
     "target": "es5",
-//    "module": "system",
-//    "outDir": "abc",
-    "removeComments": true,
+    "module": "system", // this is default
+    "outDir": ".",
+    "strict": true,
     "noImplicitAny": true,
-    "importHelpers": true,
     "lib": ["DOM","ES6","ES2015","DOM.Iterable","ScriptHost"],
     "declaration": true,
-//    "declarationDir": "../_build",
+//    "declarationDir": "_build/js",
     "noEmitOnError": true
   }
 }

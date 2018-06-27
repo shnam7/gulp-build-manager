@@ -19,29 +19,33 @@ const typeScript = {
   order: ['*ts-2.ts'],
   // dest: (file) => file.base,
   dest: upath.join(destRoot, 'js'),
-  outFile: upath.join(destRoot, 'js/sample-ts.js'),
+  outFile: 'sample-ts.js',
+  // outFile: 'sample-ts.js',
   flushStream: true,
   buildOptions: {
+    // lint: true,
+    // printConfig: true,
     sourceMap: true,
     minify: true,
     // outFileOnly: false, --> this option is not supported in TypeScriptPlugin and TypeScriptBuilder
 
     // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
-    tsConfig: upath.join(srcRoot, 'scripts/tsconfig.json')
+    tsConfig: upath.join(basePath, 'tsconfig.json')
   },
-  // moduleOptions: {
-  //   // this will override the tsConfig settings in buildOptions
-  //   typescript: {
-  //     // "outFile": "sample-ts.js",
-  //     // "outDir": upath.resolve(destRoot, 'js'),
-  //     // "declarationDir": upath.resolve(destRoot, '@types')
-  //
-  //     // "target": "es5",
-  //     // "module": "none",
-  //     // "noImplicitAny": true,
-  //     // "noEmitOnError": true
-  //   }
-  // },
+  moduleOptions: {
+    // this will override the tsConfig settings in buildOptions
+    typescript: {
+      // target: "es6",
+      // "outFile": "sample-ts.js",
+      // "outDir": upath.resolve(destRoot, 'js'),
+      // "declarationDir": upath.resolve(destRoot, '@types')
+
+      // "target": "es5",
+      // "module": "none",
+      // "noImplicitAny": true,
+      // "noEmitOnError": true
+    }
+  },
 };
 
 

@@ -13,6 +13,6 @@ gbm({
     build: conf.build,
     clean: conf.cleanList,
     default: '@build',
-    watch: {browserSync:{server:'./examples/twig/_build'}}
+    watch: {browserSync:{server:'./examples/twig/_build', open:false}}
   }
 });

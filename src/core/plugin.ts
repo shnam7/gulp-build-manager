@@ -107,7 +107,7 @@ export class GPlugin {
     builder.pipe(require('gulp-uglify-es').default(uglifyES));
 
     // check rename option
-    const rename = Object.assign({}, builder.moduleOptions.cssnano, options.rename);
+    const rename = Object.assign({}, builder.moduleOptions.rename, options.rename);
     if (!rename.extname) rename.extname = '.min.js';
     builder.pipe(require('gulp-rename')(rename));
   }
