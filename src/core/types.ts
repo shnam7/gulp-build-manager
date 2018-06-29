@@ -29,6 +29,7 @@ export interface BuildConfig {
   dest?: string;
   outFile?: string;
   outfile?: string;     // for backward compatibility
+  copy?: {src:string|string[], dest: string}[],   // copy is to be done after postBuild
   flushStream?: boolean;
   clean?: CleanTarget;
   watch?: WatchItem;

@@ -35,17 +35,30 @@ export class GBuilder {
    * Build sequence functions: Return value should be void or Promise
    *-----------------------------------------------------------------*/
 
-  async _build(conf: BuildConfig) {    //: Promise<void | GulpStream | this>
+  async _build(conf: BuildConfig) {
     // reset variables
     this.conf = conf;
     this.buildOptions = conf.buildOptions || {};
     this.moduleOptions = conf.moduleOptions || {};
+    let promise = undefined;
 
+    // preBuild
     await this._run(this.conf.preBuild);
+
+    // build
     await this.build();
     if (this.conf.flushStream) await toPromise(this.stream);
-    await this.reload();
+    if (this.conf.copy) {   // copy is the last part of the build
+      promise = this.chain(GPlugin.copy, {targets: this.conf.copy});
+      if (this.conf.flushStream) await promise;
+    }
+
+    // postBuild
     await this._run(this.conf.postBuild);
+
+    // and then, reload (after all process including postBuild
+    await this.reload();
+    return promise;
   }
 
   build(): void | Promise<this | void> {

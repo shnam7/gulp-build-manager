@@ -76,6 +76,28 @@ Output path string. In implementation perspective, this property value is passed
 <i>default: undefined</i><br>
 Output file name. This property can be optionally specified if the output of the build process is to be a single file. For example, javascript builder can concatenate all the files in input stream into a single output file in conf.dest directory.
 
+#### conf.copy
+<i>type: {src:string|string[], dest: string}[]</i><br>
+<i>default: undefined</i><br>
+copy src to dest for each array items, in the last stage of build sequence and just *before* postBuild(). 'src' accepts glob strings. If flushStream option is enabled, build task will finish after all the copy jobs are finished.
+```javascript
+const babel = {
+  buildName: 'babel',
+  builder: 'GJavaScriptBuilder',
+  src: [upath.join(srcRoot, 'es6/**/*.es6')],
+  dest: (file) => file.base,
+  copy:[
+    {src: ['/node_modules/jquery/dist/jquery.js'], dest: upath.join(destRoot, 'vendor/jquery')},
+    {src: ['/node_modules/bootstrap/dist/js/bootstrap.js'], dest: upath.join(destRoot, 'vendor/bootstrap')},
+  ],
+  flushStream: true,
+  buildOptions: {
+    babel: true,
+    minify: true
+  },
+};
+```
+
 #### conf.flushStream
 {:#flushStream}
 <i>type: boolean</i><br>

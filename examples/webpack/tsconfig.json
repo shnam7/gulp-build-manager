@@ -4,7 +4,8 @@
     "module": "amd",
     "outFile": "app.js",
     "declaration": true,
-    "sourceMap": true,
+    // TODO Need to see if this still cause webpack 'No element indexed by 1' issue
+//    "sourceMap": true,
     "noImplicitAny": true,
     "noEmitOnError": true
   },

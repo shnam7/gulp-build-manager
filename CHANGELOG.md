@@ -19,6 +19,8 @@
 - Add common support layer modules and default enabled modules into npm dependency: gulp-clone, gulp-concat, gulp-filter, gulp-order, gulp-rename, gulp-postcss, autoprefixer
 - Fix error in TypeScriptPlugin outFile and outDir normalization and config overriding sequence
 - Improve examples/webpack to have simple watchable demo page
+- Add BuildConf.copy option to support file copies in the last stage of build, but before postBuild()
+- Fix reload() to come after postBuild() in build sequence
 
 ## v3.0
 - Redesign architecture utilizing Promise
