@@ -25,33 +25,19 @@ const app= {
     builder: 'GWebpackBuilder',
     // src: [upath.join(srcRoot, 'scripts/ts/app.ts')],
     dest: upath.join(destRoot, 'js'),
-    // outFile: 'app.min.js',
+    flushStream: true,
     buildOptions: {
+      printConfig: true,
       webpackConfig: upath.join(basePath, 'webpack.config.js')
     },
     moduleOptions: {
       webpack: {
-        // entry: upath.resolve(srcRoot, 'scripts/ts/app.ts'),
-        //   mode: 'production',
-        //   // devtool: 'source-map',
-        //   module: {
-        //     rules: [
-        //       {
-        //         test: /\.tsx?$/,
-        //         use: 'ts-loader',
-        //         exclude: /node_modules/
-        //       }
-        //     ],
-        //   },
-        //   resolve: {
-        //     extensions: ['.tsx', '.ts', '.js']
-        //   },
-        //   output: {
-        //     filename: 'bundle-1.js',
-        //     path: upath.resolve(destRoot, 'js-1')
-        //   },
+        // settings here will be merged override webpackConfig file contents
       },
     },
+    watch: {
+      watched: [upath.join(srcRoot, 'scripts/ts/**/*.ts')]
+    }
   },
 
   get build() {

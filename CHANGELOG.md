@@ -21,6 +21,7 @@
 - Improve examples/webpack to have simple watchable demo page
 - Add BuildConf.copy option to support file copies in the last stage of build, but before postBuild()
 - Fix reload() to come after postBuild() in build sequence
+- Modify WebpackPlugin to run webpack without wepack-stream, simplifying the structure
 
 ## v3.0
 - Redesign architecture utilizing Promise

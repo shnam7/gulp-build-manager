@@ -26,7 +26,8 @@ const app = {
     src: upath.join(srcRoot, 'scripts/**/*.ts'),
     dest: upath.join(destRoot, 'js'),
     buildOptions: {
-      minifyOnly: true
+      minifyOnly: true,
+      tsConfig: upath.join(basePath, 'tsconfig.json')
     }
   },
 

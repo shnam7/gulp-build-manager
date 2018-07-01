@@ -34,7 +34,7 @@ export class WebpackPlugin extends GPlugin {
     // override webpack entry file with conf.src
     if (builder.conf.src) {
       if (is.Array(builder.conf.src)) {
-        let src:string[] = [];
+        let src:string[] = [];  // get absolute paths in array
         (builder.conf.src as string[]).forEach((name)=>src.push(resolve(name)));
         merge(wpOpts, {entry: src});
       }
@@ -45,20 +45,18 @@ export class WebpackPlugin extends GPlugin {
     // override webpack output settings with conf.dest and conf.outFile
     if (builder.conf.dest) merge(wpOpts, {output: {path: builder.conf.dest}});
     if (builder.conf.outFile) merge(wpOpts, {output: {filename: builder.conf.outFile}});
-
     if (!wpOpts.output || !wpOpts.output.filename) merge(wpOpts, {output: {filename: '[name].bundle.js'}});
 
-    // sanitize conf.src and conf.dest to go through gulp streams
-    if (!builder.conf.src) builder.conf.src = wpOpts.entry;
-    if (!builder.conf.dest) builder.conf.dest = wpOpts.output.path;
-
-    if (!builder.stream)
-      builder.stream = builder.conf.src ? gulp.src(builder.conf.src, builder.moduleOptions.gulp) : undefined;
-    if (!builder.stream) return;
+    // sanitize options
     if (wpOpts.output.path) wpOpts.output.path = resolve(wpOpts.output.path);
 
-    msg(`Webpack Config=${JSON.stringify(wpOpts)}`);
-    builder.pipe(require('webpack-stream')(wpOpts, require('webpack')));
+    if (opts.printConfig) msg(`Webpack Config =`, wpOpts);
+    const compiler = require('webpack')(wpOpts);
+    return new Promise<void>((resolve, reject)=>{
+      compiler.hooks.done.tap("done", resolve);
+      compiler.hooks.failed.tap("failed", reject);
+      compiler.run();
+    })
   }
 }
 

@@ -1,8 +1,10 @@
-
 import Greeter from "./greet";
 
+const greeter = new Greeter();
+console.log('Greeter loaded:', greeter.greet());
+
 $(()=>{
-  $('body').append(`<p>${new Greeter().greet()}</p>`);
+  $('body').append(`<p>${greeter.greet()}</p>`);
 });
 
 export function xx() {

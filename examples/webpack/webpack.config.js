@@ -6,12 +6,15 @@ const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
 
 module.exports = {
-  entry: upath.resolve(srcRoot, 'scripts/ts/app.ts'),
-  output: {
-    filename: 'app.min.js',    // this name will be overriden by buildConfig.outFile
-    path: upath.join(destRoot, 'js')
+  entry: {
+    app: upath.resolve(srcRoot, 'scripts/ts/app.ts'),
   },
-  mode: 'production',   // this option will minify the output automatically
+  output: {
+    filename: '[name].min.js',    // this name will be overriden by buildConfig.outFile
+    path: upath.resolve(destRoot, 'js')
+  },
+  // mode: 'production',   // this option will minify the output automatically
+  mode: 'development',
   devtool: 'source-map',
   module: {
     rules: [
@@ -24,7 +27,7 @@ module.exports = {
         // as outFile when process.cwd() is differenc from project root? See build result for the output.
         options: {
           logLevel: 'info',
-          // context: upath.resolve(upath.join(__dirname, '/..'))
+          // context: upath.resolve(basePath, '.')
           // configFile: upath.join(basePath, "tsconfig.json"),
         }
       }

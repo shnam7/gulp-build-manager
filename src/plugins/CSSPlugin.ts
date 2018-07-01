@@ -5,7 +5,7 @@
 import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {dmsg, info} from "../utils/utils";
+import {warn} from "../utils/utils";
 
 export class CSSPlugin extends GPlugin {
   constructor(options:Options={}) { super(options); }
@@ -61,11 +61,11 @@ export class CSSPlugin extends GPlugin {
     // backward compatibility on autoprefixer options
     if (opts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
       opts.autoprefixer = opts.autoPrefixer;
-      info('buildOptions.autoPrefixer is deprecated. Please use autoprefixer.');
+      warn('[GBM:CSSPlugin] DeprecationWarning: buildOptions.autoPrefixer is deprecated. Use buildOptions.autoprefixer.');
     }
     if (mopts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
       mopts.autoprefixer = mopts.autoPrefixer;
-      info('moduleOptions.autoPrefixer is deprecated. Please use autoprefixer.');
+      warn('[GBM:CSSPlugin] DeprecationWarning: moduleOptions.autoPrefixer is deprecated. Use moduleOptions.autoprefixer.');
     }
 
     // basic build options

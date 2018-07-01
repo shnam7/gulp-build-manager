@@ -4,7 +4,7 @@
 
 import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {info, is, warn} from '../utils/utils';
+import {is, warn} from '../utils/utils';
 import {BuildConfig, BuildFunction, BuildSet, ExternalBuilder, Options, TaskDoneFunction, WatchItem} from "./types";
 import {GWatcher} from "./watcher";
 import {GCleaner} from "./cleaner";
@@ -72,7 +72,7 @@ export class GBuildSet {
         item = item as BuildConfig;
         // convert prop name: outfile-->outFile
         if (!item.outFile && item.outfile) {
-          info(`[GBM][buildName=${item.buildName}] BuildConfig.outfile is deprecated. Please use outFile instead.`);
+          warn(`[GBM][buildName=${item.buildName}] DeprecationWarning: BuildConfig.outfile is deprecated. Please use outFile instead.`);
           item.outFile = item.outfile;
         }
 

@@ -5,7 +5,7 @@
 import * as gulp from 'gulp';
 import {Options} from './types';
 import {GBuilder} from './builder';
-import {toPromise, is, SpawnOptions, info, msg} from '../utils/utils';
+import {toPromise, is, SpawnOptions, info, msg, warn} from '../utils/utils';
 import {exec, spawn} from "../utils/process";
 
 export class GPlugin {
@@ -113,7 +113,7 @@ export class GPlugin {
   }
 
   static cssnano(builder: GBuilder, options: Options={}) {
-    info('cssnano is deprecated. please use cssclean instead.');
+    warn('[GBM:Plugin] DeprecationWarning: cssnano is deprecated. please use cssclean instead.');
     // check for filter option (to remove .map files, etc.)
     const filter = options.filter || ['**', '!**/*.map'];
     builder.pipe(require('gulp-filter')(filter));
