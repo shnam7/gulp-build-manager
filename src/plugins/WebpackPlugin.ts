@@ -2,12 +2,11 @@
  *  gbm Plugin - Changed
  */
 
-import * as gulp from 'gulp';
 import * as upath from 'upath';
 import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
-import {is, msg} from "../utils/utils";
+import {info, is, msg} from "../utils/utils";
 
 /**
  * Configuration priorities:
@@ -26,10 +25,12 @@ export class WebpackPlugin extends GPlugin {
     const merge = require('lodash.merge');
 
     const opts = builder.conf.buildOptions || {};
-    const configFile = this.options.configFile || opts.webpackConfig;
+    const configFile = resolve(this.options.configFile || opts.webpackConfig
+      || upath.join(process.cwd(), "webpack.config.js"));
+    info(`[GBM:WebpackPlugin] webpackConfig=${configFile}`);
 
     // load configFile first, and then override with moduleOptions.webpack
-    let wpOpts = merge(configFile ? require(upath.resolve(configFile)) : {}, builder.moduleOptions.webpack);
+    let wpOpts = merge(configFile ? require(configFile) : {}, builder.moduleOptions.webpack);
 
     // override webpack entry file with conf.src
     if (builder.conf.src) {
@@ -55,7 +56,9 @@ export class WebpackPlugin extends GPlugin {
     return new Promise<void>((resolve, reject)=>{
       compiler.hooks.done.tap("done", resolve);
       compiler.hooks.failed.tap("failed", reject);
-      compiler.run();
+      compiler.run((err: Error, stats:any)=>{{
+        msg(stats.toString({colors: true}));
+      }});
     })
   }
 }

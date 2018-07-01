@@ -14,13 +14,11 @@ const typeScript = {
   buildName: 'typeScript',
   builder: 'GTypeScriptBuilder',
   src: [upath.join(srcRoot, 'scripts/ts/**/!(*.d).ts')],
-
-  // use order property to set outFile orders
-  order: ['*ts-2.ts'],
-  // dest: (file) => file.base,
-  dest: upath.join(destRoot, 'js'),
-  outFile: 'sample-ts.js',
-  // outFile: 'sample-ts.js',
+  dest: upath.join(destRoot, 'js'), // (file) => file.base,
+  outFile: 'app.js',
+  copy: [{
+    src: upath.join(basePath, 'pages/**/*.html'), dest: upath.join(destRoot, '')
+  }],
   flushStream: true,
   buildOptions: {
     // lint: true,
@@ -28,24 +26,16 @@ const typeScript = {
     sourceMap: true,
     minify: true,
     // outFileOnly: false, --> this option is not supported in TypeScriptPlugin and TypeScriptBuilder
-
-    // You can specify tsconfig.json file here. To create a default one, run 'tsc -init'
     tsConfig: upath.join(basePath, 'tsconfig.json')
   },
   moduleOptions: {
-    // this will override the tsConfig settings in buildOptions
     typescript: {
-      // target: "es6",
-      // "outFile": "sample-ts.js",
-      // "outDir": upath.resolve(destRoot, 'js'),
-      // "declarationDir": upath.resolve(destRoot, '@types')
-
-      // "target": "es5",
-      // "module": "none",
-      // "noImplicitAny": true,
-      // "noEmitOnError": true
+      // settings here will be merged overriding tsConfig file settings
     }
   },
+  watch: {
+    watchedPlus: [upath.join(basePath, 'pages/**/*.html')]
+  }
 };
 
 
@@ -58,5 +48,6 @@ gbm({
       upath.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}')
     ],
     default: ['@clean', '@build'],
+    watch: {browserSync:{server:destRoot, open:false, reloadDelay:300}}
   }
 });

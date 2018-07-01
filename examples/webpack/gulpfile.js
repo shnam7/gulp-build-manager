@@ -56,6 +56,6 @@ gbm({
     //   path.join(srcRoot, 'node_modules')    // clean up temporary files in node_modules
     ],
     default: ['@clean', '@build'],
-    watch: {browserSync:{server:destRoot}}
+    watch: {browserSync:{server:destRoot, open: false}}
   }
 });

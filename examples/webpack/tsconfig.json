@@ -4,7 +4,6 @@
     "module": "amd",
     "outDir": "_build/js",
     "declaration": true,
-//    "sourceMap": true,    // sourcemap will handled by webpack
     "noImplicitAny": true,
     "noEmitOnError": true
   },
