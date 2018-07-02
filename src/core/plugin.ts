@@ -5,7 +5,7 @@
 import * as gulp from 'gulp';
 import {Options} from './types';
 import {GBuilder} from './builder';
-import {toPromise, is, SpawnOptions, info, msg, warn} from '../utils/utils';
+import {toPromise, is, SpawnOptions, msg, warn} from '../utils/utils';
 import {exec, spawn} from "../utils/process";
 
 export class GPlugin {
@@ -22,39 +22,6 @@ export class GPlugin {
 
 
   /***** Ready-made plugin functions *****/
-
-  static debug(builder: GBuilder, options: Options={}) {
-    let title = options.title ? options.title : '';
-    // title = `[debugPlugin${title ? ':' + title : ''}]`;
-    let opts = Object.assign({}, builder.moduleOptions.debug, options, {title});
-    builder.pipe(require('gulp-debug')(opts));
-    return toPromise(builder.stream);
-  }
-
-  static filter(builder: GBuilder, pattern:string[], options: Options={}) {
-    let opts = Object.assign({}, builder.moduleOptions.filter, options);
-    builder.pipe(require('gulp-filter')(pattern, opts))
-  }
-
-  static concat(builder: GBuilder, options: Options = {}) {
-    // check for filter option (to remove .map files, etc.)
-    const filter = options.filter || ['**', '!**/*.map'];
-    if (filter) builder.pipe(require('gulp-filter')(filter));
-
-    const outFile = options.outFile || builder.conf.outFile;
-    if (!outFile) {
-      if (options.verbose) info('[concatPlugin] Missing conf.outFile. No output generated.');
-      return;
-    }
-
-    let opts = Object.assign({}, builder.moduleOptions.concat, options.concat);
-    builder.pipe(require('gulp-concat')(outFile, opts.concat));
-  }
-
-  static rename(builder: GBuilder, options: Options={}) {
-    let opts = Object.assign({}, builder.moduleOptions.concat, options.concat || options);
-    builder.pipe(require('gulp-rename')(opts))
-  }
 
   /**
    * Copy files supporting multiple src/dest pairs
@@ -98,25 +65,50 @@ export class GPlugin {
 
   // minify javascripts
   static uglify(builder: GBuilder, options: Options={}) {
-    // check for filter option (to remove .map files, etc.)
-    const filter = options.filter || ['**', '!**/*.{map,d.ts}'];
-    builder.pipe(require('gulp-filter')(filter));
+    const opts = Object.assign({}, builder.moduleOptions.uglifyES, options.uglifyES);
+    builder.pipe(require('gulp-uglify-es').default(opts));
+  }
 
-    // minify
-    const uglifyES = Object.assign({}, builder.moduleOptions.uglifyES, options.uglifyES);
-    builder.pipe(require('gulp-uglify-es').default(uglifyES));
+  static cleancss(builder: GBuilder, options: Options={}) {
+    const opts = Object.assign({}, builder.moduleOptions.cleancss, options.cleancss || options);
+    builder.pipe(require('gulp-clean-css')(opts));
+  }
 
-    // check rename option
-    const rename = Object.assign({}, builder.moduleOptions.rename, options.rename);
-    if (!rename.extname) rename.extname = '.min.js';
-    builder.pipe(require('gulp-rename')(rename));
+  static spawn(builder: GBuilder, cmd: string, args: string[]=[], options: SpawnOptions={}) {
+    return spawn(cmd, args, options);
+  }
+
+  static exec(builder: GBuilder, cmd: string, args: string[]=[], options: SpawnOptions={}) {
+    return exec(cmd, args, options);
+  }
+
+
+  /**----------------------------------------------------------------
+   * Obsolete functions
+   *----------------------------------------------------------------*/
+
+  static debug(builder: GBuilder, options: Options={}) {
+    warn('[GBM:Plugin] DeprecationWarning: debug() is deprecated. Use builder.debug() instead.');
+    builder.debug(options);
+  }
+
+  static filter(builder: GBuilder, pattern:string[], options: Options={}) {
+    warn('[GBM:Plugin] DeprecationWarning: filter() is deprecated. Use builder.filter() instead.');
+    builder.filter(pattern, options);
+  }
+
+  static concat(builder: GBuilder, options: Options = {}) {
+    warn('[GBM:Plugin] DeprecationWarning: concat() is deprecated. Use builder.concat() instead.');
+    builder.concat(options);
+  }
+
+  static rename(builder: GBuilder, options: Options={}) {
+    warn('[GBM:Plugin] DeprecationWarning: rename() is deprecated. Use builder.rename() instead.');
+    builder.rename(options);
   }
 
   static cssnano(builder: GBuilder, options: Options={}) {
-    warn('[GBM:Plugin] DeprecationWarning: cssnano is deprecated. please use cssclean instead.');
-    // check for filter option (to remove .map files, etc.)
-    const filter = options.filter || ['**', '!**/*.map'];
-    builder.pipe(require('gulp-filter')(filter));
+    warn('[GBM:Plugin] DeprecationWarning: cssnano() is deprecated. Use cleancss() instead.');
 
     // minify
     const cssnano = Object.assign({}, builder.moduleOptions.cssnano, options.cssnano);
@@ -126,34 +118,5 @@ export class GPlugin {
     const rename = Object.assign({}, builder.moduleOptions.cssnano, options.rename);
     if (!rename.extname) rename.extname = '.min.css';
     builder.pipe(require('gulp-rename')(rename));
-  }
-
-  static cleancss(builder: GBuilder, options: Options={}) {
-    // check for filter option (to remove .map files, etc.)
-    const filter = options.filter || ['**', '!**/*.map'];
-    builder.pipe(require('gulp-filter')(filter));
-
-    // minify
-    const cleancssOpts = Object.assign({}, builder.moduleOptions.cleancss, options.cleancss);
-    if (builder.buildOptions.postcss === false) {   // default true
-      builder.pipe(require('gulp-clean-css')(cleancssOpts));
-    }
-    else {
-      let postcss = require('gulp-postcss');
-      builder.pipe(postcss([require('postcss-clean')(cleancssOpts)]));
-    }
-
-    // check rename option
-    const rename = Object.assign({}, builder.moduleOptions.cssnano, options.rename);
-    if (!rename.extname) rename.extname = '.min.css';
-    builder.pipe(require('gulp-rename')(rename));
-  }
-
-  static spawn(builder: GBuilder, cmd: string, args: string[]=[], options: SpawnOptions={}) {
-    return spawn(cmd, args, options);
-  }
-
-  static exec(builder: GBuilder, cmd: string, args: string[]=[], options: SpawnOptions={}) {
-    return exec(cmd, args, options);
   }
 }

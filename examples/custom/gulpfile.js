@@ -17,7 +17,7 @@ class MyBuilder extends gbm.GBuilder {
 class MyCSSBuilder extends gbm.GCSSBuilder {
   src() {
     // print input files
-    return super.src().chain(gbm.GPlugin.debug, {title:'MyCSSBuilder:'})
+    return super.src().debug({title:'MyCSSBuilder:'})
   }
 }
 

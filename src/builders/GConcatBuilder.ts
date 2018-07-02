@@ -9,7 +9,7 @@ export class GConcatBuilder extends GBuilder {
   constructor() { super(); }
 
   build() {
-    this.src().chain(GPlugin.concat).sourceMaps().dest();
+    this.src().concat().dest();
   }
 }
 

@@ -97,10 +97,10 @@ const typeScript = [
           "extends": "tslint:recommended"
         }
       },
-      uglifyES: {
-        // mangle: false,
-        ecma: 6
-      }
+      // uglifyES: {
+      //   // mangle: false,
+      //   ecma: 6
+      // }
     },
   }
 ];

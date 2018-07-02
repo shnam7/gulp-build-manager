@@ -4,21 +4,21 @@
 
 import {GBuilder} from "../core/builder";
 import {TypeScriptPlugin} from "../plugins/TypeScriptPlugin";
-import {GPlugin} from "../core/plugin";
 
 export class GTypeScriptBuilder extends GBuilder {
   constructor() { super(); }
 
-  async build() {
-    this.src();
-    let promise = (new TypeScriptPlugin()).process(this); // get promise for dts
-    if (this.conf.flushStream) await promise;  // flush dts files
-    if (!this.buildOptions.minifyOnly) this.dest();
+  build() {
+    this.src().chain(new TypeScriptPlugin());
 
-    // note: concat is not require, which will be done by typescript if buildOptions.outFile is set
-    if (this.buildOptions.minify || this.buildOptions.minifyOnly)
-      this.chain(GPlugin.uglify).sourceMaps();
-    return this.dest();
+    // concat stream is handled by gulp-typescript. only non-concat is handled here
+    const opts = this.buildOptions;
+    if (!opts.minifyOnly) this.dest();      // concat non-minified
+
+    let jsFilter =  require("gulp-filter")(["**/*.js"], {restore: true});
+    if (opts.minify || opts.minifyOnly) this
+      .pipe(jsFilter).minifyJs()        // minify *.js files only (not dts files)
+      .pipe(jsFilter.restore).dest();   // concat minified
   }
 }
 

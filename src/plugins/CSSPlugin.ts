@@ -23,24 +23,27 @@ export class CSSPlugin extends GPlugin {
     // All the scss/less variables should to be evaluated before postcss process starts
     if (sourceType !== 'css') {
       const processor = require('gulp-' + moduleName);
-      builder.pipe(processor(this.options[moduleName] || mopts[moduleName]));
+      builder.pipe(processor(this.options[moduleName] || mopts[moduleName])).sourceMaps();
     }
 
-    // now, transpile postcss statements
-    builder.pipe(pcss(plugins));
+    // // now, transpile postcss statements
+    builder.filter().pipe(pcss(plugins)).sourceMaps();
 
     // do some optimization to remove duplicate selectors, and beautify
-    builder.pipe(pcss([require('postcss-clean')({
+    builder.filter().pipe(require('gulp-clean-css')({
+      sourceMap: true,
+      sourceMapInlineSources: true,
       format: 'beautify',
       level: {2: {mergeSemantically: true}}
-    })]));
+    })).sourceMaps();
 
     // now run autoprefixer
     if (autoprefixer) {
       const prefixer = require('autoprefixer');
-      builder
+      builder.filter()
         .pipe(pcss([prefixer({add: false, browsers: []})])) // remove outdated prefixed
-        .pipe(pcss([prefixer(mopts.autoprefixer)]));     // now add prefixes
+        .pipe(pcss([prefixer(mopts.autoprefixer)]))     // now add prefixes
+        .sourceMaps();
     }
 
     // lint final css
@@ -50,7 +53,8 @@ export class CSSPlugin extends GPlugin {
       const reporter = require('postcss-reporter');
       let lintOpts = mopts.stylelint || {};
       const reporterOpts = lintOpts.reporter || {};
-      builder.pipe(pcss([stylelint(lintOpts.stylelint || lintOpts),reporter(reporterOpts)], {syntax: parser}));
+      builder.filter()
+        .pipe(pcss([stylelint(lintOpts.stylelint || lintOpts),reporter(reporterOpts)], {syntax: parser}));
     }
   }
 
@@ -81,21 +85,21 @@ export class CSSPlugin extends GPlugin {
       // first, transpile to standard css.
       if (sourceType !== 'css') {
         const processor = require('gulp-' + moduleName);
-        builder.pipe(processor(this.options[moduleName] || mopts[moduleName]));
+        builder.pipe(processor(this.options[moduleName] || mopts[moduleName])).sourceMaps();
       }
 
       // do some optimization to remove duplicate selectors, and beautify
-      builder.pipe(require('gulp-clean-css')({
+      builder.filter().pipe(require('gulp-clean-css')({
         format: 'beautify',
         level: {2: {mergeSemantically: true}}
-      }));
+      })).sourceMaps();
 
       // now run autoprefixer
       if (autoprefixer) {
         const prefixer = require('gulp-autoprefixer');
-        builder
+        builder.filter()
           .pipe(prefixer({add: false, browsers: []})) // remove outdated prefixed
-          .pipe(prefixer(mopts.autoprefixer));     // now add prefixes
+          .pipe(prefixer(mopts.autoprefixer)).sourceMaps();     // now add prefixes
       }
 
       // lint final css
@@ -104,7 +108,7 @@ export class CSSPlugin extends GPlugin {
         const stylelint = require('gulp-stylelint');
         let lintOpts = mopts.stylelint || {};
         if (!lintOpts.reporters) lintOpts["reporters"] = [{formatter: 'verbose', console: true}];
-        builder.pipe(stylelint(lintOpts));
+        builder.filter().pipe(stylelint(lintOpts));
       }
     }
     builder.sourceMaps();

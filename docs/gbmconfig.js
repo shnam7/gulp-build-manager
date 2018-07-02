@@ -11,7 +11,7 @@ const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = basePath;
 const destRoot = upath.join(basePath, '_site');
 const prefix = projectName + ':';
-const sourceMap = false;
+const sourceMap = true;
 
 const docs = {
   scss: {
@@ -22,6 +22,7 @@ const docs = {
     buildOptions: {
       lint: true,
       minifyOnly: true,
+      outFileOnly: false,
       sourceMap: sourceMap
     },
     flushStream: true,
@@ -38,7 +39,7 @@ const docs = {
           // require('postcss-assets')({
           //   loadPaths:[upath.join(srcRoot, 'images')],
           // }),
-          // require('postcss-inline-svg')({path:upath.join(srcRoot, 'images')}),
+          require('postcss-inline-svg')({path:upath.join(srcRoot, 'images')}),
         ]
       },
     },
@@ -58,23 +59,10 @@ const docs = {
     buildOptions: {
       minifyOnly: true,
       sourceMap: sourceMap,
-      // tsConfig: './assets/scripts/tsconfig.json',
+      tsConfig: upath.join(basePath, "tsconfig.json"),
       // printConfig: true
     },
-    // flushStream: true,
-    moduleOptions: {
-      // this will override the tsConfig settings in buildOptions
-      typescript: {
-        // "outFile": "sample-ts.js",
-        // "outDir": upath.resolve(destRoot, 'js'),
-        // "declarationDir": upath.resolve(destRoot, '@types')
-        "target": "es5",
-        // "module": "none",
-        "noImplicitAny": false,
-        "noEmitOnError": true,
-        "lib": ['DOM', 'ES6', 'DOM.Iterable', 'ScriptHost']
-      }
-    },
+    flushStream: true,
     postBuild: (builder)=> {
       // return promise to be sure copy operation is done before the task finishes
       return gbm.GPlugin.exec(builder, 'echo', ['>>', upath.join(srcRoot, '.js-triggered')]);
@@ -105,7 +93,7 @@ const docs = {
         '!' + upath.join(srcRoot, '{js,css}'),
         '!' + upath.join(srcRoot, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),
 
-        // TODO glob exclude not working: gulp issue #2192
+        // TODO glob exclude not working correctly for watcher: gulp issue #2192
         // '!' + upath.join(srcRoot, '{assets,assets/**/*}'),
         // '!' + upath.join(srcRoot, '{_site,_site/**/*}'),
         // '!' + upath.join(srcRoot, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),

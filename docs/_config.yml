@@ -10,7 +10,7 @@ repo:             "https://github.com/shnam7/gulp-build-manager/tree/master"
 #destination:      docs/_site
 version:          3.1
 encoding:         utf-8
-exclude:          ['assets', '*.map', 'gbmconfig.js', 'gulpfile.js', 'Gemfile*']
+exclude:          ['assets', 'gbmconfig.js', 'gulpfile.js', 'Gemfile*', "tsconfig.js"]
 markdown:         kramdown
 highlighter:      rouge
 permalink:        pretty

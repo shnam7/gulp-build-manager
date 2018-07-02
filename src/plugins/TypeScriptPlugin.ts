@@ -55,16 +55,9 @@ export class TypeScriptPlugin extends GPlugin {
       msg(`[TypeScriptPlugin]tsconfig evaluated(buildName:${builder.conf.buildName}):\n`, tsProject.options);
     }
 
-    // transpile .ts files
-    let tsStream = (builder.stream as GulpStream).pipe(tsProject());
-
-    // continue with transpiled javascript files
-    builder.stream = tsStream.js;
-    builder.sourceMaps();
-
-    // process dts stream/ output directory is from tsconfig.json settings or conf.dest
-    let dtsDir = tsStream.project.options.declationDir || builder.conf.dest;
-    return toPromise(tsStream.dts.pipe(gulp.dest(dtsDir)));
+    // workaround for typescript sourceMap failure which requires sourceRoot value
+    let smOpts = Object.assign({write: {sourceRoot:'.'}}, builder.moduleOptions.sourcemaps);
+    builder.pipe(tsProject()).sourceMaps(smOpts);
   }
 }
 

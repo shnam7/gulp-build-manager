@@ -4,28 +4,42 @@
 
 import {GBuilder} from "../core/builder";
 import {CSSPlugin} from "../plugins/CSSPlugin";
-import {GPlugin} from "../core/plugin";
+import {warn} from "../utils/utils";
 
 export class GCSSBuilder extends GBuilder {
   constructor() { super(); }
 
-  async build() {
+  build() {
     this.src().chain(new CSSPlugin());
+    const opts = this.buildOptions;
 
-    // if outfileOnly is not set, treat the default value to be true
-    if (!this.conf.outFile || this.buildOptions.outFileOnly == false) {
-      //---before concat
-      if (this.buildOptions.minify || this.buildOptions.minifyOnly)
-        this.pushStream().chain(GPlugin.cleancss).sourceMaps().dest().popStream();
-      if (!this.buildOptions.minifyOnly) this.dest();
+    // sanity check for options
+    if (!this.conf.outFile && opts.outFileOnly)
+      warn('[GBM:GCSSBuilder] outFileOnly option requires valid outFile value.');
+
+    // evaluate options
+    const concat = !!this.conf.outFile;
+    const concatOnly = concat && opts.outFileOnly !== false;
+
+    // dmsg(`outFile=${this.conf.outFile}, outFileOnly=${opts.outFileOnly}`);
+    // dmsg(`concat=${concat}, concatOnly=${concatOnly}`);
+    // dmsg(`minify=${opts.minify}, minifyOnly=${opts.minifyOnly}`);
+
+    // concat stream
+    if (concat) {
+      this.pushStream().concat();
+
+      if (!opts.minifyOnly) this.dest();      // concat non-minified
+      if (opts.minify || opts.minifyOnly) this.minifyCss().dest();  // concat minified
+
+      this.popStream();
     }
 
-    // concat and the next actions
-    if (this.conf.outFile) this.chain(GPlugin.concat).sourceMaps();
-    if (!this.buildOptions.minifyOnly) this.dest();
-    if (this.buildOptions.minify || this.buildOptions.minifyOnly)
-      this.chain(GPlugin.cleancss).sourceMaps().dest();
-    return this;
+    // non-concat
+    if (!concat || !concatOnly) {
+      if (!opts.minifyOnly) this.dest();      // concat non-minified
+      if (opts.minify || opts.minifyOnly) this.minifyCss().dest();  // concat minified
+    }
   }
 }
 

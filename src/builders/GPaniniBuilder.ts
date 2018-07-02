@@ -15,7 +15,7 @@ export class GPaniniBuilder extends GBuilder {
         panini.refresh();
         this.pipe(panini(this.moduleOptions.panini))
       })
-      .chain(GPlugin.rename, {extname: '.html'})
+      .rename({extname: '.html'})
       .dest();
   }
 }

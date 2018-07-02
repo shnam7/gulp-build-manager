@@ -4,28 +4,42 @@
 
 import {GBuilder} from "../core/builder";
 import JavaScriptPlugin from "../plugins/JavaScriptPlugin";
-import {GPlugin} from "../core/plugin";
+import {warn} from "../utils/utils";
 
 export class GJavaScriptBuilder extends GBuilder {
   constructor() { super(); }
 
-  async build() {
-    this.src().chain(new JavaScriptPlugin());
+  transpile() {
+    return this.chain(new JavaScriptPlugin());
+  }
 
-    // if outfileOnly is not set, it's default value is treated to be true
-    if (!this.conf.outFile || this.buildOptions.outFileOnly == false) {
-      //---before concat
-      if (this.buildOptions.minify || this.buildOptions.minifyOnly)
-        this.pushStream().chain(GPlugin.uglify).sourceMaps().dest().popStream();
-      if (!this.buildOptions.minifyOnly) this.dest();
+  build() {
+    this.src().transpile();
+    const opts = this.buildOptions;
+
+    // sanity check for options
+    if (!this.conf.outFile && opts.outFileOnly)
+      warn('[GBM:GJavaScriptBuilder] outFileOnly option requires valid outFile value.');
+
+    // evaluate options
+    const concat = !!this.conf.outFile;
+    const concatOnly = concat && opts.outFileOnly !== false;
+
+    // concat stream
+    if (concat) {
+      this.pushStream().concat();
+
+      if (!opts.minifyOnly) this.dest();      // concat non-minified
+      if (opts.minify || opts.minifyOnly) this.minifyJs().dest();  // concat minified
+
+      this.popStream();
     }
 
-    // concat and the next actions
-    if (this.conf.outFile) this.chain(GPlugin.concat).sourceMaps();
-    if (!this.buildOptions.minifyOnly) this.dest();
-    if (this.buildOptions.minify || this.buildOptions.minifyOnly)
-      this.chain(GPlugin.uglify).sourceMaps().dest();
-    return this;
+    // non-concat
+    if (!concat || !concatOnly) {
+      if (!opts.minifyOnly) this.dest();      // concat non-minified
+      if (opts.minify || opts.minifyOnly) this.minifyJs().dest();  // concat minified
+    }
   }
 }
 

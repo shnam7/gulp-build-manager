@@ -22,6 +22,7 @@
 - Add BuildConf.copy option to support file copies in the last stage of build, but before postBuild()
 - Fix reload() to come after postBuild() in build sequence
 - Modify WebpackPlugin to run webpack without wepack-stream, simplifying the structure
+- Move GPlugin built-in plugin functions, debug(), filter(), concat(), rename() to GBuilder API
 
 ## v3.0
 - Redesign architecture utilizing Promise
