@@ -1,10 +1,9 @@
 /**
  *  gbm Plugin - TypeScript
  */
-import * as gulp from 'gulp';
 import * as upath from 'upath';
-import {dmsg, is, msg, toPromise, warn} from '../utils/utils';
-import {GulpStream, Options} from "../core/types";
+import {dmsg, msg, warn} from '../utils/utils';
+import {Options} from "../core/types";
 import {GBuilder} from "../core/builder";
 import {GPlugin} from "../core/plugin";
 
@@ -38,6 +37,10 @@ export class TypeScriptPlugin extends GPlugin {
       builder.pipe(tslint(tslintOpts)).pipe(tslint.report(reportOpts));
     }
 
+    // workaround for gulp-typescript declarationMap to be true always
+    // Addd buildOptions.declarationMap option to override tsconfig files and moduleOptions.tsConfig
+    tsOpts.declarationMap = !!builder.buildOptions.declarationMap;
+
     const typescript = require('gulp-typescript');
     let tsProject = undefined;
     if (tsConfig) {
@@ -55,9 +58,11 @@ export class TypeScriptPlugin extends GPlugin {
       msg(`[TypeScriptPlugin]tsconfig evaluated(buildName:${builder.conf.buildName}):\n`, tsProject.options);
     }
 
-    // workaround for typescript sourceMap failure which requires sourceRoot value
+    // workaround for gulp-typescript sourceMap failure which requires sourceRoot value
     let smOpts = Object.assign({write: {sourceRoot:'.'}}, builder.moduleOptions.sourcemaps);
     builder.pipe(tsProject()).sourceMaps(smOpts);
+
+    if (!tsOpts.declarationMap) builder.filter(["**", "!**/*.d.ts.map"]);
   }
 }
 

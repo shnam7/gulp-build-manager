@@ -23,7 +23,9 @@
 - Fix reload() to come after postBuild() in build sequence
 - Modify WebpackPlugin to run webpack without wepack-stream, simplifying the structure
 - Move GPlugin built-in plugin functions, debug(), filter(), concat(), rename() to GBuilder API
-
+- Fix TypeScriptPlugin not to generate map file for non-minified source when minifyOnly option is enabled
+- Add buildConfig.declarationMap option to GTypeScriptBuilder
+ 
 ## v3.0
 - Redesign architecture utilizing Promise
   - Change GBuilder and GPlugin interface

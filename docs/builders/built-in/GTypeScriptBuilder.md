@@ -8,6 +8,8 @@ CSS builder. sass/scss/less and postcss are suported. You can use postcss togeth
 #### Builder specific Options
   - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)<br>
     If set to true, sourceMap files are generated.
+  - *conf.buildOptions.declarationeMap* (<i>type:boolean, default:false</i>)<br>
+    If set to true, sourceMap for declaration files are generated.
   - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)<br>
     If set to true, linter is activated.
   - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>

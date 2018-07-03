@@ -16,9 +16,12 @@ export class GTypeScriptBuilder extends GBuilder {
     if (!opts.minifyOnly) this.dest();      // concat non-minified
 
     let jsFilter =  require("gulp-filter")(["**/*.js"], {restore: true});
-    if (opts.minify || opts.minifyOnly) this
-      .pipe(jsFilter).minifyJs()        // minify *.js files only (not dts files)
-      .pipe(jsFilter.restore).dest();   // concat minified
+    if (opts.minify || opts.minifyOnly) {
+      this
+        .filter(["**", "!**/*js.map"])   // exclude non-minified map files
+        .pipe(jsFilter).minifyJs()              // minify *.js files only (not dts files)
+        .pipe(jsFilter.restore).dest();
+    }
   }
 }
 
