@@ -17,7 +17,6 @@ export class CSSPlugin extends GPlugin {
     const plugins = pcssOpts.plugins || [];
     const autoprefixer = opts.autoprefixer !== false;
     const moduleName = sourceType==='scss' ? 'sass' : sourceType;
-    const parser = sourceType!=='css' ? require('postcss-'+ sourceType) : undefined;
 
     // first, transpile to standard css.
     // All the scss/less variables should to be evaluated before postcss process starts
@@ -54,7 +53,7 @@ export class CSSPlugin extends GPlugin {
       let lintOpts = mopts.stylelint || {};
       const reporterOpts = lintOpts.reporter || {};
       builder.filter()
-        .pipe(pcss([stylelint(lintOpts.stylelint || lintOpts),reporter(reporterOpts)], {syntax: parser}));
+        .pipe(pcss([stylelint(lintOpts.stylelint || lintOpts),reporter(reporterOpts)]));
     }
   }
 
