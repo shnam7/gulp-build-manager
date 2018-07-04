@@ -1,9 +1,5 @@
-@import "../base/variables";
-
-#l-sidebar {
-  font-size: 0.95rem;
-  //@media (--medium) {
-  @media ($mq-medium) {
+#l-page > .sidebar {
+  @include w-mq(large) {
     position: sticky;
     top: 0;
   }
@@ -30,7 +26,7 @@
       margin: 0.5rem 0 0 0;
       padding: 0.35rem 1rem;
       border-radius: 3px;
-      background: color($w-color-primary a(5%));
+      background: rgba($w-color-primary, 0.05);
     }
   }
 }

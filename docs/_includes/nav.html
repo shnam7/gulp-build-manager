@@ -1,0 +1,10 @@
+{% if include.nav.size > 0 %}
+<ul class="{{include.cls}}">
+  {% for item in include.nav %}
+  <li>
+    <a href="{{site.url}}/{{item.url}}">{{item.title}}</a>
+    {% if item.sub %}{% include nav.html nav=item.sub %}{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}

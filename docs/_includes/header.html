@@ -1,9 +1,16 @@
-<div class="nav">
-  <div class="logo">
-    <a href="{{site.url}}">gbm</a>
+<div class="w-navbar">
+  <div class=wz=brand>
+    <img class= "wz-brand-logo" src="images/gbm-white.svg" width=24px alt=""><a
+      class="wz-brand-text" href="{{site.url}}">GBM</a>
   </div>
-  <div class="ui menu">
-    <!--<a class="item" title="search"><i class="fa fa-search fa-fw"></i></a>-->
+  <div class="wz-spacer"></div>
+  {%
+    include nav.html nav=site.data.nav
+    cls="wz-nav wo-responsive w-nav wo-horizontal wo-dropdown wo-icon wo-pointer wo-invert"
+  %}
+  <div class="wz-item">
+    <a class="item" title="search"><i class="fa fa-search fa-fw"></i></a>
     <a class="item" title="github" href="{{site.repo}}" target="_blank"><i class="fa fa-github fa-fw"></i></a>
   </div>
+  <a href="#" class="wz-toggle wo-responsive"></a>
 </div>

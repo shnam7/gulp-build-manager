@@ -1,34 +1,30 @@
-// main stylesheet
-@import "config/variables";
-@import "base/base";
-@import "base/variables";
-@import "base/layout";
-@import "utils/pygments-manni";
+@import "wicle.config";
+@import "wicle/scss/wicle";
+@import "wicle/scss/collections/vendor/pygments/pygments-manni";
+
 @import "region/header";
 @import "region/banner";
 @import "region/sidebar";
 @import "region/footer";
-@import "copmonents/nav";
 
-// make #l-content selector more specific to override existing #l-content
-body#l-content {
+//// make #l-content selector more specific to override existing #l-content
+#l-page > .content {
   padding-top: 1rem;
   border-top: 1px solid gray(60%, 0.3);
   em {  color: #c30;  }
-  h1,h2,h3,h4,h5,h6 {
-    color: $w-color-primary;
-  }
-  h4,h5,h6 {
-    margin-bottom:0.1rem;
-  }
-  pre.highlight {
-    padding: 0.8rem;
-    margin: 0.5rem 0;
-    border-radius: 4px;
-    background-color: #f3f6fa;
-    border: solid 1px #dce6f0;
-  }
+  //h1,h2,h3,h4,h5,h6 {
+  //  color: $w-color-primary;
+  //}
+  //h4,h5,h6 {
+  //  margin-bottom:0.1rem;
+  //}
+  //pre.highlight {
+  //  padding: 0.8rem;
+  //  margin: 0.5rem 0;
+  //  border-radius: 4px;
+  //  background-color: #f3f6fa;
+  //  border: solid 1px #dce6f0;
+  //}
 
-  //@media (--medium)
-  @media ($mq-medium) {  border-top: none;  }
+  @include w-mq(medium) {  border-top: none;  }
 }

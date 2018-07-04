@@ -6,6 +6,11 @@
     "declaration": false,
     "noImplicitAny": true,
     "noEmitOnError": true,
-    "lib" : ["dom", "es6", "dom.iterable", "scripthost"]
+    "lib" : ["dom", "es6", "dom.iterable", "scripthost"],
+
+    "baseUrl": ".",
+    "paths": {          // relative to baseUrl
+      "wicle": ["../node_modules/wicle/dist/js/wicle"]
+    }
   }
 }

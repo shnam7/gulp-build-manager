@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf lib",
-    "watch": "watch \"npm run build\" src",
+    "watch-tsc": "tsc --watch",
+    "watch-docs": "gulp --cwd docs @watch",
     "docs-build": "gulp --cwd docs",
     "docs-clean": "gulp --cwd docs @clean",
     "ex-build": "npm run gulp @ex-build-all",
@@ -98,7 +99,7 @@
     "gulp-stylelint": "^7.0.0",
     "gulp-tslint": "^8.1.3",
     "gulp-twig": "^1.2.0",
-    "gulp-typescript": "^5.0.0-alpha.2",
+    "gulp-typescript": "^5.0.0-alpha.3",
     "gulp-uglify-es": "^1.0.4",
     "gulp-zip": "^4.1.0",
     "lost": "^8.3.0",
@@ -115,6 +116,7 @@
     "tslint-eslint-rules-recommended": "^1.1.0",
     "twig-markdown": "^0.1.2",
     "typescript": "^2.9.2",
-    "webpack": "^4.14.0"
+    "webpack": "^4.14.0",
+    "wicle": "github:shnam7/wicle#dev"
   }
 }

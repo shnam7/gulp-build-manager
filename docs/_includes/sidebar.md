@@ -20,12 +20,12 @@
     - [GWebpackBuilder]({{site.baseurl}}/builders/built-in/GWebpackBuilder)
     - [GZipBuilder]({{site.baseurl}}/builders/built-in/GZipBuilder)
   - [Function Builders]({{site.baseurl}}/builders/function-builders)
-  - [Writing Custom Builders]({{site.baseurl}}/builders/writing-custom-builders)
+  - [Custom Builders]({{site.baseurl}}/builders/custom-builders)
 
 * [Plugins]({{site.baseurl}}/plugins/using-plugins)
   - [Using Plugins]({{site.baseurl}}/plugins/using-plugins)
   - [Built-in Plugins]({{site.baseurl}}/plugins/built-in-plugins)
-  - [Writing Custom Plugins]({{site.baseurl}}/plugins/writing-custom-plugins)
+  - [Custom Plugins]({{site.baseurl}}/plugins/custom-plugins)
 
 * Resources
   - [Examples]({{site.baseurl}}/resources/examples)
