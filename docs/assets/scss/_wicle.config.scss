@@ -20,7 +20,7 @@ $site-header-height: 4rem;
 //---------------------------------------------------------
 @mixin w-hook-layout-default-init() {
   $key: 'w-layout-default';
-  //@include ssv($key, 'page/font-family', $w-font-fira-sans, true);
+  @include ssv($key, 'page/font-family', $w-font-roboto, true);
 }
 
 //--- wicle init hooks: called before default variables are set
@@ -33,10 +33,4 @@ $site-header-height: 4rem;
   $key: 'w-nav';
   //@include ssv($key, 'font-size', 1.25rem, true);
   //@include ssv($key, 'icon/font-size', 1.25rem, true);
-}
-
-
-//---  Wickle override hooks: called after default variables are set
-@mixin w-hook-nav-override() {
-
 }
