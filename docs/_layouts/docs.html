@@ -7,8 +7,8 @@
   <div id="l-header">{% include header.html %}</div>
   {% if page.frontpage %}<div id="l-banner">{% include banner.html %}</div>{% endif %}
   <div id="l-page" class="{{page.classes}}">
-    <div class="content markdown-body">{{ content }}</div>
-    <div class="sidebar">{% capture toc %}{% include sidebar.md %}{% endcapture %}{{ toc | markdownify }}</div>
+    <div class="w-content markdown-body">{{ content }}</div>
+    <div class="w-sidebar">{% capture toc %}{% include sidebar.md %}{% endcapture %}{{ toc | markdownify }}</div>
   </div>
   <div id="l-footer">{% include footer.html %}</div>
 </div>

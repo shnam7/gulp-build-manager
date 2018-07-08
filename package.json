@@ -55,7 +55,7 @@
   },
   "homepage": "https://github.com/shnam7/gulp-build-manager#readme",
   "dependencies": {
-    "autoprefixer": "^8.6.5",
+    "autoprefixer": "^9.0.0",
     "chalk": "^2.4.1",
     "del": "^3.0.0",
     "glob": "^7.1.2",
@@ -93,7 +93,7 @@
     "gulp-html-prettify": "^0.0.1",
     "gulp-htmlmin": "^4.0.0",
     "gulp-imagemin": "^4.1.0",
-    "gulp-less": "^4.0.0",
+    "gulp-less": "^4.0.1",
     "gulp-markdown": "^2.0.1",
     "gulp-sass": "^4.0.1",
     "gulp-stylelint": "^7.0.0",
@@ -112,11 +112,11 @@
     "stylelint": "^9.3.0",
     "stylelint-config-recommended": "^2.1.0",
     "ts-loader": "^4.4.2",
-    "tslint": "^5.10.0",
+    "tslint": "^5.11.0",
     "tslint-eslint-rules-recommended": "^1.1.0",
     "twig-markdown": "^0.1.2",
     "typescript": "^2.9.2",
-    "webpack": "^4.15.1",
-    "wicle": "github:shnam7/wicle#dev"
+    "webpack": "^4.16.1",
+    "wicle": "^1.1.0"
   }
 }

@@ -20,7 +20,8 @@ $site-header-height: 4rem;
 //---------------------------------------------------------
 @mixin w-hook-layout-default-init() {
   $key: 'w-layout-default';
-  @include ssv($key, 'page/font-family', $w-font-roboto, true);
+  //@include ssv($key, 'page/font-family', $w-font-roboto, true);
+  //@include ssv($key, 'page/code/bg', #f3f6fa, true);
 }
 
 //--- wicle init hooks: called before default variables are set

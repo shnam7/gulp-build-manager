@@ -1,6 +1,5 @@
 @import "wicle.config";
 @import "wicle/scss/wicle";
-@import "wicle/scss/collections/vendor/pygments/pygments-manni";
 
 @import "region/header";
 @import "region/banner";
@@ -8,7 +7,7 @@
 @import "region/footer";
 
 //// make #l-content selector more specific to override existing #l-content
-#l-page > .content {
+#l-page > .w-content {
   padding-top: 1rem;
   border-top: 1px solid gray(60%, 0.3);
   em {  color: #c30;  }
@@ -27,4 +26,9 @@
   //}
 
   @include w-mq(medium) {  border-top: none;  }
+}
+
+// hiligtjs
+.hljs {
+  background: #f3f6fa;
 }

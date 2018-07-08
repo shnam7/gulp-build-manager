@@ -44,7 +44,7 @@ gbm({
 ```
 
 ### Modular Configuration
-For *modular configuration* to handle complex project, refer to [modular configuration][2] section in documentation.<br>
+For modular configuration to handle complex project, refer to **[modular configuration][2]** section in documentation.<br>
 
 ### Resources
 To learn more, check out the resources below. You are recommended to see the examples which shows various usage and practices that can be applied to your work quickly.
@@ -52,6 +52,6 @@ To learn more, check out the resources below. You are recommended to see the exa
 - [Documentation][0]{:target="_blank"}
 - [Examples][1]{:target="_blank"}
 
-[0]: {{site.url}}
+[0]: {{site.baseurl}}
 [1]: {{site.repo}}/examples
-[2]: {{site.url}}/resources/modular-configuration
+[2]: {{site.baseurl}}/resources/modular-configuration
