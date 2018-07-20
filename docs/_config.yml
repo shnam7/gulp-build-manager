@@ -11,7 +11,7 @@ repo:             "https://github.com/shnam7/gulp-build-manager/tree/master"
 version:          3.1
 encoding:         utf-8
 markdown:         kramdown
-highlighter:      rouge
+#highlighter:      rouge
 permalink:        pretty
 exclude:          ['assets', 'Gemfile*', 'gbmconfig.js', 'gulpfile.js', "tsconfig.js"]
 defaults:
@@ -24,6 +24,8 @@ defaults:
 kramdown:
   input: GFM
   auto_ids: false
+  syntax_highlighter_opts:
+    disable : true
 
 #keep_files:       []
 

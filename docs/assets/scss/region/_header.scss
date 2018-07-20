@@ -1,6 +1,5 @@
 #l-header {
   height: $site-header-height;
-  background: #004b66 linear-gradient(45deg, #00384D, #004b66);
 
   [class^=wz-brand] {
     display: inline;
@@ -11,7 +10,7 @@
   }
   .wz-brand-text {
     font-size: 1.5rem;
-    font-weight: 500;
+    //font-weight: 500;
   }
   .wz-item {
     font-size: 1.25rem;

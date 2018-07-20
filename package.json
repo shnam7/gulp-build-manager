@@ -117,6 +117,6 @@
     "twig-markdown": "^0.1.2",
     "typescript": "^2.9.2",
     "webpack": "^4.16.1",
-    "wicle": "^1.1.0"
+    "wicle": "^1.1.1"
   }
 }

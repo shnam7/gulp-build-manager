@@ -1,9 +1,10 @@
 #l-banner {
   margin:0;
-  padding: 2rem 1rem;
+  padding: 2rem 1rem 3rem;
   color: $w-color-text-white;
+  border-top: 1px solid shade($w-color-theme, 25%);
   text-align: center;
-  background-color: #004d66;
+  @include w-pattern(shade($w-color-theme, 25%));
   p {
     font-size: 1.2rem;
   }

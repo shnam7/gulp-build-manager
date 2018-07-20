@@ -4,13 +4,14 @@
 //
 //=========================================================
 
-@import "wicle/scss/wdk/variables";
+@import "wicle/scss/wdk/constants";
 
 $site-header-height: 4rem;
 
 //--- wdk hooks: this should come before importing wdk
 @mixin wdk-hook-variables-init() {
   //$w-font-size:           16px !global;
+  $w-font-sans:           $w-font-open-sans !global;
   //$w-color-theme:       $w-color-french-rose !global;
 }
 
