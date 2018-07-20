@@ -95,7 +95,7 @@ For *modular configuration* to handle complex projects, refer to [modular config
 [0]: https://shnam7.github.io/gulp-build-manager/
 [1]: https://github.com/shnam7/gulp-build-manager/tree/master/examples
 [2]: https://github.com/shnam7/gulp-build-manager/tree/master/CHANGELOG.md
-[3]: https://github.com/shnam7/gulp-build-manager/tree/master/docs
+[3]: https://github.com/shnam7/gulp-build-manager/tree/v2.2.0/docs
 [4]: https://shnam7.github.io/gulp-build-manager/resources/modular-configuration/
 
 <br>
