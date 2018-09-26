@@ -6,7 +6,8 @@
     "declaration": true,
     "sourceMap": true,
     "noImplicitAny": true,
-    "noEmitOnError": true
+    "noEmitOnError": true,
+    "lib": ["es6", "dom"]
   },
   "exclude": []
 }

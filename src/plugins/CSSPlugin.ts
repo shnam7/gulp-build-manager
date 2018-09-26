@@ -26,7 +26,7 @@ export class CSSPlugin extends GPlugin {
     }
 
     // // now, transpile postcss statements
-    builder.filter().pipe(pcss(plugins)).sourceMaps();
+    if (plugins.length > 0) builder.filter().pipe(pcss(plugins)).sourceMaps();
 
     // do some optimization to remove duplicate selectors, and beautify
     builder.filter().pipe(require('gulp-clean-css')({
