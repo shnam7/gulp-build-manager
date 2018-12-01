@@ -43,7 +43,7 @@ export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}):
   if (process.platform.startsWith('win')) {
     // args.unshift('/c', cmd);
     // cmd = 'cmd.exe';
-    if (!spawnOptions.stdio) spawnOptions['stdio'] = 'pipe';
+    if (!spawnOptions.stdio) spawnOptions.stdio = 'pipe';
   }
 
   const childProcess = child_process.spawn(cmd, args, spawnOptions);

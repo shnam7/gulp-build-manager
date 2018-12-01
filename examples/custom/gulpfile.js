@@ -41,8 +41,9 @@ const myBuilder = {
 const myCSSBuilder = {
   buildName: 'myCSSBuilder',
   builder: new MyCSSBuilder(),
-  src: basePath,
-  dest: (file)=>file.base
+  src: upath.join(basePath, '*.scss'),
+  dest: (file)=>file.base,
+  clean: [upath.join(basePath, "sample.css")]
 };
 
 

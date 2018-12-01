@@ -62,10 +62,10 @@ export class GBuildSet {
    *  @returns {*} Gulp task name if gulp task is created. Or, gulp.series() or gulp.parallel()
    */
   resolve(customDirs: string | string[], defaultModuleOptions: Options, watcher: GWatcher, cleaner: GCleaner): string | TaskFunction {
-    let resolved = [];
+    let resolved:(string | TaskFunction)[] = [];
     for (let item of this.set) {
       if (is.String(item) || is.Function(item))
-        resolved.push(item);
+        resolved.push(item as (string | TaskFunction));
       else if (item instanceof GBuildSet)
         resolved.push(item.resolve(customDirs, defaultModuleOptions, watcher, cleaner));
       else if (is.Object(item) && item.hasOwnProperty('buildName')) {
@@ -125,7 +125,7 @@ export class GBuildSet {
     }
 
     if (resolved.length === 1) return resolved[0] as (string | TaskFunction);
-    return (this.isSeries) ? gulp.series.apply(null, resolved) : gulp.parallel.apply(null, resolved);
+    return (this.isSeries) ? gulp.series.apply(null, resolved as any) : gulp.parallel.apply(null, resolved as any);
   }
 
   getBuilder(buildItem:BuildConfig, customDirs:string|string[]) {
