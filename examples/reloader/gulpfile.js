@@ -31,10 +31,7 @@ gbm({
   systemBuilds: {
     build: [html, scss],
     clean: [destRoot],
-    watch: {
-      livereload: { start: true },
-      browserSync: { server: './_build' }
-    },
-    default: ['@clean', '@build']
+    default: ['@clean', '@build'],
+    watch: {browserSync:{server: upath.resolve(destRoot)}}
   }
 });

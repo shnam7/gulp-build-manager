@@ -90,7 +90,9 @@ const app = {
 
   get build() { return gbm.parallel(this.scss, this.scripts, this.twig) },
 
-  cleanList: [destRoot]
+  cleanList: [destRoot],
+
+  destRoot: destRoot
 };
 
 module.exports = app;

@@ -25,6 +25,7 @@ gbm({
     build: [markdown],
     clean: [destRoot],
     default: 'markdown',
-    watch: {livereload:{start:true}}
+    // watch: {livereload:{start:true}},
+    watch: {browserSync:{server: upath.resolve(destRoot)}}
   }
 });

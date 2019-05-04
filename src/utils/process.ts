@@ -48,7 +48,7 @@ export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}):
 
   const childProcess = child_process.spawn(cmd, args, spawnOptions);
 
-  childProcess.stdout.on('data', (data: Buffer) => {
+  childProcess.stdout!.on('data', (data: Buffer) => {
     if (options.captureOutput) stdout += data.toString('utf-8');
     if (options.silent) return;
     data.toString('utf-8')
@@ -56,7 +56,7 @@ export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}):
       .filter(line => line !== '')
       .forEach(line => msg('  ' + line));
   });
-  childProcess.stderr.on('data', (data: Buffer) => {
+  childProcess.stderr!.on('data', (data: Buffer) => {
     if (options.captureOutput) stderr += data.toString('utf-8');
     if (options.silent) return;
     data.toString('utf-8')
@@ -77,12 +77,12 @@ export function spawn(cmd: string, args: string[]=[], options: SpawnOptions={}):
       }
     });
     if (options.stopOnMatch) {
-      childProcess.stdout.on('data', (data: Buffer) => {
+      childProcess.stdout!.on('data', (data: Buffer) => {
         if (data.toString().match(options.stopOnMatch as RegExp)) {
           resolve({ stdout, stderr });
         }
       });
-      childProcess.stderr.on('data', (data: Buffer) => {
+      childProcess.stderr!.on('data', (data: Buffer) => {
         if (data.toString().match(options.stopOnMatch as RegExp)) {
           resolve({ stdout, stderr });
         }

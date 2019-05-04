@@ -56,7 +56,7 @@ const docs = {
       // return promise to be sure copy operation is done before the task finishes
       return gbm.GPlugin.exec(builder, 'echo', ['>>', cssTriggerFile]);
     },
-    clean: [upath.join(basePath, 'css'), cssTriggerFile]
+    clean: [upath.join(basePath, 'css'), cssTriggerFile],
   },
 
   scripts: {
@@ -115,6 +115,8 @@ const docs = {
   get build() {
     return [gbm.parallel(this.scss, this.scripts), this.jekyll]
   },
+
+  destRoot: destRoot
 };
 
 module.exports = docs;

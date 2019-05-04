@@ -7,6 +7,7 @@
     "noImplicitAny": true,
     "noEmitOnError": true,
     "lib" : ["dom", "es6", "dom.iterable", "scripthost"],
+    "moduleResolution": "Node",
 
     "baseUrl": ".",
     "paths": {          // relative to baseUrl

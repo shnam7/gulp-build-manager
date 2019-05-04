@@ -36,7 +36,7 @@ const sass = {
     },
     postcss: {
       plugins: [
-        require('postcss-cssnext'),
+        require('postcss-preset-env'),
         require('postcss-utilities'),
         require('lost'),
       ]
@@ -77,7 +77,7 @@ const less = {
     // },
     postcss: {
       plugins: [
-        require('postcss-cssnext'),
+        require('postcss-preset-env'),
         require('postcss-utilities'),
         require('lost'),
       ]
@@ -100,7 +100,7 @@ const postcss = {
   moduleOptions: {
     postcss:{
       plugins: [
-        require('postcss-cssnext'),
+        require('postcss-preset-env'),
         require('postcss-utilities'),
       ]
     },
@@ -115,6 +115,6 @@ gbm({
     clean: [destRoot],
     default: ['@clean', '@build'],
     // watch: {livereload:{start:true}}
-    watch: {browserSync:{server: '_build'}}
+    watch: {browserSync:{server: upath.resolve(destRoot)}}
   }
 });

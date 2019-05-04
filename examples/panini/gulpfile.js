@@ -44,6 +44,7 @@ gbm({
     build: [panini],
     clean: [destRoot],
     default: ['@clean', 'panini'],
-    watch: {livereload:{start:true}}
+    // watch: {livereload:{start:true}},
+    watch: {browserSync:{server: upath.resolve(destRoot)}}
   }
 });

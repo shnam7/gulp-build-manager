@@ -48,6 +48,12 @@ gbm({
       upath.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}')
     ],
     default: ['@clean', '@build'],
-    watch: {browserSync:{server:destRoot, open:false, reloadDelay:300}}
+    watch: {
+      browserSync:{
+        server: upath.resolve(destRoot),
+        open: true,
+        // reloadDelay:300
+      }
+    }
   }
 });
