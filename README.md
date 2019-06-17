@@ -54,6 +54,9 @@ gbm({
 });
 ```
 
+### Notes
+Required modules are not installed automatically. When running gulp with the configuration, you can see errors of missing node modules. Then, install all the modules reuired.
+
 ### References
   - [Documentation][0]
   - [Examples][1]
