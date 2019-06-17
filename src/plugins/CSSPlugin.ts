@@ -40,7 +40,7 @@ export class CSSPlugin extends GPlugin {
     if (autoprefixer) {
       const prefixer = require('autoprefixer');
       builder.filter()
-        .pipe(pcss([prefixer({add: false, browsers: []})])) // remove outdated prefixed
+        .pipe(pcss([prefixer({add: false})])) // remove outdated prefixed
         .pipe(pcss([prefixer(mopts.autoprefixer)]))     // now add prefixes
         .sourceMaps();
     }
@@ -97,7 +97,7 @@ export class CSSPlugin extends GPlugin {
       if (autoprefixer) {
         const prefixer = require('gulp-autoprefixer');
         builder.filter()
-          .pipe(prefixer({add: false, browsers: []})) // remove outdated prefixed
+          .pipe(prefixer({add: false})) // remove outdated prefixed
           .pipe(prefixer(mopts.autoprefixer)).sourceMaps();     // now add prefixes
       }
 

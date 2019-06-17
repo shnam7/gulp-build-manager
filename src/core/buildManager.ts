@@ -31,10 +31,10 @@ export class GBuildManager {
       sass: 'assets/scss'
     },
 
-    autoprefixer: {
-      browsers: ['last 2 versions', '> 5%']
+    // autoprefixer: {
+      // browsers: ['last 2 versions', '> 5%']
       // browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']
-    },
+    // },
 
     cssnano: {discardUnused: false},
 
