@@ -15,6 +15,7 @@
     - [GJekyllBuilder]({{site.baseurl}}/builders/built-in/GJekyllBuilder)
     - [GMarkdownBuilder]({{site.baseurl}}/builders/built-in/GMarkdownBuilder)
     - [GPaniniBuilder]({{site.baseurl}}/builders/built-in/GPaniniBuilder)
+    - [GRTLCSSBuilder]({{site.baseurl}}/builders/built-in/GRTLCSSBuilder)
     - [GTwigBuilder]({{site.baseurl}}/builders/built-in/GTwigBuilder)
     - [GTypeScriptBuilder]({{site.baseurl}}/builders/built-in/GTypeScriptBuilder)
     - [GWebpackBuilder]({{site.baseurl}}/builders/built-in/GWebpackBuilder)

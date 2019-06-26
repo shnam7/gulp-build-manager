@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.2.0-rc
+- Add GRTLCSSBuilder
+
+## v3.1.2
+- Add Browserslist support, removing default value for autoprefixer
+- Fix crash issue when conf.dependencies or conf.triggers has empty array value
+
 ## v3.1
 - Add GCleanBuilder and GPlugin:clean() plugin function
 - Fix to prevent dummy task creation when no builder is set but dependencies or triggers exist in BuildConfig

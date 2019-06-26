@@ -16,105 +16,140 @@ const copyHtml = {
   dest: destRoot
 };
 
-const sass = {
-  buildName: 'sass',
-  builder: 'GCSSBuilder',
-  src: [upath.join(srcRoot, 'scss/**/*.scss')],
-  dest: upath.join(destRoot, 'css'),
-  buildOptions: {
-    sourceType: 'scss',
-    sourceMap: true,
-    lint: true,
-    minify: true,
-    postcss: true
-  },
-  moduleOptions: {
-    sass: {
-      includePaths: [
-        'assets/scss'
-      ]
+const styles = {
+  sass: {
+    buildName: 'sass',
+    builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'scss/**/*.scss')],
+    dest: upath.join(destRoot, 'css'),
+    buildOptions: {
+      sourceType: 'scss',
+      sourceMap: true,
+      lint: true,
+      minify: true,
+      postcss: true
     },
-    postcss: {
-      plugins: [
-        require('postcss-preset-env'),
-        require('postcss-utilities'),
-        require('lost'),
-      ]
-    },
-    stylelint: {
-      "extends": [
-        "stylelint-config-recommended",
-        "./.stylelintrc"
-        ],
-      rules: {
-        "function-calc-no-unspaced-operator": null,
-        "no-descending-specificity": null
+    moduleOptions: {
+      sass: {
+        includePaths: [
+          'assets/scss'
+        ]
       },
-      // "fix": true,
-    }
-  },
-  watch: {livereload: true}
-};
-
-const less = {
-  buildName: 'less',
-  builder: 'GCSSBuilder',
-  src: [upath.join(srcRoot, 'less/**/*.less')],
-  dest: upath.join(destRoot, 'css'),
-  buildOptions: {
-    sourceType: 'less',
-    sourceMap: true,
-    lint: true,
-    minify: true,
-    autoprefixer: false,
-    // postcss: true
-  },
-  moduleOptions: {
-    // sass: {
-    //   includePaths: [
-    //     'assets/scss'
-    //   ]
-    // },
-    postcss: {
-      plugins: [
-        require('postcss-preset-env'),
-        require('postcss-utilities'),
-        require('lost'),
-      ]
-    }
-  },
-  watch: {livereload: true}
-};
-
-const postcss = {
-  buildName: 'postcss',
-  builder: 'GCSSBuilder',
-  src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
-  dest: upath.join(destRoot, 'css'),
-  buildOptions: {
-    lint: true,
-    sourceMap: true,
-    minify: true,
-    postcss: true
-  },
-  moduleOptions: {
-    postcss:{
-      plugins: [
-        require('postcss-preset-env'),
-        require('postcss-utilities'),
-      ]
+      postcss: {
+        plugins: [
+          require('postcss-preset-env'),
+          require('postcss-utilities'),
+          require('lost'),
+        ]
+      },
+      stylelint: {
+        "extends": [
+          "stylelint-config-recommended",
+          "./.stylelintrc"
+        ],
+        rules: {
+          "function-calc-no-unspaced-operator": null,
+          "no-descending-specificity": null
+        },
+        // "fix": true,
+      }
     },
+    flushStream: true,
+    watch: {
+      livereload: true
+    }
   },
-  watch: {livereload:true}
-};
+
+  less: {
+    buildName: 'less',
+    builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'less/**/*.less')],
+    dest: upath.join(destRoot, 'css'),
+    buildOptions: {
+      sourceType: 'less',
+      sourceMap: true,
+      lint: true,
+      minify: true,
+      autoprefixer: false,
+      // postcss: true
+    },
+    moduleOptions: {
+      // sass: {
+      //   includePaths: [
+      //     'assets/scss'
+      //   ]
+      // },
+      postcss: {
+        plugins: [
+          require('postcss-preset-env'),
+          require('postcss-utilities'),
+          require('lost'),
+        ]
+      }
+    },
+    flushStream: true,
+    watch: {
+      livereload: true
+    }
+  },
+
+  postcss: {
+    buildName: 'postcss',
+    builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
+    dest: upath.join(destRoot, 'css'),
+    buildOptions: {
+      lint: true,
+      sourceMap: true,
+      minify: true,
+      postcss: true
+    },
+    moduleOptions: {
+      postcss: {
+        plugins: [
+          require('postcss-preset-env'),
+          require('postcss-utilities'),
+        ]
+      },
+    },
+    flushStream: true,
+    watch: {
+      livereload: true
+    }
+  },
+
+  rtl: {
+    buildName: 'rtl',
+    builder: 'GRTLCSSBuilder',
+    src: [upath.join(destRoot, 'css/*.css')],
+    dest: upath.join(destRoot, 'css'),
+    moduleOptions: {
+      // if no rename option is set, default is {suffix: '-rtl'}
+      rename: {
+        suffix: '---rtl'
+      }
+    },
+    watch: {
+      livereload: true
+    }
+  },
+
+  get build() {
+    return gbm.series(gbm.parallel(this.sass, this.less, this.postcss), this.rtl)
+  }
+}
 
 
 gbm({
   systemBuilds: {
-    build: gbm.parallel(sass, less, postcss, copyHtml),
+    build: gbm.parallel(styles.build, copyHtml),
     clean: [destRoot],
     default: ['@clean', '@build'],
     // watch: {livereload:{start:true}}
-    watch: {browserSync:{server: upath.resolve(destRoot)}}
+    watch: {
+      browserSync: {
+        server: upath.resolve(destRoot)
+      }
+    }
   }
 });

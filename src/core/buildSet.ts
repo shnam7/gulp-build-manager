@@ -52,6 +52,14 @@ export class GBuildSet {
     }
   }
 
+  normalizeBuildConfig(conf: BuildConfig) {
+    if (is.Array(conf.dependencies) && (<any[]>conf.dependencies).length === 0)
+      conf.dependencies = undefined;
+    if (is.Array(conf.triggers) && (<any[]>conf.triggers).length === 0)
+      conf.triggers = undefined;
+    return conf;
+  }
+
   /**
    *  Converts build items in this.set[] into:
    *    - gulp task name, which is created automatically
@@ -69,7 +77,7 @@ export class GBuildSet {
       else if (item instanceof GBuildSet)
         resolved.push(item.resolve(customDirs, defaultModuleOptions, watcher, cleaner));
       else if (is.Object(item) && item.hasOwnProperty('buildName')) {
-        item = item as BuildConfig;
+        item = this.normalizeBuildConfig(item as BuildConfig);
         // convert prop name: outfile-->outFile
         if (!item.outFile && item.outfile) {
           warn(`[GBM][buildName=${item.buildName}] DeprecationWarning: BuildConfig.outfile is deprecated. Please use outFile instead.`);
