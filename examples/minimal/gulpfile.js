@@ -70,7 +70,7 @@ const buildSetTest = {
 gbm({
   systemBuilds: {
     build: [simpleTask, buildSetTest],
-    clean: [""],  // dummy to create '@close' task to make main gulpfile not to fail with error
+    clean: ["__dummy"],  // dummy to create '@close' task to make main gulpfile not to fail with error
     default: ['@build']
   }
 });

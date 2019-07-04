@@ -22,7 +22,7 @@ const cmd2 = {
 gbm({
   systemBuilds: {
     build: [cmd1, cmd2],
-    clean: [""],  // dummy to create '@close' task to make main gulpfile not to fail with error
+    clean: ["__dummy"],  // dummy to create '@close' task to make main gulpfile not to fail with error
     default: ['@build']
   }
 });

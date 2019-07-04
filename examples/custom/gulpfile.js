@@ -52,7 +52,7 @@ gbm({
   customBuilderDir: upath.join(basePath, 'custom-builders'),
   systemBuilds: {
     build: [customFunction, customBuilder, myBuilder, myCSSBuilder],
-    clean: [""],  // dummy to create '@close' task to make main gulpfile not to fail with error
+    clean: ["__dummy"],  // dummy to create '@close' task to make main gulpfile not to fail with error
     default: ['customFunction', 'customBuilder', 'myBuilder']
   }
 });
