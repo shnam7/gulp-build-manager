@@ -179,7 +179,7 @@ export class GBuilder {
   }
 
   minifyCss() {
-    return this.filter().chain(GPlugin.cleancss)
+    return this.filter().chain(GPlugin.cleanCss)
       .rename({extname: '.min.css'}).sourceMaps();
   }
 

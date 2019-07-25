@@ -2,6 +2,7 @@
 
 ## 3.2.0-rc
 - Add GRTLCSSBuilder
+- Rename cleancss to cleanCss in GPlugin.cleancss and moduleOptions.cleancss
 
 ## v3.1.2
 - Add Browserslist support, removing default value for autoprefixer
@@ -32,7 +33,7 @@
 - Move GPlugin built-in plugin functions, debug(), filter(), concat(), rename() to GBuilder API
 - Fix TypeScriptPlugin not to generate map file for non-minified source when minifyOnly option is enabled
 - Add buildConfig.declarationMap option to GTypeScriptBuilder
- 
+
 ## v3.0
 - Redesign architecture utilizing Promise
   - Change GBuilder and GPlugin interface
@@ -49,14 +50,14 @@
 - Fix missing sourceMaps() call in GPlugin.concat() and CSSPlugin
 - Fix minify and outFile errors on GCoffeeScriptBuilder, GJavaScriptBuilder, GCSSBuilder
 - Add pushStream() and popStream()to GBuilder
-- Fix build sequence to handle flushStream just after build() and before reload() 
+- Fix build sequence to handle flushStream just after build() and before reload()
 - Change gulp 4.0 dependency from github to npm (npm i gulp@next)
 
 ## v2.2 - 2018-03-25
 - Add GExternalBuilder and exmaples/external (Sec docs)
 - Add GWebpackBuilder, WebpackPlugin (See docs)
 - Simplify GJekyllBuilder with improved error handling by extending from GExternalBuilder.
-- Add main gulpfile.js to build all the sub-projects including docs and examples 
+- Add main gulpfile.js to build all the sub-projects including docs and examples
 - moduleOptions support arguments to module property functions (See docs)
 - Add Travis CI support
 - Update package.json scripts
@@ -64,7 +65,7 @@
 
 ## v2.1 - 2018-03-06
 - convert source codes into typescript
-- Remove lodash.pick and lodash.merge 
+- Remove lodash.pick and lodash.merge
 - Add browser-sync support
 - Add GPlugin.OnStream()
 

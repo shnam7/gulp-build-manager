@@ -55,7 +55,7 @@
   },
   "homepage": "https://github.com/shnam7/gulp-build-manager#readme",
   "dependencies": {
-    "autoprefixer": "^9.6.0",
+    "autoprefixer": "^9.6.1",
     "chalk": "^2.4.2",
     "del": "^5.0.0",
     "glob": "^7.1.4",
@@ -102,10 +102,10 @@
     "gulp-uglify-es": "^1.0.4",
     "gulp-zip": "^5.0.0",
     "lost": "^8.3.1",
-    "mocha": "^6.1.4",
+    "mocha": "^6.2.0",
     "panini": "^1.6.3",
     "postcss-inline-svg": "^4.1.0",
-    "postcss-preset-env": "6.6.0",
+    "postcss-preset-env": "6.7.0",
     "postcss-reporter": "^6.0.1",
     "postcss-utilities": "^0.8.2",
     "stylelint": "^10.1.0",
@@ -114,8 +114,8 @@
     "tslint": "^5.18.0",
     "tslint-eslint-rules-recommended": "^1.2.2",
     "twig-markdown": "^0.2.1",
-    "typescript": "^3.5.2",
-    "webpack": "^4.35.2",
+    "typescript": "^3.5.3",
+    "webpack": "^4.38.0",
     "wicle": "^1.1.2"
   }
 }

@@ -3,6 +3,14 @@
 const gbm = require('../../lib');
 const upath = require('upath');
 
+const postcssPlugins = [
+  require('postcss-preset-env'),
+  require('postcss-utilities'),
+  require('lost'),
+  // require('cssnano')(),   // additional optimization
+  // require('postcss-combine-duplicated-selectors')(),  // specific optimization
+];
+
 // set base directory to project root
 process.chdir('../../');
 const basePath = upath.relative(process.cwd(), __dirname);
@@ -36,11 +44,7 @@ const styles = {
         ]
       },
       postcss: {
-        plugins: [
-          require('postcss-preset-env'),
-          require('postcss-utilities'),
-          require('lost'),
-        ]
+        plugins: postcssPlugins
       },
       stylelint: {
         "extends": [
@@ -80,11 +84,7 @@ const styles = {
       //   ]
       // },
       postcss: {
-        plugins: [
-          require('postcss-preset-env'),
-          require('postcss-utilities'),
-          require('lost'),
-        ]
+        plugins: postcssPlugins
       }
     },
     flushStream: true,
@@ -106,10 +106,7 @@ const styles = {
     },
     moduleOptions: {
       postcss: {
-        plugins: [
-          require('postcss-preset-env'),
-          require('postcss-utilities'),
-        ]
+        plugins: postcssPlugins
       },
     },
     flushStream: true,
@@ -121,7 +118,7 @@ const styles = {
   rtl: {
     buildName: 'rtl',
     builder: 'GRTLCSSBuilder',
-    src: [upath.join(destRoot, 'css/*.css')],
+    src: [upath.join(destRoot, 'css/*.css'), "!**/*-rtl.css"],
     dest: upath.join(destRoot, 'css'),
     moduleOptions: {
       // if no rename option is set, default is {suffix: '-rtl'}

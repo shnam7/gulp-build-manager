@@ -18,6 +18,7 @@ export class GPlugin {
    * @param {args} args plugin specific arguments.
    * @returns void or Promise<any>. If Promise is returned, it weill be awaited by the builder
    */
+  // tslint:disable-next-line: no-empty
   process(builder: GBuilder, ...args: any[]): void | Promise<any> {}
 
 
@@ -70,9 +71,21 @@ export class GPlugin {
   }
 
   static cleancss(builder: GBuilder, options: Options={}) {
-    const opts = Object.assign({}, builder.moduleOptions.cleancss, options.cleancss || options);
+    warn('[GBM:Plugin] DeprecationWarning: cleancss() is deprecated. Use cleanCss() instead.');
+    if (builder.moduleOptions.cleancss) {
+      warn('[GBM:Plugin] DeprecationWarning: builder.moduleOptions.cleancss is deprecated.'
+      + 'Use builder.moduleOptions.cleanCss instead.');
+    }
+
+    const optsOld = Object.assign({}, builder.moduleOptions.cleancss, options.cleancss || options);
+    const opts = Object.assign({}, optsOld, builder.moduleOptions.cleanCss, options.cleanCss || options);
     builder.pipe(require('gulp-clean-css')(opts));
   }
+  static cleanCss(builder: GBuilder, options: Options={}) {
+    const opts = Object.assign({}, builder.moduleOptions.cleanCss, options.cleanCss || options);
+    builder.pipe(require('gulp-clean-css')(opts));
+  }
+
 
   static spawn(builder: GBuilder, cmd: string, args: string[]=[], options: SpawnOptions={}) {
     return spawn(cmd, args, options);
@@ -108,7 +121,7 @@ export class GPlugin {
   }
 
   static cssnano(builder: GBuilder, options: Options={}) {
-    warn('[GBM:Plugin] DeprecationWarning: cssnano() is deprecated. Use cleancss() instead.');
+    // warn('[GBM:Plugin] DeprecationWarning: cssnano() is deprecated. Use cleanCss() instead.');
 
     // minify
     const cssnano = Object.assign({}, builder.moduleOptions.cssnano, options.cssnano);
