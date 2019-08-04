@@ -1,17 +1,22 @@
 <html>
+
 <head>
-  {% include head.html %}
+    {% include head.html %}
 </head>
+
 <body class="{{page.body_class}}">
-<div id="l-site-container">
-  <div id="l-header">{% include header.html %}</div>
-  {% if page.frontpage %}<div id="l-banner">{% include banner.html %}</div>{% endif %}
-  <div id="l-page" class="{{page.classes}}">
-    <div class="w-content markdown-body">{{ content }}</div>
-    <div class="w-sidebar">{% capture toc %}{% include sidebar.md %}{% endcapture %}{{ toc | markdownify }}</div>
-  </div>
-  <div id="l-footer">{% include footer.html %}</div>
-</div>
-{% include scripts.html %}
+    <div class="l-site">
+        <header class="l-site-header">{% include header.html %}</header>
+        {% if page.frontpage %}<div class="l-site-banner">{% include banner.html %}</div>{% endif %}
+        <div class=l-site-content>
+            <div class="l-page" class="{{page.classes}}">
+                <div class="l-content markdown-body">{{ content }}</div>
+                <div class="l-sidebar">{% capture toc %}{% include sidebar.md %}{% endcapture %}{{ toc | markdownify }}</div>
+            </div>
+        </div>
+        <footer class="l-site-footer">{% include footer.html %}</footer>
+    </div>
+    {% include scripts.html %}
 </body>
+
 </html>

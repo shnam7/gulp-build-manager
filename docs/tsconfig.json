@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es5",
     "module": "system",    // note:webpack does not supports systemjs
-    "outDir": "./js",
+    // "outDir": "./js",
     "declaration": false,
     "noImplicitAny": true,
     "noEmitOnError": true,
@@ -11,7 +11,8 @@
 
     "baseUrl": ".",
     "paths": {          // relative to baseUrl
-      "wicle": ["../node_modules/wicle/dist/js/wicle"]
+      "*": ["*", "../node_modules/wicle/dist/js"]
+    //   "wicle": ["../node_modules/wicle/dist/js"]
     }
   }
 }

@@ -1,5 +1,5 @@
 .idea
-.code
+.vscode
 node_modules
 /_*
 *.map

@@ -104,10 +104,11 @@
     "lost": "^8.3.1",
     "mocha": "^6.2.0",
     "panini": "^1.6.3",
+    "postcss-combine-duplicated-selectors": "^8.0.2",
     "postcss-inline-svg": "^4.1.0",
     "postcss-preset-env": "6.7.0",
     "postcss-reporter": "^6.0.1",
-    "postcss-utilities": "^0.8.2",
+    "postcss-utilities": "^0.8.4",
     "stylelint": "^10.1.0",
     "stylelint-config-recommended": "^2.2.0",
     "ts-loader": "^6.0.4",
@@ -115,7 +116,7 @@
     "tslint-eslint-rules-recommended": "^1.2.2",
     "twig-markdown": "^0.2.1",
     "typescript": "^3.5.3",
-    "webpack": "^4.38.0",
-    "wicle": "^1.1.2"
+    "webpack": "^4.39.1",
+    "wicle": "github:shnam7/wicle#dev"
   }
 }

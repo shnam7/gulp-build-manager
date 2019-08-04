@@ -1,7 +1,14 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/scss.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/0.21.4/system-production.js"></script>
-<script src="{{site.baseurl}}/js/wicle.min.js"></script>
-<script src="{{site.baseurl}}/js/docs.min.js"></script>
-<script>SystemJS.import("docs"); hljs.initHighlightingOnLoad();</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js" integrity="sha256-AIeoCoYob+LP5IKqSqhSgagg7jY5XcJ3n/XEO7b/OX8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/languages/scss.min.js" integrity="sha256-eek2X9CXZFSN3jZUYGcxdvpGUbEjjtXobLOI8/qxZqk=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/5.0.0/system.min.js" integrity="sha256-uXkS+U7CJO4fEqwnS4RCDBZMl49PgoKj/+CuV+ZT9TU=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/5.0.0/extras/named-register.min.js" integrity="sha256-Vuh3TczExPMAVhPsR3+vaqgN90hBtLgOUSU8m4gL0GQ=" crossorigin="anonymous"></script>
+
+<script>
+    baseUrl = (window.location.hostname === 'localhost') ? '/js/' : '/gulp-build-manager/js/';
+    System.import(baseUrl + 'wicle.min.js').then(() => System.import(baseUrl + "docs.min.js"));
+
+    hljs.initHighlightingOnLoad();
+
+</script>

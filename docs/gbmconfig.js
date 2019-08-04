@@ -28,7 +28,7 @@ const docs = {
     },
     flushStream: true,
     moduleOptions: {
-      sass: {includePaths: ["node_modules"]},
+      sass: {includePaths: ["node_modules/sass-wdk", "node_modules/wicle/scss"]},
       stylelint: {
         "extends": "stylelint-config-recommended",
         "rules": {
@@ -42,6 +42,7 @@ const docs = {
       // },
       postcss: {
         plugins:[
+            require('postcss-combine-duplicated-selectors')(),
           // require('postcss-cssnext')({features:{rem: false}}),
           // require('postcss-utilities')(),
           // require('lost')(),
