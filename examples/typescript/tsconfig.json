@@ -1,12 +1,12 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "module": "system", // this is default
-    "strict": true,
-    "noImplicitAny": true,
-    "lib": ["dom","es6","es2015","dom.iterable","scripthost"],
-    "declaration": true,
-    "noEmitOnError": true,
-    "moduleResolution": "Node"      // this resolve "Can't find module 'chokidar'" error
-  },
+    "compilerOptions": {
+        "target": "es5",
+        "module": "system", // this is default
+        "strict": true,
+        "noImplicitAny": true,
+        "lib": ["dom", "es6", "es2015", "dom.iterable", "scripthost"],
+        "declaration": true,
+        "noEmitOnError": true,
+        "moduleResolution": "Node" // this resolve "Can't find module 'chokidar'" error
+    },
 }

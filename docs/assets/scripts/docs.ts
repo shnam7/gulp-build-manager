@@ -7,5 +7,5 @@
 import { nav } from 'wicle/ui/nav';
 
 nav('.w-nav', {
-  // parentLink: true,  // enable link of parent item in accordion menu
+    // parentLink: true,  // enable link of parent item in accordion menu
 });

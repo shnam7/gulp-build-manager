@@ -22,8 +22,8 @@ $site-header-height: 4rem;
 //  Wicle custom config
 //-----------------------------------------------
 $w-page-max-width:              1220px;
+$w-font-sans:                   $w-font-open-sans;
 // $w-font-size: 15px;
-//TODO $w-font-sans:            $w-font-open-sans !global;
 
 
 @mixin wicle-custom-config {

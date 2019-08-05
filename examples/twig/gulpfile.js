@@ -9,15 +9,15 @@ const conf = require('./gbmconfig');
 
 // build manager
 gbm({
-  systemBuilds: {
-    build: conf.build,
-    clean: conf.cleanList,
-    default: '@build',
-    watch: {
-      browserSync:{
-        server: upath.resolve(conf.destRoot),
-        open:false
-      }
+    systemBuilds: {
+        build: conf.build,
+        clean: conf.cleanList,
+        default: '@build',
+        watch: {
+            browserSync: {
+                server: upath.resolve(conf.destRoot),
+                open: false
+            }
+        }
     }
-  }
 });

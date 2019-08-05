@@ -1,13 +1,13 @@
 {
-  "name": "minimal",
-  "version": "1.0.0",
-  "description": "Gulp Build Manager Sample - primitives",
-  "main": "gulpfile.js",
-  "author": "Robin Soo-hyuk Nam",
-  "license": "MIT",
-  "devDependencies": {
-    "gulp-build-manager": "file:../..",
-    "gulp-imagemin": "^3.3.0",
-    "gulp-zip": "^4.0.0"
-  }
+    "name": "minimal",
+    "version": "1.0.0",
+    "description": "Gulp Build Manager Sample - primitives",
+    "main": "gulpfile.js",
+    "author": "Robin Soo-hyuk Nam",
+    "license": "MIT",
+    "devDependencies": {
+        "gulp-build-manager": "file:../..",
+        "gulp-imagemin": "^3.3.0",
+        "gulp-zip": "^4.0.0"
+    }
 }

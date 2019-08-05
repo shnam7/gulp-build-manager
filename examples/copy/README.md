@@ -1,4 +1,4 @@
-# Gulp Build Manager Sample: copy 
+# Gulp Build Manager Sample: copy
 
 ## Overview
 This sample shows how to use copy builds.

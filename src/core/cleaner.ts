@@ -2,33 +2,34 @@
  *  GCleaner - Gulp task clean list manager
  */
 
-import {is, msg} from "../utils/utils";
-import {CleanTarget} from "./types";
+import { is, msg } from "../utils/utils";
 import gulp = require("gulp");
 import del = require("del");
 
+export type CleanTarget = string | string[];
+
 export class GCleaner {
-  cleanList:string[] = [];
+    cleanList: string[] = [];
 
-  constructor(public options: del.Options={}) {}
+    constructor(public options: del.Options = {}) { }
 
-  add(cleanTarget:CleanTarget) {
-    if (is.String(cleanTarget))
-      this.cleanList.push(cleanTarget as string);
-    else if (cleanTarget.length > 0)
-      this.cleanList = this.cleanList.concat(cleanTarget);
-  }
+    add(cleanTarget: CleanTarget) {
+        if (is.String(cleanTarget))
+            this.cleanList.push(cleanTarget as string);
+        else if (cleanTarget.length > 0)
+            this.cleanList = this.cleanList.concat(cleanTarget);
+    }
 
-  clean(callback?:(value:string[])=>void) {
-    msg(`GCleaner::cleanList:[${this.cleanList}]`);
-    del(this.cleanList, this.options).then(callback);
-  }
+    clean(callback?: (value: string[]) => void) {
+        msg(`GCleaner::cleanList:[${this.cleanList}]`);
+        del(this.cleanList, this.options).then(callback);
+    }
 
-  reset() { this.cleanList = []; }
+    reset() { this.cleanList = []; }
 
-  createTask(opts: del.Options, taskName = '@clean') {
-    if (this.cleanList.length <= 0) return;
-    this.options = opts;
-    gulp.task(taskName, (done) => this.clean(()=>done()));
-  }
+    createTask(opts: del.Options, taskName = '@clean') {
+        if (this.cleanList.length <= 0) return;
+        this.options = opts;
+        gulp.task(taskName, (done) => this.clean(() => done()));
+    }
 }

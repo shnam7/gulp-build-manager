@@ -1,12 +1,12 @@
 {
-  "name": "sequence",
-  "version": "1.0.0",
-  "description": "Gulp Build Manager Sample - twig",
-  "main": "gulpfile.js",
-  "author": "Robin Soo-hyuk Nam",
-  "license": "MIT",
-  "devDependencies": {
-    "gulp-build-manager": "file:../..",
-    "gulp-markdown": "^1.2.0"
-  }
+    "name": "sequence",
+    "version": "1.0.0",
+    "description": "Gulp Build Manager Sample - twig",
+    "main": "gulpfile.js",
+    "author": "Robin Soo-hyuk Nam",
+    "license": "MIT",
+    "devDependencies": {
+        "gulp-build-manager": "file:../..",
+        "gulp-markdown": "^1.2.0"
+    }
 }

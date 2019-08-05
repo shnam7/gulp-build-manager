@@ -6,6 +6,9 @@
 - Update docs using wicle 2.0.0-dev
 - Update SystemJS loader to version 5
 - Fix "Can't find module 'chokidar'" error (Set tsconfig.json moduleResolution to "Node")
+- Add ExternalBuilder into GBuilder (GExternalBUilder is deprecated)
+- Restructuring internal module architecture (in progress)
+- Refine code formatting (4 spaces for tab)
 
 ## v3.1.2
 - Add Browserslist support, removing default value for autoprefixer
