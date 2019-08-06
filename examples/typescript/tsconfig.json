@@ -7,6 +7,6 @@
         "lib": ["dom", "es6", "es2015", "dom.iterable", "scripthost"],
         "declaration": true,
         "noEmitOnError": true,
-        "moduleResolution": "Node" // this resolve "Can't find module 'chokidar'" error
+        // "moduleResolution": "Node" // this resolve "Can't find module 'chokidar'" error
     },
 }

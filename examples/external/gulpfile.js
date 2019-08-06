@@ -5,7 +5,7 @@ process.chdir('../../');
 
 const cmd1 = {
     buildName: 'external-command1',
-    builder: new gbm.GExternalBuilder('dir', ['.']),
+    builder: new gbm.GBuilder({ command: 'dir', args: ['.'] }),
     flushStream: true
 };
 
@@ -18,6 +18,12 @@ const cmd2 = {
     },
     flushStream: true
 };
+
+// const cmd3 = {
+//     buildName: 'rollup',
+//     builder: new gbm.GBuilder({command: "..\\..\\node_modules\\.bin\\rollup",
+//         args:['gulpfile.js', '--file', 'bundle.js', '--format', 'iife']}),
+// };
 
 gbm({
     systemBuilds: {

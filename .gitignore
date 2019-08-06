@@ -1,7 +1,7 @@
 .idea
 .vscode
 node_modules
-/_*
+/__*
 *.map
 /lib
 .jekyll-metadata

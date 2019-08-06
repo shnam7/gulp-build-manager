@@ -9,7 +9,7 @@ import { info, is, toPromise } from "../utils/utils";
 import { GReloader } from "./reloader";
 import * as filter from "gulp-filter";
 import { BuildConfig, BuildFunction, BuildFunctionObject, Plugin } from './buildSet';
-import { ExecOptions, SpawnOptions } from 'child_process';
+import { SpawnOptions } from 'child_process';
 
 export interface ExternalBuilder {
     command: string;
