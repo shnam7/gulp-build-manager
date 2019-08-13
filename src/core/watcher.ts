@@ -41,8 +41,8 @@ export class GWatcher {
         this.reloader.init(watchOptions);
         for (let item of this.watchMap) {
             msg(`Watching ${item.name}: [${item.watched}]`);
-            let watcher = gulp.watch(item.watched, gulp.parallel(item.task));
-            if (this.reloader.browserSync) watcher.on('change', this.reloader.browserSync.reload);
+            // let watcher = gulp.watch(item.watched, gulp.parallel(item.task));
+            // if (this.reloader.browserSync) watcher.on('change', this.reloader.browserSync.reload);
         }
     }
 

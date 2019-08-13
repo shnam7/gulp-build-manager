@@ -3,7 +3,7 @@
  */
 
 import * as upath from 'upath';
-import { is, warn } from '../utils/utils';
+import { is, warn, info } from '../utils/utils';
 import { Options, gulp } from "./common";
 import { GWatcher, WatchItem } from "./watcher";
 import { GCleaner, CleanTarget } from "./cleaner";
@@ -116,20 +116,14 @@ export class GBuildSet {
                 let builder = this.getBuilder(item, customDirs);
                 builder.reloader = watcher.reloader;
                 let task = (done: TaskDoneFunction) => builder._build(item);
-                let deps = undefined;
-                let triggers = undefined;
-
-                if (item.dependencies)
-                    deps = new GBuildSet(item.dependencies as BuildSet).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
-
-                if (item.triggers)
-                    triggers = new GBuildSet(item.triggers as BuildSet).resolve(customDirs, defaultModuleOptions, watcher, cleaner);
+                let deps = (item.dependencies) ?
+                    new GBuildSet(item.dependencies as BuildSet).resolve(customDirs, defaultModuleOptions, watcher, cleaner) : undefined;
+                let triggers = (item.triggers) ?
+                    new GBuildSet(item.triggers as BuildSet).resolve(customDirs, defaultModuleOptions, watcher, cleaner) : undefined;
 
                 let taskList: (string | TaskFunction)[] = item.builder ? [task] : [];
-                if (deps || triggers) {
-                    if (deps) taskList.unshift(deps);
-                    if (triggers) taskList.push(triggers);
-                }
+                if (deps) taskList.unshift(deps);
+                if (triggers) taskList.push(triggers);
 
                 // if builder is not specified, create task only when there's no deps and triggers to prevent empty taskList
                 if (taskList.length === 0) taskList = [task];
