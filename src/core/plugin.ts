@@ -2,8 +2,7 @@
  *  GPlugin - Plugin management systems
  */
 
-import * as gulp from 'gulp';
-import { Options } from './types';
+import { Options, gulp } from './common';
 import { GBuilder } from './builder';
 import { toPromise, is, SpawnOptions, msg, warn } from '../utils/utils';
 import { exec, spawn } from "../utils/process";

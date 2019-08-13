@@ -2,10 +2,9 @@
  *  GBuildSet - Gulp task tree builder and analyzer
  */
 
-import * as gulp from 'gulp';
 import * as upath from 'upath';
 import { is, warn } from '../utils/utils';
-import { Options } from "./types";
+import { Options, gulp } from "./common";
 import { GWatcher, WatchItem } from "./watcher";
 import { GCleaner, CleanTarget } from "./cleaner";
 import { GBuilder, ExternalBuilder } from "./builder";

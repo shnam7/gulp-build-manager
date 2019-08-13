@@ -1,6 +1,6 @@
 import * as glob from 'glob';
 import * as upath from 'upath';
-import {Stream} from "../core/types";
+import {Stream} from "../core/common";
 import * as fs from "fs";
 import chalk from "chalk";
 

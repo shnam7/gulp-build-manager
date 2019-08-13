@@ -7,12 +7,11 @@
  *
  */
 
-import * as gulp from 'gulp';
 import * as upath from 'upath';
 import { GWatcher, WatchOptions } from './watcher';
 import { GCleaner, CleanTarget } from './cleaner';
 import { GBuildSet, BuildSet } from "./buildSet";
-import { Options } from "./types";
+import { Options, gulp } from "./common";
 import { is } from "../utils/utils";
 
 

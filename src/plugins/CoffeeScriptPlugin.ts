@@ -1,7 +1,7 @@
 /**
  *  gbm Plugin - CoffeeScript
  */
-import { Options } from "../core/types";
+import { Options } from "../core/common";
 import { GBuilder } from "../core/builder";
 import { GPlugin } from "../core/plugin";
 

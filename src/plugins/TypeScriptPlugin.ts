@@ -3,7 +3,7 @@
  */
 import * as upath from 'upath';
 import { dmsg, msg, warn } from '../utils/utils';
-import { Options } from "../core/types";
+import { Options } from "../core/common";
 import { GBuilder } from "../core/builder";
 import { GPlugin } from "../core/plugin";
 

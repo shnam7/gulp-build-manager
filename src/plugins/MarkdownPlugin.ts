@@ -2,7 +2,7 @@
  *  gbm Plugin - Markdown
  */
 
-import { Options } from "../core/types";
+import { Options } from "../core/common";
 import { GPlugin } from "../core/plugin";
 import { GBuilder } from "../core/builder";
 

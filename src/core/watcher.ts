@@ -2,11 +2,11 @@
  *  GWatcher - Gulp watch list manager
  */
 
-import * as gulp from 'gulp';
 import { GReloader } from "./reloader";
 import { msg } from "../utils/utils";
 import { Options } from '@nodelib/fs.walk';
 import * as Undertaker from "undertaker";
+import { gulp } from "./common";
 
 
 export interface WatchOptions {

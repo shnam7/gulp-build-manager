@@ -3,7 +3,7 @@
  */
 
 import * as upath from 'upath';
-import { Options } from "../core/types";
+import { Options } from "../core/common";
 import { GBuilder } from "../core/builder";
 import { GPlugin } from "../core/plugin";
 import { info, is, msg } from "../utils/utils";

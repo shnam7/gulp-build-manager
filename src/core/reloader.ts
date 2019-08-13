@@ -1,7 +1,7 @@
 /**
  *  GReloader - Browser reloader
  */
-import { Options, Stream } from "./types";
+import { Options, Stream } from "./common";
 import { msg } from "../utils/utils";
 
 export class GReloader {

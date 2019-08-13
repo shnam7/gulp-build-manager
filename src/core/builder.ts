@@ -2,8 +2,7 @@
  *  Builder Base Class
  */
 
-import * as gulp from 'gulp';
-import { Options, Stream } from "./types";
+import { Options, Stream, gulp } from "./common";
 import { GPlugin } from "./plugin";
 import { info, is, toPromise } from "../utils/utils";
 import { GReloader } from "./reloader";
