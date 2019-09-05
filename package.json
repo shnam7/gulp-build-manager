@@ -57,7 +57,7 @@
     "dependencies": {
         "autoprefixer": "^9.6.1",
         "chalk": "^2.4.2",
-        "del": "^5.0.0",
+        "del": "^5.1.0",
         "glob": "^7.1.4",
         "gulp-clone": "^2.0.1",
         "gulp-concat": "^2.6.1",
@@ -66,7 +66,7 @@
         "gulp-postcss": "^8.0.0",
         "gulp-rename": "^1.4.0",
         "gulp-sourcemaps": "^2.6.5",
-        "upath": "^1.1.2"
+        "upath": "^1.2.0"
     },
     "peerDependencies": {
         "gulp": "^4.0.2"
@@ -90,9 +90,9 @@
         "gulp-eslint": "^6.0.0",
         "gulp-html-prettify": "^0.0.1",
         "gulp-htmlmin": "^5.0.1",
-        "gulp-imagemin": "^6.0.0",
+        "gulp-imagemin": "^6.1.0",
         "gulp-less": "^4.0.1",
-        "gulp-markdown": "^4.0.0",
+        "gulp-markdown": "^5.0.0",
         "gulp-rtlcss": "^1.4.0",
         "gulp-sass": "^4.0.2",
         "gulp-stylelint": "^9.0.0",
@@ -113,11 +113,11 @@
         "stylelint": "^10.1.0",
         "stylelint-config-recommended": "^2.2.0",
         "ts-loader": "^6.0.4",
-        "tslint": "^5.18.0",
+        "tslint": "^5.19.0",
         "tslint-eslint-rules-recommended": "^1.2.2",
         "twig-markdown": "^0.2.1",
-        "typescript": "^3.5.3",
-        "webpack": "^4.39.1",
+        "typescript": "^3.6.2",
+        "webpack": "^4.39.3",
         "wicle": "github:shnam7/wicle#dev"
     }
 }
