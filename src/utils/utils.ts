@@ -2,7 +2,7 @@ import * as glob from 'glob';
 import * as upath from 'upath';
 import {Stream} from "../core/common";
 import * as fs from "fs";
-import chalk from "chalk";
+import * as chalk from "chalk";
 
 /** pick */
 export function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
