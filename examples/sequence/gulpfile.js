@@ -9,8 +9,8 @@ process.chdir('../../');
 // Create build definition Item #1
 const buildItem1 = {
     buildName: 'task1',
-    builder: (builder) => {
-        console.log('test1 executed - this will take 0.3 seconds to finish.');
+    builder: (rtb) => {
+        console.log(rtb.conf.buildName + ' executed - this will take 0.3 seconds to finish.');
         return new Promise(resolve => setTimeout(() => resolve(), 300));
     },
     preBuild: () => { console.log('preBuild called. It will take 0.2 seconds.'); return wait(200) },
@@ -20,8 +20,8 @@ const buildItem1 = {
 // Create build definition Item #2
 const buildItem2 = {
     buildName: 'task2',
-    builder: () => {
-        console.log('test2 executed. This should have been executed after finishing task1');
+    builder: (rtb) => {
+        console.log(rtb.conf.buildName + ' executed. This should have been executed after finishing task1');
     }
 };
 

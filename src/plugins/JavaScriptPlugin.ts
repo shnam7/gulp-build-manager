@@ -3,22 +3,22 @@
  */
 
 import { Options } from "../core/common";
-import { GBuilder } from "../core/builder";
 import { GPlugin } from "../core/plugin";
+import { RTB } from "../core/rtb";
 
 export class JavaScriptPlugin extends GPlugin {
     constructor(options: Options = {}) { super(options); }
 
-    process(builder: GBuilder) {
+    process(rtb: RTB) {
         // check lint option
-        if (builder.buildOptions.lint) {
+        if (rtb.buildOptions.lint) {
             const eslint = require('gulp-eslint');
-            const eslintOpts = builder.moduleOptions.eslint || {};
-            builder.pipe(eslint(eslintOpts.eslint || eslintOpts))
+            const eslintOpts = rtb.moduleOptions.eslint || {};
+            rtb.pipe(eslint(eslintOpts.eslint || eslintOpts))
                 .pipe(eslint.format(eslintOpts.format))
                 .pipe(eslint.failAfterError());
         }
-        builder.pipe(require('gulp-babel')(builder.moduleOptions.babel)).sourceMaps();
+        rtb.pipe(require('gulp-babel')(rtb.moduleOptions.babel)).sourceMaps();
     }
 }
 

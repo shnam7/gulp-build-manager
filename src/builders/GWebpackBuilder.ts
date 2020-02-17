@@ -9,10 +9,10 @@ import { warn } from "../utils/utils";
 export class GWebpackBuilder extends GBuilder {
     constructor() { super(); }
 
-    async build(): Promise<void> {
+    build() {
         if (this.conf.src)
             warn(`[GBM:GWebpackBuilder] src:${this.conf.src} will be ignored. User webpackConfig file to build src.`);
-        return this.call(new WebpackPlugin());
+        this.chain(new WebpackPlugin());
     }
 }
 

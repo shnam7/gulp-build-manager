@@ -10,8 +10,8 @@ const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
 
 class MyPlugin extends gbm.GPlugin {
-    process(builder) {
-        console.log(`This is custom plugin. buildName=${builder.conf.buildName}`)
+    process(rtb) {
+        console.log(`This is custom plugin. buildName=${rtb.conf.buildName}`)
     }
 }
 
@@ -24,12 +24,12 @@ const copy = {
 
 const task1 = {
     buildName: 'task1',
-    builder: (builder) => {
-        builder
+    builder: (rtb) => {
+        rtb
             .chain(new MyPlugin())
-            .chain((builder) => console.log(`custom plugin#1, buildName=${builder.conf.buildName}`))
+            .chain((rtb) => console.log(`custom plugin#1, buildName=${rtb.conf.buildName}`))
             .chain(() => console.log('custom plugin'));
-        console.log(`task1 executed: src=${builder.conf.src}, clean=${builder.conf.clean}`);
+        console.log(`task1 executed: src=${rtb.conf.src}, clean=${rtb.conf.clean}`);
     },
 
     // add clean targets for task1
@@ -38,8 +38,8 @@ const task1 = {
 
 const task2 = {
     buildName: 'task2',
-    builder: (builder) => {
-        console.log(`task2 executed: src=${builder.conf.src}, clean=${builder.conf.clean}`);
+    builder: (rtb) => {
+        console.log(`task2 executed: src=${rtb.conf.src}, clean=${rtb.conf.clean}`);
     },
 
     // add clean targets for task2
@@ -55,7 +55,7 @@ const task2 = {
 
 const clean1 = {
     buildName: 'myClean1',
-    builder: 'GCleanBuilder',
+    // builder: (rtb) => {},
     flushStream: true, // finish clean before the build finishes (sync)
     clean: ['dir/**/files-to-delete*.*'] // set files to delete here
 };
@@ -64,13 +64,8 @@ const clean2 = {
     buildName: 'myClean2',
     clean: ['dir/**/files-to-delete*.*'], // set files to delete here
 
-    preBuild: (builder) => {
-        // call with builder if sync is not required
-        builder.chain(gbm.GPlugin.clean);
-
-        // or, call from GPlugin if sync is required
-        let promise = gbm.GPlugin.clean(builder);
-        return promise; // return promise to finish clean before the build finishes (sync)
+    preBuild: (rtb) => {
+        rtb.clean();
     }
 };
 

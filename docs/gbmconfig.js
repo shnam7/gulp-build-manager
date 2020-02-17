@@ -53,9 +53,9 @@ const docs = {
                 ]
             },
         },
-        postBuild: (builder) => {
+        postBuild: () => {
             // return promise to be sure copy operation is done before the task finishes
-            return gbm.GPlugin.exec(builder, 'echo', ['>>', cssTriggerFile]);
+            return gbm.utils.exec('echo', ['>>', cssTriggerFile]);
         },
         clean: [upath.join(basePath, 'css'), cssTriggerFile],
     },
@@ -73,29 +73,43 @@ const docs = {
             sourceMap: sourceMap,
         },
         flushStream: true,
-        postBuild: (builder) => {
+        postBuild: () => {
             // return promise to be sure copy operation is done before the task finishes
-            return gbm.GPlugin.exec(builder, 'echo', ['>>', jsTriggerFile]);
+            return gbm.utils.exec('echo', ['>>', jsTriggerFile]);
         },
         clean: [upath.join(basePath, 'js'), jsTriggerFile]
     },
 
     jekyll: {
         buildName: prefix + 'jekyll',
-        builder: 'GJekyllBuilder',
-        src: upath.join(basePath, ''),
-        dest: destRoot,
-        flushStream: true,
-        moduleOptions: {
-            jekyll: {
-                command: 'build',
-                args: [
-                    '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
-                    '--baseurl http://localhost:3000',  // root folder relative to local server,
-                    '--incremental'
-                ]
-            }
+        // builder: 'GJekyllBuilder',
+        builder: {
+            command: 'jekyll',
+            args: [
+                'build',
+                '-s ' + upath.join(basePath, ''),   // source path
+                '-d ' + destRoot,                   // destination path
+                '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
+                '--baseurl http://localhost:3000',  // root folder relative to local server,
+                '--incremental'
+            ],
+            // options: { shell: true }
         },
+
+
+        // src: upath.join(basePath, ''),
+        // dest: destRoot,
+        flushStream: true,
+        // moduleOptions: {
+        //     jekyll: {
+        //         command: 'build',
+        //         args: [
+        //             '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
+        //             '--baseurl http://localhost:3000',  // root folder relative to local server,
+        //             '--incremental'
+        //         ]
+        //     }
+        // },
         watch: {
             watched: [
                 upath.join(basePath, '**/*.{yml,html,md}'),

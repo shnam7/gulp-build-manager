@@ -3,16 +3,17 @@
  */
 
 import { GBuilder } from "../core/builder";
+import { RTB } from "../core/rtb";
 
 export class GJekyllBuilder extends GBuilder {
+    command: string;
+
     constructor() {
-        if (process.platform.startsWith('win'))
-            super({ command: 'jekyll.bat', args: [], options: { shell: true } });
-        else
-            super({ command: 'jekyll', args: [] });
+        super();
+        this.command = process.platform.startsWith('win') ? 'jekyll.bat' : 'jekyll';
     }
 
-    async build() {
+    build() {
         const opts = this.moduleOptions.jekyll || {};
 
         let args = [opts.subcommand || 'build'];
@@ -20,8 +21,7 @@ export class GJekyllBuilder extends GBuilder {
         if (this.conf.dest) args.push('-d ' + this.conf.dest);
         args = args.concat(opts.args ? opts.args : opts.options);
 
-        this.externalBuilder!.args = args;
-        return super.build();
+        this.promise(RTB.exec(this.command, args, { shell: true }));
     }
 }
 

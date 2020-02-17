@@ -26,9 +26,9 @@ export class GReloader {
         }
     }
 
-    reload(stream: Stream, mopts: Options = {}, builder?: Options) {
-        let livereload = !(builder && builder.livereload === false);
-        let browserSync = !(builder && builder.browserSync === false);
+    reload(stream: Stream, mopts: Options = {}, watch?: Options) {
+        let livereload = !(watch && watch.livereload === false);
+        let browserSync = !(watch && watch.browserSync === false);
         if (stream) {
             if (livereload && this.livereload) stream = stream.pipe(this.livereload(mopts.livereload));
             if (browserSync && this.browserSync) {

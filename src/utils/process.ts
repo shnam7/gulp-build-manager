@@ -3,7 +3,7 @@
  */
 
 import * as child_process from 'child_process';
-import { msg, notice } from "./utils";
+import { msg, notice, is } from "./utils";
 
 export interface SpawnOptions extends child_process.SpawnOptions {
     // spawn?: SpawnOptions;
@@ -17,6 +17,13 @@ export type ProcessOutput = {
     stdout: string;
     stderr: string;
 }
+
+export interface ExternalCommand {
+    command: string,
+    args?: string[];
+    options?: SpawnOptions;
+}
+
 
 export function spawn(cmd: string, args: string[] = [], options: SpawnOptions = {}): Promise<ProcessOutput> {
     let stdout = '';
@@ -91,10 +98,16 @@ export function spawn(cmd: string, args: string[] = [], options: SpawnOptions = 
     });
 }
 
-export function exec(cmd: string, args: string[] = [], options: SpawnOptions = {}): Promise<ProcessOutput> {
+export function exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): Promise<ProcessOutput> {
+    if (is.Object(cmd)) {
+        args = (<ExternalCommand>cmd).args || [];
+        options = (<ExternalCommand>cmd).options || {};
+        cmd = (<ExternalCommand>cmd).command;
+    }
+
     let opts = Object.assign({}, options);
     if (opts.shell === undefined) opts.shell = true;
-    return spawn(cmd, args, opts);
+    return spawn(cmd as string, args, opts);
 }
 
 

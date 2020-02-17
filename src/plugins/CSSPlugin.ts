@@ -3,14 +3,14 @@
  */
 
 import { Options } from "../core/common";
-import { GBuilder } from "../core/builder";
 import { GPlugin } from "../core/plugin";
 import { warn } from "../utils/utils";
+import { RTB } from "../core/rtb";
 
 export class CSSPlugin extends GPlugin {
     constructor(options: Options = {}) { super(options); }
 
-    processPostcss(builder: GBuilder, opts: Options, mopts: Options) {
+    processPostcss(rtb: RTB, opts: Options, mopts: Options) {
         const sourceType = opts.sourceType || 'scss';
         const pcss = require('gulp-postcss');
         const pcssOpts = this.options.postcss || mopts.postcss || {};
@@ -22,14 +22,14 @@ export class CSSPlugin extends GPlugin {
         // All the scss/less variables should to be evaluated before postcss process starts
         if (sourceType !== 'css') {
             const processor = require('gulp-' + moduleName);
-            builder.pipe(processor(this.options[moduleName] || mopts[moduleName])).sourceMaps();
+            rtb.pipe(processor(this.options[moduleName] || mopts[moduleName])).sourceMaps();
         }
 
         // // now, transpile postcss statements
-        if (plugins.length > 0) builder.filter().pipe(pcss(plugins)).sourceMaps();
+        if (plugins.length > 0) rtb.filter().pipe(pcss(plugins)).sourceMaps();
 
         // do some optimization to remove duplicate selectors, and beautify
-        builder.filter().pipe(require('gulp-clean-css')({
+        rtb.filter().pipe(require('gulp-clean-css')({
             sourceMap: true,
             sourceMapInlineSources: true,
             format: 'beautify',
@@ -39,7 +39,7 @@ export class CSSPlugin extends GPlugin {
         // now run autoprefixer
         if (autoprefixer) {
             const prefixer = require('autoprefixer');
-            builder.filter()
+            rtb.filter()
                 .pipe(pcss([prefixer({ add: false })])) // remove outdated prefixed
                 .pipe(pcss([prefixer(mopts.autoprefixer)]))     // now add prefixes
                 .sourceMaps();
@@ -52,14 +52,14 @@ export class CSSPlugin extends GPlugin {
             const reporter = require('postcss-reporter');
             let lintOpts = mopts.stylelint || {};
             const reporterOpts = lintOpts.reporter || {};
-            builder.filter()
+            rtb.filter()
                 .pipe(pcss([stylelint(lintOpts.stylelint || lintOpts), reporter(reporterOpts)]));
         }
     }
 
-    process(builder: GBuilder) {
-        const opts = builder.buildOptions;
-        const mopts = builder.moduleOptions;
+    process(rtb: RTB) {
+        const opts = rtb.buildOptions;
+        const mopts = rtb.moduleOptions;
 
         // backward compatibility on autoprefixer options
         if (opts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
@@ -74,7 +74,7 @@ export class CSSPlugin extends GPlugin {
         // basic build options
         const postcss = opts.postcss !== false;   // enable postcss by default
         if (postcss) {
-            this.processPostcss(builder, opts, mopts);
+            this.processPostcss(rtb, opts, mopts);
         }
         else {
             const sourceType = opts.sourceType || 'scss';
@@ -84,11 +84,11 @@ export class CSSPlugin extends GPlugin {
             // first, transpile to standard css.
             if (sourceType !== 'css') {
                 const processor = require('gulp-' + moduleName);
-                builder.pipe(processor(this.options[moduleName] || mopts[moduleName])).sourceMaps();
+                rtb.pipe(processor(this.options[moduleName] || mopts[moduleName])).sourceMaps();
             }
 
             // do some optimization to remove duplicate selectors, and beautify
-            builder.filter().pipe(require('gulp-clean-css')({
+            rtb.filter().pipe(require('gulp-clean-css')({
                 format: 'beautify',
                 level: { 2: { mergeSemantically: true } }
             })).sourceMaps();
@@ -96,7 +96,7 @@ export class CSSPlugin extends GPlugin {
             // now run autoprefixer
             if (autoprefixer) {
                 const prefixer = require('gulp-autoprefixer');
-                builder.filter()
+                rtb.filter()
                     .pipe(prefixer({ add: false })) // remove outdated prefixed
                     .pipe(prefixer(mopts.autoprefixer)).sourceMaps();     // now add prefixes
             }
@@ -107,10 +107,10 @@ export class CSSPlugin extends GPlugin {
                 const stylelint = require('gulp-stylelint');
                 let lintOpts = mopts.stylelint || {};
                 if (!lintOpts.reporters) lintOpts["reporters"] = [{ formatter: 'verbose', console: true }];
-                builder.filter().pipe(stylelint(lintOpts));
+                rtb.filter().pipe(stylelint(lintOpts));
             }
         }
-        builder.sourceMaps();
+        rtb.sourceMaps();
     }
 }
 
