@@ -65,18 +65,17 @@ const docs = {
         builder: 'GTypeScriptBuilder',
         src: [upath.join(srcRoot, 'scripts/**/*.ts')],
         dest: upath.join(basePath, 'js'),
-        copy: [{ src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js') }],
         flushStream: true,
-        buildOptions: {
-            minifyOnly: true,
-            tsConfig: upath.join(basePath, "tsconfig.json"),
-            sourceMap: sourceMap,
-        },
-        flushStream: true,
-        postBuild: () => {
+        postBuild: (rtb) => {
+            rtb.copy([{ src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js') }])
             // return promise to be sure copy operation is done before the task finishes
             return gbm.utils.exec('echo', ['>>', jsTriggerFile]);
         },
+        buildOptions: {
+            minifyOnly: true,
+            tsConfig: upath.join(basePath, "tsconfig.json"),
+                sourceMap: sourceMap,
+            },
         clean: [upath.join(basePath, 'js'), jsTriggerFile]
     },
 
@@ -95,11 +94,10 @@ const docs = {
             ],
             // options: { shell: true }
         },
-
+        flushStream: true,
 
         // src: upath.join(basePath, ''),
         // dest: destRoot,
-        flushStream: true,
         // moduleOptions: {
         //     jekyll: {
         //         command: 'build',

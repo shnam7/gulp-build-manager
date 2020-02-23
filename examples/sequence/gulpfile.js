@@ -1,7 +1,6 @@
 // Sample
 
 const gbm = require('../../lib');
-const wait = require('../../lib/utils/utils').wait;
 
 // set base directory to project root
 process.chdir('../../');
@@ -11,10 +10,14 @@ const buildItem1 = {
     buildName: 'task1',
     builder: (rtb) => {
         console.log(rtb.conf.buildName + ' executed - this will take 0.3 seconds to finish.');
-        return new Promise(resolve => setTimeout(() => resolve(), 300));
+        return gbm.utils.wait(300);
     },
-    preBuild: () => { console.log('preBuild called. It will take 0.2 seconds.'); return wait(200) },
-    postBuild: () => console.log('postBuild called')
+    preBuild: () => {
+        console.log('preBuild called. It will take 0.2 seconds.');
+        return gbm.utils.wait(200);
+    },
+    postBuild: () => console.log('postBuild called'),
+    sync: true
 };
 
 // Create build definition Item #2

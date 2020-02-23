@@ -14,8 +14,6 @@ const markdown = {
     builder: 'GMarkdownBuilder',
     src: [upath.join(srcRoot, '**/*.md')],
     dest: upath.join(destRoot, ''),
-    buildOptions: {},
-    moduleOptions: {},
     watch: { livereload: true }
 };
 

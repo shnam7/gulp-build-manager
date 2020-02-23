@@ -23,8 +23,8 @@ class MyCSSBuilder extends gbm.GCSSBuilder {
 
 const customFunction = {
     buildName: 'customFunction',
-    builder: (builder) => {
-        console.log('Custom builder using function(): Hello!!!', builder.conf.buildName);
+    builder: (rtb) => {
+        console.log('Custom builder using function(): Hello!!!', rtb.conf.buildName);
     }
 };
 

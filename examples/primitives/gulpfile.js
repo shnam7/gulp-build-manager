@@ -8,10 +8,11 @@ process.chdir('../../');
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
+const destZip = upath.join(basePath, '_dist');
 
 /**
-	* Define build items
-	*/
+ * Define build items
+ */
 const copy = {
     buildName: 'copy',
     builder: 'GBuilder',
@@ -33,7 +34,7 @@ const zip = {
         upath.join(destRoot, '**/*'),
         upath.join(srcRoot, 'zip-me-too/**/*')
     ],
-    dest: '_dist',
+    dest: destZip,
     outFile: 'primitives.zip',
     watch: {
         // disable watch by setting 'watched' list to empty array
@@ -43,12 +44,12 @@ const zip = {
 
 
 /**
-	* Create gbmConfig object
-	*/
+ * Create gbmConfig object
+ */
 gbm({
     systemBuilds: {
         build: [gbm.parallel(copy, images), zip],
-        clean: [destRoot, '_dist'],
+        clean: [destRoot, destZip],
         default: ['@clean', '@build'],
 
         // if 'watch' property exists, watch task is created.

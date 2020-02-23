@@ -13,7 +13,7 @@ let buildItem1 = {
     buildName: 'task1',
     builder: () => {
         console.log('test1 executed - this will take 0.3 seconds to finish.');
-        return new Promise(resolve => setTimeout(() => resolve(), 300));
+        return gbm.utils.wait(300);
     }
 };
 

@@ -10,8 +10,8 @@ const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
 
 // build configurations
-const __coffeeScript = {
-    buildName: '__coffeeScript',
+const coffee = {
+    buildName: 'javascript:coffee',
     builder: 'GCoffeeScriptBuilder',
     src: [upath.join(srcRoot, 'coffee/**/*.coffee')],
     dest: (file) => file.base,
@@ -23,15 +23,14 @@ const __coffeeScript = {
     }
 };
 
-const __babel = {
-    buildName: '__babel',
+const babel = {
+    buildName: 'javascript:babel',
     builder: 'GJavaScriptBuilder',
     src: [upath.join(srcRoot, 'es6/**/*.es6')],
     dest: (file) => file.base,
     flushStream: true,
     buildOptions: {
         babel: true,
-
         // TODO gulp-eslint seems to have bug on dependencies
         // lint: true,
         sourceMap: true,
@@ -56,7 +55,7 @@ const javaScript = {
     order: ['sample1.js'],
     dest: upath.join(destRoot, 'js'),
     outFile: 'sample.js',
-    dependencies: gbm.parallel(__coffeeScript, __babel),
+    dependencies: gbm.parallel(coffee, babel),
     buildOptions: {
         minify: true,
         // minifyOnly: true,

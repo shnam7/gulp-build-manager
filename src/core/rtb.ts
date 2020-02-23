@@ -26,9 +26,12 @@ export class RTB {
         rtb.src().dest();
     };
 
-    protected _run(action?: FunctionBuilders) {
-        if (is.Function(action)) return action(this);
-        if (is.Object(action)) return action.func(this, ...action.args);
+    protected _executor(action?: FunctionBuilders): () => Promise<unknown> {
+        return () => {
+            if (is.Function(action)) return action(this) || Promise.resolve();
+            if (is.Object(action)) return action.func(this, ...action.args) || Promise.resolve();
+            return Promise.resolve();
+        }
     }
 
     constructor(conf?: BuildConfig, func?: FunctionBuilder) {
@@ -65,7 +68,7 @@ export class RTB {
         if (this.syncMode) this.log('Strating build in sync Mode.');
 
         // preBuild
-        this.promise(() => new Promise(resolve => { this._run(this.conf.preBuild); resolve() }));
+        this.promise(this._executor(this.conf.preBuild));
 
         // build
         this.promise(() => (this.build() || Promise.resolve()));
@@ -74,13 +77,13 @@ export class RTB {
         if (flushStream) this.promise(() => toPromise(this.stream));
 
         // postBuild
-        this.promise(() => new Promise(resolve => { this._run(this.conf.postBuild); resolve() }));
+        this.promise(this._executor(this.conf.postBuild));
 
-        // and then, reload (after all process including postBuild
-        this.promise(() => new Promise(resolve => { this.reload(); resolve() }));
+        // sync'ed promises
+        this.promises.push(this.promiseSync);
 
-        if (this.promiseSync) this.promises.push(this.promiseSync);
-        return Promise.all(this.promises);
+        // finally, reload after all the promises are resolved
+        return Promise.all(this.promises).then(() => this.reload());
     }
 
     build(): void | Promise<unknown> {

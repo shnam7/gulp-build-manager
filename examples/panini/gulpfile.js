@@ -26,11 +26,6 @@ const panini = {
         }
     },
 
-    plugins: [
-        // rename *.md files into *.html in the start of build process
-        stream => stream.pipe(require('gulp-rename')({ extname: '.html' }))
-    ],
-
     watch: {
         // include sub directories to detect changes of the file which are not in src list.
         watched: [upath.join(srcRoot, '**/*')],

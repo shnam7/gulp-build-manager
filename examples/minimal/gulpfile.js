@@ -11,12 +11,15 @@ const simpleTask = {
     builder: () => {
         console.log('simpleTask executed');
     },
-    pretBuild: (builder) => console.log(`preBuild called, customVar1=${builder.conf.customVar1}`),
+    preBuild: rtb => console.log(`preBuild called, customVar1=${rtb.conf.customVar1}`),
     postBuild: {
         func: (builder, arg1, arg2) => console.log(`postBuild called,`
             + `customVar1=${builder.conf.customVar2}, arg1=${arg1}, arg2=${arg2}`),
         args: ['arg1', 'arg2']
     },
+
+    // buildSet can be of type GulpTaskFunction, not normal function.
+    // so, gulp.serial() or gulp.parallel() is required
     triggers: gbm.parallel((done) => {
         console.log(`trigger successful. buildName`);
         done();

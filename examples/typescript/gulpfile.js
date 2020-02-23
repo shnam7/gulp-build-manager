@@ -16,9 +16,10 @@ const typeScript = {
     src: [upath.join(srcRoot, 'scripts/ts/**/!(*.d).ts')],
     dest: upath.join(destRoot, 'js'), // (file) => file.base,
     outFile: 'app.js',
-    copy: [{
+    postBuild: rtb => rtb.copy([{
         src: upath.join(basePath, 'pages/**/*.html'), dest: upath.join(destRoot, '')
-    }],
+    }]),
+
     flushStream: true,
     buildOptions: {
         // lint: true,

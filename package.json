@@ -75,7 +75,7 @@
         "@types/glob": "^7.1.1",
         "@types/gulp": "^4.0.6",
         "@types/gulp-filter": "^3.0.33",
-        "@types/jquery": "^3.3.32",
+        "@types/jquery": "^3.3.33",
         "babel-core": "^6.26.3",
         "babel-preset-env": "^1.7.0",
         "browser-sync": "^2.26.7",
