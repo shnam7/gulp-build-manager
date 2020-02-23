@@ -116,7 +116,7 @@
         "tslint": "^6.0.0",
         "tslint-eslint-rules-recommended": "^1.2.2",
         "twig-markdown": "^0.2.1",
-        "typescript": "^3.7.5",
+        "typescript": "^3.8.2",
         "webpack": "^4.41.6",
         "wicle": "github:shnam7/wicle#dev"
     }

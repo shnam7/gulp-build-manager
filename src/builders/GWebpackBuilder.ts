@@ -11,7 +11,7 @@ export class GWebpackBuilder extends GBuilder {
 
     build() {
         if (this.conf.src)
-            warn(`[GBM:GWebpackBuilder] src:${this.conf.src} will be ignored. User webpackConfig file to build src.`);
+            warn(`[GBM:GWebpackBuilder] src:${this.conf.src} will be ignored. Use webpackConfig file to build src.`);
         this.chain(new WebpackPlugin());
     }
 }

@@ -21,7 +21,7 @@ export class GJekyllBuilder extends GBuilder {
         if (this.conf.dest) args.push('-d ' + this.conf.dest);
         args = args.concat(opts.args ? opts.args : opts.options);
 
-        this.promise(RTB.exec(this.command, args, { shell: true }));
+        this.exec(this.command, args, { shell: true });
     }
 }
 

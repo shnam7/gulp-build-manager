@@ -4,35 +4,26 @@ import {Stream} from "../core/common";
 import * as fs from "fs";
 import * as chalk from "chalk";
 
-/** pick */
-export function pick<T, K extends keyof T>(obj: T, ...keys: K[]): Pick<T, K> {
-    const ret: any = {};
-    keys.forEach(key => {
-        ret[key] = obj[key];
-    });
-    return ret;
-}
-
 /** is: collection of type checking functions */
 function _is(a: any, name: string) {
     return toString.call(a) === '[object ' + name + ']';
 }
 
 export const is = {
-  Array:        (a:any) => Array.isArray(a),
-  Object:       (a:any) => a === Object(a),
-  Arguments:    (a:any) => _is(a, 'Argument'),
-  Function:     (a:any) => _is(a, 'Function'),
-  String:       (a:any) => _is(a, 'String'),
-  Number:       (a:any) => _is(a, 'Number'),
-  Date:         (a:any) => _is(a, 'Date'),
-  RegExp:       (a:any) => _is(a, 'RegExp'),
-  Error:        (a:any) => _is(a, 'Error'),
-  Symbol:       (a:any) => _is(a, 'Symbol'),
-  Map:          (a:any) => _is(a, 'Map'),
-  WeakMap:      (a:any) => _is(a, 'WeakMap'),
-  Set:          (a:any) => _is(a, 'Set'),
-  WeakSet:      (a:any) => _is(a, 'WeakSet')
+  Array:        (a:unknown): a is typeof a[] => Array.isArray(a),
+  Object:       (a:unknown): a is object => a === Object(a),
+  Arguments:    (a:unknown) => _is(a, 'Argument'),
+  Function:     (a:unknown): a is Function => _is(a, 'Function'),
+  String:       (a:unknown): a is string => _is(a, 'String'),
+  Number:       (a:unknown): a is number => _is(a, 'Number'),
+  Date:         (a:unknown): a is Date => _is(a, 'Date'),
+  RegExp:       (a:unknown): a is RegExp  => _is(a, 'RegExp'),
+  Error:        (a:unknown): a is Error => _is(a, 'Error'),
+  Symbol:       (a:unknown): a is Symbol => _is(a, 'Symbol'),
+  Map:          (a:unknown): a is typeof Map => _is(a, 'Map'),
+  WeakMap:      (a:unknown): a is typeof WeakMap => _is(a, 'WeakMap'),
+  Set:          (a:unknown): a is typeof Set => _is(a, 'Set'),
+  WeakSet:      (a:unknown): a is typeof WeakSet => _is(a, 'WeakSet')
 };
 
 /**
@@ -74,9 +65,9 @@ export function toPromise(stream: Stream): Promise<Stream> {
 
 //** load yml and json files
 export function loadData(globPatterns: string | string[]): Object {
-    if (is.String(globPatterns)) globPatterns = [globPatterns as string];
+    if (is.String(globPatterns)) globPatterns = [globPatterns];
     let data = {};
-    (globPatterns as string[]).forEach((globPattern: string) => {
+    globPatterns.forEach((globPattern: string) => {
         glob.sync(globPattern).forEach((file) => {
             let ext = upath.extname(file).toLowerCase();
             if (ext === '.yml' || ext === 'yaml')
@@ -90,7 +81,9 @@ export function loadData(globPatterns: string | string[]): Object {
     return data;
 }
 
-export let wait = (msec: number) => new Promise(res => setTimeout(res, msec));
+export let wait = (msec: number) => new Promise(resolve => setTimeout(() => resolve(), msec));
+// export let wait = (msec: number) => new Promise(resolve => setTimeout(()=>{
+//     console.log('ms=' + msec); resolve()}, msec));
 
 // export function npmInstallGuard(func:()=>void, options: Options={}) {
 //   let errorCount = 0;

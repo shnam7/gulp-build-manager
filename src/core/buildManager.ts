@@ -11,7 +11,7 @@ import * as upath from 'upath';
 import { GWatcher, WatchOptions, WatchItem } from './watcher';
 import { GCleaner, CleanTarget } from './cleaner';
 import { Options, gulp, GulpTaskFunction } from "./common";
-import { is, warn, ExternalCommand } from "../utils/utils";
+import { is, warn, ExternalCommand, exec } from "../utils/utils";
 import { RTB } from './rtb';
 import { GBuilder, BuildSet, BuildName, BuildConfig, TaskDoneFunction, BuildSetSeries, BuildSetParallel, ObjectBuilders, CopyBuilder, FunctionBuilder } from './builder';
 
@@ -76,14 +76,14 @@ export class GBuildManager {
     loadBuilders(config: string | GBMConfig) {
         let basePath = "";
         if (is.String(config)) {
-            basePath = upath.dirname(config as string);
-            config = require(upath.join(process.cwd(), config as string))
+            basePath = upath.dirname(config);
+            config = require(upath.join(process.cwd(), config))
         }
         config = config as GBMConfig;
 
         if (config.customBuilderDir) {
             let dirs = (is.String(config.customBuilderDir))
-                ? [config.customBuilderDir as string] : config.customBuilderDir as string[];
+                ? [config.customBuilderDir] : config.customBuilderDir;
             this.customDirs = [];
             for (let dir of dirs) this.customDirs.push(upath.join(basePath, dir));
         }
@@ -104,7 +104,7 @@ export class GBuildManager {
             let sysBuilds = config.systemBuilds.build;
             if (sysBuilds) {
                 let resolved = this.resolve(sysBuilds);
-                if (resolved) gulp.task('@build', is.String(resolved) ? gulp.series(resolved) : resolved as GulpTaskFunction);
+                if (resolved) gulp.task('@build', is.String(resolved) ? gulp.series(resolved) : resolved);
             }
 
             this.cleaner.createTask(mopts.del);
@@ -113,7 +113,7 @@ export class GBuildManager {
             let defaultBuild = config.systemBuilds.default;
             if (defaultBuild) {
                 let resolved = this.resolve(defaultBuild);
-                if (resolved) gulp.task('default', is.String(resolved) ? gulp.series(resolved) : resolved as GulpTaskFunction);
+                if (resolved) gulp.task('default', is.String(resolved) ? gulp.series(resolved) : resolved);
             }
         }
     }
@@ -131,9 +131,9 @@ export class GBuildManager {
             let rtb = this.getBuilder(conf);
             rtb.reloader = this.watcher.reloader;
             let deps = is.Array(conf.dependencies) ? conf.dependencies : [conf.dependencies];
-            let task = (done: TaskDoneFunction) => rtb._build(conf);
+            let task = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
             let triggers = is.Array(conf.triggers) ? conf.triggers : [conf.triggers];
-            gulp.task(conf.buildName, <GulpTaskFunction>this.resolve([...<any>deps, task, ...<any>triggers]));
+            gulp.task(conf.buildName, <GulpTaskFunction>this.resolve([...deps, task, ...<any>triggers]));
 
             // resolve clean targets, even in the case taskList is empty
             if (conf.clean) this.cleaner.add(conf.clean);
@@ -141,7 +141,7 @@ export class GBuildManager {
             // resolve watch
             let watchItem: WatchItem = {
                 name: conf.buildName,
-                watched: conf.src ? (is.Array(conf.src) ? (conf.src as string[]).slice() : [conf.src as string]) : [],
+                watched: conf.src ? (is.Array(conf.src) ? conf.src.slice() : [conf.src]) : [],
                 task: conf.buildName,
             };
             Object.assign(watchItem, conf.watch || {});
@@ -159,7 +159,7 @@ export class GBuildManager {
         // if buildSet is BuildSetSeries: recursion
         else if (is.Array(buildSet)) {
             let list = [];
-            for (let bs of <BuildSetSeries>buildSet) {
+            for (let bs of buildSet) {
                 let ret = this.resolve(bs);
                 if (ret) list.push(ret);
             }
@@ -219,7 +219,7 @@ export class GBuildManager {
         }
 
         // if builder is BuildFunction
-        if (is.Function(builder)) return new RTB(buildItem, builder as FunctionBuilder);
+        if (is.Function(builder)) return new RTB(buildItem, builder);
 
         // if builders is RTB or its derivatives such as GBuilder
         if (builder instanceof RTB) return builder.init(buildItem);
@@ -235,7 +235,7 @@ export class GBuildManager {
 
             // if builder is ExternalBuilder
             return new RTB(buildItem, () => {
-                return RTB.exec(<ExternalCommand>builder);
+                return exec(<ExternalCommand>builder);
             });
 
             throw Error(`[buildName:${buildItem.buildName}]Unknown ObjectBuilder.`);

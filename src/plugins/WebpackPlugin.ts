@@ -36,7 +36,7 @@ export class WebpackPlugin extends GPlugin {
         if (rtb.conf.src) {
             if (is.Array(rtb.conf.src)) {
                 let src: string[] = [];  // get absolute paths in array
-                (rtb.conf.src as string[]).forEach((name) => src.push(resolve(name)));
+                rtb.conf.src.forEach((name) => src.push(resolve(name)));
                 merge(wpOpts, { entry: src });
             }
             else
@@ -53,14 +53,10 @@ export class WebpackPlugin extends GPlugin {
 
         if (opts.printConfig) msg(`Webpack Config =`, wpOpts);
         const compiler = require('webpack')(wpOpts);
-        return new Promise<void>((resolve, reject) => {
+        return new Promise((resolve, reject) => {
             compiler.hooks.done.tap("done", resolve);
             compiler.hooks.failed.tap("failed", reject);
-            compiler.run((err: Error, stats: any) => {
-                {
-                    msg(stats.toString({ colors: true }));
-                }
-            });
+            compiler.run((err: Error, stats: any) => msg(stats.toString({ colors: true })) );
         })
     }
 }

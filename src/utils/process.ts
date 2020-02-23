@@ -100,14 +100,14 @@ export function spawn(cmd: string, args: string[] = [], options: SpawnOptions = 
 
 export function exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): Promise<ProcessOutput> {
     if (is.Object(cmd)) {
-        args = (<ExternalCommand>cmd).args || [];
-        options = (<ExternalCommand>cmd).options || {};
-        cmd = (<ExternalCommand>cmd).command;
+        args = cmd.args || [];
+        options = cmd.options || {};
+        cmd = cmd.command;
     }
 
     let opts = Object.assign({}, options);
     if (opts.shell === undefined) opts.shell = true;
-    return spawn(cmd as string, args, opts);
+    return spawn(cmd, args, opts);
 }
 
 

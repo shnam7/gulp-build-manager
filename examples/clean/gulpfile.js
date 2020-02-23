@@ -55,7 +55,7 @@ const task2 = {
 
 const clean1 = {
     buildName: 'myClean1',
-    // builder: (rtb) => {},
+    builder: (rtb) => { rtb.clean(); },
     flushStream: true, // finish clean before the build finishes (sync)
     clean: ['dir/**/files-to-delete*.*'] // set files to delete here
 };

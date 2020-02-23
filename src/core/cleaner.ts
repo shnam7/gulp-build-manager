@@ -15,7 +15,7 @@ export class GCleaner {
 
     add(cleanTarget: CleanTarget) {
         if (is.String(cleanTarget))
-            this.cleanList.push(cleanTarget as string);
+            this.cleanList.push(cleanTarget);
         else if (cleanTarget.length > 0)
             this.cleanList = this.cleanList.concat(cleanTarget);
     }

@@ -19,7 +19,7 @@ export type BuildName = string;
 export type NamedBuilders = GBuilderClassName | BuildName;
 
 //--- Function Builders
-export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<any>
+export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>
 export type FunctionObjectBuilder = { func: FunctionBuilder; args: any[] }
 export type FunctionBuilders = FunctionBuilder | FunctionObjectBuilder;
 
@@ -54,7 +54,8 @@ export interface BuildConfig {
     order?: string[];
     dest?: string;
     outFile?: string;
-    copy?: CopyParam | CopyParam[],   // copy is executed after postBuild
+    sync?: boolean,
+    verbose?: boolean,
     flushStream?: boolean;
     clean?: CleanTarget;
     watch?: WatchItem;
