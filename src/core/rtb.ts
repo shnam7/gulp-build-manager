@@ -26,10 +26,17 @@ export class RTB {
         rtb.src().dest();
     };
 
+
     protected _executor(action?: FunctionBuilders): () => Promise<unknown> {
         return () => {
-            if (is.Function(action)) return action(this) || Promise.resolve();
-            if (is.Object(action)) return action.func(this, ...action.args) || Promise.resolve();
+            if (is.Function(action)) {
+                let r = action(this);
+                return (r instanceof Promise) ? r : Promise.resolve();
+            }
+            if (is.Object(action)) {
+                let r = action.func(this, ...action.args);
+                return (r instanceof Promise) ? r : Promise.resolve();
+            }
             return Promise.resolve();
         }
     }
@@ -71,7 +78,10 @@ export class RTB {
         this.promise(this._executor(this.conf.preBuild));
 
         // build
-        this.promise(() => (this.build() || Promise.resolve()));
+        this.promise(() => {
+            let r = this.build();
+            return r instanceof Promise ? r : Promise.resolve();
+        });
 
         // flush strream
         if (flushStream) this.promise(() => toPromise(this.stream));
@@ -237,7 +247,7 @@ export class RTB {
         const delOpts = Object.assign({}, this.moduleOptions.del, options.del);
 
         if (!options.silent) msg('Deleting:', cleanList);
-        return this.promise(require("del")(cleanList, delOpts));
+        return this.promise(() => require("del")(cleanList, delOpts));
     }
 
     copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
