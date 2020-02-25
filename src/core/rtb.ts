@@ -273,7 +273,7 @@ export class RTB {
     }
 
     exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
-        return this.promise(() => exec(cmd));
+        return this.promise(() => exec(cmd, args, options));
     }
 
 
