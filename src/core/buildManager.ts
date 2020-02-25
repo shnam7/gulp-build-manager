@@ -8,7 +8,7 @@
  */
 
 import * as upath from 'upath';
-import { GWatcher, WatchOptions, WatchItem } from './watcher';
+import { GWatcher, WatcherOptions, WatchItem } from './watcher';
 import { GCleaner, CleanTarget } from './cleaner';
 import { Options, gulp, GulpTaskFunction } from "./common";
 import { is, warn, ExternalCommand, exec } from "../utils/utils";
@@ -24,7 +24,7 @@ export interface GBMConfig {
         build?: BuildSet;
         clean?: CleanTarget;
         default?: BuildSet;
-        watch?: WatchOptions;
+        watch?: WatcherOptions;
         moduleOptions?: Options;
     },
     moduleOptions?: Options;    // value for defaultModuleOptions
@@ -107,8 +107,9 @@ export class GBuildManager {
                 if (resolved) gulp.task('@build', is.String(resolved) ? gulp.series(resolved) : resolved);
             }
 
-            this.cleaner.createTask(mopts.del);
+            // @watch and @clean tasks will be ceated only when watch/clean item lists are not empty
             this.watcher.createTask(config.systemBuilds.watch);
+            this.cleaner.createTask(mopts.del);
 
             let defaultBuild = config.systemBuilds.default;
             if (defaultBuild) {
@@ -129,7 +130,6 @@ export class GBuildManager {
         else if (is.Object(buildSet) && buildSet.hasOwnProperty('buildName')) {
             let conf = buildSet as BuildConfig;
             let rtb = this.getBuilder(conf);
-            rtb.reloader = this.watcher.reloader;
             let deps = is.Array(conf.dependencies) ? conf.dependencies : [conf.dependencies];
             let task = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
             let triggers = is.Array(conf.triggers) ? conf.triggers : [conf.triggers];
@@ -153,6 +153,7 @@ export class GBuildManager {
             if (conf.watch && conf.watch.task) watchItem.task = conf.watch.task;
 
             this.watcher.addWatch(watchItem);
+            rtb.reloader = this.watcher.reloader;
             return conf.buildName;
         }
 

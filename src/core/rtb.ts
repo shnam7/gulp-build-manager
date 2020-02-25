@@ -4,10 +4,10 @@
 
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilders, FunctionBuilder, CopyParam } from "./builder";
-import { GReloader } from "./reloader";
 import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait } from "../utils/utils";
 import { Plugins, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
+import { GReloader } from "./reloader";
 
 export class RTB {
     protected stream?: GulpStream;
@@ -54,7 +54,6 @@ export class RTB {
             this.conf.dependencies = undefined;
         if (is.Array(this.conf.triggers) && this.conf.triggers.length === 0)
             this.conf.triggers = undefined;
-
         return this;
     }
 
@@ -202,8 +201,7 @@ export class RTB {
     }
 
     reload(): this {
-        if (this.buildOptions.reload !== false && this.reloader)
-            this.reloader.reload(this.stream, this.moduleOptions, this.buildOptions.watch);
+        if (this.reloader) this.reloader.reload(this.stream, this.moduleOptions);
         return this;
     }
 

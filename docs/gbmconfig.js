@@ -81,7 +81,7 @@ const docs = {
 
     jekyll: {
         buildName: prefix + 'jekyll',
-        // builder: 'GJekyllBuilder',
+        builder: 'GJekyllBuilder',
         builder: {
             command: 'jekyll',
             args: [
@@ -96,30 +96,26 @@ const docs = {
         },
         flushStream: true,
 
-        // src: upath.join(basePath, ''),
-        // dest: destRoot,
-        // moduleOptions: {
-        //     jekyll: {
-        //         command: 'build',
-        //         args: [
-        //             '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
-        //             '--baseurl http://localhost:3000',  // root folder relative to local server,
-        //             '--incremental'
-        //         ]
-        //     }
-        // },
+        src: upath.join(basePath, ''),
+        dest: destRoot,
+        moduleOptions: {
+            jekyll: {
+                command: 'build',
+                args: [
+                    '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
+                    '--baseurl http://localhost:3000',  // root folder relative to local server,
+                    '--incremental'
+                ]
+            }
+        },
         watch: {
             watched: [
                 upath.join(basePath, '**/*.{yml,html,md}'),
                 upath.join(basePath, '.*-triggered'),
-                '!' + upath.join(basePath, '{js,css}'),
-                '!' + upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),
-
-                // TODO glob exclude not working correctly for watcher: gulp issue #2192
-                // '!' + upath.join(srcRoot, '{assets,assets/**/*}'),
-                // '!' + upath.join(srcRoot, '{_site,_site/**/*}'),
-                // '!' + upath.join(srcRoot, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),
-                // upath.join(srcRoot, '**/*'),
+                `!(${upath.join(basePath, '{_site,_site/**/*}')})`,
+                `!(${upath.join(basePath, '{js,js/**/*}')})`,
+                `!(${upath.join(basePath, '{css,css/**/*}')})`,
+                `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
             ]
         },
         clean: [destRoot, upath.join(basePath, '.jekyll-metadata')],

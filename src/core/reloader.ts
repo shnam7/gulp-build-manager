@@ -3,16 +3,22 @@
  */
 import { Options, Stream } from "./common";
 import { msg } from "../utils/utils";
+import { WatcherOptions } from "./watcher";
+
+export interface ReloaderOptions {
+    livereload?: Options;
+    browserSync?: Options;
+}
 
 export class GReloader {
     livereload: any = undefined;
     browserSync: any = undefined;
 
-    constructor(options?: Options) {
+    constructor(options?: ReloaderOptions & WatcherOptions) {
         if (options) this.init(options);
     }
 
-    init(opts: Options) {
+    init(opts: ReloaderOptions & WatcherOptions) {
         if (!this.livereload && opts.livereload) {
             this.livereload = require('gulp-livereload');
             this.livereload(opts.livereload);
@@ -26,18 +32,14 @@ export class GReloader {
         }
     }
 
-    reload(stream: Stream, mopts: Options = {}, watch?: Options) {
-        let livereload = !(watch && watch.livereload === false);
-        let browserSync = !(watch && watch.browserSync === false);
+    reload(stream: Stream, mopts: Options = {}) {
         if (stream) {
-            if (livereload && this.livereload) stream = stream.pipe(this.livereload(mopts.livereload));
-            if (browserSync && this.browserSync) {
-                if (stream) stream = stream.pipe(this.browserSync.stream(mopts.browserSync));
-            }
+            if (this.livereload) stream = stream.pipe(this.livereload(mopts.livereload));
+            if (this.browserSync && stream) stream = stream.pipe(this.browserSync.stream(mopts.browserSync));
         }
         else {
-            if (livereload && this.livereload) this.livereload(mopts.livereload);
-            if (browserSync && this.browserSync) this.browserSync.reload(mopts.browserSync);
+            if (this.livereload) this.livereload(mopts.livereload);
+            if (this.browserSync) this.browserSync.reload(mopts.browserSync);
         }
         return stream;
     }
