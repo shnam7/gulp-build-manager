@@ -263,6 +263,11 @@ export class RTB {
         return this;
     }
 
+    del(patterns: string | string[], options: Options = {}): this {
+        if (this.conf.verbose) info('Deleting:', patterns);
+        return this.promise(() => require("del")(patterns, options));
+    }
+
     spawn(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
         return this.promise(() => (is.Object(cmd))
             ? spawn(cmd.command, cmd.args, cmd.options)
