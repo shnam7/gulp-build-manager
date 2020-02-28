@@ -4,6 +4,5 @@ node_modules
 /__*
 *.map
 /lib
-.jekyll-metadata
 /docs/_site/
-/docs/.*-triggered
+/docs/.jekyll-*

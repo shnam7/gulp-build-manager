@@ -102,7 +102,7 @@
         "gulp-uglify-es": "^2.0.0",
         "gulp-zip": "^5.0.1",
         "lost": "^8.3.1",
-        "mocha": "^7.0.1",
+        "mocha": "^7.1.0",
         "panini": "^1.6.3",
         "postcss-combine-duplicated-selectors": "^8.1.0",
         "postcss-inline-svg": "^4.1.0",

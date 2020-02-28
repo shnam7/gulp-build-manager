@@ -48,23 +48,23 @@ export type Builders = NamedBuilders | FunctionBuilders | ObjectBuilders | GBuil
 
 //--- Build Config
 export interface BuildConfig {
-    buildName: string;    // mandatory
+    buildName: string;          // mandatory
     builder?: Builders;
     src?: string | string[];
-    order?: string[];
     dest?: string;
     outFile?: string;
-    sync?: boolean,
-    verbose?: boolean,
-    flushStream?: boolean;
-    clean?: CleanTarget;
-    watch?: WatchItem;
+    order?: string[];           // input file(src) ordering
+    flushStream?: boolean;      // finish all the output streams before exiting gulp task
+    sync?: boolean,             // serialize each build execution steps
+    verbose?: boolean,          // print verbose messages
     preBuild?: FunctionBuilders;
     postBuild?: FunctionBuilders;
-    dependencies?: BuildSet;
-    triggers?: BuildSet;
-    buildOptions?: Options;
-    moduleOptions?: Options;
+    buildOptions?: Options;     // buildConfig instance specific custom options
+    moduleOptions?: Options;    // gulp module options
+    dependencies?: BuildSet;    // buildSet to be executed before this build task
+    triggers?: BuildSet;        // buildSet to be executed after this build task
+    clean?: CleanTarget;
+    watch?: WatchItem;
 }
 
 //--- BuildSet

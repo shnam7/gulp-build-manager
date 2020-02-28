@@ -8,12 +8,11 @@ const upath = require('upath');
 
 const projectName = upath.basename(__dirname);   // set template name to parent directory name
 const basePath = upath.relative(process.cwd(), __dirname);
-const srcRoot = upath.join(basePath, 'assets');
+const srcRoot = upath.join(basePath, '_assets');
 const destRoot = upath.join(basePath, '_site');
 const prefix = projectName + ':';
 const sourceMap = true;
-const jsTriggerFile = upath.join(basePath, '.js-triggered');
-const cssTriggerFile = upath.join(basePath, '.css-triggered');
+const jekyllTrigger = upath.join(basePath, '.jekyll-trigger');  // flag to trigger jekyll watcher
 
 const docs = {
     scss: {
@@ -55,9 +54,9 @@ const docs = {
         },
         postBuild: () => {
             // return promise to be sure copy operation is done before the task finishes
-            return gbm.utils.exec('echo', ['>>', cssTriggerFile]);
+            return gbm.utils.exec('echo', ['>' + jekyllTrigger]);
         },
-        clean: [upath.join(basePath, 'css'), cssTriggerFile],
+        clean: [upath.join(basePath, 'css')],
     },
 
     scripts: {
@@ -69,19 +68,18 @@ const docs = {
         postBuild: (rtb) => {
             rtb.copy([{ src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js') }])
             // return promise to be sure copy operation is done before the task finishes
-            return gbm.utils.exec('echo', ['>>', jsTriggerFile]);
+            return gbm.utils.exec('echo', ['>', jekyllTrigger]);
         },
         buildOptions: {
             minifyOnly: true,
             tsConfig: upath.join(basePath, "tsconfig.json"),
                 sourceMap: sourceMap,
             },
-        clean: [upath.join(basePath, 'js'), jsTriggerFile]
+        clean: [upath.join(basePath, 'js')]
     },
 
     jekyll: {
         buildName: prefix + 'jekyll',
-        builder: 'GJekyllBuilder',
         builder: {
             command: 'jekyll',
             args: [
@@ -95,30 +93,17 @@ const docs = {
             // options: { shell: true }
         },
         flushStream: true,
-
-        src: upath.join(basePath, ''),
-        dest: destRoot,
-        moduleOptions: {
-            jekyll: {
-                command: 'build',
-                args: [
-                    '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
-                    '--baseurl http://localhost:3000',  // root folder relative to local server,
-                    '--incremental'
-                ]
-            }
-        },
         watch: {
             watched: [
+                jekyllTrigger,
                 upath.join(basePath, '**/*.{yml,html,md}'),
-                upath.join(basePath, '.*-triggered'),
                 `!(${upath.join(basePath, '{_site,_site/**/*}')})`,
                 `!(${upath.join(basePath, '{js,js/**/*}')})`,
                 `!(${upath.join(basePath, '{css,css/**/*}')})`,
                 `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
             ]
         },
-        clean: [destRoot, upath.join(basePath, '.jekyll-metadata')],
+        clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTrigger],
     },
 
     get build() {

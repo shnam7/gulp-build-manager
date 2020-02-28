@@ -7,13 +7,11 @@ const upath = require('upath');
 process.chdir('../../');
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
-const destRoot = upath.join(basePath, '_build');
+const destRoot = upath.join(basePath, 'html');
 
 const html = {
-    buildName: 'html',
-    builder: 'GBuilder',
-    src: [upath.join(srcRoot, 'html/**/*.html')],
-    dest: destRoot
+    buildName: 'html-watcher',
+    watch: { watched: [upath.join(destRoot, '**/*.html')] }
 };
 
 const scss = {
@@ -21,16 +19,13 @@ const scss = {
     builder: 'GCSSBuilder',
     src: [upath.join(srcRoot, 'scss/**/*.scss')],
     dest: upath.join(destRoot, 'css'),
-    buildOptions: {
-        postcss: true
-    }
+    clean: [upath.join(destRoot, 'css')]
 };
 
 // create gbmConfig object
 gbm({
     systemBuilds: {
         build: [html, scss],
-        clean: [destRoot],
         default: ['@clean', '@build'],
         watch: { browserSync: { server: upath.resolve(destRoot) } }
     }
