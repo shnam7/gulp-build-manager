@@ -2,13 +2,13 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        "outDir": "lib",
-        "rootDir": "src",
+        "outDir": "../lib",
+        "rootDir": ".",
         "noEmitOnError": true,
         "strict": true,
         "noImplicitAny": true,
     },
-    "include": [
-        "src/**/*.ts"
-    ]
+    // "include": [
+        // "src/**/*.ts"
+    // ]
 }

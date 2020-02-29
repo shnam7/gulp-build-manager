@@ -1,105 +1,108 @@
 # Gulp Build Manager
 
-Gulp Build Manager, 'gbm' for short, is an easy to use, flexible gulp task manager. It is a tool helping gulp users to create tasks with simple configuration. This provides the convenience of configuration and the flexibility of javascript programming in setting up gulp tasks.
+Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp task manager. Users can create gulp tasks with simple build configuration. At the same time, javascript can be used to customize or extend the configuration to manage build processes.
 
-### Installation
+
+## Installation
 ```bash
-npm install gulp@4    # install gulp version 4
+npm install gulp --save-dev
 npm install gulp-build-manager --save-dev
 ```
+Note that gulp 4.0 or higher is required, and it's not installed automatically when gulp-build-manager is installed. It should be installed of its own.
 
-To install the latest version from github:
-```bash
-npm install gulp@4    # install gulp version 4
-npm install github:shnam7/gulp-build-manager --save-dev
-````
-Note that gulp is not automatically installed together with gulp-build-manager. It should be installed of its own.
 
-### Quick Start
-Creating gulp task is simple and easy.
-
-```javascript
+## Quick Example
+```js
 const gbm = require('gulp-build-manager');
-const srcRoot = 'assets';
-const destRoot = '_build';
 
-const scss = {
-  buildName: 'scss',
-  builder: 'GCSSBuilder',
-  src: [upath.join(srcRoot, 'scss/**/*.scss')],
-  dest: upath.join(destRoot, 'css'),
-  moduleOptions: {
-    sass: { includePaths: [ 'assets/scss' ] },
-  }
+// build config
+const html = {
+    buildName: 'html-watcher',
+    watch: { watched: ['www/**/*.html'] }
 };
 
-const javaScript = {
-  buildName: 'javaScript',
-  builder: 'GJavaScriptBuilder',
-  src: ['assets/scripts/js/**/*.js'],
-  dest: '_build/js',
-  outFile: 'sample.js',
-  buildOptions: {
-    minify: true,
-    sourceMap: true
-  }
-};
-
+// create gbmConfig object
 gbm({
-  systemBuilds: {
-    build: gbm.parallel(scss, javaScript),
-    clean: ['_build'],
-    default: ['@clean', '@build'],
-  }
+    builds: [html],
+    systemBuilds: {
+        watch: { browserSync: { server: './www' } }
+    }
 });
 ```
+This is example creats two gulp tasks, 'html-watcher' and '@watch'. 'html-watcher' is a dummy builder(no build action) that just specifying watch targets - html files in 'www' directory. '@watch' is a task created by gbm that actually watching the watch targets and triggers build actions and broiwserSync reloading on any changes in watch targets.
+So, with this configuration, we have html editing environment that automatically updated to the browser on change.
 
-### Notes
-Required modules are not installed automatically. When running gulp with the configuration, you can see errors of missing node modules. Then, install all the modules reuired.
+Now, let's add sass builders to the html watcher.
 
-### References
-  - [Documentation][0]
-  - [Examples][1]
-  - [ChangeLog][2]
-  
-gbm provides various built-in builder classes including:
-  - GBuilder - Base Builder, which work as a Copy Builder.
+```js
+const gbm = require('gulp-build-manager');
+
+// build config
+const html = {
+    buildName: 'html-watcher',
+    watch: { watched: ['www/**/*.html'] }
+};
+
+const sass = {
+    buildName: 'scss',
+    builder: 'GCSSBuilder',
+    src: 'assets/scss/**/*.scss',
+    dest: 'www/css/',
+    watch: { watched: ['assets/scss/**/*.scss'] },
+    clean: ['www/css']
+}
+
+// create gbmConfig object
+gbm({
+    builds: [html, sass],
+    systemBuilds: { watch: { browserSync: { server: './www' } } }
+});
+```
+Now you have sass builder automatically reloading the changes to browser.
+
+For more examples, check [Gulp-Build-Manager-Examples][1] site.
+
+
+## Built-in build modules
+gbm provides various predefined built-in builders for your convenience, just like 'GCSSBuilder' in the above example.
+Those buildes include:
+
+  - GBuilder - Base Builder, which works as a copy builder.
   - GCoffeeScriptBuilder
   - GConcatBuilder
-  - GCopyBuilder - Copy files from multiple sources to multiple destinations
   - GCSSBuilder - sass/scss/less/postcss builder.
-  - GExternalBuilder - builder to run external commands.
   - GImagesBuilder - Image optimizer
   - GJavaScriptBuilder
   - GJekyllBuilder
   - GMarkdownBuilder
   - GPaniniBuilder
+  - GRTLCSSBuilder - generates rtl files form css files
   - GTwigBuilder
   - GTypeScriptBuilder
   - GWebpackckBuilder
   - GZipBuilder - File packer for distribution
+
+See the **[Documentation][0]** for more details.
+
+
+## Node modules dependency
+gbm does not install all the required modules automatically. So, When running gulp with gbm the configuration, you may see errors of missing node modules. In that case, you have to install all the modules reuired.
+
+
+## References
+  - [Documentation][0]
+  - [Examples][1]
+  - [ChangeLog][2]
+
 
 Those classes can be extended or modified using class inheritance.<br>
 gbm also provides plugin system, which enables users to add custom functions or plugin objects into specific stages of the build process.
 Builders can also be in the form of function, which is sometimes simpler and convenient.<br>
 For *modular configuration* to handle complex projects, refer to [modular configuration][4] section in documentation.<br>
 
-### Migration from v2
-- Some of Build Configuration interface was changed and please refer to the [Examples][1] to find out how to migrate to achieve the same functionality with v3 interface.
-- User plugins inside the Build Configuration are not supported. Instead, consider using 'preBuild' and 'postBuild' options or overload GBuilder methods.
-- To keep using v2.x, install it with following command
-  ```bash
-  npm i gulp-build-manager@2 --save-dev
-  ```
-
-### Documentations for previous versions
-  - [Dcoumentation - v2.2][3]
-
 [0]: https://shnam7.github.io/gulp-build-manager/
-[1]: https://github.com/shnam7/gulp-build-manager/tree/master/examples
+[1]: https://github.com/shnam7/gulp-build-manager-examples
 [2]: https://github.com/shnam7/gulp-build-manager/tree/master/CHANGELOG.md
-[3]: https://github.com/shnam7/gulp-build-manager/tree/v2.2.0/docs
-[4]: https://shnam7.github.io/gulp-build-manager/resources/modular-configuration/
 
 <br>
 <br>
