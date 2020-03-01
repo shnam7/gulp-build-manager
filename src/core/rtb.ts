@@ -8,6 +8,7 @@ import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, w
 import { Plugins, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
 import { GReloader } from "./reloader";
+import { WatchItem } from "./watcher";
 
 export class RTB {
     protected stream?: GulpStream;
@@ -15,7 +16,6 @@ export class RTB {
     protected promises: Promise<unknown>[] = [];
     protected promiseSync: Promise<unknown> = Promise.resolve();
     protected syncMode = false;
-    protected verbose = false;
 
     conf: BuildConfig = { buildName: '' };
     buildOptions: Options = {};
@@ -69,7 +69,6 @@ export class RTB {
         this.moduleOptions = conf.moduleOptions || {};
         const flushStream = this.conf.flushStream;
         this.syncMode = conf.sync || false;
-        this.verbose = conf.verbose || false;
 
         if (this.syncMode) this.log('Strating build in sync Mode.');
 
@@ -165,12 +164,12 @@ export class RTB {
 
     // print message in promise execution sequence
     msg(...args: any[]): this {
-        return this.promise(() => new Promise(resolve => { info(args); resolve() }));
+        return this.promise(() => new Promise(resolve => { msg(args); resolve() }));
     }
 
     // print message in promise execution sequence only when verbose option enabled
     log(...args: any[]): this {
-        return this.verbose ? this.promise(() => new Promise(resolve => { info(args); resolve() })) : this;
+        return !this.conf.silent ? this.promise(() => new Promise(resolve => { info(args); resolve() })) : this;
     }
 
     pushStream(): this {
@@ -222,6 +221,36 @@ export class RTB {
         return this.pipe(require('gulp-rename')(opts));
     }
 
+    copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
+        if (!param) return this;   // allow null argument
+
+        let targets = is.Array(param) ? param : [param];
+        for (let target of targets) {
+            this.promise(() => {
+                let copyInfo = `[${target.src}] => ${target.dest}`;
+                if (options.verbose) msg(`copying: [${copyInfo}]`);
+                return toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest)))
+                    .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) })
+            });
+        }
+        return this;
+    }
+
+    del(patterns: string | string[], options: Options = {}): this {
+        if (!this.conf.silent) msg('Deleting:', patterns);
+        return this.promise(() => require("del")(patterns, options));
+    }
+
+    spawn(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
+        return this.promise(() => (is.Object(cmd))
+            ? spawn(cmd.command, cmd.args, cmd.options)
+            : spawn(cmd, args, options)
+        )
+    }
+
+    exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
+        return this.promise(() => exec(cmd, args, options));
+    }
 
     // minify javascripts
     uglify(options: Options = {}): this {
@@ -243,40 +272,7 @@ export class RTB {
 
         // check rename option
         const delOpts = Object.assign({}, this.moduleOptions.del, options.del);
-
-        if (!options.silent) msg('Deleting:', cleanList);
-        return this.promise(() => require("del")(cleanList, delOpts));
-    }
-
-    copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
-        if (!param) return this;   // allow null argument
-
-        let targets = is.Array(param) ? param : [param];
-        for (let target of targets) {
-            this.promise(() => {
-                let copyInfo = `[${target.src}] => ${target.dest}`;
-                if (options.verbose) msg(`copying: [${copyInfo}]`);
-                return toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest)))
-                    .then(() => { if (this.verbose) info(`--> copy done: [${copyInfo}]`) })
-            });
-        }
-        return this;
-    }
-
-    del(patterns: string | string[], options: Options = {}): this {
-        if (this.conf.verbose) info('Deleting:', patterns);
-        return this.promise(() => require("del")(patterns, options));
-    }
-
-    spawn(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
-        return this.promise(() => (is.Object(cmd))
-            ? spawn(cmd.command, cmd.args, cmd.options)
-            : spawn(cmd, args, options)
-        )
-    }
-
-    exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
-        return this.promise(() => exec(cmd, args, options));
+        return this.del(cleanList, delOpts)
     }
 
 
@@ -299,5 +295,20 @@ export class RTB {
     minifyJs(): this {
         return this.filter().uglify()
             .rename({ extname: '.min.js' }).sourceMaps();
+    }
+
+
+    //--- utility functions
+    getWatchItem(): WatchItem {
+        let wItem: WatchItem = Object.assign({
+            name: this.conf.buildName,
+            watched: this.conf.src ? (is.Array(this.conf.src) ? this.conf.src.slice() : [this.conf.src]) : [],
+            task: gulp.parallel(this.conf.buildName),
+        }, this.conf.watch);
+
+        if (is.String(wItem.watched)) wItem.watched = [wItem.watched];
+        if (wItem.watchedPlus)
+            wItem.watched = wItem.watched.concat(wItem.watchedPlus);
+        return wItem;
     }
 }

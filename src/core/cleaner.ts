@@ -6,14 +6,12 @@ import { is, msg } from "../utils/utils";
 import gulp = require("gulp");
 import del = require("del");
 
-export type CleanTarget = string | string[];
-
 export class GCleaner {
     cleanList: string[] = [];
 
     constructor(public options: del.Options = {}) { }
 
-    add(cleanTarget: CleanTarget) {
+    add(cleanTarget: string | string[]) {
         if (is.String(cleanTarget))
             this.cleanList.push(cleanTarget);
         else if (cleanTarget.length > 0)
@@ -21,7 +19,7 @@ export class GCleaner {
     }
 
     clean(callback?: (value: string[]) => void) {
-        msg(`GCleaner::cleanList:[${this.cleanList}]`);
+        msg('GCleaner::cleanList:[', this.cleanList, ']');
         del(this.cleanList, this.options).then(callback);
     }
 

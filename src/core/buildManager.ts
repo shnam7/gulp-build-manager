@@ -9,11 +9,11 @@
 
 import * as upath from 'upath';
 import { GWatcher, WatcherOptions, WatchItem } from './watcher';
-import { GCleaner, CleanTarget } from './cleaner';
+import { GCleaner } from './cleaner';
 import { Options, gulp, GulpTaskFunction } from "./common";
-import { is, warn, ExternalCommand, exec } from "../utils/utils";
+import { is, warn, ExternalCommand, exec, info } from "../utils/utils";
 import { RTB } from './rtb';
-import { GBuilder, BuildSet, BuildName, BuildConfig, TaskDoneFunction, BuildSetSeries, BuildSetParallel, ObjectBuilders, CopyBuilder, FunctionBuilder } from './builder';
+import { GBuilder, BuildSet, BuildName, BuildConfig, TaskDoneFunction, BuildSetParallel, ObjectBuilders, CopyBuilder } from './builder';
 
 
 // GBM Config
@@ -22,7 +22,7 @@ export interface GBMConfig {
     builds?: BuildSet;
     systemBuilds?: {
         build?: BuildSet;
-        clean?: CleanTarget;
+        clean?: string | string[];
         default?: BuildSet;
         watch?: WatcherOptions;
         moduleOptions?: Options;
@@ -129,6 +129,16 @@ export class GBuildManager {
         // if buildSet is BuildConfig
         else if (is.Object(buildSet) && buildSet.hasOwnProperty('buildName')) {
             let conf = buildSet as BuildConfig;
+
+            // check for duplicate task registeration
+            let gulpTask = gulp.task(conf.buildName);
+            if (gulpTask && (gulpTask.displayName === conf.buildName)) {
+                // duplicated buildName may not be error in case it was resolved multiple time due to deps or triggers
+                // So, info message is displayed only when verbose mode is turned on.
+                if (conf.verbose) info(`GBuildManager:resolve: taskName=${conf.buildName} already registered`);
+                return conf.buildName;
+            }
+
             let rtb = this.getBuilder(conf);
             let deps = is.Array(conf.dependencies) ? conf.dependencies : [conf.dependencies];
             let task = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());

@@ -3,11 +3,10 @@
  */
 
 import { Options, GulpTaskFunction } from "./common";
-import { WatchItem } from "./watcher";
-import { CleanTarget } from "./cleaner";
 import { GPlugin } from './plugin';
 import { ExternalCommand } from "../utils/utils";
 import { RTB } from "./rtb";
+import { WatchItem } from "./watcher";
 
 export type TaskDoneFunction = (error?: any) => void;
 export type Plugin = FunctionBuilder | GPlugin;
@@ -57,13 +56,14 @@ export interface BuildConfig {
     flushStream?: boolean;      // finish all the output streams before exiting gulp task
     sync?: boolean,             // serialize each build execution steps
     verbose?: boolean,          // print verbose messages
+    silent?: boolean,           // depress informative messages
     preBuild?: FunctionBuilders;
     postBuild?: FunctionBuilders;
     buildOptions?: Options;     // buildConfig instance specific custom options
     moduleOptions?: Options;    // gulp module options
     dependencies?: BuildSet;    // buildSet to be executed before this build task
     triggers?: BuildSet;        // buildSet to be executed after this build task
-    clean?: CleanTarget;
+    clean?: string | string[];
     watch?: WatchItem;
 }
 
