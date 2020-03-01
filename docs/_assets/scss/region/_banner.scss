@@ -1,0 +1,26 @@
+.l-site-banner {
+    margin: 0;
+    padding: 2rem 1rem 3rem;
+    color: $w-color-text-white;
+    border-top: 1px solid shade($w-theme-color, 25%);
+    text-align: center;
+    @include w-pattern(shade($w-theme-color, 25%));
+
+    .title {
+        color: $w-color-text-white;
+    }
+
+    p {
+        font-size: 1.2rem;
+    }
+
+    .w-button {
+        padding: 0.6rem 0.9rem;
+        font-size: 0.9rem;
+
+        &,
+        &:visited {
+            color: rgba(255, 255, 255, 0.7);
+        }
+    }
+}

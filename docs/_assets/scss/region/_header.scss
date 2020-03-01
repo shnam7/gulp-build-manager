@@ -1,0 +1,21 @@
+.l-site-header {
+    height: $site-header-height;
+
+    [class^=wz-brand] {
+        display: inline;
+        vertical-align: middle;
+    }
+
+    .wz-brand-logo {
+        margin-right: 0.75em;
+    }
+
+    .wz-brand-text {
+        font-size: 1.5rem;
+        //font-weight: 500;
+    }
+
+    .wz-item {
+        font-size: 1.25rem;
+    }
+}

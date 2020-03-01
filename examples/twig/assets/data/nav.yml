@@ -1,0 +1,7 @@
+nav:
+  - title: Doc
+    url: '/docs'
+  - title: Examples
+    url: '/examples'
+  - title: About
+    url: '/about'

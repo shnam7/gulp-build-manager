@@ -1,0 +1,10 @@
+<div id="l-navbar">
+  <div class="navbar">
+    <div class="site-logo"><a href="#">Twig Builder Demo</a></div>
+    <ul class="nav">
+      {% for item in nav %}
+      <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

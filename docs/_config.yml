@@ -1,0 +1,33 @@
+# Site settings
+title:              Gulp Build Manager
+description:        Easy to use, configurable gulp task manager.
+url:                "https://shnam7.github.io/gulp-build-manager"
+repo:               "https://github.com/shnam7/gulp-build-manager/tree/master"
+
+# Project settings
+# source and destination is set by gulpfile.js
+#source:           docs
+#destination:      docs/_site
+version:            4.0
+encoding:           utf-8
+markdown:           kramdown
+#highlighter:        rouge
+permalink:          pretty
+exclude:            ['_assets', 'Gemfile*', 'gbmconfig.js', 'gulpfile.js', "tsconfig.js"]
+contentsurl:        contents
+defaults:
+  - scope:
+      path:         ""
+    values:
+      layout:       docs
+
+# Module settings
+kramdown:
+  input: GFM
+  auto_ids: false
+  syntax_highlighter_opts:
+    disable : true
+
+keep_files:         []
+
+# Custom variable

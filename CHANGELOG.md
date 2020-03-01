@@ -1,14 +1,6 @@
 # Changelog
 
-## 4.0
-- RTB, Run-Time-Builder, introduction with rich API set
-- Improved promise handling for better build process synchronization
-- Add Object Builder types, ExternalBuilder and CopyBuilder
-- Remove GExternalBuilder, GCopyBuilder
-- Remove BuildConfig.copy
-- Remove examples and docs (moved to separate repositories)
-
-## 3.2.0
+## 3.2.0-rc
 - Add GRTLCSSBuilder
 - Rename cleancss to cleanCss in GPlugin.cleancss and moduleOptions.cleancss
 - Update docs using wicle 2.0.0-dev

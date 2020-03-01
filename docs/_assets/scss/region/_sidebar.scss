@@ -1,0 +1,35 @@
+.l-sidebar {
+    @include w-media(large) {
+        position: sticky;
+        top: 0;
+    }
+
+    // title
+    &>.title {
+        text-align: center;
+    }
+
+    // table of contents list
+    &>ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        a:hover {
+            color: $w-color-dark-red;
+        }
+
+        ul {
+            margin: 0;
+            list-style-type: disc;
+            padding: 0 1rem 0.5rem 1rem;
+        }
+
+        &>li {
+            margin: 0.5rem 0 0 0;
+            padding: 0.35rem 1rem;
+            border-radius: 3px;
+            background: rgba($w-color-primary, 0.05);
+        }
+    }
+}

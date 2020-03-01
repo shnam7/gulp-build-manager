@@ -1,0 +1,24 @@
+//
+//  docs main
+//
+
+@import "site.config";
+
+@import "./region/header";
+@import "./region/banner";
+@import "./region/sidebar";
+@import "./region/footer";
+
+
+.w-content {
+    border-bottom: 1px solid gray(60%, 0.3);
+
+    @include w-media(large) {
+        border-bottom: none;
+    }
+}
+
+// code highlighter: highlight.js
+.hljs {
+    background: $w-color-alice-blue;
+}

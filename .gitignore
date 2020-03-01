@@ -1,5 +1,6 @@
 .idea
 .vscode
+.trash
 node_modules
 /__*
 *.map
