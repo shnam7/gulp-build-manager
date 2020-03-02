@@ -4,7 +4,7 @@
 
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilders, FunctionBuilder, CopyParam } from "./builder";
-import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait } from "../utils/utils";
+import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify } from "../utils/utils";
 import { Plugins, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
 import { GReloader } from "./reloader";
@@ -20,7 +20,7 @@ export class RTB {
     conf: BuildConfig = { buildName: '' };
     buildOptions: Options = {};
     moduleOptions: Options = {};
-    protected reloader?: GReloader;
+    reloader?: GReloader;
 
     protected buildFunc = (rtb: RTB) => {
         rtb.src().dest();
@@ -224,7 +224,7 @@ export class RTB {
     copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
         if (!param) return this;   // allow null argument
 
-        let targets = is.Array(param) ? param : [param];
+        let targets = arrayify(param);
         for (let target of targets) {
             this.promise(() => {
                 let copyInfo = `[${target.src}] => ${target.dest}`;
@@ -302,13 +302,11 @@ export class RTB {
     getWatchItem(): WatchItem {
         let wItem: WatchItem = Object.assign({
             name: this.conf.buildName,
-            watched: this.conf.src ? (is.Array(this.conf.src) ? this.conf.src.slice() : [this.conf.src]) : [],
             task: gulp.parallel(this.conf.buildName),
-        }, this.conf.watch);
+            watched: arrayify(this.conf.src),
+        }, this.conf.watch ? this.conf.watch : {});
 
-        if (is.String(wItem.watched)) wItem.watched = [wItem.watched];
-        if (wItem.watchedPlus)
-            wItem.watched = wItem.watched.concat(wItem.watchedPlus);
+        if (wItem.watchedPlus) wItem.watched = wItem.watched.concat(wItem.watchedPlus);
         return wItem;
     }
 }

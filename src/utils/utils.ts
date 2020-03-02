@@ -26,6 +26,11 @@ export const is = {
   WeakSet:      (a:unknown): a is typeof WeakSet => _is(a, 'WeakSet')
 };
 
+export function arrayify<T>(arg?: T | T[]) {
+    return arg? (is.Array(arg) ? arg : [arg]) : [];
+}
+
+
 /**
  *  Add properties to object from directories
  *

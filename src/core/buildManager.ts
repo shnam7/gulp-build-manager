@@ -11,9 +11,10 @@ import * as upath from 'upath';
 import { GWatcher, WatcherOptions, WatchItem } from './watcher';
 import { GCleaner } from './cleaner';
 import { Options, gulp, GulpTaskFunction } from "./common";
-import { is, warn, ExternalCommand, exec, info } from "../utils/utils";
+import { is, warn, ExternalCommand, exec, info, arrayify } from "../utils/utils";
 import { RTB } from './rtb';
 import { GBuilder, BuildSet, BuildName, BuildConfig, TaskDoneFunction, BuildSetParallel, ObjectBuilders, CopyBuilder } from './builder';
+import { ResolvedType } from './project';
 
 
 // GBM Config
@@ -94,10 +95,7 @@ export class GBuildManager {
         if (config.systemBuilds && config.systemBuilds.clean)
             this.cleaner.add(config.systemBuilds.clean);
 
-        if (config.builds) {
-            let bs = is.Array(config.builds) ? config.builds : [config.builds];
-            for (let bs of config.builds as BuildSet[]) this.resolve(bs)
-        }
+        for (let bs of arrayify(config.builds)) this.resolve(bs)
 
         if (config.systemBuilds) {
             let mopts = Object.assign({}, this.defaultModuleOptions, config.systemBuilds.moduleOptions);
@@ -119,6 +117,10 @@ export class GBuildManager {
         }
     }
 
+    // resolve(buildSet?: BuildSet): GulpTaskFunction | BuildName | void {
+    //     return GBuildManager.resolve(buildSet, this.watcher, this.cleaner);
+    // }
+
     resolve(buildSet?: BuildSet): GulpTaskFunction | BuildName | void {
         if (!buildSet) return;
 
@@ -139,10 +141,10 @@ export class GBuildManager {
                 return conf.buildName;
             }
 
-            let rtb = this.getBuilder(conf);
-            let deps = is.Array(conf.dependencies) ? conf.dependencies : [conf.dependencies];
+            let rtb = GBuildManager.getBuilder(conf, this.customDirs);
+            let deps = arrayify(conf.dependencies);
             let task = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
-            let triggers = is.Array(conf.triggers) ? conf.triggers : [conf.triggers];
+            let triggers = arrayify(conf.triggers);
             gulp.task(conf.buildName, <GulpTaskFunction>this.resolve([...deps, task, ...<any>triggers]));
 
             // resolve clean targets, even in the case taskList is empty
@@ -162,8 +164,14 @@ export class GBuildManager {
             // if user provided the task to run, enable it
             if (conf.watch && conf.watch.task) watchItem.task = conf.watch.task;
 
-            this.watcher.addWatch(watchItem);
-            rtb.reloader = this.watcher.reloader;
+            // this.watcher.addWatch(watchItem);
+            // rtb.reloader = this.watcher.reloader;
+
+            if (this.watcher) {
+                this.watcher.addWatch(watchItem);
+                // this.watcher.addWatch(rtb.getWatchItem());
+                rtb.reloader = this.watcher.reloader;
+            }
             return conf.buildName;
         }
 
@@ -193,7 +201,7 @@ export class GBuildManager {
         throw Error('buildManager:resolve:Unknown type of buildSet');
     }
 
-    getBuilder(buildItem: BuildConfig) {
+    static getBuilder(buildItem: BuildConfig, customBuilderDirs?: string | string[]): RTB {
         let builder = buildItem.builder;
 
         // if builder is GBuilderClassName
@@ -201,10 +209,10 @@ export class GBuildManager {
             if (builder === 'GBuilder') return new GBuilder(buildItem);
 
             // try custom dir first to give a chance to overload default builder
-            if (this.customDirs) {
+            if (customBuilderDirs) {
                 // dmsg(`Trying custom builders in '${this.customDirs}'`);
-                for (const customDir of this.customDirs) {
-                    let pathName = upath.join(process.cwd(), customDir, builder as string);
+                for (const dir of arrayify(customBuilderDirs)) {
+                    let pathName = upath.join(process.cwd(), dir, builder);
                     try {
                         let builderClass = require(pathName);
                         return new builderClass(buildItem);
@@ -256,6 +264,71 @@ export class GBuildManager {
         if (!builder) return new RTB(buildItem, () => {
             // dmsg(`BuildName:${buildItem.buildName}: No builder specified.`);
         });
+
+        return new RTB();   // dummy for return type consistency
+    }
+
+    static resolve(buildSet?: BuildSet, watcher?: GWatcher, cleaner?: GCleaner, customBuilderDirs?: string): ResolvedType | void {
+            if (!buildSet) return;
+
+
+            // if buildSet is BuildName or GulpTaskFunction
+            if (is.String(buildSet) || is.Function(buildSet))
+                return buildSet as (BuildName | GulpTaskFunction);
+
+            // if buildSet is BuildConfig
+            else if (is.Object(buildSet) && buildSet.hasOwnProperty('buildName')) {
+                let conf = buildSet as BuildConfig;
+
+                // check for duplicate task registeration
+                let gulpTask = gulp.task(conf.buildName);
+                if (gulpTask && (gulpTask.displayName === conf.buildName)) {
+                    // duplicated buildName may not be error in case it was resolved multiple time due to deps or triggers
+                    // So, info message is displayed only when verbose mode is turned on.
+                    if (conf.verbose) info(`GBuildManager:resolve: taskName=${conf.buildName} already registered`);
+                    return conf.buildName;
+                }
+
+                let rtb = GBuildManager.getBuilder(conf, customBuilderDirs);
+                let deps = arrayify(conf.dependencies);
+                let task = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
+                let triggers = arrayify(conf.triggers);
+                gulp.task(conf.buildName, <GulpTaskFunction>this.resolve([...deps, task, ...<any>triggers]));
+
+                if (conf.watch && watcher) {
+                    watcher.addWatch(rtb.getWatchItem());
+                    rtb.reloader = watcher.reloader;
+                }
+
+                if (conf.clean && cleaner) cleaner.add(conf.clean);
+
+                return conf.buildName;
+            }
+
+            // if buildSet is BuildSetSeries: recursion
+            else if (is.Array(buildSet)) {
+                let list = [];
+                for (let bs of buildSet) {
+                    let ret = this.resolve(bs);
+                    if (ret) list.push(ret);
+                }
+                if (list.length === 0) return;
+                return list.length > 1 ? gulp.series.apply(null, <any>list) : list[0];
+            }
+
+            // if buildSet is BuildSetParallel: recursion
+            else if (is.Object(buildSet) && buildSet.hasOwnProperty('set')) {
+                let list = [];
+                for (let bs of (<BuildSetParallel>buildSet).set) {
+                    let ret = this.resolve(bs);
+                    if (ret) list.push(ret);
+                }
+                if (list.length === 0) return;
+                return list.length > 1 ? gulp.parallel.apply(null, <any>list) : list[0];
+            }
+
+            // dmsg('buildManager:resolve:buildSet='); dmsg(buildSet);
+            throw Error('buildManager:resolve:Unknown type of buildSet');
     }
 
     //--- static functions
