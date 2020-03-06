@@ -6,7 +6,6 @@ import { Options, GulpTaskFunction } from "./common";
 import { GPlugin } from './plugin';
 import { ExternalCommand } from "../utils/utils";
 import { RTB } from "./rtb";
-import { WatchItem } from "./watcher";
 
 export type TaskDoneFunction = (error?: any) => void;
 export type Plugin = FunctionBuilder | GPlugin;
@@ -63,8 +62,9 @@ export interface BuildConfig {
     moduleOptions?: Options;    // gulp module options
     dependencies?: BuildSet;    // buildSet to be executed before this build task
     triggers?: BuildSet;        // buildSet to be executed after this build task
+    watch?: string | string[];  // override default watch, 'src' if defined
+    addWatch?: string | string[];   // additional watch in addition to watch or default watch
     clean?: string | string[];
-    watch?: WatchItem;
 }
 
 //--- BuildSet

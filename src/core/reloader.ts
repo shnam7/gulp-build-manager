@@ -25,14 +25,15 @@ export class GReloader {
         }
         if (!this.browserSync && opts.browserSync) {
             let browserSync = require('browser-sync');
-            this.browserSync = browserSync.has('gbm') ? browserSync.get('gbm') : browserSync.create('gbm');
+            // this.browserSync = browserSync.has('gbm') ? browserSync.get('gbm') : browserSync.create('gbm');
+            this.browserSync = browserSync.create('gbm' + opts.buildKey);
             this.browserSync.init(opts.browserSync,
                 () => msg('browserSync server started with options:', opts.browserSync)
             );
         }
     }
 
-    reload(stream: Stream, mopts: Options = {}) {
+    reload(stream?: Stream, mopts: Options = {}) {
         if (stream) {
             if (this.livereload) stream = stream.pipe(this.livereload(mopts.livereload));
             if (this.browserSync && stream) stream = stream.pipe(this.browserSync.stream(mopts.browserSync));

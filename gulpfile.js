@@ -1,55 +1,29 @@
 const gbm = require('./lib');
+const upath = require('upath');
 const fs = require('fs');
 
-function createConfig(buildName, dirPath, taskName = '') {
-    return {
-        buildName: buildName,
-        builder: {
-            command: 'npm',
-            args: ['run', 'gulp', '--', '--cwd', dirPath, taskName],
-            options: { shell: true }
-        },
-        flushStream: true
-    }
-}
+// load docs config
+require('./docs/gbmconfig');
 
-const docs = createConfig('docs', 'docs');
-const docsClean = createConfig('docs-clean', 'docs', '@clean');
-const exAll = [];
-let exBuildNames = [];
-let exCleanNames = [];
+// const selector = [1] // ,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
+//--- load examples config
 fs.readdirSync('./examples').forEach((name) => {
-    const buildName = 'ex-' + name;
-    const cleanName = buildName + '-clean';
+    // if (!selector.includes(parseInt(name))) return;
     const dirPath = './examples/' + name;
-    if (fs.statSync(dirPath).isDirectory()) {
-        exAll.push(createConfig(buildName, dirPath, '@build'));
-        exAll.push(createConfig(cleanName, dirPath, '@clean'));
-        exBuildNames.push(buildName);
-        exCleanNames.push(cleanName);
+    if (fs.statSync(dirPath)) {
+        let exConfig = upath.join(dirPath, 'gbmconfig.js');
+        if (fs.existsSync(exConfig)) require('./' + exConfig);
     }
 });
 
-const exBuild = {
-    buildName: '@ex-build-all',
-    dependencies: exBuildNames
-};
+gbm
+    .addTrigger('@build-all', /@build$/)
+    .addTrigger('default', '@build-all')
+    .addCleaner('@clean-all')
+    .addTrigger('ex-build-all', /^\d.*@build$/)
+    .addTrigger('ex-clean-all', /^\d.*@clean$/)
+    .resolve();
 
-const exClean = {
-    buildName: '@ex-clean-all',
-    dependencies: exCleanNames
-};
 
-const cleanAll = {
-    buildName: '@clean',
-    dependencies: ['docs-clean'].concat(exCleanNames)
-};
-
-gbm({
-    builds: [docs, docsClean, exAll, exBuild, exClean, cleanAll],
-    systemBuilds: {
-        build: ['docs'].concat(exBuildNames),
-        default: ['@build']
-    }
-});
+// console.log('size=', gbm.size, ', buildNames=', gbm.buildNames);

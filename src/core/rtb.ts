@@ -4,11 +4,10 @@
 
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilders, FunctionBuilder, CopyParam } from "./builder";
-import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify } from "../utils/utils";
+import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify, dmsg } from "../utils/utils";
 import { Plugins, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
 import { GReloader } from "./reloader";
-import { WatchItem } from "./watcher";
 
 export class RTB {
     protected stream?: GulpStream;
@@ -295,18 +294,5 @@ export class RTB {
     minifyJs(): this {
         return this.filter().uglify()
             .rename({ extname: '.min.js' }).sourceMaps();
-    }
-
-
-    //--- utility functions
-    getWatchItem(): WatchItem {
-        let wItem: WatchItem = Object.assign({
-            name: this.conf.buildName,
-            task: gulp.parallel(this.conf.buildName),
-            watched: arrayify(this.conf.src),
-        }, this.conf.watch ? this.conf.watch : {});
-
-        if (wItem.watchedPlus) wItem.watched = wItem.watched.concat(wItem.watchedPlus);
-        return wItem;
     }
 }

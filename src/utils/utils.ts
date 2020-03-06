@@ -27,7 +27,7 @@ export const is = {
 };
 
 export function arrayify<T>(arg?: T | T[]) {
-    return arg? (is.Array(arg) ? arg : [arg]) : [];
+    return arg ? (is.Array(arg) ? arg : [arg]) : [];
 }
 
 
@@ -111,7 +111,8 @@ export let wait = (msec: number) => new Promise(resolve => setTimeout(() => reso
 // }
 
 export function dmsg(...args: any[]) {
-    console.log(...args);
+    let [arg1, ...arg2] = args; // decompose to seperate object priting
+    console.log(arg1); if (arg2.length > 0) console.log(...arg2);
 }
 
 export function msg(...args: any[]) {
