@@ -128,6 +128,7 @@ export class GBuildProject {
 
     addVar(key: any, value: any) {
         this._vars[key] = value;
+        return this;
     }
 
     // merge(...projects: GBuildProject[]) {
