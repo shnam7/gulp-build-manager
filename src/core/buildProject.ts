@@ -119,10 +119,12 @@ export class GBuildProject {
 
     addTrigger(buildName: string, buildNames: string | string[], opts: TriggerOptions={}) {
         buildNames = this.filter(buildNames);
-        if (buildNames.length > 0) this.addBuildItem({
-            buildName: buildName,
-            dependencies: opts.sync ? buildNames : GBuildProject.parallel(...buildNames)
-        });
+        let triggers = (buildNames.length === 1)
+            ? buildNames[0]
+            : opts.sync ? buildNames : GBuildProject.parallel(...buildNames);
+
+        if (buildNames.length > 0)
+            this.addBuildItem({ buildName: buildName, triggers: triggers });
         return this;
     }
 
@@ -158,11 +160,20 @@ export class GBuildProject {
                 return conf.buildName;
             }
 
+            let defaultTaskFunc = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
             let rtb = this.getBuilder(conf);
             let deps = arrayify(conf.dependencies);
-            let task = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
+            let task = conf.builder ?  defaultTaskFunc : undefined;
             let triggers = arrayify(conf.triggers);
-            gulp.task(conf.buildName, <GulpTaskFunction>this.resolveBuildSet([...deps, task, ...<any>triggers]));
+
+            // sanity check for the final task function before calling gulp.task()
+            let resolved = this.resolveBuildSet([...deps, task, ...<any>triggers]);
+            if (!resolved)
+                resolved = defaultTaskFunc;
+            else if (is.String(resolved))
+                resolved = gulp.parallel(resolved);
+
+            gulp.task(conf.buildName, <GulpTaskFunction>resolved);
 
             // resolve clean targets
             if (conf.clean) this._cleaner.add(conf.clean);

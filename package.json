@@ -17,10 +17,10 @@
         "ex-build": "gulp @ex-build-all",
         "ex-clean": "gulp @ex-clean-all",
         "build-all": "npm run build && gulp @build-all",
-        "clean-all": "npm run clean && gulp @clean-all",
+        "clean-all": "gulp @clean-all && npm run clean",
         "test": "npm run build && mocha --reporter spec && npm run gulp-test",
         "prepare": "npm run clean && npm run build",
-        "prepare-to-commit": "npm run prepare && npm run docs-build && npm run ex-clean ",
+        "prepare-to-commit": "npm run prepare && npm run build-all && npm run ex-clean ",
         "npm-dry-run": "npm publish --dry-run",
         "--deprecated-build-babel": "babel src --presets env --out-dir lib",
         "--deprecated-test-babel": "mocha --require babel-core/register --reporter spec"

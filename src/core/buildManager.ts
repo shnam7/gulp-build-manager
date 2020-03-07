@@ -95,7 +95,6 @@ export class GBuildManager {
             watchMap = watchMap.concat(proj.watcher.watchMap);
         });
 
-        // __utils.dmsg('--111---', watchMap);
         this._managerProject.watcher.reset(watchMap);
         this._managerProject.addWatcher(buildName, opts);
         return this;
