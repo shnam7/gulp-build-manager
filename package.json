@@ -14,8 +14,8 @@
         "watch-docs": "gulp docs:@watch",
         "docs-build": "gulp docs:@build",
         "docs-clean": "gulp docs:@clean",
-        "ex-build": "gulp ex-build-all",
-        "ex-clean": "gulp ex-clean-all",
+        "ex-build": "gulp @ex-build-all",
+        "ex-clean": "gulp @ex-clean-all",
         "build-all": "npm run build && gulp @build-all",
         "clean-all": "npm run clean && gulp @clean-all",
         "test": "npm run build && mocha --reporter spec && npm run gulp-test",
@@ -113,7 +113,7 @@
         "tslint-eslint-rules-recommended": "^1.2.2",
         "twig-markdown": "^0.2.1",
         "typescript": "^3.8.3",
-        "webpack": "^4.41.6",
+        "webpack": "^4.42.0",
         "wicle": "github:shnam7/wicle#dev"
     }
 }

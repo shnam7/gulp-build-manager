@@ -21,8 +21,8 @@ gbm
     .addTrigger('@build-all', /@build$/)
     .addCleaner('@clean-all')
     .addWatcher('@watch-all')
-    .addTrigger('ex-build-all', /^\d.*@build$/)
-    .addTrigger('ex-clean-all', /^\d.*@clean$/)
+    .addTrigger('@ex-build-all', /^\d.*@build$/)
+    .addTrigger('@ex-clean-all', /^\d.*@clean$/)
     .addTrigger('default', '@build-all')
     .resolve();
 

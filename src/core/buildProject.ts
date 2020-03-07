@@ -33,6 +33,7 @@ export class GBuildProject {
 
     protected _watcher: GWatcher = new GWatcher;
     protected _cleaner: GCleaner = new GCleaner;
+    protected _vars:any  = {};
     reloadManager: GReloadManager = new GReloadManager();
 
     constructor(buildGroup: BuildGroup = {}, options: ProjectOptions = {}) {
@@ -43,6 +44,10 @@ export class GBuildProject {
     get size() { return this._map.size; }
 
     get projectName() { return this._options.projectName || ""; }
+
+    get prefix() { return this._options.prefix; }
+
+    get vars() { return this._vars; }
 
     get buildNames() {
         let buildNames: string[] = [];
@@ -120,6 +125,15 @@ export class GBuildProject {
         });
         return this;
     }
+
+    addVar(key: any, value: any) {
+        this._vars[key] = value;
+    }
+
+    // merge(...projects: GBuildProject[]) {
+    //     projects.forEach(proj => this.addBuildGroup(proj.buildGroup));
+    //     return this;
+    // }
 
     protected resolveBuildSet(buildSet?: BuildSet): ResolvedType | void {
         if (!buildSet) return;

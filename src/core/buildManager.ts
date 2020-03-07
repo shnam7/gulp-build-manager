@@ -21,43 +21,43 @@ registerPropertiesFromFiles(__plugins, upath.join(__dirname, '../plugins/*.js'))
 
 //--- GBuildManager
 export class GBuildManager {
-    protected projects: GBuildProject[] = [];
-    protected managerProject: GBuildProject = new GBuildProject();
+    protected _projects: GBuildProject[] = [];
+    protected _managerProject: GBuildProject = new GBuildProject();
 
     constructor() {}
 
     get size() {
         let size = 0;
-        this.projects.forEach(proj => { size += proj.size })
+        this._projects.forEach(proj => { size += proj.size })
         return size;
     }
 
     get buildNames() {
         let buildNames: string[] = [];
-        this.projects.forEach(proj => { buildNames = buildNames.concat(proj.buildNames) })
+        this._projects.forEach(proj => { buildNames = buildNames.concat(proj.buildNames) })
         return buildNames;
     }
 
     createProject(buildGroup: BuildGroup, opts?: ProjectOptions) : GBuildProject {
         let project = new GBuildProject(buildGroup, opts);
-        this.projects.push(project);
+        this._projects.push(project);
         return project;
     }
 
     resolve(): void {
-        this.projects.forEach(proj => proj.resolve());
-        this.managerProject.resolve();
+        this._projects.forEach(proj => proj.resolve());
+        this._managerProject.resolve();
     }
 
     addBuildItem(conf: BuildConfig) {
-        this.managerProject.addBuildItem(conf);
+        this._managerProject.addBuildItem(conf);
         return this;
     }
 
     addTrigger(buildName: string, selector: string | string[] | RegExp | RegExp[]) {
         let triggers = this.filter(selector)
 
-        if (triggers.length > 0) this.managerProject.addBuildItem({
+        if (triggers.length > 0) this._managerProject.addBuildItem({
             buildName: buildName,
             triggers: triggers
         });
@@ -66,17 +66,23 @@ export class GBuildManager {
 
     filter(selector: string | string[] | RegExp | RegExp[]): string[] {
         let buildNames: string[] = [];
-        this.projects.forEach(proj => {
+        this._projects.forEach(proj => {
             buildNames = buildNames.concat(proj.filter(selector));
         });
-        return buildNames.concat(this.managerProject.filter(selector));;
+        return buildNames.concat(this._managerProject.filter(selector));;
     }
+
+    // flatten() {
+    //     this._projects.forEach(proj => this._managerProject.merge(proj));
+    //     this._projects = [];
+    //     return this;
+    // }
 
     addCleaner(buildName: string, opts?: CleanerOptions, selector: string | string[] | RegExp | RegExp[] = /@clean$/): this {
         // return this.addTrigger(buildName, '/@clean$/')
         // let cleanBuilds = this.projectList.map(proj => proj.cleaner.buildName)
         let cleanBuilds = this.filter(selector)
-        this.managerProject.addBuildItem({
+        this._managerProject.addBuildItem({
             buildName: buildName,
             triggers: GBuildProject.parallel(...cleanBuilds),
         });
@@ -85,13 +91,13 @@ export class GBuildManager {
 
     addWatcher(buildName: string, opts:WatcherOptions) {
         let watchMap: WatchItem[] = [];
-        this.projects.forEach(proj => {
+        this._projects.forEach(proj => {
             watchMap = watchMap.concat(proj.watcher.watchMap);
         });
 
         // __utils.dmsg('--111---', watchMap);
-        this.managerProject.watcher.reset(watchMap);
-        this.managerProject.addWatcher(buildName, opts);
+        this._managerProject.watcher.reset(watchMap);
+        this._managerProject.addWatcher(buildName, opts);
         return this;
     }
 
