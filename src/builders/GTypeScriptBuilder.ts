@@ -2,11 +2,14 @@
  *  TypeScript Builder
  */
 
-import { GBuilder } from "../core/builder";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 import { TypeScriptPlugin } from "../plugins/TypeScriptPlugin";
+import { Options } from "../core/common";
 
 export class GTypeScriptBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     build() {
         this.src().chain(new TypeScriptPlugin());

@@ -2,11 +2,14 @@
  *  Twig Builder
  */
 
-import { GBuilder } from "../core/builder";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 import TwigPlugin from "../plugins/TwigPlugin";
+import { Options } from "../core/common";
 
 export class GTwigBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     build() {
         this.src().chain(new TwigPlugin()).dest();

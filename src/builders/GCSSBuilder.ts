@@ -2,12 +2,14 @@
  *  CSS Builder with support for Sass/Scss, Less and PostCSS
  */
 
-import { GBuilder } from "../core/builder";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 import { CSSPlugin } from "../plugins/CSSPlugin";
 import { warn } from "../utils/utils";
 
 export class GCSSBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     build() {
         this.src().chain(new CSSPlugin());

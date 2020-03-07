@@ -2,14 +2,14 @@
  *  Jekyll Builder
  */
 
-import { GBuilder } from "../core/builder";
-import { RTB } from "../core/rtb";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { Options } from "../core/common";
 
 export class GJekyllBuilder extends GBuilder {
     command: string;
 
-    constructor() {
-        super();
+    constructor(conf: BuildConfig) {
+        super(conf);
         this.command = process.platform.startsWith('win') ? 'jekyll.bat' : 'jekyll';
     }
 

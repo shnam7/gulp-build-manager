@@ -2,12 +2,15 @@
  *  JavaScript Builder
  */
 
-import { GBuilder } from "../core/builder";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 import JavaScriptPlugin from "../plugins/JavaScriptPlugin";
 import { warn } from "../utils/utils";
+import { Options } from "../core/common";
 
 export class GJavaScriptBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     transpile() {
         return this.chain(new JavaScriptPlugin());

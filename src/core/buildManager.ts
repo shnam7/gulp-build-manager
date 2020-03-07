@@ -6,6 +6,8 @@ import { registerPropertiesFromFiles, is } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
 import { GPlugin as GPluginClass } from './plugin';
 import * as __utils from '../utils/utils';
+import { WatcherOptions, WatchItem } from './watcher';
+import { Options } from './common';
 
 
 //-- custom builders and plugins
@@ -81,6 +83,18 @@ export class GBuildManager {
         return this;
     }
 
+    addWatcher(buildName: string, opts:WatcherOptions) {
+        let watchMap: WatchItem[] = [];
+        this.projects.forEach(proj => {
+            watchMap = watchMap.concat(proj.watcher.watchMap);
+        });
+
+        // __utils.dmsg('--111---', watchMap);
+        this.managerProject.watcher.reset(watchMap);
+        this.managerProject.addWatcher(buildName, opts);
+        return this;
+    }
+
     //--- built-in collections
     get builders() { return __builders; }
     get plugins() { return __plugins; }
@@ -95,5 +109,41 @@ export class GBuildManager {
     buildNamesOf(buildList: BuildGroup | BuildConfig[], prefix = ""): string[] {
         if (is.Array(buildList)) return buildList.map(conf => prefix + conf.buildName);
         return Object.values(buildList).map(conf => prefix + conf.buildName);
+    }
+
+
+    //--- statics
+    static defaultModuleOptions: Options = {
+        sass: {
+            outputStyle: 'compact',
+            // outputStyle: 'compressed',
+            includePaths: []
+        },
+
+        compass: {
+            config_file: './config.rb',
+            css: 'css',
+            sass: 'assets/scss'
+        },
+
+        // autoprefixer: {
+        // browsers: ['last 2 versions', '> 5%']
+        // browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']
+        // },
+
+        cssnano: { discardUnused: false },
+
+        // babel: {presets:["env"]},
+
+        imagemin: {
+            progressive: true,
+            optimizationLevel: 5
+        },
+        htmlPrettify: {
+            indent_char: ' ',
+            indent_size: 4
+        },
+
+        eslint: { "extends": "eslint:recommended", "rules": { "strict": 1 } },
     }
 }

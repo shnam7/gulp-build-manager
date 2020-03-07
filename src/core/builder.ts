@@ -35,8 +35,8 @@ export type ObjectBuilders = CopyBuilder | ExternalBuilder;
 
 //--- GBuilder
 export class GBuilder extends RTB {
-    constructor(conf?: BuildConfig, func?: FunctionBuilder) {
-        super(conf, func);
+    constructor(conf?: BuildConfig) {
+        super(conf || { buildName: '' });
     }
 }
 

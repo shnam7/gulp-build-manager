@@ -2,10 +2,12 @@
  *  Zip Builder
  */
 
-import { GBuilder } from "../core/builder";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 
 export class GZipBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     build() {
         this.src().pipe(require('gulp-zip')(this.conf.outFile)).dest();

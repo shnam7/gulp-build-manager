@@ -19,10 +19,11 @@ fs.readdirSync('./examples').forEach((name) => {
 
 gbm
     .addTrigger('@build-all', /@build$/)
-    .addTrigger('default', '@build-all')
     .addCleaner('@clean-all')
+    .addWatcher('@watch-all')
     .addTrigger('ex-build-all', /^\d.*@build$/)
     .addTrigger('ex-clean-all', /^\d.*@clean$/)
+    .addTrigger('default', '@build-all')
     .resolve();
 
 

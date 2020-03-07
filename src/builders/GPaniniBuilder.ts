@@ -2,11 +2,13 @@
  *  Panini Builder
  */
 
-import { GBuilder } from "../core/builder";
-import { GPlugin } from "../core/plugin";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { Options } from "../core/common";
 
 export class GPaniniBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     build() {
         this.src()

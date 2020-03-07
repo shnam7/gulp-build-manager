@@ -4,55 +4,54 @@
 
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilders, FunctionBuilder, CopyParam } from "./builder";
-import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify, dmsg } from "../utils/utils";
+import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify } from "../utils/utils";
 import { Plugins, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
-import { GReloader } from "./reloader";
+import { GBuildManager } from "./buildManager";
+import { GReloadManager } from "./reloader";
 
 export class RTB {
-    protected stream?: GulpStream;
-    protected streamQ: GulpStream[] = [];
-    protected promises: Promise<unknown>[] = [];
-    protected promiseSync: Promise<unknown> = Promise.resolve();
-    protected syncMode = false;
+    protected _stream?: GulpStream;
+    protected _streamQ: GulpStream[] = [];
+    protected _promises: Promise<unknown>[] = [];
+    protected _promiseSync: Promise<unknown> = Promise.resolve();
+    protected _syncMode: boolean = false;
+    protected _reloadManager?: GReloadManager;
+    protected _buildFunc: FunctionBuilder = (rtb: RTB) => { rtb.src().dest(); };
+
+    //--- internal functions
 
     conf: BuildConfig = { buildName: '' };
     buildOptions: Options = {};
     moduleOptions: Options = {};
-    reloader?: GReloader;
 
-    protected buildFunc = (rtb: RTB) => {
-        rtb.src().dest();
-    };
-
-
-    protected _executor(action?: FunctionBuilders): () => Promise<unknown> {
-        return () => {
-            if (is.Function(action)) {
-                let r = action(this);
-                return (r instanceof Promise) ? r : Promise.resolve();
-            }
-            if (is.Object(action)) {
-                let r = action.func(this, ...action.args);
-                return (r instanceof Promise) ? r : Promise.resolve();
-            }
-            return Promise.resolve();
-        }
+    constructor(conf: BuildConfig) {
+        this._init(conf);
     }
 
-    constructor(conf?: BuildConfig, func?: FunctionBuilder) {
-        this.init(conf, func);
-    }
+    /**----------------------------------------------------------------
+     * Configuration functions
+     *-----------------------------------------------------------------*/
 
-    init(conf?: BuildConfig, func?: FunctionBuilder): this {
+    _init(conf: BuildConfig): this {
         this.conf = conf || { buildName: '' };
-        if (func) this.buildFunc = func;
 
         // normalize config
         if (is.Array(this.conf.dependencies) && this.conf.dependencies.length === 0)
             this.conf.dependencies = undefined;
         if (is.Array(this.conf.triggers) && this.conf.triggers.length === 0)
             this.conf.triggers = undefined;
+        this.conf.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
+        return this;
+    }
+
+    setbuildFunc(func: (rtb:RTB) => Promise<unknown> | void) {
+        this._buildFunc = func;
+        return this;
+    }
+
+    setReloadManager(mgr: GReloadManager) {
+        this._reloadManager = mgr;
         return this;
     }
 
@@ -67,9 +66,9 @@ export class RTB {
         this.buildOptions = conf.buildOptions || {};
         this.moduleOptions = conf.moduleOptions || {};
         const flushStream = this.conf.flushStream;
-        this.syncMode = conf.sync || false;
+        this._syncMode = conf.sync || false;
 
-        if (this.syncMode) this.log('Strating build in sync Mode.');
+        if (this._syncMode) this.log('Strating build in sync Mode.');
 
         // preBuild
         this.promise(this._executor(this.conf.preBuild));
@@ -81,20 +80,20 @@ export class RTB {
         });
 
         // flush strream
-        if (flushStream) this.promise(() => toPromise(this.stream));
+        if (flushStream) this.promise(() => toPromise(this._stream));
 
         // postBuild
         this.promise(this._executor(this.conf.postBuild));
 
         // sync'ed promises
-        this.promises.push(this.promiseSync);
+        this._promises.push(this._promiseSync);
 
         // finally, reload after all the promises are resolved
-        return Promise.all(this.promises).then(() => this.reload());
+        return Promise.all(this._promises).then(() => this.reload());
     }
 
     build(): void | Promise<unknown> {
-        return this.buildFunc(this);
+        return this._buildFunc(this);
     }
 
 
@@ -105,7 +104,7 @@ export class RTB {
     src(src?: string | string[]): this {
         if (!src) src = this.conf.src;
         if (!src) return this;
-        this.stream = gulp.src(src, this.moduleOptions.gulp && this.moduleOptions.gulp.src);
+        this._stream = gulp.src(src, this.moduleOptions.gulp && this.moduleOptions.gulp.src);
 
         // check input file ordering
         if (this.conf.order && this.conf.order?.length > 0) {
@@ -124,7 +123,7 @@ export class RTB {
     }
 
     pipe(destination: any, options?: { end?: boolean; }): this {
-        if (this.stream) this.stream = this.stream!.pipe(destination, options);
+        if (this._stream) this._stream = this._stream!.pipe(destination, options);
         return this;
     }
 
@@ -136,25 +135,25 @@ export class RTB {
     }
 
     on(event: string | symbol, listener: (...args: any[]) => void): this {
-        if (this.stream) this.stream = this.stream.on(event, listener);
+        if (this._stream) this._stream = this._stream.on(event, listener);
         return this;
     }
 
     promise(executor: ()=>Promise<unknown>): this {
-        if (this.syncMode)
-            this.promiseSync = this.promiseSync.then(executor);
+        if (this._syncMode)
+            this._promiseSync = this._promiseSync.then(executor);
         else
-            this.promises.push(executor());
+            this._promises.push(executor());
         return this;
     }
 
     sync(): this {
         // syncMode change need promise to be excuted on proper time in the sequence of all the promise executions
-        return this.promise(() => new Promise((resolve) => { this.syncMode = true; resolve(); }));
+        return this.promise(() => new Promise((resolve) => { this._syncMode = true; resolve(); }));
     }
 
     async(): this {
-        return this.promise(() => new Promise((resolve) => { this.syncMode = false; resolve(); }));
+        return this.promise(() => new Promise((resolve) => { this._syncMode = false; resolve(); }));
     }
 
     wait(msec: number = 0): this {
@@ -172,17 +171,17 @@ export class RTB {
     }
 
     pushStream(): this {
-        if (this.stream) {
-            this.streamQ.push(this.stream);
-            this.stream = this.stream.pipe(require('gulp-clone')());
+        if (this._stream) {
+            this._streamQ.push(this._stream);
+            this._stream = this._stream.pipe(require('gulp-clone')());
         }
         return this;
     }
 
     popStream(): this {
-        if (this.streamQ.length > 0) {
-            if (this.stream) this.promise(() => toPromise(this.stream));  // back for flushing
-            this.stream = this.streamQ.pop()
+        if (this._streamQ.length > 0) {
+            if (this._stream) this.promise(() => toPromise(this._stream));  // back for flushing
+            this._stream = this._streamQ.pop()
         }
         return this;
     }
@@ -199,7 +198,7 @@ export class RTB {
     }
 
     reload(): this {
-        if (this.reloader) this.reloader.reload(this.stream, this.moduleOptions);
+        if (this._reloadManager) this._reloadManager.reload(this._stream);
         return this;
     }
 
@@ -294,5 +293,20 @@ export class RTB {
     minifyJs(): this {
         return this.filter().uglify()
             .rename({ extname: '.min.js' }).sourceMaps();
+    }
+
+
+    protected _executor(action?: FunctionBuilders): () => Promise<unknown> {
+        return () => {
+            if (is.Function(action)) {
+                let r = action(this);
+                return (r instanceof Promise) ? r : Promise.resolve();
+            }
+            if (is.Object(action)) {
+                let r = action.func(this, ...action.args);
+                return (r instanceof Promise) ? r : Promise.resolve();
+            }
+            return Promise.resolve();
+        }
     }
 }

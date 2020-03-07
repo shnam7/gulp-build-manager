@@ -3,7 +3,6 @@
  */
 
 import { msg, arrayify } from "../utils/utils";
-import gulp = require("gulp");
 import del = require("del");
 import { BuildConfig } from "./builder";
 
@@ -37,8 +36,5 @@ export class GCleaner {
             buildName: buildName,
             builder: () => this.clean()
         }
-        // gulp.task(buildName, (done) => this.clean(() => done()));
     }
-
-    // get buildName() { return this._buildName; }
 }

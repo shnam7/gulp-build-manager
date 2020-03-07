@@ -2,12 +2,14 @@
  *  Webpack Builder
  */
 
-import { GBuilder } from "../core/builder";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 import { WebpackPlugin } from "../plugins/WebpackPlugin";
 import { warn } from "../utils/utils";
 
 export class GWebpackBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     build() {
         if (this.conf.src)

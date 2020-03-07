@@ -3,10 +3,13 @@
  *
  */
 
-import { GBuilder } from "../core/builder";
+import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { Options } from "../core/common";
 
 export class GRTLCSSBuilder extends GBuilder {
-    constructor() { super(); }
+    constructor(conf: BuildConfig) {
+        super(conf);
+    }
 
     build() {
         let rtlOpts = this.moduleOptions.rtlcss || {};
