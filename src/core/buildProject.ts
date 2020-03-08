@@ -143,8 +143,8 @@ export class GBuildProject {
         return this;
     }
 
-    addVar(key: any, value: any) {
-        this._vars[key] = value;
+    addVars(vars: { [key: string]: any }) {
+        Object.assign(this._vars, vars);
         return this;
     }
 
