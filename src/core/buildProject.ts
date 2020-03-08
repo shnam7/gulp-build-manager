@@ -87,7 +87,7 @@ export class GBuildProject {
             // check for pure watch: watch atrgets w/o action/task to run (just for reloading)
             if (opts && opts.watch) this._watcher.addWatch({
                 watch: opts.watch,
-                task: (done) => { reloaders.reload(); done(); },
+                task: (done) => { reloaders.reload(); info('<watcher>:reloading triggered.'); done(); },
                 displayName: '<reloader>'
             });
 

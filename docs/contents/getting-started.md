@@ -25,12 +25,18 @@ const html = {
     watch: { watched: ['www/**/*.html')] }
 };
 
-gbm({
-    builds: [html],
-    systemBuilds: {
-        watch: { browserSync: { server: 'www' } }
-    }
-});
+module.exports = gbm.createProject(scss)
+    .addTrigger('@build', [scss.buildName])
+    .addWatcher('@watch', {
+        watch: [upath.join(destRoot, '**/*.html')],  // watch files for reloader (no build actions)
+        browserSync: {
+            server: destRoot,
+            port: port + parseInt(prefix),
+            ui: { port: port + 100 + parseInt(prefix) }
+        },
+    })
+    .addCleaner();
+
 ```
 This configuration will create two gulp tasks, 'html-watcher' and '@watch'. For the names in 'systemBuilds' except 'default', '@' is prefixed to the task name to avoid conflict with other user defined task names.<br>
 If you run 'gulp @watch' command with this configuration, you will see a browser page that are automatically updated when you edit html files in the watched folder, 'www/'.

@@ -39,7 +39,7 @@ export class GBuildManager {
         return buildNames;
     }
 
-    createProject(buildGroup: BuildGroup, opts?: ProjectOptions) : GBuildProject {
+    createProject(buildGroup: BuildGroup={}, opts?: ProjectOptions) : GBuildProject {
         let project = new GBuildProject(buildGroup, opts);
         this._projects.push(project);
         return project;

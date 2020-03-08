@@ -9,18 +9,16 @@ const projectName = upath.basename(__dirname);
 const prefix = projectName + ':';
 const port = 5000;
 
-const exConfig = {
-    scss: {
-        buildName: 'scss',
-        builder: 'GCSSBuilder',
-        src: upath.join(srcRoot, 'scss/**/*.scss'),
-        dest: upath.join(destRoot, 'css'),
-        clean: upath.join(destRoot, 'css')
-    },
+const scss = {
+    buildName: 'scss',
+    builder: 'GCSSBuilder',
+    src: upath.join(srcRoot, 'scss/**/*.scss'),
+    dest: upath.join(destRoot, 'css'),
+    clean: upath.join(destRoot, 'css')
 }
 
-module.exports = gbm.createProject(exConfig, { prefix })
-    .addTrigger('@build', [exConfig.scss.buildName])
+module.exports = gbm.createProject(scss, { prefix })
+    .addTrigger('@build', [scss.buildName])
     .addWatcher('@watch', {
         watch: [upath.join(destRoot, '**/*.html')],  // watch files for reloader (no build actions)
         browserSync: {
