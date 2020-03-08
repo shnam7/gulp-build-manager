@@ -17,7 +17,8 @@ export interface WatcherOptions {
 
 export interface WatchItem {
     watch: string | string[];
-    task: BuildName | GulpTaskFunction;
+    task: GulpTaskFunction;
+    displayName?: string;
 }
 
 
@@ -43,8 +44,8 @@ export class GWatcher {
     watch(activate = true) {
         this._watchMap.forEach(wItem => {
             let name = is.String(wItem.task) ? wItem.task : "";
-            msg(`Watching ${name}: [${wItem.watch}]`);
-            let gulpWatcher = gulp.watch(wItem.watch, gulp.parallel(wItem.task));
+            msg(`Watching ${wItem.displayName}: [${wItem.watch}]`);
+            let gulpWatcher = gulp.watch(wItem.watch, wItem.task);
             if (this._options.reloadOnChange !== false)
                 gulpWatcher.on('change', () => this._reloaders.onChange());
         });
