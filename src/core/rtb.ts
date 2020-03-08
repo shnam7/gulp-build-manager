@@ -8,7 +8,7 @@ import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, w
 import { Plugins, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
 import { GBuildManager } from "./buildManager";
-import { GReloadManager } from "./reloader";
+import { GReloaders } from "./reloader";
 
 export class RTB {
     protected _stream?: GulpStream;
@@ -16,7 +16,7 @@ export class RTB {
     protected _promises: Promise<unknown>[] = [];
     protected _promiseSync: Promise<unknown> = Promise.resolve();
     protected _syncMode: boolean = false;
-    protected _reloadManager?: GReloadManager;
+    protected _reloaders?: GReloaders;
     protected _buildFunc: FunctionBuilder = (rtb: RTB) => { rtb.src().dest(); };
 
     //--- internal functions
@@ -50,8 +50,8 @@ export class RTB {
         return this;
     }
 
-    setReloadManager(mgr: GReloadManager) {
-        this._reloadManager = mgr;
+    setReloaders(reloaders: GReloaders) {
+        this._reloaders = reloaders;
         return this;
     }
 
@@ -89,7 +89,9 @@ export class RTB {
         this._promises.push(this._promiseSync);
 
         // finally, reload after all the promises are resolved
-        return Promise.all(this._promises).then(() => this.reload());
+        return Promise.all(this._promises).then(() => {
+            if (conf.reloadOnFinish === true) this.reload()
+        });
     }
 
     build(): void | Promise<unknown> {
@@ -198,7 +200,7 @@ export class RTB {
     }
 
     reload(): this {
-        if (this._reloadManager) this._reloadManager.reload(this._stream);
+        if (this._reloaders) this._reloaders.reload(this._stream);
         return this;
     }
 

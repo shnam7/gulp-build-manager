@@ -8,7 +8,9 @@ const prefix = projectName + ':';
 
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
-const destRoot = upath.join(basePath, '_build');
+const destRoot = upath.join(basePath, 'www');
+const port = 5000;
+
 
 const postcssPlugins = [
     require('postcss-preset-env'),
@@ -20,13 +22,6 @@ const postcssPlugins = [
 
 
 const app = {
-    copyHtml: {
-        buildName: 'copyHtml',
-        builder: 'GBuilder',
-        src: upath.join(srcRoot, '*.html'),
-        dest: destRoot
-    },
-
     sass: {
         buildName: 'sass',
         builder: 'GCSSBuilder',
@@ -36,14 +31,12 @@ const app = {
             sourceType: 'scss',
             sourceMap: true,
             lint: true,
-            minify: true,
+            minify: false,
             postcss: true
         },
         moduleOptions: {
             sass: {
-                includePaths: [
-                    'assets/scss'
-                ]
+                includePaths: [ 'assets/scss' ]
             },
             postcss: {
                 plugins: postcssPlugins
@@ -72,7 +65,7 @@ const app = {
             sourceType: 'less',
             sourceMap: true,
             lint: true,
-            minify: true,
+            minify: false,
             autoprefixer: false,
             // postcss: true
         },
@@ -97,7 +90,7 @@ const app = {
         buildOptions: {
             lint: true,
             sourceMap: true,
-            minify: true,
+            minify: false,
             postcss: true
         },
         moduleOptions: {
@@ -111,14 +104,19 @@ const app = {
     rtl: {
         buildName: 'rtl',
         builder: 'GRTLCSSBuilder',
-        src: [upath.join(destRoot, 'css/*.css'), "!**/*-rtl.css"],
+        src: [
+            upath.join(destRoot, 'css/*.css'),
+            `!${upath.join(destRoot, 'css/**/*-rtl.css')}`
+        ],
+
         dest: upath.join(destRoot, 'css'),
         moduleOptions: {
             // if no rename option is set, default is {suffix: '-rtl'}
             rename: {
-                suffix: '---rtl'
+                suffix: '-rtl'
             }
         },
+        watch: []
     },
 }
 
@@ -126,12 +124,17 @@ module.exports = gbm.createProject(app, {prefix})
     .addBuildItem({
         buildName: '@build',
         dependencies: [
-            gbm.parallel(app.copyHtml.buildName, app.sass.buildName, app.less.buildName, app.postcss.buildName),
+            gbm.parallel(app.sass.buildName, app.less.buildName, app.postcss.buildName),
             app.rtl.buildName
         ],
-        clean: [destRoot]
+        clean: [upath.join(destRoot, 'css')]
     })
     .addWatcher('@watch', {
-        browserSync: { server: upath.resolve(destRoot) }
+        watch: [upath.join(destRoot, "**/*.html")],
+        browserSync: {
+            server: upath.resolve(destRoot),
+            port: port + parseInt(prefix),
+            ui: { port: port + 100 + parseInt(prefix) }
+        }
     })
     .addCleaner();

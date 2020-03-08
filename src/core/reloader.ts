@@ -2,25 +2,24 @@
  *  GReloader - Browser reloader
  */
 import { Options, Stream } from "./common";
-import { msg } from "../utils/utils";
-import { WatcherOptions } from "./watcher";
+import { msg, arrayify } from "../utils/utils";
 
-export interface ReloaderOptions {
-    livereload?: Options;
-    browserSync?: Options; // browserSync.Options is not used to remove unnecessary dependency when browserSync is not used
+
+export interface ReloaderOptions extends Options {
+    instanceName?: string;
 }
-
 
 export class GReloader {
     protected _module: any;
-    protected _moduleOption: Options = {};
+    protected _options: Options = {};
 
-    constructor(moduleOption?: ReloaderOptions) {
-        Object.assign(this._moduleOption, moduleOption);
+    constructor(options?: ReloaderOptions) {
+        Object.assign(this._options, options);
     }
 
-    init() {}
+    activate() {}
     reload(stream?: Stream, mopts: Options = {}) { return stream; }
+    onChange() { if (this._module) this._module.reload(); }
 }
 
 export class GLiveReload extends GReloader {
@@ -28,13 +27,14 @@ export class GLiveReload extends GReloader {
         super(options);
     }
 
-    init() {
+    activate() {
         if (this._module) return;
-
-        this._module = require('gulp-livereload')(this._moduleOption);
+        this._module = require('gulp-livereload')(this._options);
     }
 
     reload(stream?: Stream, opts: Options = {}) {
+        if (!this._module) return;  // if not activated, return
+
         if (stream)
             stream = stream.pipe(this._module(opts));
         else
@@ -48,15 +48,17 @@ export class GBrowserSync extends GReloader {
         super(moduleOptions);
     }
 
-    init() {
+    activate() {
         if (this._module) return;
-
         this._module = require('browser-sync');
-        this._module = this._module.has('gbm') ? this._module.get('gbm') : this._module.create('gbm');
-        this._module.init(this._moduleOption, () => msg('browserSync server started with options:', this._moduleOption));
+        // this._module = this._module.has('gbm') ? this._module.get('gbm') : this._module.create('gbm');
+        this._module = this._module.create(this._options.instanceName );
+        this._module.init(this._options, () => msg('browserSync server started with options:', this._options));
     }
 
     reload(stream?: Stream, opts: Options = {}) {
+        if (!this._module) return;  // if not activated, return
+
         if (stream)
             stream = stream.pipe(this._module.stream(opts));
         else
@@ -66,23 +68,31 @@ export class GBrowserSync extends GReloader {
 }
 
 
-export class GReloadManager {
+// Reloader Manager
+export class GReloaders {
     protected _reloaders: GReloader[] = [];
 
-    addReloader(reloader: GReloader) {
-        this._reloaders.push(reloader);
+    createReloaders(opts: ReloaderOptions={}) {
+        if (opts.livereload) this._reloaders.push(new GLiveReload(opts.livereload));
+        if (opts.browserSync) this._reloaders.push(new GBrowserSync(opts.browserSync));
         return this;
     }
 
-    init(opts?: ReloaderOptions & WatcherOptions) {
-        // create reloaders
-        if (opts?.browserSync) this.addReloader(new GBrowserSync(opts.browserSync));
-        if (opts?.livereload) this.addReloader(new GBrowserSync(opts.livereload));
+    addReloaders(reloaders: GReloader | GReloader[] | GReloaders) {
+        if (reloaders instanceof GReloaders) reloaders = reloaders._reloaders;
+        this._reloaders = this._reloaders.concat(arrayify(reloaders));
+        return this;
+    }
 
-        this._reloaders.forEach(reloader => reloader.init());
+    activate() {
+        this._reloaders.forEach(reloader => reloader.activate());
     }
 
     reload(stream?: Stream, opts?: Options) {
-        this._reloaders.forEach(reloader => reloader.reload(stream, opts));
+        this._reloaders.forEach(reloader => reloader.reload(stream, opts) );
+    }
+
+    onChange() {
+        this._reloaders.forEach(reloader => reloader.onChange());
     }
 }

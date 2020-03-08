@@ -7,7 +7,7 @@ import { GulpTaskFunction, gulp } from "./common";
 import { is, arrayify, info, ExternalCommand, warn, exec } from "../utils/utils";
 import { GCleaner, CleanerOptions } from "./cleaner";
 import { WatcherOptions } from './watcher';
-import { GReloadManager } from './reloader';
+import { GBuildManager } from './buildManager';
 
 export type ResolvedType = BuildName | GulpTaskFunction;
 export type BuildGroup = {
@@ -34,7 +34,6 @@ export class GBuildProject {
     protected _watcher: GWatcher = new GWatcher;
     protected _cleaner: GCleaner = new GCleaner;
     protected _vars:any  = {};
-    reloadManager: GReloadManager = new GReloadManager();
 
     constructor(buildGroup: BuildGroup = {}, options: ProjectOptions = {}) {
         Object.assign(this._options, options);
@@ -74,16 +73,32 @@ export class GBuildProject {
     }
 
     addWatcher(buildName = '@watch', opts?: WatcherOptions): this {
-        // check for pure watch: watch atrgets w/o action/task to run (just for reloading)
-        if (opts && opts.watch) this._watcher.addWatch({
-            watch: opts.watch,
-            task: (done) => { this.reloadManager.reload(); done(); }
-        });
+        if (opts) {
+            if (opts.browserSync) Object.assign(opts.browserSync,
+                { instanceName: this._options.prefix + buildName });
+            if (opts.livereload) Object.assign(opts.livereload,
+                { instanceName: this._options.prefix + buildName });
+            let reloaders = this._watcher.reloaders.createReloaders({
+                browserSync: opts.browserSync,
+                livereloiad: opts.livereload
+            });
+
+            // add additional watch map:
+            // check for pure watch: watch atrgets w/o action/task to run (just for reloading)
+            if (opts && opts.watch) this._watcher.addWatch({
+                watch: opts.watch,
+                task: (done) => { reloaders.reload(); done(); }
+            });
+
+            this._watcher.reloadOnChange(opts.reloadOnChange);
+        }
 
         // create watch build item
         return this.addBuildItem({
             buildName: buildName,
-            builder: () => { this._watcher.watch(opts); this.reloadManager.init(opts); }
+            builder: () => {
+                this._watcher.watch();
+            }
         });
     }
 
@@ -108,7 +123,7 @@ export class GBuildProject {
                 });
             }
             else {
-                let buildNamesArray = arrayify(sel).map(buildName => buildName);;
+                let buildNamesArray = arrayify(sel).map(buildName => buildName);
                 this._map.forEach((conf) => {
                     if (buildNamesArray.includes(conf.buildName)) ret.push(conf.buildName)
                 });
@@ -132,11 +147,6 @@ export class GBuildProject {
         this._vars[key] = value;
         return this;
     }
-
-    // merge(...projects: GBuildProject[]) {
-    //     projects.forEach(proj => this.addBuildGroup(proj.buildGroup));
-    //     return this;
-    // }
 
     protected resolveBuildSet(buildSet?: BuildSet): ResolvedType | void {
         if (!buildSet) return;
@@ -169,9 +179,9 @@ export class GBuildProject {
             // sanity check for the final task function before calling gulp.task()
             let resolved = this.resolveBuildSet([...deps, task, ...<any>triggers]);
             if (!resolved)
-                resolved = defaultTaskFunc;
+            resolved = defaultTaskFunc;
             else if (is.String(resolved))
-                resolved = gulp.parallel(resolved);
+            resolved = gulp.parallel(resolved);
 
             gulp.task(conf.buildName, <GulpTaskFunction>resolved);
 
@@ -180,13 +190,16 @@ export class GBuildProject {
 
             // resolve watch
             let watched = arrayify(conf.watch ? conf.watch : conf.src).concat(arrayify(conf.addWatch));
-            if (watched.length > 0) this._watcher.addWatch({
-                // buildName: conf.buildName,
-                watch: watched,
-                task: conf.buildName ? gulp.parallel(conf.buildName) : (done) => { done() },
+            if (watched.length > 0) {
+                this._watcher.addWatch({
+                    // buildName: conf.buildName,
+                    watch: watched,
+                    task: conf.buildName ? gulp.parallel(conf.buildName) : (done) => { done() }
                 });
+            }
 
-            rtb.setReloadManager(this.reloadManager);
+            rtb.setReloaders(this._watcher.reloaders);
+            GBuildManager.rtbMap.set(rtb.conf.buildName, rtb);   // register to global rtb list
             return conf.buildName;
         }
 

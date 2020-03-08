@@ -12,6 +12,7 @@ const destRoot = upath.join(basePath, '_site');
 const prefix = projectName + ':';
 const sourceMap = true;
 const jekyllTrigger = upath.join(basePath, '.jekyll-trigger');  // flag to trigger jekyll watcher
+const port = 4000;
 
 const scss = {
     buildName: 'scss',
@@ -65,7 +66,6 @@ const scripts = {
     flushStream: true,
     postBuild: (rtb) => {
         rtb.copy([{ src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js') }])
-        // return promise to be sure copy operation is done before the task finishes
         return gbm.utils.exec('echo', ['>', jekyllTrigger]);
     },
     buildOptions: {
@@ -85,7 +85,7 @@ const jekyll = {
             '-s ' + upath.join(basePath, ''),   // source path
             '-d ' + destRoot,                   // destination path
             '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
-            '--baseurl http://localhost:3000',  // root folder relative to local server,
+            '--baseurl http://localhost:' + port,  // root folder relative to local server,
             '--incremental'
         ],
         // options: { shell: true }
@@ -100,6 +100,7 @@ const jekyll = {
         `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
     ],
     clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTrigger],
+    reloadOnFinish: true
 };
 
 module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
@@ -111,10 +112,12 @@ module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
         ]
     })
     .addWatcher('@watch', {
+        reloadOnChange: false,
         browserSync: {
             server: upath.resolve(destRoot),
-            port: 3000,
             open: true,
+            port: port,
+            ui: { port: port + 100 }
             // reloadDebounce: 500
         }
     })

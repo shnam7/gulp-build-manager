@@ -7,6 +7,7 @@ const destRoot = upath.join(basePath, 'www');
 
 const projectName = upath.basename(__dirname);
 const prefix = projectName + ':';
+const port = 5000;
 
 const exConfig = {
     scss: {
@@ -22,6 +23,10 @@ module.exports = gbm.createProject(exConfig, { prefix })
     .addTrigger('@build', [exConfig.scss.buildName])
     .addWatcher('@watch', {
         watch: [upath.join(destRoot, '**/*.html')],  // watch files for reloader (no build actions)
-        browserSync: { server: destRoot },
+        browserSync: {
+            server: destRoot,
+            port: port + parseInt(prefix),
+            ui: { port: port + 100 + parseInt(prefix) }
+        },
     })
     .addCleaner();

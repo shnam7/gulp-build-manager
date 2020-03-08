@@ -64,6 +64,7 @@ export interface BuildConfig {
     triggers?: BuildSet;        // buildSet to be executed after this build task
     watch?: string | string[];  // override default watch, 'src' if defined
     addWatch?: string | string[];   // additional watch in addition to watch or default watch
+    reloadOnFinish?: boolean;
     clean?: string | string[];
 }
 

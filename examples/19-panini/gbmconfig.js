@@ -9,6 +9,7 @@ const prefix = projectName + ':';
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets/panini');
 const destRoot = upath.join(basePath, '_build');
+const port = 5000;
 
 const panini = {
     buildName: 'panini',
@@ -35,6 +36,10 @@ const panini = {
 module.exports = gbm.createProject(panini, {prefix})
     .addTrigger('@build', [panini.buildName])
     .addWatcher('@watch', {
-        browserSync: { server: upath.resolve(destRoot) }
+        browserSync: {
+            server: upath.resolve(destRoot),
+            port: port + parseInt(prefix),
+            ui: { port: port + 100 + parseInt(prefix) }
+        }
     })
     .addCleaner();

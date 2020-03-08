@@ -9,6 +9,7 @@ const prefix = projectName + ':';
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, 'www');
+const port = 5000;
 
 // build configuration
 const typeScript = {
@@ -34,6 +35,7 @@ const typeScript = {
         upath.join(destRoot, 'js'),
         upath.join(srcRoot, 'scripts/ts/**/*.{js,map,d.ts}')
     ],
+    flushStream: true,
 };
 
 module.exports = gbm.createProject(typeScript, { prefix })
@@ -42,6 +44,8 @@ module.exports = gbm.createProject(typeScript, { prefix })
         browserSync: {
             server: upath.resolve(destRoot),
             open: true,
+            port: port + parseInt(prefix),
+            ui: { port: port + 100 + parseInt(prefix) }
             // reloadDelay:300
         },
         watch: [

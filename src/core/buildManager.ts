@@ -6,8 +6,9 @@ import { registerPropertiesFromFiles, is } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
 import { GPlugin as GPluginClass } from './plugin';
 import * as __utils from '../utils/utils';
-import { WatcherOptions, WatchItem } from './watcher';
+import { WatcherOptions } from './watcher';
 import { Options } from './common';
+import { RTB } from './rtb';
 
 
 //-- custom builders and plugins
@@ -72,15 +73,7 @@ export class GBuildManager {
         return buildNames.concat(this._managerProject.filter(selector));;
     }
 
-    // flatten() {
-    //     this._projects.forEach(proj => this._managerProject.merge(proj));
-    //     this._projects = [];
-    //     return this;
-    // }
-
     addCleaner(buildName: string, opts?: CleanerOptions, selector: string | string[] | RegExp | RegExp[] = /@clean$/): this {
-        // return this.addTrigger(buildName, '/@clean$/')
-        // let cleanBuilds = this.projectList.map(proj => proj.cleaner.buildName)
         let cleanBuilds = this.filter(selector)
         this._managerProject.addBuildItem({
             buildName: buildName,
@@ -90,14 +83,24 @@ export class GBuildManager {
     }
 
     addWatcher(buildName: string, opts:WatcherOptions) {
-        let watchMap: WatchItem[] = [];
-        this._projects.forEach(proj => {
-            watchMap = watchMap.concat(proj.watcher.watchMap);
-        });
+        // create reloaders in manager project
+        let watcher = this._managerProject.watcher;
+        let reloaders = watcher.reloaders.createReloaders(opts);
+        this._projects.forEach(proj => proj.watcher.reloaders.addReloaders(reloaders));
 
-        this._managerProject.watcher.reset(watchMap);
-        this._managerProject.addWatcher(buildName, opts);
-        return this;
+        watcher.reloadOnChange(opts.reloadOnChange);
+
+        // create watch build item
+        return this.addBuildItem({
+            buildName: buildName,
+            builder: () => {
+                // start watch for all the project, but depress reloader activation
+                this._projects.forEach(proj => proj.watcher.watch(false))
+
+                // activate reloaders in manager project
+                reloaders.activate();
+            }
+        });
     }
 
     //--- built-in collections
@@ -151,4 +154,7 @@ export class GBuildManager {
 
         eslint: { "extends": "eslint:recommended", "rules": { "strict": 1 } },
     }
+
+    // active RTB list
+    static rtbMap: Map<string, RTB> = new Map();
 }

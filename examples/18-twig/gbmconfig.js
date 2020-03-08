@@ -9,6 +9,7 @@ const prefix = projectName + ':';
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
+const port = 5000;
 
 
 const exConfig = {
@@ -92,6 +93,10 @@ const exConfig = {
 module.exports = gbm.createProject(exConfig, {prefix})
     .addTrigger('@build', gbm.buildNamesOf(exConfig))
     .addWatcher('@watch', {
-        browserSync: { server: upath.resolve(destRoot) }
+        browserSync: {
+            server: upath.resolve(destRoot),
+            port: port + parseInt(prefix),
+            ui: { port: port + 100 + parseInt(prefix) }
+        }
     })
     .addCleaner('@clean', { clean: destRoot });
