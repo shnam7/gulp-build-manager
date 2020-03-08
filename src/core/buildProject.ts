@@ -88,7 +88,7 @@ export class GBuildProject {
             if (opts && opts.watch) this._watcher.addWatch({
                 watch: opts.watch,
                 task: (done) => { reloaders.reload(); done(); },
-                displayName: 'reloader'
+                displayName: '<reloader>'
             });
 
             this._watcher.reloadOnChange(opts.reloadOnChange);
