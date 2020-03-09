@@ -1,0 +1,11 @@
+{
+  "name": "00-getting-started",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gbmconfig.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Robin Soo-hyuk Nam",
+  "license": "ISC"
+}

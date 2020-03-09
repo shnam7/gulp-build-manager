@@ -24,6 +24,7 @@ defaults:
 # Module settings
 kramdown:
   input: GFM
+  hard_wrap: true
   auto_ids: false
   syntax_highlighter_opts:
     disable : true

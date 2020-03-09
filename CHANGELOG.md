@@ -8,6 +8,10 @@
 - Remove BuildConfig.copy
 - Remove examples and docs (moved to separate repositories)
 - Feature Add check for duplicate gulp task in GBuildManager:resolve()
+- Feature Add GProjectManager
+- Feature Add new interface for main task creator in gulpfle
+- Feature Add multiple reloader supports
+- Improve performance by removing all dummy task creation
 
 ## 3.2.0-rc
 - Add GRTLCSSBuilder
