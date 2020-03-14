@@ -60,7 +60,7 @@ export class GBuildManager {
         let reloaders = watcher.reloaders.createReloaders(opts);
         this._projects.forEach(proj => proj.watcher.reloaders.addReloaders(reloaders));
 
-        watcher.reloadOnChange(opts.reloadOnChange);
+        reloaders.reloadOnChange(opts.reloadOnChange);
 
         // create watch build item
         return this.addBuildItem({

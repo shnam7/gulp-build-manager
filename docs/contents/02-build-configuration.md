@@ -13,26 +13,26 @@ When resolving BuildConfig, RTB(Runtime Builder) instance with the config is cre
 
 ```js
 interface BuildConfig {
-    buildName: string;          // mandatory
+    buildName: string;              // mandatory
     builder?: Builders;
     src?: string | string[];
     dest?: string;
     outFile?: string;
-    order?: string[];           // input file(src) ordering
-    flushStream?: boolean;      // finish all the output streams before exiting gulp task
-    sync?: boolean,             // serialize each build execution steps
-    verbose?: boolean,          // print verbose messages
-    silent?: boolean,           // depress informative messages
+    order?: string[];               // input file(src) ordering
+    flushStream?: boolean;          // finish all the output streams before exiting gulp task
+    sync?: boolean,                 // serialize each build execution steps
+    verbose?: boolean,              // print verbose messages
+    silent?: boolean,               // depress informative messages
     preBuild?: FunctionBuilders;
     postBuild?: FunctionBuilders;
-    buildOptions?: Options;     // buildConfig instance specific custom options
-    moduleOptions?: Options;    // gulp module options
-    dependencies?: BuildSet;    // buildSet to be executed before this build task
-    triggers?: BuildSet;        // buildSet to be executed after this build task
-    watch?: string | string[];  // override default watch, 'src' if defined
+    buildOptions?: Options;         // buildConfig instance specific custom options
+    moduleOptions?: Options;        // gulp module options
+    dependencies?: BuildSet;        // buildSet to be executed before this build task
+    triggers?: BuildSet;            // buildSet to be executed after this build task
+    watch?: string | string[];      // override default watch, 'src' if defined
     addWatch?: string | string[];   // additional watch in addition to watch or default watch
-    reloadOnFinish?: boolean;
     clean?: string | string[];
+    reloadOnFinish?: boolean;       // trigger reload when build operation is finished
 }
 
 //--- BuildSet
@@ -160,11 +160,6 @@ Specifies other build items that will be executed after this build item, in gulp
 The dependencies can be any combination of build items in the form of BuildSet.
 
 
-### conf.clean
-Specifies clean target files that will be removed by GCleaner when clean task is triggered.
-GCleaner instance is automatically created by GBuildProject, if there's any clean target to remove.
-Glob supported.
-
 ### conf.watch
 Specifies watch target files that will be monitored by GWatcher when watch task is triggered.
 GWatcher instance is automatically created by GBuildProject, if there's any watch target to monitor.
@@ -174,3 +169,46 @@ Glob supported.
 
 ### conf.addWatch
 Addional watch targets that will be added to conf.watch in addition to default vale, conf.src.
+
+
+### conf.clean
+Specifies clean target files that will be removed by GCleaner when clean task is triggered.
+GCleaner instance is automatically created by GBuildProject, if there's any clean target to remove.
+Glob supported.
+
+
+### conf.reloadOnFinish
+By default, Gwatcher monitors and triggers reloading. So, reloading ath the end of build is not required.
+This is generally fine, but in some cases such as executing external commands without gulp stream, reloading need to be delayed until the build execution is finished. In that case, this option can be turned on, and GWatcher's reloadOnChange option can be turned off.
+Here is an example to do that.
+```js
+const jekyll = {
+    buildName: 'jekyll',
+    builder: 'GJekyllBuilder',
+    src: upath.join(basePath, ''),
+    dest: destRoot,
+    moduleOptions: {
+        jekyll: {
+            subcommand: 'build',
+            args: [
+                '--safe', // github runs in safe mode for security reason. Custom plugins are not supported.
+                '--baseurl http://localhost:' + port, // root folder relative to local server,
+                '--incremental'
+            ]
+        }
+    },
+    watch: [ upath.join(basePath, '**/*.{yml,html,md}') ],
+    clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTrigger],
+
+    reloadOnFinish: true
+}
+
+gbm.createProject(jekyll)
+    .addWatcher('watch', {
+        browserSync: {server: upath.join(destRoot, '_site')}
+        reloadOnChange: false       // turns off automatic reloading on change
+    })
+    .resolve()
+```
+
+Note: If reloadOnChange option is turned off, this will affect all the build items registered ito the project. So, in that case, reloadOnFinish option should to be truned on for all the build items in the project to have proper reloading.

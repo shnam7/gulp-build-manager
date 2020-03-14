@@ -6,7 +6,7 @@ import { msg, arrayify } from "../utils/utils";
 
 
 export interface ReloaderOptions extends Options {
-    instanceName?: string;
+    reloadOnChange?: boolean;
 }
 
 export class GReloader {
@@ -19,7 +19,14 @@ export class GReloader {
 
     activate() {}
     reload(stream?: Stream, mopts: Options = {}) { return stream; }
-    onChange() { if (this._module) this._module.reload(); }
+    onChange() {
+        if (this._module && this._options.reloadOnChange !== false)
+            this._module.reload();
+    }
+
+    reloadOnChange(val: boolean = true) {
+        this._options.reloadOnChange = val !== false;
+    }
 }
 
 export class GLiveReload extends GReloader {
@@ -94,5 +101,9 @@ export class GReloaders {
 
     onChange() {
         this._reloaders.forEach(reloader => reloader.onChange());
+    }
+
+    reloadOnChange(val: boolean = true) {
+        this._reloaders.forEach(reloader => reloader.reloadOnChange(val));
     }
 }

@@ -20,16 +20,15 @@ fs.readdirSync('./examples').forEach((name) => {
 gbm
     .addTrigger('@build-all', /@build$/)
     .addCleaner('@clean-all')
-    .addTrigger('@watch-all', /@watch$/)
-    // .addWatcher('@watch-all-reload-on-ex1', {
-    //     browserSync: {
-    //         server: './examples/01-watcher/www',
-    //         ui: {
-    //             port: 3100
-    //         },
-    //         port: 3101,
-    //     }
-    // })
+    // .addTrigger('@watch-all', /@watch$/)
+    .addWatcher('@watch', {
+        browserSync: {
+            server: './docs/_site',
+            ui: { port: 3100 },
+            port: 3101,
+        },
+        reloadOnChange: false
+    })
     .addTrigger('@ex-build-all', /^\d.*@build$/)
     .addTrigger('@ex-clean-all', /^\d.*@clean$/)
     .addTrigger('default', '@build-all')

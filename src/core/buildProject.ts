@@ -86,7 +86,7 @@ export class GBuildProject {
                 displayName: '<reloader>'
             });
 
-            this._watcher.reloadOnChange(opts.reloadOnChange);
+            this._watcher.reloaders.reloadOnChange(opts.reloadOnChange);
         }
 
         // create watch build item
