@@ -9,12 +9,12 @@ import { RTB } from "./rtb";
 
 export type TaskDoneFunction = (error?: any) => void;
 export type Plugin = FunctionBuilder | GPlugin;
+export type BuildName = string;
 
 
 //--- Named Builders
 export type GBuilderClassName = string;
-export type BuildName = string;
-export type NamedBuilders = GBuilderClassName | BuildName;
+export type NamedBuilders = GBuilderClassName;
 
 //--- Function Builders
 export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>
@@ -38,6 +38,8 @@ export class GBuilder extends RTB {
     constructor(conf?: BuildConfig) {
         super(conf || { buildName: '' });
     }
+
+    protected build(): void | Promise<unknown> {}
 }
 
 //--- Combined Builders Type

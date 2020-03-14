@@ -10,11 +10,11 @@ const buildItem1 = {
     buildName: 'task1',
     builder: (rtb) => {
         console.log(rtb.conf.buildName + ' executed - this will take 0.3 seconds to finish.');
-        return gbm.utils.wait(300);
+        return gbm.utils.wait(3);
     },
     preBuild: () => {
         console.log('preBuild called. It will take 0.2 seconds.');
-        return gbm.utils.wait(200);
+        return gbm.utils.wait(2);
     },
     postBuild: () => console.log('postBuild called'),
     sync: true
@@ -47,4 +47,4 @@ const parallel = {
 };
 
 module.exports = gbm.createProject({ buildItem1, buildItem2, series, parallel }, {prefix})
-    .addTrigger('@build', gbm.buildNamesOf([series, parallel]));
+    .addTrigger('@build', /(series|parallel)$/);

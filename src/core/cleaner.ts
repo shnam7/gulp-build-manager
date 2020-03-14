@@ -8,7 +8,7 @@ import { BuildConfig } from "./builder";
 
 export interface CleanerOptions extends del.Options {
     clean?: string | string[];
-};
+}
 
 export class GCleaner {
     // protected _buildName: string = "";

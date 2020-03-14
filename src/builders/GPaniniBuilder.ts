@@ -10,7 +10,7 @@ export class GPaniniBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src()
             .chain(() => {
                 const panini = require('panini');

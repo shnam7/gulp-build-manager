@@ -11,7 +11,7 @@ export class GTwigBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src().chain(new TwigPlugin()).dest();
     }
 }

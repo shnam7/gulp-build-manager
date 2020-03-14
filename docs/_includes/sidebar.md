@@ -1,34 +1,35 @@
-## [Contents](/{{site.contentsurl}}/)
+## Contents
 {:class="title"}
-* [Getting Started](/{{site.contentsurl}}/getting-started)
-* [Build Manager](/{{site.contentsurl}}/build-manager)
-* [Builders](/{{site.contentsurl}}/builders/using-builders)
-  - [Using Builders](/{{site.contentsurl}}/builders/using-builders)
-  - [Built-in Builders](/{{site.contentsurl}}/builders/built-in-builders)
-    - [GBuilder](/{{site.contentsurl}}/builders/built-in/GBuilder)
-    - [GCoffeeScriptBuilder](/{{site.contentsurl}}/builders/built-in/GCoffeeScriptBuilder)
-    - [GConcatBuilder](/{{site.contentsurl}}/builders/built-in/GConcatBuilder)
-    - [GCSSBuilder](/{{site.contentsurl}}/builders/built-in/GCSSBuilder)
-    - [GExternalBuilder](/{{site.contentsurl}}/builders/built-in/GExternalBuilder)
-    - [GImagesBuilder](/{{site.contentsurl}}/builders/built-in/GImagesBuilder)
-    - [GJavaScriptBuilder](/{{site.contentsurl}}/builders/built-in/GJavaScriptBuilder)
-    - [GJekyllBuilder](/{{site.contentsurl}}/builders/built-in/GJekyllBuilder)
-    - [GMarkdownBuilder](/{{site.contentsurl}}/builders/built-in/GMarkdownBuilder)
-    - [GPaniniBuilder](/{{site.contentsurl}}/builders/built-in/GPaniniBuilder)
-    - [GRTLCSSBuilder](/{{site.contentsurl}}/builders/built-in/GRTLCSSBuilder)
-    - [GTwigBuilder](/{{site.contentsurl}}/builders/built-in/GTwigBuilder)
-    - [GTypeScriptBuilder](/{{site.contentsurl}}/builders/built-in/GTypeScriptBuilder)
-    - [GWebpackBuilder](/{{site.contentsurl}}/builders/built-in/GWebpackBuilder)
-    - [GZipBuilder](/{{site.contentsurl}}/builders/built-in/GZipBuilder)
-  - [Function Builders](/{{site.contentsurl}}/builders/function-builders)
-  - [Custom Builders](/{{site.contentsurl}}/builders/custom-builders)
+01. [Gettiing Started](/{{site.contentsurl}}/01-getting-started)
+02. [Build Configuration](/{{site.contentsurl}}/02-build-configuration)
+03. [Build Project](/{{site.contentsurl}}/03-build-project)
+04. [Build Manager](/{{site.contentsurl}}/04-build-manager)
+05. [RTB - Runtime Builder](/{{site.contentsurl}}/05-rtb)
+06. [Builders](/{{site.contentsurl}}/06-builders)
+07. [Plugins](/{{site.contentsurl}}/07-plugins)
+08. [Modular Configuration](/{{site.contentsurl}}/08-modular-configuration)
+09. [Migration from v3](/{{site.contentsurl}}/09-migration-from-v3)
 
-* [Plugins](/{{site.contentsurl}}/plugins/using-plugins)
-  - [Using Plugins](/{{site.contentsurl}}/plugins/using-plugins)
-  - [Built-in Plugins](/{{site.contentsurl}}/plugins/built-in-plugins)
-  - [Custom Plugins](/{{site.contentsurl}}/plugins/custom-plugins)
 
-* Resources
-  - [Examples](/{{site.contentsurl}}/resources/examples)
-  - [Task synchronization](/{{site.contentsurl}}/resources/task-synchronization)
-  - [Modular Configuration](/{{site.contentsurl}}/resources/modular-configuration)
+### Built-in Builders
+- [GBuilder](/{{site.contentsurl}}/builtin-builders/GBuilder)
+- [GCoffeeScriptBuilder](/{{site.contentsurl}}/builtin-builders/GCoffeeScriptBuilder)
+- [GConcatBuilder](/{{site.contentsurl}}/builtin-builders/GConcatBuilder)
+- [GCSSBuilder](/{{site.contentsurl}}/builtin-builders/GCSSBuilder)
+- [GImagesBuilder](/{{site.contentsurl}}/builtin-builders/GImagesBuilder)
+- [GJavaScriptBuilder](/{{site.contentsurl}}/builtin-builders/GJavaScriptBuilder)
+- [GJekyllBuilder](/{{site.contentsurl}}/builtin-builders/GJekyllBuilder)
+- [GMarkdownBuilder](/{{site.contentsurl}}/builtin-builders/GMarkdownBuilder)
+- [GPaniniBuilder](/{{site.contentsurl}}/builtin-builders/GPaniniBuilder)
+- [GRTLCSSBuilder](/{{site.contentsurl}}/builtin-builders/GRTLCSSBuilder)
+- [GTwigBuilder](/{{site.contentsurl}}/builtin-builders/GTwigBuilder)
+- [GTypeScriptBuilder](/{{site.contentsurl}}/builtin-builders/GTypeScriptBuilder)
+- [GWebpackBuilder](/{{site.contentsurl}}/builtin-builders/GWebpackBuilder)
+- [GZipBuilder](/{{site.contentsurl}}/builtin-builders/GZipBuilder)
+
+
+### Resources
+- [Examples][0]{:target="_blank"}
+
+
+[0]: {{site.repo}}/examples

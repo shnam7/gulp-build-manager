@@ -70,5 +70,5 @@ const clean2 = {
 
 
 module.exports = gbm.createProject({copy, build1, build2, clean1, clean2}, {prefix})
-    .addTrigger('@build', gbm.buildNamesOf([copy, build1, build2, clean1, clean2]))
+    .addTrigger('@build', /.*/)
     .addCleaner();

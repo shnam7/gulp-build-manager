@@ -11,7 +11,7 @@ export class GMarkdownBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src().chain(new MarkdownPlugin()).dest();
     }
 }

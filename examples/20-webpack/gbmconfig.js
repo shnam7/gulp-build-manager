@@ -12,41 +12,36 @@ const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
 const port = 5000;
 
-const app = {
-    pages: {
-        buildName: 'twig',
-        builder: 'GTwigBuilder',
-        src: [upath.join(srcRoot, 'pages/**/*.html')],
-        dest: upath.join(destRoot, ''),
-        buildOptions: { prettify: true },
+
+const pages = {
+    buildName: 'twig',
+    builder: 'GTwigBuilder',
+    src: [upath.join(srcRoot, 'pages/**/*.html')],
+    dest: upath.join(destRoot, ''),
+    buildOptions: { prettify: true },
+}
+
+const webpack = {
+    buildName: 'webpack',
+    builder: 'GWebpackBuilder',
+    // src: [upath.join(srcRoot, 'scripts/ts/app.ts')],
+    dest: upath.join(destRoot, 'js'),
+    flushStream: true,
+    buildOptions: {
+        printConfig: true,
+        webpackConfig: upath.join(basePath, 'webpack.config.js')
     },
-
-    webpack: {
-        buildName: 'webpack',
-        builder: 'GWebpackBuilder',
-        // src: [upath.join(srcRoot, 'scripts/ts/app.ts')],
-        dest: upath.join(destRoot, 'js'),
-        flushStream: true,
-        buildOptions: {
-            printConfig: true,
-            webpackConfig: upath.join(basePath, 'webpack.config.js')
+    moduleOptions: {
+        webpack: {
+            // settings here will be merged override webpackConfig file contents
         },
-        moduleOptions: {
-            webpack: {
-                // settings here will be merged override webpackConfig file contents
-            },
-        },
-        watch: [upath.join(srcRoot, 'scripts/ts/**/*.ts')]
     },
-
-    // get build() {
-    //     return gbm.parallel(this.pages, this.webpack)
-    // }
-};
+    watch: [upath.join(srcRoot, 'scripts/ts/**/*.ts')]
+}
 
 
-module.exports = gbm.createProject(app, { prefix })
-    .addTrigger('@build', gbm.buildNamesOf(app))
+module.exports = gbm.createProject({pages, webpack}, { prefix })
+    .addTrigger('@build', /.*/)
     .addWatcher('@watch', {
         browserSync: {
             server: upath.resolve(destRoot),

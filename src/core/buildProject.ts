@@ -1,6 +1,6 @@
 import * as upath from 'upath';
 
-import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, ObjectBuilders, CopyBuilder } from "./builder";
+import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, ObjectBuilders, CopyBuilder, BuildSetSeries } from "./builder";
 import { RTB } from "./rtb";
 import { GWatcher } from "./watcher";
 import { GulpTaskFunction, gulp } from "./common";
@@ -20,11 +20,6 @@ export type ProjectOptions = {
     customBuilderDirs?: string | string[];
 };
 
-export type TriggerOptions = {
-    sync?: boolean;
-    buildKey?: string;
-}
-
 
 export class GBuildProject {
     protected _map: Map<string, BuildConfig> = new Map();
@@ -40,22 +35,6 @@ export class GBuildProject {
         this.addBuildGroup(buildGroup);
     }
 
-    get size() { return this._map.size; }
-
-    get projectName() { return this._options.projectName || ""; }
-
-    get prefix() { return this._options.prefix; }
-
-    get vars() { return this._vars; }
-
-    get buildNames() {
-        let buildNames: string[] = [];
-        this._map.forEach(conf=>{buildNames.push(conf.buildName)})
-        return buildNames;
-    }
-
-    get watcher() { return this._watcher; }
-
     addBuildItem(conf: BuildConfig): this {
         if (this._options.prefix) conf.buildName = this._options.prefix + conf.buildName
         // this.map.set(this.options.prefix + buildKey, conf);
@@ -69,6 +48,22 @@ export class GBuildProject {
             this.addBuildItem(buildGroup as BuildConfig);
         else
             Object.entries(buildGroup as BuildGroup).forEach(([buildKey, conf]) => this.addBuildItem(conf));
+        return this;
+    }
+
+    addTrigger(buildName: string, selector: string | string[] | RegExp | RegExp[], series: boolean = false): this {
+        let buildNames = this.filter(selector);
+        let triggers = (buildNames.length === 1)
+            ? buildNames[0]
+            : series ? buildNames : GBuildProject.parallel(...buildNames);
+
+        if (buildNames.length > 0)
+            this.addBuildItem({ buildName, triggers });
+        return this;
+    }
+
+    addVars(vars: { [key: string]: any }): this {
+        Object.assign(this._vars, vars);
         return this;
     }
 
@@ -103,16 +98,8 @@ export class GBuildProject {
         });
     }
 
-    addCleaner(buildName = '@clean', opts?: CleanerOptions) {
+    addCleaner(buildName = '@clean', opts?: CleanerOptions): this {
         return this.addBuildItem(this._cleaner.createTask(buildName, opts));
-    }
-
-    resolve() : this {
-        this._map.forEach(conf => {
-            let resolved = this.resolveBuildSet(conf);
-            if (resolved) this._resolved.push(resolved);
-        });
-        return this;
     }
 
     filter(selector: string | string[] | RegExp | RegExp[]): string[] {
@@ -133,22 +120,32 @@ export class GBuildProject {
         return ret;
     }
 
-    addTrigger(buildName: string, buildNames: string | string[], opts: TriggerOptions={}) {
-        buildNames = this.filter(buildNames);
-        let triggers = (buildNames.length === 1)
-            ? buildNames[0]
-            : opts.sync ? buildNames : GBuildProject.parallel(...buildNames);
-
-        if (buildNames.length > 0)
-            this.addBuildItem({ buildName: buildName, triggers: triggers });
+    resolve() : this {
+        this._map.forEach(conf => {
+            let resolved = this.resolveBuildSet(conf);
+            if (resolved) this._resolved.push(resolved);
+        });
         return this;
     }
 
-    addVars(vars: { [key: string]: any }) {
-        Object.assign(this._vars, vars);
-        return this;
+    get size() { return this._map.size; }
+
+    get projectName() { return this._options.projectName || ""; }
+
+    get prefix() { return this._options.prefix; }
+
+    get vars() { return this._vars; }
+
+    get buildNames() {
+        let buildNames: string[] = [];
+        this._map.forEach(conf=>{buildNames.push(conf.buildName)})
+        return buildNames;
     }
 
+    get watcher() { return this._watcher; }
+
+
+    //--- internals
     protected resolveBuildSet(buildSet?: BuildSet): ResolvedType | void {
         if (!buildSet) return;
 
@@ -294,7 +291,7 @@ export class GBuildProject {
         throw Error(`[buildName:${buildItem.buildName}]Unknown ObjectBuilder.`);
     }
 
-    // utilities
-    static series(...args: BuildSet[]) { return args }
-    static parallel(...args: BuildSet[]) { return { set: args } }
+    // statics
+    static series(...args: BuildSet[]): BuildSetSeries { return args }
+    static parallel(...args: BuildSet[]): BuildSetParallel { return { set: args } }
 }

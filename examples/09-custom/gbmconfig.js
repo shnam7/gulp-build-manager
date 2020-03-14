@@ -46,10 +46,9 @@ const myCSSBuilder = {
     clean: [upath.join(basePath, "sample.css")]
 };
 
-const app = { customFunction, customBuilder, myBuilder, myCSSBuilder }
 
-module.exports = gbm.createProject(app, {
+module.exports = gbm.createProject({customFunction, customBuilder, myBuilder, myCSSBuilder}, {
         prefix,
         customBuilderDirs: upath.join(basePath, 'custom-builders')
     })
-    .addTrigger('@build', gbm.buildNamesOf(app))
+    .addTrigger('@build', /.*/)

@@ -11,6 +11,17 @@ const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, 'www');
 const port = 5000;
 
+const stylelint = {
+    "extends": [
+        "stylelint-config-recommended",
+        "./.stylelintrc"
+    ],
+    rules: {
+        "function-calc-no-unspaced-operator": null,
+        "no-descending-specificity": null
+    },
+    // "fix": true,
+}
 
 const postcssPlugins = [
     require('postcss-preset-env'),
@@ -21,111 +32,100 @@ const postcssPlugins = [
 ];
 
 
-const app = {
-    sass: {
-        buildName: 'sass',
-        builder: 'GCSSBuilder',
-        src: [upath.join(srcRoot, 'scss/**/*.scss')],
-        dest: upath.join(destRoot, 'css'),
-        buildOptions: {
-            sourceType: 'scss',
-            sourceMap: true,
-            lint: true,
-            minify: false,
-            postcss: true
-        },
-        moduleOptions: {
-            sass: {
-                includePaths: [ 'assets/scss' ]
-            },
-            postcss: {
-                plugins: postcssPlugins
-            },
-            stylelint: {
-                "extends": [
-                    "stylelint-config-recommended",
-                    "./.stylelintrc"
-                ],
-                rules: {
-                    "function-calc-no-unspaced-operator": null,
-                    "no-descending-specificity": null
-                },
-                // "fix": true,
-            }
-        },
-        flushStream: true,
+const sass = {
+    buildName: 'sass',
+    builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'scss/**/*.scss')],
+    dest: upath.join(destRoot, 'css'),
+    buildOptions: {
+        sourceType: 'scss',
+        sourceMap: true,
+        lint: true,
+        minify: false,
+        postcss: true
     },
+    moduleOptions: {
+        sass: {
+            includePaths: [ 'assets/scss' ]
+        },
+        postcss: {
+            plugins: postcssPlugins
+        },
 
-    less: {
-        buildName: 'less',
-        builder: 'GCSSBuilder',
-        src: [upath.join(srcRoot, 'less/**/*.less')],
-        dest: upath.join(destRoot, 'css'),
-        buildOptions: {
-            sourceType: 'less',
-            sourceMap: true,
-            lint: true,
-            minify: false,
-            autoprefixer: false,
-            // postcss: true
-        },
-        moduleOptions: {
-            // sass: {
-            // includePaths: [
-            // 'assets/scss'
-            // ]
-            // },
-            postcss: {
-                plugins: postcssPlugins
-            }
-        },
-        flushStream: true,
     },
-
-    postcss: {
-        buildName: 'postcss',
-        builder: 'GCSSBuilder',
-        src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
-        dest: upath.join(destRoot, 'css'),
-        buildOptions: {
-            lint: true,
-            sourceMap: true,
-            minify: false,
-            postcss: true
-        },
-        moduleOptions: {
-            postcss: {
-                plugins: postcssPlugins
-            },
-        },
-        flushStream: true,
-    },
-
-    rtl: {
-        buildName: 'rtl',
-        builder: 'GRTLCSSBuilder',
-        src: [
-            upath.join(destRoot, 'css/*.css'),
-            `!${upath.join(destRoot, 'css/**/*-rtl.css')}`
-        ],
-
-        dest: upath.join(destRoot, 'css'),
-        moduleOptions: {
-            // if no rename option is set, default is {suffix: '-rtl'}
-            rename: {
-                suffix: '-rtl'
-            }
-        },
-        watch: []
-    },
+    flushStream: true,
 }
 
-module.exports = gbm.createProject(app, {prefix})
+const less = {
+    buildName: 'less',
+    builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'less/**/*.less')],
+    dest: upath.join(destRoot, 'css'),
+    buildOptions: {
+        sourceType: 'less',
+        sourceMap: true,
+        lint: true,
+        minify: false,
+        autoprefixer: false,
+        // postcss: true
+    },
+    moduleOptions: {
+        // sass: {
+        // includePaths: [
+        // 'assets/scss'
+        // ]
+        // },
+        postcss: {
+            plugins: postcssPlugins
+        }
+    },
+    flushStream: true,
+}
+
+const postcss = {
+    buildName: 'postcss',
+    builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
+    dest: upath.join(destRoot, 'css'),
+    buildOptions: {
+        lint: true,
+        sourceMap: true,
+        minify: false,
+        postcss: true
+    },
+    moduleOptions: {
+        postcss: {
+            plugins: postcssPlugins
+        },
+        stylelint
+    },
+    flushStream: true,
+}
+
+const rtl = {
+    buildName: 'rtl',
+    builder: 'GRTLCSSBuilder',
+    src: [
+        upath.join(destRoot, 'css/*.css'),
+        `!${upath.join(destRoot, 'css/**/*-rtl.css')}`
+    ],
+
+    dest: upath.join(destRoot, 'css'),
+    moduleOptions: {
+        // if no rename option is set, default is {suffix: '-rtl'}
+        rename: {
+            suffix: '-rtl'
+        }
+    },
+    watch: []
+}
+
+module.exports = gbm.createProject({sass, less, postcss, rtl}, {prefix})
     .addBuildItem({
         buildName: '@build',
         dependencies: [
-            gbm.parallel(app.sass.buildName, app.less.buildName, app.postcss.buildName),
-            app.rtl.buildName
+            gbm.parallel(sass.buildName, less.buildName, postcss.buildName),
+            rtl.buildName
         ],
         clean: [upath.join(destRoot, 'css')]
     })

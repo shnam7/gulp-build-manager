@@ -11,7 +11,7 @@ export class GCSSBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src().chain(new CSSPlugin());
         const opts = this.buildOptions;
 

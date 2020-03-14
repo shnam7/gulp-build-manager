@@ -13,7 +13,7 @@ export class GJekyllBuilder extends GBuilder {
         this.command = process.platform.startsWith('win') ? 'jekyll.bat' : 'jekyll';
     }
 
-    build() {
+    protected build() {
         const opts = this.moduleOptions.jekyll || {};
 
         let args = [opts.subcommand || 'build'];

@@ -11,7 +11,7 @@ export class GTypeScriptBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src().chain(new TypeScriptPlugin());
 
         // concat stream is handled by gulp-typescript. only non-concat is handled here

@@ -4,32 +4,33 @@
         top: 0;
     }
 
-    // title
-    &>.title {
+    h1 {
         text-align: center;
     }
 
+    h3 {
+        font-size: 1.2rem;
+        margin: 1.5rem 0 0 0;
+        color: gray(30%);
+    }
+
+    a {
+        color: $w-color-falu-red;
+        &:hover {
+            color: $w-color-dark-red;
+            font-weight: bold;
+        }
+    }
+
     // table of contents list
-    &>ul {
+    ul {
         margin: 0;
         padding: 0;
-        list-style: none;
-
-        a:hover {
-            color: $w-color-dark-red;
-        }
-
-        ul {
-            margin: 0;
-            list-style-type: disc;
-            padding: 0 1rem 0.5rem 1rem;
-        }
-
+        list-style: disc;
+        list-style-position: inside;
         &>li {
-            margin: 0.5rem 0 0 0;
-            padding: 0.35rem 1rem;
-            border-radius: 3px;
-            background: rgba($w-color-primary, 0.05);
+            margin: 0; // 0.5rem 0 0 0;
+            padding: 0rem 1rem;
         }
     }
 }

@@ -26,7 +26,7 @@ export const is = {
   WeakSet:      (a:unknown): a is typeof WeakSet => _is(a, 'WeakSet')
 };
 
-export function arrayify<T>(arg?: T | T[]) {
+export function arrayify<T>(arg?: T | T[]): T[] {
     return arg ? (is.Array(arg) ? arg : [arg]) : [];
 }
 

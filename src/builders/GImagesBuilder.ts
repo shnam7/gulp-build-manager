@@ -10,7 +10,7 @@ export class GImagesBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src().pipe(require('gulp-imagemin')(this.moduleOptions.imagemin)).dest();
     }
 }

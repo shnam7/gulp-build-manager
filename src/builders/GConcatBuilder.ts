@@ -9,7 +9,7 @@ export class GConcatBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src().concat().dest();
     }
 }

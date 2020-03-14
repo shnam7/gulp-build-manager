@@ -33,7 +33,7 @@ export class RTB {
      * Configuration functions
      *-----------------------------------------------------------------*/
 
-    _init(conf: BuildConfig): this {
+    protected _init(conf: BuildConfig): this {
         this.conf = conf || { buildName: '' };
 
         // normalize config
@@ -71,19 +71,19 @@ export class RTB {
         if (this._syncMode) this.log('Strating build in sync Mode.');
 
         // preBuild
-        this.promise(this._executor(this.conf.preBuild));
+        this.promise(this._executor(this.conf.preBuild), true);
 
         // build
         this.promise(() => {
             let r = this.build();
             return r instanceof Promise ? r : Promise.resolve();
-        });
+        }, true);
 
         // flush strream
-        if (flushStream) this.promise(() => toPromise(this._stream));
+        if (flushStream) this.promise(() => toPromise(this._stream), true);
 
         // postBuild
-        this.promise(this._executor(this.conf.postBuild));
+        this.promise(this._executor(this.conf.postBuild), true);
 
         // sync'ed promises
         this._promises.push(this._promiseSync);
@@ -94,7 +94,7 @@ export class RTB {
         });
     }
 
-    build(): void | Promise<unknown> {
+    protected build(): void | Promise<unknown> {
         return this._buildFunc(this);
     }
 
@@ -125,7 +125,7 @@ export class RTB {
     }
 
     pipe(destination: any, options?: { end?: boolean; }): this {
-        if (this._stream) this._stream = this._stream!.pipe(destination, options);
+        if (this._stream) this._stream = this._stream.pipe(destination, options);
         return this;
     }
 
@@ -141,8 +141,8 @@ export class RTB {
         return this;
     }
 
-    promise(executor: ()=>Promise<unknown>): this {
-        if (this._syncMode)
+    promise(executor: () => Promise<unknown>, sync: boolean = false): this {
+        if (this._syncMode || sync === true)
             this._promiseSync = this._promiseSync.then(executor);
         else
             this._promises.push(executor());
@@ -158,8 +158,8 @@ export class RTB {
         return this.promise(() => new Promise((resolve) => { this._syncMode = false; resolve(); }));
     }
 
-    wait(msec: number = 0): this {
-        return this.promise(() => wait(msec));
+    wait(msec: number = 0, sync: boolean = false): this {
+        return this.promise(() => wait(msec), sync);
     }
 
     // print message in promise execution sequence

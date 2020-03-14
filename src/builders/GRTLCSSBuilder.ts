@@ -11,7 +11,7 @@ export class GRTLCSSBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         let rtlOpts = this.moduleOptions.rtlcss || {};
         let renameOpts = this.moduleOptions.rename || { suffix: '-rtl' };
 

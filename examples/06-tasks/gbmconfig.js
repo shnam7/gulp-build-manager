@@ -32,38 +32,34 @@ const set04 = gbm.parallel(prefix+build1.buildName, prefix+build2.buildName);
 const set05 = prefix + 'build1';
 const set06 = [prefix+build1.buildName, prefix+build2.buildName];
 
-const exConfig = {
-    build1, build2,
-
-    simpleTask: {
-        buildName: 'simple-builds',
-        builder: () => {
-            console.log('simpleTask executed');
-        },
-        preBuild: rtb => console.log(`preBuild called, customVar1=${rtb.conf.customVar1}`),
-        postBuild: {
-            func: (builder, arg1, arg2) => console.log(`postBuild called,`
-                + `customVar1=${builder.conf.customVar2}, arg1=${arg1}, arg2=${arg2}`),
-            args: ['arg1', 'arg2']
-        },
-
-        // buildSet can be of type GulpTaskFunction, not normal function.
-        // so, gulp.serial() or gulp.parallel() is required
-        triggers: gbm.parallel((done) => {
-            console.log(this.buildName, `: trigger successful.`);
-            done();
-        }),
-
-        customVar1: 'customer variable#1',
-        customVar2: 'customer variable#2'
+const simpleTask = {
+    buildName: 'simple-builds',
+    builder: () => {
+        console.log('simpleTask executed');
+    },
+    preBuild: rtb => console.log(`preBuild called, customVar1=${rtb.conf.customVar1}`),
+    postBuild: {
+        func: (builder, arg1, arg2) => console.log(`postBuild called,`
+            + `customVar1=${builder.conf.customVar2}, arg1=${arg1}, arg2=${arg2}`),
+        args: ['arg1', 'arg2']
     },
 
-    buildSetTest: {
-        buildName: 'buildset-test',
-        builder: (rtb) => console.log('This is the main task: buildSetTest\n'),
-        dependencies: gbm.parallel(set01, set02, set03, set04, set05, set06)
-    },
-};
+    // buildSet can be of type GulpTaskFunction, not normal function.
+    // so, gulp.serial() or gulp.parallel() is required
+    triggers: gbm.parallel((done) => {
+        console.log(this.buildName, `: trigger successful.`);
+        done();
+    }),
 
-module.exports = gbm.createProject(exConfig, {prefix})
-    .addTrigger('@build', gbm.buildNamesOf(exConfig))
+    customVar1: 'customer variable#1',
+    customVar2: 'customer variable#2'
+}
+
+const buildSetTest = {
+    buildName: 'buildset-test',
+    builder: (rtb) => console.log('This is the main task: buildSetTest\n'),
+    dependencies: gbm.parallel(set01, set02, set03, set04, set05, set06)
+}
+
+module.exports = gbm.createProject({build1, build2, simpleTask, buildSetTest}, {prefix})
+    .addTrigger('@build', /.*/)

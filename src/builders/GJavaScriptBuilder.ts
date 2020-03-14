@@ -12,11 +12,11 @@ export class GJavaScriptBuilder extends GBuilder {
         super(conf);
     }
 
-    transpile() {
+    protected transpile() {
         return this.chain(new JavaScriptPlugin());
     }
 
-    build() {
+    protected build() {
         this.src().transpile();
         const opts = this.buildOptions;
 

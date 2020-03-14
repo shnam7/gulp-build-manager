@@ -9,7 +9,7 @@ const build1 = {
     buildName: 'build1',
     builder: () => {
         console.log('build1 executed - this will take 0.3 seconds to finish.');
-        return gbm.utils.wait(300);
+        return gbm.utils.wait(3);
     }
 };
 

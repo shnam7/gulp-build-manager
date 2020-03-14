@@ -34,7 +34,7 @@ const panini = {
 };
 
 module.exports = gbm.createProject(panini, {prefix})
-    .addTrigger('@build', [panini.buildName])
+    .addTrigger('@build', /.*/)
     .addWatcher('@watch', {
         browserSync: {
             server: upath.resolve(destRoot),

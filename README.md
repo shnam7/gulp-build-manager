@@ -1,5 +1,5 @@
 # Gulp Build Manager
-Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp task manager. Users can create gulp tasks with simple build configuration. At the same time, javascript can be used to customize or extend the configuration.
+Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp task manager. Users can create gulp tasks with simple build configurations. At the same time, javascript can be used to customize and extend the configuration.
 
 ## Key features
 - Various Buildt-in builders and plugins
@@ -21,15 +21,15 @@ Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp ta
 
 
 ## Installation
-Refer to [Getting Started](/docs/contents/getting-started.md) guide
-
-
-## Migration from v3
-Refer to [Migration from v3](/docs/contents/resources/migration-from-v3.md)
-
+```bash
+npm i gulp-build-manager --save-dev
+npm i gulp --save-dev
+```
+Refer to [Getting Started](/docs/contents/01-getting-started.md) guide for the details.
 
 
 ## Sample gulpfile.js using gbm
+
 ```js
 const gbm = require('../../lib');
 const upath = require('upath');
@@ -37,7 +37,6 @@ const upath = require('upath');
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
-
 
 const scss = {
     buildName: 'scss',
@@ -82,11 +81,13 @@ gbm.createProject(app)
 ```
 
 
+## Resource
+- [Documentation](/docs/contents/README.md)
+- [Migration from v3](/docs/contents/09-migration-from-v3.md)
+
+
+
 <p align="center">
   <img class="logo" src="https://shnam7.github.io/gulp-build-manager/images/gbm.svg" width="64px">
   <p align=center>Copyright &copy; 2017, under <a href="./LICENSE">MIT</a></p>
 </div>
-
-[0]: https://shnam7.github.io/gulp-build-manager/
-[1]: https://github.com/shnam7/gulp-build-manager-examples
-[2]: https://github.com/shnam7/gulp-build-manager/tree/master/CHANGELOG.md

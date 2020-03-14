@@ -9,7 +9,7 @@ export class GZipBuilder extends GBuilder {
         super(conf);
     }
 
-    build() {
+    protected build() {
         this.src().pipe(require('gulp-zip')(this.conf.outFile)).dest();
     }
 }
