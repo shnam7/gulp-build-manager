@@ -177,9 +177,9 @@ export class GBuildProject {
             // sanity check for the final task function before calling gulp.task()
             let resolved = this.resolveBuildSet([...deps, task, ...<any>triggers]);
             if (!resolved)
-            resolved = defaultTaskFunc;
+                resolved = defaultTaskFunc;
             else if (is.String(resolved))
-            resolved = gulp.parallel(resolved);
+                resolved = gulp.parallel(resolved);
 
             gulp.task(conf.buildName, <GulpTaskFunction>resolved);
 
@@ -204,6 +204,9 @@ export class GBuildProject {
 
         // if buildSet is BuildSetSeries: recursion
         else if (is.Array(buildSet)) {
+            // strip redundant arrays
+            while (buildSet.length === 1 && is.Array(buildSet[0])) buildSet = buildSet[0];
+
             let list = [];
             for (let bs of buildSet) {
                 let ret = this.resolveBuildSet(bs);
@@ -215,8 +218,12 @@ export class GBuildProject {
 
         // if buildSet is BuildSetParallel: recursion
         else if (is.Object(buildSet) && buildSet.hasOwnProperty('set')) {
+            // strip redundant arrays
+            let set = (<BuildSetParallel>buildSet).set;
+            while (set.length === 1 && is.Array(set[0])) set = set[0];
+
             let list = [];
-            for (let bs of (<BuildSetParallel>buildSet).set) {
+            for (let bs of set) {
                 let ret = this.resolveBuildSet(bs);
                 if (ret) list.push(ret);
             }
