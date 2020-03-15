@@ -10,6 +10,8 @@ import filter = require("gulp-filter");
 import { GBuildManager } from "./buildManager";
 import { GReloaders } from "./reloader";
 
+type PromiseExecutor = () => void | Promise<unknown>;
+
 export class RTB {
     protected _stream?: GulpStream;
     protected _streamQ: GulpStream[] = [];
@@ -68,30 +70,16 @@ export class RTB {
         const flushStream = this.conf.flushStream;
         this._syncMode = conf.sync || false;
 
-        if (this._syncMode) this.log('Strating build in sync Mode.');
-
-        // preBuild
-        this.promise(this._executor(this.conf.preBuild), true);
-
-        // build
-        this.promise(() => {
-            let r = this.build();
-            return r instanceof Promise ? r : Promise.resolve();
-        }, true);
-
-        // flush strream
-        if (flushStream) this.promise(() => toPromise(this._stream), true);
-
-        // postBuild
-        this.promise(this._executor(this.conf.postBuild), true);
-
-        // sync'ed promises
-        this._promises.push(this._promiseSync);
-
-        // finally, reload after all the promises are resolved
-        return Promise.all(this._promises).then(() => {
-            if (conf.reloadOnFinish === true) this.reload()
-        });
+        // build sequence use new promise independent of API promises (this._promises and this._promiseSync)
+        if (this._syncMode) console.log('RTB: Strating build in sync Mode.');
+        return Promise.resolve()
+            .then(() => this._execute(this.conf.preBuild))           // prebuild
+            .then(() => this.build())
+            .then(() => this._execute(this.conf.postBuild))
+            .then(() => Promise.all(this._promises))
+            .then(() => { if (flushStream) toPromise(this._stream); })
+            .then(() => this._promiseSync)
+            .then(() => { if (conf.reloadOnFinish === true) this.reload(); });
     }
 
     protected build(): void | Promise<unknown> {
@@ -130,10 +118,9 @@ export class RTB {
     }
 
     chain(action: Plugins, ...args: any[]): this {
-        return this.promise(() => (
-            action instanceof GPlugin ? action.process(this, ...args) : action(this, ...args))
-            || Promise.resolve()
-        );
+        let ret = this.promise(action instanceof GPlugin ? action.process(this, ...args) : action(this, ...args));
+        if (ret instanceof Promise) this.promise(ret);
+        return this;
     }
 
     on(event: string | symbol, listener: (...args: any[]) => void): this {
@@ -141,35 +128,39 @@ export class RTB {
         return this;
     }
 
-    promise(executor: () => Promise<unknown>, sync: boolean = false): this {
-        if (this._syncMode || sync === true)
-            this._promiseSync = this._promiseSync.then(executor);
-        else
-            this._promises.push(executor());
+    //--- accept function or promise
+    promise(promise?: Promise<unknown> | void | PromiseExecutor, sync: boolean = false): this {
+        if (promise instanceof Promise) {
+            if (sync || this._syncMode)
+                this._promiseSync = this._promiseSync.then(() => promise);
+            else
+                this._promises.push(promise);
+        }
+        else if (is.Function(promise)) {
+            if (sync || this._syncMode)
+                this._promiseSync = this._promiseSync.then(promise as PromiseExecutor);
+            else {
+                promise = (promise as PromiseExecutor)();
+                if (promise) this._promises.push(promise);
+            }
+        }
         return this;
     }
 
     sync(): this {
-        // syncMode change need promise to be excuted on proper time in the sequence of all the promise executions
-        return this.promise(() => new Promise((resolve) => { this._syncMode = true; resolve(); }));
+        this._syncMode = true;
+        return this;
     }
 
     async(): this {
-        return this.promise(() => new Promise((resolve) => { this._syncMode = false; resolve(); }));
+        this._syncMode = true;
+        return this;
     }
 
     wait(msec: number = 0, sync: boolean = false): this {
-        return this.promise(() => wait(msec), sync);
-    }
-
-    // print message in promise execution sequence
-    msg(...args: any[]): this {
-        return this.promise(() => new Promise(resolve => { msg(args); resolve() }));
-    }
-
-    // print message in promise execution sequence only when verbose option enabled
-    log(...args: any[]): this {
-        return !this.conf.silent ? this.promise(() => new Promise(resolve => { info(args); resolve() })) : this;
+        return (sync || this._syncMode)
+            ? this.promise(() => wait(msec), sync)
+            : this.promise(wait(msec), sync);
     }
 
     pushStream(): this {
@@ -182,7 +173,7 @@ export class RTB {
 
     popStream(): this {
         if (this._streamQ.length > 0) {
-            if (this._stream) this.promise(() => toPromise(this._stream));  // back for flushing
+            if (this._stream) this.promise(toPromise(this._stream));  // back for flushing
             this._stream = this._streamQ.pop()
         }
         return this;
@@ -221,35 +212,41 @@ export class RTB {
         return this.pipe(require('gulp-rename')(opts));
     }
 
-    copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
+    copy(param?: CopyParam | CopyParam[], options: Options = {}, sync: boolean = false): this {
         if (!param) return this;   // allow null argument
 
         let targets = arrayify(param);
         for (let target of targets) {
-            this.promise(() => {
-                let copyInfo = `[${target.src}] => ${target.dest}`;
-                if (options.verbose) msg(`copying: [${copyInfo}]`);
-                return toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest)))
-                    .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) })
-            });
+            let copyInfo = `[${target.src}] => ${target.dest}`;
+            if (options.verbose) msg(`copying: [${copyInfo}]`);
+
+            if (sync || this._syncMode)
+                this.promise(()=>toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest)))
+                    .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) }), sync);
+            else
+                this.promise(toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest)))
+                    .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) }), sync);
         }
         return this;
     }
 
-    del(patterns: string | string[], options: Options = {}): this {
+    del(patterns: string | string[], options: Options = {}, sync: boolean = false): this {
         if (!this.conf.silent) msg('Deleting:', patterns);
-        return this.promise(() => require("del")(patterns, options));
+        return (sync || this._syncMode)
+            ? this.promise(() => require("del")(patterns, options), sync)
+            : this.promise(require("del")(patterns, options), sync);
     }
 
-    spawn(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
-        return this.promise(() => (is.Object(cmd))
-            ? spawn(cmd.command, cmd.args, cmd.options)
-            : spawn(cmd, args, options)
-        )
+    spawn(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false): this {
+        return (sync || this._syncMode)
+            ? this.promise(() => (is.Object(cmd)) ? spawn(cmd.command, cmd.args, cmd.options) : spawn(cmd, args, options), sync)
+            : this.promise((is.Object(cmd)) ? spawn(cmd.command, cmd.args, cmd.options) : spawn(cmd, args, options), sync);
     }
 
-    exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
-        return this.promise(() => exec(cmd, args, options));
+    exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false): this {
+        return (sync || this._syncMode)
+            ? this.promise(() => exec(cmd, args, options), sync)
+            : this.promise(exec(cmd, args, options), sync);
     }
 
     // minify javascripts
@@ -263,7 +260,7 @@ export class RTB {
         return this.pipe(require('gulp-clean-css')(opts));
     }
 
-    clean(options: Options = {}): this {
+    clean(options: Options = {}, sync: boolean = false): this {
         let clean1 = this.conf.clean || [];
         let clean2 = options.clean || [];
         if (is.String(clean1)) clean1 = [clean1];
@@ -272,7 +269,7 @@ export class RTB {
 
         // check rename option
         const delOpts = Object.assign({}, this.moduleOptions.del, options.del);
-        return this.del(cleanList, delOpts)
+        return this.del(cleanList, delOpts, sync)
     }
 
 
@@ -298,17 +295,8 @@ export class RTB {
     }
 
 
-    protected _executor(action?: FunctionBuilders): () => Promise<unknown> {
-        return () => {
-            if (is.Function(action)) {
-                let r = action(this);
-                return (r instanceof Promise) ? r : Promise.resolve();
-            }
-            if (is.Object(action)) {
-                let r = action.func(this, ...action.args);
-                return (r instanceof Promise) ? r : Promise.resolve();
-            }
-            return Promise.resolve();
-        }
+    protected _execute(action?: FunctionBuilders): void | Promise<unknown> {
+        if (is.Function(action)) return action(this);
+        if (is.Object(action)) return action.func(this, ...action.args);
     }
 }

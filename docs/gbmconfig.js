@@ -82,15 +82,15 @@ const jekyll = {
         command: 'jekyll',
         args: [
             'build',
-            '-s ' + upath.join(basePath, ''),   // source path
-            '-d ' + destRoot,                   // destination path
-            '--safe',       // github runs in safe mode foe security reason. Custom plugins are not supported.
-            '--baseurl http://localhost:' + port,  // root folder relative to local server,
+            '-s ' + upath.join(basePath, ''), // source path
+            '-d ' + destRoot, // destination path
+            '--safe', // github runs in safe mode foe security reason. Custom plugins are not supported.
+            '--baseurl http://localhost:' + port, // root folder relative to local server,
             '--incremental'
         ],
         // options: { shell: true }
     },
-    flushStream: true,
+
     watch: [
         jekyllTrigger,
         upath.join(basePath, '**/*.{yml,html,md}'),

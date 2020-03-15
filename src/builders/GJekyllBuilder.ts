@@ -3,7 +3,6 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { Options } from "../core/common";
 
 export class GJekyllBuilder extends GBuilder {
     command: string;
