@@ -77,7 +77,7 @@ export class RTB {
             .then(() => this.build())
             .then(() => this._execute(this.conf.postBuild))
             .then(() => Promise.all(this._promises))
-            .then(() => { if (flushStream) toPromise(this._stream); })
+            .then(() => { if (flushStream) return toPromise(this._stream); })
             .then(() => this._promiseSync)
             .then(() => { if (conf.reloadOnFinish === true) this.reload(); });
     }
