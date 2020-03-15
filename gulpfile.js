@@ -31,7 +31,7 @@ gbm
     // })
     .addTrigger('@ex-build-all', /^\d.*@build$/)
     .addTrigger('@ex-clean-all', /^\d.*@clean$/)
-    .addTrigger('default', '@build-all')
+    .addTrigger('default', ['@clean-all', '@build-all'], true)
     .resolve();
 
 

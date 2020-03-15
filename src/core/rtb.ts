@@ -261,13 +261,8 @@ export class RTB {
     }
 
     clean(options: Options = {}, sync: boolean = false): this {
-        let clean1 = this.conf.clean || [];
-        let clean2 = options.clean || [];
-        if (is.String(clean1)) clean1 = [clean1];
-        if (is.String(clean2)) clean2 = [clean2];
-        let cleanList = (<string[]>[]).concat(clean1, clean2);
+        let cleanList = arrayify(this.conf.clean).concat(arrayify(options.clean));
 
-        // check rename option
         const delOpts = Object.assign({}, this.moduleOptions.del, options.del);
         return this.del(cleanList, delOpts, sync)
     }

@@ -5,9 +5,11 @@
 import { msg, arrayify } from "../utils/utils";
 import del = require("del");
 import { BuildConfig } from "./builder";
+import { RTB } from "./rtb";
 
 export interface CleanerOptions extends del.Options {
     clean?: string | string[];
+    sync?: boolean;
 }
 
 export class GCleaner {
@@ -20,11 +22,6 @@ export class GCleaner {
         if (cleanTarget.length > 0) this.cleanList = this.cleanList.concat(cleanTarget);
     }
 
-    clean(callback?: (value: string[]) => void) {
-        msg('GCleaner::cleanList:', this.cleanList);
-        del(this.cleanList, this.options).then(callback);
-    }
-
     reset() { this.cleanList = []; }
 
     createTask(buildName = '@clean', opts?: CleanerOptions): BuildConfig {
@@ -34,7 +31,10 @@ export class GCleaner {
 
         return {
             buildName: buildName,
-            builder: () => this.clean()
+            builder: rtb => {
+                msg('GCleaner::cleanList:', this.cleanList);
+                rtb.promise(del(this.cleanList, this.options), this.options.sync);
+            }
         }
     }
 }
