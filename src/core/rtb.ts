@@ -4,7 +4,7 @@
 
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilders, FunctionBuilder, CopyParam } from "./builder";
-import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify } from "../utils/utils";
+import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify, copy } from "../utils/utils";
 import { Plugins, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
 import { GBuildManager } from "./buildManager";
@@ -215,18 +215,15 @@ export class RTB {
     copy(param?: CopyParam | CopyParam[], options: Options = {}, sync: boolean = false): this {
         if (!param) return this;   // allow null argument
 
-        let targets = arrayify(param);
-        for (let target of targets) {
+        const _copy = (target: any): Promise<unknown> => {
             let copyInfo = `[${target.src}] => ${target.dest}`;
             if (options.verbose) msg(`copying: [${copyInfo}]`);
-
-            if (sync || this._syncMode)
-                this.promise(()=>toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest)))
-                    .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) }), sync);
-            else
-                this.promise(toPromise(gulp.src(target.src).pipe(gulp.dest(target.dest)))
-                    .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) }), sync);
+            return copy(target.src, target.dest)
+                .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) });
         }
+        arrayify(param).forEach(target => this.promise(
+            (sync || this._syncMode) ? () => _copy(target) : _copy(target)
+        ));
         return this;
     }
 

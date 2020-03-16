@@ -68,6 +68,29 @@ export function toPromise(stream: Stream): Promise<Stream> {
     })
 }
 
+
+//** copy multi-glob files to single destination */
+export function copy(patterns: string | string[], destPath: string): Promise<unknown> {
+    patterns = arrayify(patterns);
+    if (patterns.length === 0) return Promise.resolve();
+    let promises: Promise<void>[] = [];
+
+    // ensure destination directory exists
+    if (!fs.existsSync(destPath)) fs.mkdirSync(destPath, { recursive: true });
+
+    patterns.forEach(pattern => glob(pattern, (err: Error | null, files: string[]) =>
+        files.forEach((file: string) => promises.push(new Promise((resolve, reject) => {
+            const rd = fs.createReadStream(file).on('error', err => reject(err));
+            const wr = fs.createWriteStream(upath.join(destPath, upath.basename(file)))
+                .on('error', err => reject(err))
+                .on('close', () => resolve());
+            rd.pipe(wr);
+        })))
+    ));
+    return Promise.all(promises);
+}
+
+
 //** load yml and json files
 export function loadData(globPatterns: string | string[]): Object {
     if (is.String(globPatterns)) globPatterns = [globPatterns];
