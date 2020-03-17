@@ -4,7 +4,6 @@
   "description": "",
   "main": "gulpfile.js",
   "scripts": {
-    "tasks": "gulp --tasks"
   },
   "author": "Robin Soo-hyuk Nam",
   "license": "ISC",
