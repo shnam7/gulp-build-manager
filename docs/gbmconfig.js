@@ -8,12 +8,11 @@ const upath = require('upath');
 
 const projectName = upath.basename(__dirname);   // set template name to parent directory name
 const basePath = upath.relative(process.cwd(), __dirname);
-const srcRoot = upath.join(basePath, 'assets');
+const srcRoot = upath.join(basePath, '_assets');
 const destRoot = upath.join(basePath, '_site');
 const prefix = projectName + ':';
 const sourceMap = true;
-const jsTriggerFile = upath.join(basePath, '.js-triggered');
-const cssTriggerFile = upath.join(basePath, '.css-triggered');
+const jekyllTrigger = upath.join(basePath, '.jekyll-triggered');
 
 const docs = {
     scss: {
@@ -55,9 +54,9 @@ const docs = {
         },
         postBuild: (builder) => {
             // return promise to be sure copy operation is done before the task finishes
-            return gbm.GPlugin.exec(builder, 'echo', ['>>', cssTriggerFile]);
+            return gbm.GPlugin.exec(builder, 'echo', ['>', jekyllTrigger]);
         },
-        clean: [upath.join(basePath, 'css'), cssTriggerFile],
+        clean: [upath.join(basePath, 'css')],
     },
 
     scripts: {
@@ -75,9 +74,9 @@ const docs = {
         flushStream: true,
         postBuild: (builder) => {
             // return promise to be sure copy operation is done before the task finishes
-            return gbm.GPlugin.exec(builder, 'echo', ['>>', jsTriggerFile]);
+            return gbm.GPlugin.exec(builder, 'echo', ['>', jekyllTrigger]);
         },
-        clean: [upath.join(basePath, 'js'), jsTriggerFile]
+        clean: [upath.join(basePath, 'js')]
     },
 
     jekyll: {
@@ -98,19 +97,15 @@ const docs = {
         },
         watch: {
             watched: [
+                jekyllTrigger,
                 upath.join(basePath, '**/*.{yml,html,md}'),
-                upath.join(basePath, '.*-triggered'),
-                '!' + upath.join(basePath, '{js,css}'),
-                '!' + upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),
-
-                // TODO glob exclude not working correctly for watcher: gulp issue #2192
-                // '!' + upath.join(srcRoot, '{assets,assets/**/*}'),
-                // '!' + upath.join(srcRoot, '{_site,_site/**/*}'),
-                // '!' + upath.join(srcRoot, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}'),
-                // upath.join(srcRoot, '**/*'),
+                `!(${upath.join(basePath, '{_site,_site/**/*}')})`,
+                `!(${upath.join(basePath, '{js,js/**/*}')})`,
+                `!(${upath.join(basePath, '{css,css/**/*}')})`,
+                `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
             ]
         },
-        clean: [destRoot, upath.join(basePath, '.jekyll-metadata')],
+        clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTrigger],
     },
 
     get build() {

@@ -3,11 +3,11 @@ layout: docs
 ---
 
 # Modular Configuration
-For complex projects, it can be convenient to have independent configuration to each build modules.<br>
+For complex projects, it can be convenient to have independent configuration to each build modules.
 Let's see an example here.
 - 'mylib' is a project which contains scss and typescript files
 - 'docs' is a documentation for 'mylib', which also has it's own scss and typescript files
-- 'demo' is a sample demo project for 'mylib', which has its own configuration file in a separate directory 
+- 'demo' is a sample demo project for 'mylib', which has its own configuration file in a separate directory
 
 ```javascript
 const gbm = require('../../lib');

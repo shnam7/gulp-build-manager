@@ -3,17 +3,17 @@ layout: docs
 ---
 
 # GWebpackBuilder (Experimental)
-Webpack project builder.<br>
+Webpack project builder.
 GWebpack builder first load webpack configuration file if available. And then, override it with conf.moduleOptions.webpack settings if available. Finally, override the entry points and output settings again with conf.src, conf.dest, conf.outFile.
 
 #### Builder specific Options
-  - *conf.src* (<i>type:string, default:undefined</i>)<br>
+  - *conf.src* (<i>type:string, default:undefined</i>)
     If set, this will override 'entry' value of webpack configuration. A string or an array of string is allowed, and it cannot specify multiple entry points. To config multiple entry points, user moduleOptions.webpack option or separate webpack configuration file.
-  - *conf.dest* (<i>type:string, default:undefined</i>)<br>
+  - *conf.dest* (<i>type:string, default:undefined</i>)
     If set, this will override output.path of webpack configuration.
-  - *conf.outFile* (<i>type:string, default:undefined</i>)<br>
+  - *conf.outFile* (<i>type:string, default:undefined</i>)
     If set, this will override output.filename of webpack configuration.
-  - *conf.buildOptions.webpackConfig* (<i>type:string, default:undefined</i>)<br>
+  - *conf.buildOptions.webpackConfig* (<i>type:string, default:undefined</i>)
     Path to webpack configuration file.
 
 #### Notes
@@ -33,7 +33,7 @@ const destRoot = '_build';
 const webpack = {
   buildName: 'webpack',
   builder: 'GWebpackBuilder',
-  
+
   // This will finally override the webpack configuration
   // src: [path.join(srcRoot, 'scripts/ts/app.ts')],
   // dest: path.join(destRoot, 'jss'),

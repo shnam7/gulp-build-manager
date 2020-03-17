@@ -3,14 +3,14 @@ layout: docs
 ---
 
 # GTwigBuilder
-Panini project builder.<br>
+Panini project builder.
 See [twig](https://twig.symfony.com){:target='_blank'} to learn more about twig.
 
 #### Builder specific Options
-  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>
-    If set to true, output html files are minimized.
-  - *conf.buildOptions.prettify* (<i>type:boolean, default:false</i>)<br>
-    If set to true, output html files are prettified.
+  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)
+      If set to true, output html files are minimized.
+  - *conf.buildOptions.prettify* (<i>type:boolean, default:false</i>)
+      If set to true, output html files are prettified.
 
 ### Notes
   - If both minify and prettify options are set, then minify is done first and it's prettified.

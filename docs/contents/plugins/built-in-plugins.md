@@ -19,26 +19,26 @@ Built-in plugin functions searches BuildConfig.moduleOptions to find options for
   - And then, override(merge not replace) it with options.debug
 
 #### GPlugin.debug : Deprecated. use builder.debug() instead.
-gulp-debug plugin.<br>
-*Prototype*: GPlugin.debug(builder: GBuilder, options: Options={})<br>
+gulp-debug plugin.
+*Prototype*: GPlugin.debug(builder: GBuilder, options: Options={})
 For convenience, options itself is used an an argument to gulp-debug if options.debug is not found
 ```javascript
 builder.chain(gbm.GPlugin.debug, {title: 'title-test'})
 ```
 
 #### GPlugin.filter : Deprecated. use builder.filter() instead.
-gulp-filter plugin.<br>
+gulp-filter plugin.
 *Prototype*: GPlugin.filter(builder: GBuilder, pattern:string[], options: Options={})
 ```javascript
 builder.pipe(require('gulp-filter')(['**', '!**/*.map'], options.filter));
 ```
 
 #### GPlugin.concat : Deprecated. use builder.concat() instead.
-gulp-concat plugin.<br>
-Concatenates the files in gulp stream of the current builder. For output file name, builder.conf.outFile is checked first and then options.outFile is checked to override it.<br>
-*Prototype*: GPlugin.concat(builder: GBuilder, options: Options = {})<br>
-*options.filter*: pattern to filter the gulp stream<br>
-*options.outFile*: output path name to override builder.conf.outFile.<br>
+gulp-concat plugin.
+Concatenates the files in gulp stream of the current builder. For output file name, builder.conf.outFile is checked first and then options.outFile is checked to override it.
+*Prototype*: GPlugin.concat(builder: GBuilder, options: Options = {})
+*options.filter*: pattern to filter the gulp stream
+*options.outFile*: output path name to override builder.conf.outFile.
 *options.concat*: module options to gulp-concat, which will override builder.moduleOptions.concat
 ```javascript
 builder.chain(GPlugin.concat);
@@ -46,10 +46,10 @@ builder.chain(GPlugin.concat);
 
 
 #### GPlugin.rename : Deprecated. use builder.rename() instead.
-gulp-rename plugin.<br>
+gulp-rename plugin.
 If both builder.moduleOptions.rename and options.rename are missing, then options itself is used for convenience.
-*Prototype*: GPlugin.rename(builder: GBuilder, options: Options = {})<br>
-  
+*Prototype*: GPlugin.rename(builder: GBuilder, options: Options = {})
+
 ```javascript
 builder.chain(GPlugin.rename, {extname: '.html'});
 ```
@@ -75,16 +75,16 @@ const copyOptions = {
 }
 
 builder.chain(GPlugin.copy, copyOptions);
-``` 
-   
+```
+
 #### GPlugin.clean
 {:#clean}
 Delete files specified by BuildConfig.clean or options.clean properties.
  prototype*: GPlugin.clean(builder:GBuilder, options:Options={})
 *options.clean*: Optional glob string or string[] to delete.
 *options.del*: gulp-del options, which will override BuildConfig.moduleOptions.del.
-All the files specified in BuildConfig.clean and options.clean will be deleted.<br>
-Returns a promise for the delete operation. 
+All the files specified in BuildConfig.clean and options.clean will be deleted.
+Returns a promise for the delete operation.
 ```javascript
 const clean1 = {
   buildName: 'myClean1',
@@ -106,22 +106,22 @@ const clean2 = {
     return promise;   // return promise to finish clean before the build finishes (sync)
   }
 };
-``` 
-   
+```
+
 #### GPlugin.uglify
-gulp-uglify-es plugin.<br>
-*Prototype*: GPlugin.uglify(builder: GBuilder, options: Options = {})<br>
-*options.filter*: pattern to filter the gulp stream<br>
+gulp-uglify-es plugin.
+*Prototype*: GPlugin.uglify(builder: GBuilder, options: Options = {})
+*options.filter*: pattern to filter the gulp stream
 *options.uglifyES*: module options to gulp-uglify-es, which will override builder.moduleOptions.uglifyES
-*options.rename*: rename options. default is { extname: '.min.js' } 
+*options.rename*: rename options. default is { extname: '.min.js' }
 ```javascript
 builder.chain(GPlugin.uglify);
 ```
 
 #### GPlugin.cssnano
-gulp-uglify-es plugin.<br>
-*Prototype*: GPlugin.cssnano(builder: GBuilder, options: Options = {})<br>
-*options.filter*: pattern to filter the gulp stream<br>
+gulp-uglify-es plugin.
+*Prototype*: GPlugin.cssnano(builder: GBuilder, options: Options = {})
+*options.filter*: pattern to filter the gulp stream
 *options.cssnano*: module options to gulp-uglify-es, which will override builder.moduleOptions.cssnano
 *options.rename*: rename options. default is { extname: '.min.css' }
 ```javascript
@@ -131,15 +131,15 @@ builder.chain(GPlugin.cssnano);
 
 ## Built-in plugin classes
 #### CoffeeScriptPlugin
-CoffeeScript transpiler.<br>
+CoffeeScript transpiler.
 See [source code]({{site.repo}}/src/plugins/CoffeeScriptPlugin.ts){:target='_blank'} for the details.
 
 #### CSSPlugin
-Stylesheet processor supporting sass/scss/less with postcss. See source code for the details.<br>
+Stylesheet processor supporting sass/scss/less with postcss. See source code for the details.
 See [source code]({{site.repo}}/src/plugins/CSSPlugin.ts){:target='_blank'} for the details.
 
 #### JavaScriptPlugin
-JavaScript process with babel support. See source code for the details.<br>
+JavaScript process with babel support. See source code for the details.
 See [source code]({{site.repo}}/src/plugins/JavaScriptPlugin.ts){:target='_blank'} for the details.
 
 #### MarkdownPlugin
@@ -147,9 +147,9 @@ Markdown compiler.
 See [source code]({{site.repo}}/src/plugins/MarkdownPlugin.ts){:target='_blank'} for the details.
 
 #### TwigPlugin
-Twig builder. See source code for the details.<br>
+Twig builder. See source code for the details.
 See [source code]({{site.repo}}/src/plugins/TwigPlugin.ts){:target='_blank'} for the details.
 
 #### TypeScriptPlugin
-TypeScript transpiler. See source code for the details.<br>
+TypeScript transpiler. See source code for the details.
 See [source code]({{site.repo}}/src/plugins/TypeScriptPlugin.ts){:target='_blank'} for the details.

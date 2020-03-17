@@ -3,8 +3,8 @@ layout: docs
 ---
 
 # GPaniniBuilder
-Panini project builder.<br>
-See [panini](https://github.com/zurb/panini){:target='_blank'} to learn more about panini.<br>
+Panini project builder.
+See [panini](https://github.com/zurb/panini){:target='_blank'} to learn more about panini.
 As an additional reference, [zerb foundation](http://foundation.zurb.com/sites/docs/panini.html){:target='_blank'} is explaining well about panini with good examples.
 
 #### Builder specific Options

@@ -6,25 +6,25 @@ layout: docs
 CSS builder. sass/scss/less and postcss are suported. You can use postcss together with sass/scss/less.
 
 #### Builder specific Options
-  - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)
     If set to true, sourceMap files are generated.
-  - *conf.buildOptions.declarationeMap* (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.declarationeMap* (<i>type:boolean, default:false</i>)
     If set to true, sourceMap for declaration files are generated.
-  - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)
     If set to true, linter is activated.
-  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)
     If set to true, *.min.js files are generated.
-  - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)
     If set to true, *.min.js files are generated but non-minified files are not created.
-  - *conf.buildOptions.babel* (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.babel* (<i>type:boolean, default:false</i>)
     If set to true, babel is enabled so that you can use es6 features.
-  - *conf.buildOptions.printConfig* (<i>type:boolean, default:false</i>)<br>
+  - *conf.buildOptions.printConfig* (<i>type:boolean, default:false</i>)
     If set to true, evaluated TypeScript options(tsconfig) will be printed.
 
 ### Notes
   - If conf.outFile is set, it will override the outFile setting of tsconfig.json
   - If conf.outFile and conf.dest is set, conf.dest will override the outDir setting of tsconfig.json
-  - buildOptions.outFileOnly option is not supported. TypeScript compiler always generates outFile only, and if non-concatenated each individual files need to be generated, create another build configuration without outFile option. 
+  - buildOptions.outFileOnly option is not supported. TypeScript compiler always generates outFile only, and if non-concatenated each individual files need to be generated, create another build configuration without outFile option.
 
 #### Example
 ```javascript

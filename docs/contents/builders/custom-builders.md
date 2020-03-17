@@ -8,14 +8,14 @@ layout: docs
 GBuilder provides basic builder interface and all custom builder classes should extends from it.
 
 ### Public variables
-*GBuilder.prototype.stream*: Main build stream<br>
-*GBuilder.prototype.conf*: Build configuration<br>
-*GBuilder.prototype.buildOptions*: Build options. Equivalent to conf.buildOptions. If conf.buildOptions is not defined, it becomes {}<br>
-*GBuilder.prototype.moduleOptions*: Module options. Equivalent to conf.moduleOptions. If conf.moduleOptions is not defined, it becomes {}<br>
+*GBuilder.prototype.stream*: Main build stream
+*GBuilder.prototype.conf*: Build configuration
+*GBuilder.prototype.buildOptions*: Build options. Equivalent to conf.buildOptions. If conf.buildOptions is not defined, it becomes {}
+*GBuilder.prototype.moduleOptions*: Module options. Equivalent to conf.moduleOptions. If conf.moduleOptions is not defined, it becomes {}
 
 ### Public methods
 #### GBuilder.prototype.constructor(buildFunc: BuildFunction)
-@param *buildFunc* is an optional main build function. If not specified, default becomes copy function.<br>
+@param *buildFunc* is an optional main build function. If not specified, default becomes copy function.
 *BuildFunction*: (builder: GBuilder, ...args: any[]) => void | Promise\<any\>
 
 #### GBuilder.prototype.build()
@@ -43,8 +43,8 @@ export class GConcatBuilder extends GBuilder {
 GBuilder provides service functions to help custom builder development. All those functions return itself(this) so that it can be chained to other build service functions or build actions.
 
 #### src(src?: string | string[])
-Creates main build stream based on conf.src settings.<br>
- If conf.order is specified, then the files in the stream are ordered.<br>
+Creates main build stream based on conf.src settings.
+ If conf.order is specified, then the files in the stream are ordered.
  If buildOptions.sourceMap is true, internal sourceMaps are initialized.
 
 
@@ -61,7 +61,7 @@ Relay the on() call onto the main stream.
 Calls plugin object or function. This function does not support Promise. So, if plugin function or object should return a Promise, it must be called directly.
 
 ### sourceMaps(options: Options = {})
-Provides gulp-sourcemaps service.<br>
+Provides gulp-sourcemaps service.
 *options.init*: if evaluates to true, then sourceMaps are initialized. This is done by default in src() function.
 If called without init options, it generates sourcemaps for the current main stream files.
 
@@ -87,4 +87,4 @@ Note that async/await used to have non-minified output files to be flushed into 
 
 ### Resources
 It is recommended to see the source code and examples to learn more on writing custom builders.
-See asl [Using Plugins]({{site.baseurl}}/plugins/using-plugins) to learn about plugins.
+See asl [Using Plugins]({{site.contentsurl}}/plugins/using-plugins) to learn about plugins.

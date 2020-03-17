@@ -27,4 +27,4 @@ const gbm = require('gulp-build-manager');
 ```
 
 #### Using babel with gulp
-To use babel, follow the instructions [here]({{site.baseurl}}/getting-started).
+To use babel, follow the instructions [here]({{site.contentsurl}}/getting-started).

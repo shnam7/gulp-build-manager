@@ -61,7 +61,7 @@ Required modules are not installed automatically. When running gulp with the con
   - [Documentation][0]
   - [Examples][1]
   - [ChangeLog][2]
-  
+
 gbm provides various built-in builder classes including:
   - GBuilder - Base Builder, which work as a Copy Builder.
   - GCoffeeScriptBuilder
@@ -79,10 +79,11 @@ gbm provides various built-in builder classes including:
   - GWebpackckBuilder
   - GZipBuilder - File packer for distribution
 
-Those classes can be extended or modified using class inheritance.<br>
+Those classes can be extended or modified using class inheritance.
 gbm also provides plugin system, which enables users to add custom functions or plugin objects into specific stages of the build process.
-Builders can also be in the form of function, which is sometimes simpler and convenient.<br>
-For *modular configuration* to handle complex projects, refer to [modular configuration][4] section in documentation.<br>
+Builders can also be in the form of function, which is sometimes simpler and convenient.
+For *modular configuration* to handle complex projects, refer to [modular configuration][4] section in documentation.
+
 
 ### Migration from v2
 - Some of Build Configuration interface was changed and please refer to the [Examples][1] to find out how to migrate to achieve the same functionality with v3 interface.

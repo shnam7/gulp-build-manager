@@ -7,7 +7,7 @@ layout: docs
 ## What is Builder?
 Builder is essentially a set of gulp tasks to achieve project mission. Typically, it reads input from source directories, processes them, and writes the output to destination directory.
 Builder can be a single function or a class object derived from GBuilder class.
-To use builders, *Build Configuration* need to be created first. 
+To use builders, *Build Configuration* need to be created first.
 
 ## Build Configuration
 Typical build configuration looks like this:
@@ -46,39 +46,39 @@ Build Configuration has a common set of pre-defined properties, but users can ad
 {:#buildConfigurationOptions}
 
 #### conf.buildName
-<i>type: string</i><br>
-<i>default: undefined</i><br>
+<i>type: string</i>
+<i>default: undefined</i>
 Name of the build configuration. This is used to set gulp task name of the build configuration, and can be used to set task dependencies.
 
 ##### conf.builder
-<i>type: string | GBuilder or its derivatives | function(done)</i><br>
-<i>default: function(done) { done(); }</i><br>
+<i>type: string | GBuilder or its derivatives | function(done)</i>
+<i>default: function(done) { done(); }</i>
 Name of builder class in string or in class name. Or it can be a function that can be passed to a gulp.task().
 If class name is specified as a string, directory locations specified by gbmConfig.customBuildDir in build manager options will be searched first for the class definition, and then built-in builders will be checked. This sequence will give you a chance to overload built-in builder classes with the same name.
 
 #### conf.src
-<i>type: string | string[]</i><br>
-<i>default: undefined</i><br>
+<i>type: string | string[]</i>
+<i>default: undefined</i>
 Glob path or array of glob paths that are referencing source files or directories. In implementation perspective, this parameter is delivered to gulp.src() function as it is to create input stream.
 
 #### conf.order
-<i>type: string[]</i><br>
-<i>default: undefined</i><br>
-Specifies the order of the files in input stream. This property is using 'gulp-order' module and the value specified here is passed to it. As an example, `['file2.js','*.js']` specifies 'file2.js' to come first and then all other '*.js' files to be follow. Please refer to the [gulp-order](https://github.com/sirlantis/gulp-order) site for the details. 
+<i>type: string[]</i>
+<i>default: undefined</i>
+Specifies the order of the files in input stream. This property is using 'gulp-order' module and the value specified here is passed to it. As an example, `['file2.js','*.js']` specifies 'file2.js' to come first and then all other '*.js' files to be follow. Please refer to the [gulp-order](https://github.com/sirlantis/gulp-order) site for the details.
 
 #### conf.dest
-<i>type: string</i><br>
-<i>default: '.'</i><br>
+<i>type: string</i>
+<i>default: '.'</i>
 Output path string. In implementation perspective, this property value is passed to gulp.dest() function as it is.
 
 #### conf.outFile
-<i>type: string</i><br>
-<i>default: undefined</i><br>
+<i>type: string</i>
+<i>default: undefined</i>
 Output file name. This property can be optionally specified if the output of the build process is to be a single file. For example, javascript builder can concatenate all the files in input stream into a single output file in conf.dest directory.
 
 #### conf.copy
-<i>type: {src:string|string[], dest: string}[]</i><br>
-<i>default: undefined</i><br>
+<i>type: {src:string|string[], dest: string}[]</i>
+<i>default: undefined</i>
 copy src to dest for each array items, in the last stage of build sequence and just *before* postBuild(). 'src' accepts glob strings. If flushStream option is enabled, build task will finish after all the copy jobs are finished.
 ```javascript
 const babel = {
@@ -100,30 +100,30 @@ const babel = {
 
 #### conf.flushStream
 {:#flushStream}
-<i>type: boolean</i><br>
-<i>default: false</i><br>
+<i>type: boolean</i>
+<i>default: false</i>
 Gulp tasks run in parallel. Sometimes, they are finishes even though file writing is still in progress. If this option is set to true, the gulp task running this build configuration will not finish until it finishes all the file writings are finishes. If one task depends on output files of another task, this is where it plays in.
 
 #### conf.buildOptions
-<i>type: Object</i><br>
-<i>default: {}</i><br>
+<i>type: Object</i>
+<i>default: {}</i>
 Builder-specific options. Each builders can have their own options here. For the details, refer to the documentation of relevant builders.
 
 #### moduleOptions
 {: #moduleOptions}
-<i>type: Object</i><br>
-<i>default: {}</i><br>
-Builders are typically using one or more gulp plugin modules. This property is used to set options for those modules. The property name of the module options should be the same as the module name without 'gulp-' prefix. If module name is including hyphens, then Camel Case should be used in place of the hyphen. For example, options for 'gulp-html-prettify' will be conf.moduleOptions.htmlPrettify'. Options to 'gulp' itself is set to 'conf.moduleOptions.gulp'. 
+<i>type: Object</i>
+<i>default: {}</i>
+Builders are typically using one or more gulp plugin modules. This property is used to set options for those modules. The property name of the module options should be the same as the module name without 'gulp-' prefix. If module name is including hyphens, then Camel Case should be used in place of the hyphen. For example, options for 'gulp-html-prettify' will be conf.moduleOptions.htmlPrettify'. Options to 'gulp' itself is set to 'conf.moduleOptions.gulp'.
 
 #### conf.preBuild
 {: #preBuild}
-<i>type: (builder: GBuilder)=\>void | Promise\<any\><br>
-or object with below prototype<br>
-  {<br>
-    &ensp;func: (builder: GBuilder)=\>void | Promise\<any\><br>
-    &ensp;args: \[...\]<br>
-  }<br>
-<i>default: undefined</i><br>
+<i>type: (builder: GBuilder)=\>void | Promise\<any\>
+or object with below prototype
+  {
+    &ensp;func: (builder: GBuilder)=\>void | Promise\<any\>
+    &ensp;args: \[...\]
+  }
+<i>default: undefined</i>
 preBuild function is invoked before build process starts but ready for build with proper build config setting. GBuilder object running this buildConfig is passed as first argument, and it can return a promise which is to be completed before starting build process. To pass user arguments, use object form with properties 'func' and 'args'.
 ```javascript
 const simpleTask = {
@@ -145,44 +145,44 @@ const simpleTask = {
 postBuild works exactly the same as preBuild except it's invoked after build process is finished.
 
 #### conf.dependencies
-<i>type: BuildSet</i><br>
-<i>default: undefined</i><br>
+<i>type: BuildSet</i>
+<i>default: undefined</i>
 Specifies BuildSet, the build configurations to be executed before this build configuration. See [BuildSet](#BuildSet) for the details.
- 
+
 #### conf.triggers
-<i>type: BuildSet</i><br>
-<i>default: undefined</i><br>
+<i>type: BuildSet</i>
+<i>default: undefined</i>
 Specifies BuildSet, the build configurations to be executed after this build configuration. See [BuildSet](#BuildSet) for the details.
 
 #### conf.clean
-<i>type: string[]</i><br>
-<i>default: undefined</i><br>
+<i>type: string[]</i>
+<i>default: undefined</i>
 Clean list that will be cleaned/erased by '@clean' task, which is to be created by build manager.
 
 #### conf.watch
-<i>type: Object</i><br>
-<i>default: undefined</i><br>
+<i>type: Object</i>
+<i>default: undefined</i>
 Override default Watch configuration.
 
 #### conf.watch.watched
-<i>type: string[]</i><br>
-<i>default: conf.src</i><br>
+<i>type: string[]</i>
+<i>default: conf.src</i>
 List of glob string referencing watch targets. Default value is set to conf.src. Watch service is enabled by default. You can disable it by setting this value to empty array([]).
 
 #### conf.watch.watchedPlus
-<i>type: string[]</i><br>
-<i>default: undefined</i><br>
+<i>type: string[]</i>
+<i>default: undefined</i>
 List of glob string referencing additional watch targets. This option can be useful when additional watch target need to be added to default conf.watched value.
 
 #### conf.watch.livereload
-<i>type: boolean | Object</i><br>
-<i>default: true (v2.1 or later)</i><br>
+<i>type: boolean | Object</i>
+<i>default: true (v2.1 or later)</i>
 Enable or disable livereload. The value can be options object to gulp-livereload module.
 
 
 #### conf.watch.browserSync
-<i>type: boolean</i><br>
-<i>default: true</i><br>
+<i>type: boolean</i>
+<i>default: true</i>
 Enable or disable browserSync. Options to browser-sync module can be set in conf.modulesOptions.browserSync.
 
 

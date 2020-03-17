@@ -52,7 +52,7 @@ gulp
 Then, 'javaScript' task will be created and run. It will concatenate all the *.js files from src directory into sample.js in dest directory.
 Three more tasks, @build, @clean, default will also be created as per the settings in systemBuilds property.
 
-<br>
+
 
 ### Using babel with gulp
 If you want, you can use babel with gulp. Just, install babel packages and create .babelrc file with preset settings.

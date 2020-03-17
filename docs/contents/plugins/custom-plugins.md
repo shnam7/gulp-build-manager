@@ -9,7 +9,7 @@ Build process is basically executing a sequence of actions, and those actions ca
 ```javascript
 export class GPlugin {
   constructor(public options: Options = {}) {}
-  
+
   process(builder: GBuilder, ...args: any[]): void | Promise<any> {}
 }
 ```
@@ -35,7 +35,7 @@ export class MarkdownPlugin extends GPlugin {
 ```
 
 ## GPlugin function
-Any function with following prototype can be used as custom plugin function:<br>
+Any function with following prototype can be used as custom plugin function:
 *Prototype*: (builder: GBuilder) =\> void | Promise\<any\>
 ```javascript
 builder

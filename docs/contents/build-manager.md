@@ -4,7 +4,7 @@ title: Build Manager
 ---
 
 # {{page.title}}
-gbm, the build manager, creates gulp tasks according to the options given to it.<br>
+gbm, the build manager, creates gulp tasks according to the options given to it.
 
 ```javascript
 // Build Manager
@@ -25,48 +25,48 @@ const gbmConfig = {
 // create gulp tasks as configured
 gbm(gbmConfig); // or gbm.loadBuilders(gbmConfig);
 
-``` 
+```
 
 ## Options
 
 #### gbmConfig.builds
-<i>type: BuildSet[]</i><br>
-<i>default: undefined</i><br>
+<i>type: BuildSet[]</i>
+<i>default: undefined</i>
 Single or an aray of top level build configurations. Even though array notation [] is used to form a list, it does not mean those tasks are grouped in series. For example, ['task1', 'task'] will creates two independent gulp tasks, 'task1' and 'task2'.
 
 #### gbmConfig.customBuilderDir
-<i>type: string | string[]</i><br>
-<i>default: undefined</i><br>
+<i>type: string | string[]</i>
+<i>default: undefined</i>
 Path or an array of paths to search for custom Builder classes. You can store your custom builders in this directories, and specify its name as a string in conf.builder of build configuration.
 
 #### gbmConfig.moduleOptions
 {: #moduleOptions}
-<i>type: Object</i><br>
-<i>default: {}</i><br>
+<i>type: Object</i>
+<i>default: {}</i>
 Global module options that will override gbm.defaultModuleOptions.
 If build configuration does not specify options for modules, the options specified will be used.
 
 #### gbmConfig.systemBuilds
-<i>type: Object</i><br>
-<i>default: {}</i><br>
+<i>type: Object</i>
+<i>default: {}</i>
 Configures four system build tasks, @build, @clean, default, and @watch. '@' is prefixed to distinguish system build task from other tasks except default task.
 If no configuration is specified, the task will not be created.
 
 ##### gbmConfig.systemBuilds.build
-<i>type: BuildSet</i><br>
-<i>default: undefined</i><br>
+<i>type: BuildSet</i>
+<i>default: undefined</i>
 Configures @build task. Typically, this is the main build task that builds everything.
 
 ##### gbmConfig.systemBuilds.clean
-<i>type: string[]</i><br>
-<i>default: []</i><br>
+<i>type: string[]</i>
+<i>default: []</i>
 Configures @clean task. Glob is allowed. All the clean targets specified here will be cleaned/removed. The clean targets specified in each build configurations will be cleaned independently of this. If no clean targets are specified both here and in build configurations, then @clean task will not be created.
 To delete files outside of project scope, set 'moduleOptions.del.force' option to true.
 See [moduleOptions](#moduleOptions) below
 
 ##### gbmConfig.systemBuilds.default
-<i>type: BuildSet</i><br>
-<i>default: undefined</i><br>
+<i>type: BuildSet</i>
+<i>default: undefined</i>
 Configures default task that will be executed by 'gulp' command.
 
 
@@ -77,18 +77,18 @@ default: undefined
 Configures @watch task. All the watch items specified in each build configurations will be monitored in this @watch task.
 
 ##### gbmConfig.systemBuilds.watch.livereload
-<i>type: Object</i><br>
-<i>default: undefined</i><br>
+<i>type: Object</i>
+<i>default: undefined</i>
 Specifies livereload options. By default, it's disabled. To turn it on, set the value here to {livereload:{start:true}} with other options as necessary.
  For more options on livereload, see [livereload](https://github.com/vohof/gulp-livereload#options-optional){:target="_blank"}.
-<br><br>
+
 
 ##### gbmConfig.systemBuilds.watch.browserSync
-<i>type: Object</i><br>
-<i>default: undefined</i><br>
+<i>type: Object</i>
+<i>default: undefined</i>
 Specifies browser-sync options. By default, it's disabled. To turn it on, set the options here such as {:{server:'../_gh_pages'}}.
  For more options on livereload, see [Browsersync](https://browsersync.io/docs/options){:target="_blank"}.
-<br><br>
+
 
 
 ## API
@@ -140,4 +140,4 @@ Ready-made plugins functions ar also available:
   - gbm.uglify
   - gbm.cssnano
 
-Refer to [Plugin]({{site.baseurl}}/plugins/using-plugins) section for more information.
+Refer to [Plugin]({{site.contentsurl}}/plugins/using-plugins) section for more information.

@@ -23,10 +23,15 @@ $site-header-height: 4rem;
 //-----------------------------------------------
 $w-page-max-width:              1220px;
 $w-font-sans:                   $w-font-open-sans;
+$w-font-text:                   'Source Sans Prp', $w-font-open-sans;
+$w-theme-color-link:            red; // darken($w-theme-color, 10%) !default;
 // $w-font-size: 15px;
 
 
 @mixin wicle-custom-config {
+    $key: 'w-reset';
+    @include ssv($key, 'a/fg', $w-color-text-red, true);
+
     //--- navbar
     $key: 'w-navbar';
     @include ssv($key, 'height', $site-header-height, true);
