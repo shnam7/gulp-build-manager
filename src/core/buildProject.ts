@@ -168,8 +168,8 @@ export class GBuildProject {
                 return conf.buildName;
             }
 
-            let defaultTaskFunc = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
             let rtb = this.getBuilder(conf);
+            let defaultTaskFunc = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
             let deps = arrayify(conf.dependencies);
             let task = conf.builder ?  defaultTaskFunc : undefined;
             let triggers = arrayify(conf.triggers);

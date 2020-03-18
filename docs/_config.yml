@@ -13,8 +13,9 @@ encoding:           utf-8
 markdown:           kramdown
 #highlighter:        rouge
 permalink:          pretty
+baseurl:            "/gulp-build-manager"
+contentsurl:        "/gulp-build-manager/contents"
 exclude:            ['_assets', 'Gemfile*', 'gbmconfig.js', 'gulpfile.js', "tsconfig.js"]
-contentsurl:        contents
 defaults:
   - scope:
       path:         ""

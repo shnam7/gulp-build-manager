@@ -8,7 +8,7 @@ const upath = require('upath');
 const projectName = upath.basename(__dirname);   // set template name to parent directory name
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, '_assets');
-const destRoot = upath.join(basePath, '_site');
+const destRoot = upath.join(basePath, 'gulp-build-manager');
 const prefix = projectName + ':';
 const sourceMap = true;
 const jekyllTrigger = upath.join(basePath, '.jekyll-trigger');  // flag to trigger jekyll watcher
@@ -85,7 +85,7 @@ const jekyll = {
             '-s ' + upath.join(basePath, ''), // source path
             '-d ' + destRoot, // destination path
             '--safe', // github runs in safe mode foe security reason. Custom plugins are not supported.
-            '--baseurl http://localhost:' + port, // root folder relative to local server,
+            // '--baseurl http://localhost/gulp-build-manager:' + port, // root folder relative to local server,
             '--incremental'
         ],
         // options: { shell: true }
@@ -94,7 +94,7 @@ const jekyll = {
     watch: [
         jekyllTrigger,
         upath.join(basePath, '**/*.{yml,html,md}'),
-        `!(${upath.join(basePath, '{_site,_site/**/*}')})`,
+        `!(${upath.join(basePath, '{gulp-build-manager,gulp-build-manager/**/*}')})`,
         `!(${upath.join(basePath, '{js,js/**/*}')})`,
         `!(${upath.join(basePath, '{css,css/**/*}')})`,
         `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
@@ -114,7 +114,7 @@ module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
     .addWatcher('@watch', {
         reloadOnChange: false,
         browserSync: {
-            server: upath.resolve(destRoot),
+            server: upath.resolve(basePath),
             open: true,
             port: port,
             ui: { port: port + 100 }

@@ -82,20 +82,20 @@ This is just a quick start. GBM provides various features useful in using gulp.
 
 ## Built-in builders
 gbm provides predefined built-in builders, similar to the 'GCSSBuilder' in the above example, for your convenience. Those buildes include:
-- [GBuilder](/{{site.contentsurl}}/builtin-builders/GBuilder)
-- [GCoffeeScriptBuilder](/{{site.contentsurl}}/builtin-builders/GCoffeeScriptBuilder)
-- [GConcatBuilder](/{{site.contentsurl}}/builtin-builders/GConcatBuilder)
-- [GCSSBuilder](/{{site.contentsurl}}/builtin-builders/GCSSBuilder)
-- [GImagesBuilder](/{{site.contentsurl}}/builtin-builders/GImagesBuilder)
-- [GJavaScriptBuilder](/{{site.contentsurl}}/builtin-builders/GJavaScriptBuilder)
-- [GJekyllBuilder](/{{site.contentsurl}}/builtin-builders/GJekyllBuilder)
-- [GMarkdownBuilder](/{{site.contentsurl}}/builtin-builders/GMarkdownBuilder)
-- [GPaniniBuilder](/{{site.contentsurl}}/builtin-builders/GPaniniBuilder)
-- [GRTLCSSBuilder](/{{site.contentsurl}}/builtin-builders/GRTLCSSBuilder)
-- [GTwigBuilder](/{{site.contentsurl}}/builtin-builders/GTwigBuilder)
-- [GTypeScriptBuilder](/{{site.contentsurl}}/builtin-builders/GTypeScriptBuilder)
-- [GWebpackBuilder](/{{site.contentsurl}}/builtin-builders/GWebpackBuilder)
-- [GZipBuilder](/{{site.contentsurl}}/builtin-builders/GZipBuilder)
+- [GBuilder]({{site.contentsurl}}/builtin-builders/GBuilder)
+- [GCoffeeScriptBuilder]({{site.contentsurl}}/builtin-builders/GCoffeeScriptBuilder)
+- [GConcatBuilder]({{site.contentsurl}}/builtin-builders/GConcatBuilder)
+- [GCSSBuilder]({{site.contentsurl}}/builtin-builders/GCSSBuilder)
+- [GImagesBuilder]({{site.contentsurl}}/builtin-builders/GImagesBuilder)
+- [GJavaScriptBuilder]({{site.contentsurl}}/builtin-builders/GJavaScriptBuilder)
+- [GJekyllBuilder]({{site.contentsurl}}/builtin-builders/GJekyllBuilder)
+- [GMarkdownBuilder]({{site.contentsurl}}/builtin-builders/GMarkdownBuilder)
+- [GPaniniBuilder]({{site.contentsurl}}/builtin-builders/GPaniniBuilder)
+- [GRTLCSSBuilder]({{site.contentsurl}}/builtin-builders/GRTLCSSBuilder)
+- [GTwigBuilder]({{site.contentsurl}}/builtin-builders/GTwigBuilder)
+- [GTypeScriptBuilder]({{site.contentsurl}}/builtin-builders/GTypeScriptBuilder)
+- [GWebpackBuilder]({{site.contentsurl}}/builtin-builders/GWebpackBuilder)
+- [GZipBuilder]({{site.contentsurl}}/builtin-builders/GZipBuilder)
 
 
 ### Migration from v3
@@ -113,4 +113,4 @@ For better understanding on gbm, it's highly recommended to see the examples inc
 
 [0]: {{site.repo}}/examples
 [1]: {{site.repo}}/CHANGELOG.md
-[2]: {{site.contentsurl}}/09-migration-from-v3
+[2]: {site.contentsurl}}/09-migration-from-v3
