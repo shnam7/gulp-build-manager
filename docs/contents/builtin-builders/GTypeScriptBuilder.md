@@ -1,25 +1,33 @@
 ---
 layout: docs
+title: GTypeScriptBuilder
 ---
 
 # GTypeScruptBuilder
 CSS builder. sass/scss/less and postcss are suported. You can use postcss together with sass/scss/less.
 
 ### Builder specific Options
-  - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)
+  - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)<br>
     If set to true, sourceMap files are generated.
-  - *conf.buildOptions.declarationeMap* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.declarationeMap* (<i>type:boolean, default:false</i>)<br>
     If set to true, sourceMap for declaration files are generated.
-  - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)<br>
     If set to true, linter is activated.
-  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>
     If set to true, *.min.js files are generated.
-  - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)<br>
     If set to true, *.min.js files are generated but non-minified files are not created.
-  - *conf.buildOptions.babel* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.babel* (<i>type:boolean, default:false</i>)<br>
     If set to true, babel is enabled so that you can use es6 features.
-  - *conf.buildOptions.printConfig* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.printConfig* (<i>type:boolean, default:false</i>)<br>
     If set to true, evaluated TypeScript options(tsconfig) will be printed.
+
 
 #### Notes
   - If conf.outFile is set, it will override the outFile setting of tsconfig.json

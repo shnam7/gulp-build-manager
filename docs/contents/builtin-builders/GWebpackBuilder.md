@@ -1,21 +1,27 @@
 ---
 layout: docs
+title: GWebpackBuilder
 ---
 
 # GWebpackBuilder (Experimental)
 Webpack project builder.
+
 GWebpack builder first load webpack configuration file if available. And then, override it with conf.moduleOptions.webpack settings if available. Finally, override the entry points and output settings again with conf.src, conf.dest, conf.outFile.
 
 
 ### Builder specific Options
-  - *conf.src* (<i>type:string, default:undefined</i>)
+  - *conf.src* (<i>type:string, default:undefined</i>)<br>
     If set, this will override 'entry' value of webpack configuration. A string or an array of string is allowed, and it cannot specify multiple entry points. To config multiple entry points, user moduleOptions.webpack option or separate webpack configuration file.
-  - *conf.dest* (<i>type:string, default:undefined</i>)
+
+  - *conf.dest* (<i>type:string, default:undefined</i>)<br>
     If set, this will override output.path of webpack configuration.
-  - *conf.outFile* (<i>type:string, default:undefined</i>)
+
+  - *conf.outFile* (<i>type:string, default:undefined</i>)<br>
     If set, this will override output.filename of webpack configuration.
-  - *conf.buildOptions.webpackConfig* (<i>type:string, default:undefined</i>)
+
+  - *conf.buildOptions.webpackConfig* (<i>type:string, default:undefined</i>)<br>
     Path to webpack configuration file.
+
 
 #### Notes
 To enable sourceMap, you need to add devtool option to webpack configuration file. For more details, please refer to webpack documentation on [Devtool](https://webpack.js.org/configuration/devtool/){:target="_blank"}.
@@ -68,4 +74,4 @@ const webpack = {
 ```
 
 #### Resources
-  - You can also refer to an example at [examples/webpack]({{site.repo}}/examples/webpack/)
+  - You can also refer to an example at [examples/webpack](../../examples/20-webpack)

@@ -1,5 +1,6 @@
 ---
 layout: docs
+title: GCSSBuilder
 ---
 
 # GCSSBuilder
@@ -7,22 +8,29 @@ Transpiles sass/scss/less/postcss files into css. postcss can be used together w
 PostCSS is enabled by default (from v3.1) unless it's turned off intentionally.
 
 ### Builder specific Options
-  - *conf.buildOptions.postcss* (<i>type:boolean, default:true</i>)
+  - *conf.buildOptions.postcss* (<i>type:boolean, default:true</i>)<br>
     If set to false, PostCSS is disabled. PostCSS automatically handles auto-prefixing without autoPrefixer.
-  - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.sourceMap* (<i>type:boolean, default:false</i>)<br>
     If set to true, sourceMap files are generated.
-  - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.lint* (<i>type:boolean, default:false</i>)<br>
     If set to true, linter is activated.
-  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>
     If set to true, *.min.js files are generated.
-  - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)
+
+  - *conf.buildOptions.minifyOnly* (<i>type:boolean, default:false</i>)<br>
     If set to true, *.min.js files are generated but non-minified files are not created.
-  - *conf.buildOptions.outFileOnly* (<i>type:boolean, default:*true*</i>)
+
+  - *conf.buildOptions.outFileOnly* (<i>type:boolean, default:*true*</i>)<br>
     If set to false, each transpiled files are generated before concatenation.
     This option is valid only when conf.outFile is set.
-  - *conf.buildOptions.sourceType* (<i>type:string, default:'scss'</i>)
+
+  - *conf.buildOptions.sourceType* (<i>type:string, default:'scss'</i>)<br>
     Specifies input source type. Possible values are 'css', 'scss', 'sass', 'less'.
-  - *conf.buildOptions.autoPrefixer* (<i>type:boolean, default:true</i>)
+
+  - *conf.buildOptions.autoPrefixer* (<i>type:boolean, default:true</i>)<br>
     Enable autoPrefixer. If postcss option is enabled(default), this is ignored in preference to auto-prefixing feature of postcss.
 
     If postcss option is enabled, this option is ignored and autoPrefixer is not used.

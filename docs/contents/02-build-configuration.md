@@ -3,7 +3,7 @@ layout: docs
 title: Build Configuration
 ---
 
-# {{page.title}}
+# Build Configuration
 
 ## BuildConfig
 Understanding Build Configuration would be a starting point of learning gulp-build-manager.
@@ -45,35 +45,31 @@ type BuildSetParallel = { set: BuildSet[] };
 type Options = { [key: string]: any; }
 ```
 
+
 ### conf.buildName
 Name of the build configuration. This is the only mandatory property used as gulp task name which is uniquely idenfied.
-All the BuildConfig instances should have unique buildName across the whole project.
-When creating GBuildProject, this is automatically prefixed with ProjectOptions.prefix to avoid name conflicts between sub-projects.
+All the BuildConfig instances should have unique buildName across the whole project. When creating GBuildProject, this is automatically prefixed with ProjectOptions.prefix to avoid name conflicts between sub-projects.
 
 
 ### conf.builder
-Main build operation executor. Thius can be a builder class name, function, object, or RTB instance.
-If builder class name is specified, custom directory locations specified by ProjectOptions.customBuildDirs are searched first for the class definition. If no class definition is found, then built-in builders checked for the mathing. This sequence gives a chance to overload built-in builder classes with the same name.
-If no builder is specified, default function doing nothing is assigned.
+Main build operation executor. Thius can be a builder class name, function, object, or RTB instance. If builder class name is specified, custom directory locations specified by ProjectOptions.customBuildDirs are searched first for the class definition. If no class definition is found, then built-in builders checked for the mathing. This sequence gives a chance to overload built-in builder classes with the same name. If no builder is specified, default function doing nothing is assigned.
 
 
 ### conf.src
-Glob path or array of glob paths that are referencing source files. Typically, this property is passed to gulp.src() function to create input stream for build operations.
-If no src specified, then no gulp stream is created. For executing external commands or custom functions etc., no gulp stream is required and leave this property as undefined.
+Glob path or array of glob paths that are referencing source files. Typically, this property is passed to gulp.src() function to create input stream for build operations. If no src specified, then no gulp stream is created. For executing external commands or custom functions etc., no gulp stream is required and leave this property as undefined.
 
 
 ### conf.dest
-Output directory path. Typically, this property is passed to gulp.dest() function to create otput files.
-If no value is specified, current process directory is used as output directory.
+Output directory path. Typically, this property is passed to gulp.dest() function to create otput files. If no value is specified, current process directory is used as output directory.
 
 
 ### conf.outFile
-Output file name. This property can be optionally specified if some build process requires single output file name.
-For example, javascript builder can concatenate all the files in input stream into a single output file in conf.dest directory.
+Output file name. This property can be optionally specified if some build process requires single output file name. For example, javascript builder can concatenate all the files in input stream into a single output file in conf.dest directory.
 
 
 ### conf.order
 Specifies the order of files in input stream. For file ordering, 'gulp-order' module is used.
+
 As an example, `['file2.js','*.js']` specifies 'file2.js' to come first and all other '*.js' files to follow.
 Refer to the [gulp-order](https://github.com/sirlantis/gulp-order) site for the details.
 
@@ -84,9 +80,7 @@ If flushStream property is set to true, gulp task running this BuildConfig will 
 
 
 ### conf.sync
-Synchronization between gulp tasks can be achieved using gulp.series() and conf.flushStream. However, there are cases some internal or custom build operations need to be executed in synchronous way.
-If sync is set to true, all the operations involving promises are executed in sequence. By default, all the build operations are executed in async mode for better performance.
-This sync option can be terned on of off using rtb.sync(), rtb.async() functions.
+Synchronization between gulp tasks can be achieved using gulp.series() and conf.flushStream. However, there are cases some internal or custom build operations need to be executed in synchronous way. If sync is set to true, all the operations involving promises are executed in sequence. By default, all the build operations are executed in async mode for better performance. This sync option can be terned on of off using rtb.sync(), rtb.async() functions.
 
 
 ### conf.verbose
@@ -99,8 +93,7 @@ Suppress non critical messages. Default is false.
 
 ### conf.preBuild
 {: #preBuild}
-preBuild specifies a function that will be involed before conf.builder is executed.
-The three major build operations, conf.preBuild, conf.builder, conf.postBuild are executed in sync mode regardless of  conf.sync value. All those three function may return promise. In that case, those promises would be resolved before executing next steps.
+preBuild specifies a function that will be involed before conf.builder is executed. The three major build operations, conf.preBuild, conf.builder, conf.postBuild are executed in sync mode regardless of  conf.sync value. All those three function may return promise. In that case, those promises would be resolved before executing next steps.
 
 **[FunctionBuilders]** type:
 ```js
@@ -124,8 +117,8 @@ postBuild works exactly the same as preBuild except it is invoked after conf.bui
 
 
 ### conf.buildOptions
-This is Builder-specific options. Each builders can have their own options here.
-For the details, refer to the documentation of relevant builders.
+This is Builder-specific options. Each builders can have their own options here. For the details, refer to the documentation of relevant builders.
+
 Some common options includes:
 ```js
 buildOptions {
@@ -151,19 +144,15 @@ Build operations typically use one or more gulp plugin modules. This property is
 
 
 ### conf.dependencies
-Specifies other build items that will be executed before this build item, in gulp task sequence wise.
-The dependencies can be any combination of build items in the form of BuildSet.
+Specifies other build items that will be executed before this build item, in gulp task sequence wise. The dependencies can be any combination of build items in the form of BuildSet.
 
 
 ### conf.triggers
-Specifies other build items that will be executed after this build item, in gulp task sequence wise.
-The dependencies can be any combination of build items in the form of BuildSet.
+Specifies other build items that will be executed after this build item, in gulp task sequence wise. The dependencies can be any combination of build items in the form of BuildSet.
 
 
 ### conf.watch
-Specifies watch target files that will be monitored by GWatcher when watch task is triggered.
-GWatcher instance is automatically created by GBuildProject, if there's any watch target to monitor.
-If not specified, conf.src is set to conf.watch by default. To disable this automatic watching, set conf.watch = [].
+Specifies watch target files that will be monitored by GWatcher when watch task is triggered. GWatcher instance is automatically created by GBuildProject, if there's any watch target to monitor. If not specified, conf.src is set to conf.watch by default. To disable this automatic watching, set conf.watch = [].
 Glob supported.
 
 
@@ -172,15 +161,14 @@ Addional watch targets that will be added to conf.watch in addition to default v
 
 
 ### conf.clean
-Specifies clean target files that will be removed by GCleaner when clean task is triggered.
-GCleaner instance is automatically created by GBuildProject, if there's any clean target to remove.
-Glob supported.
+Specifies clean target files that will be removed by GCleaner when clean task is triggered. GCleaner instance is automatically created by GBuildProject, if there's any clean target to remove. Glob supported.
 
 
 ### conf.reloadOnFinish
-By default, Gwatcher monitors and triggers reloading. So, reloading ath the end of build is not required.
-This is generally fine, but in some cases such as executing external commands without gulp stream, reloading need to be delayed until the build execution is finished. In that case, this option can be turned on, and GWatcher's reloadOnChange option can be turned off.
+By default, Gwatcher monitors and triggers reloading. So, reloading ath the end of build is not required. This is generally fine, but in some cases such as executing external commands without gulp stream, reloading need to be delayed until the build execution is finished. In that case, this option can be turned on, and GWatcher's reloadOnChange option can be turned off.
+
 Here is an example to do that.
+
 ```js
 const jekyll = {
     buildName: 'jekyll',

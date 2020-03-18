@@ -3,13 +3,14 @@ layout: docs
 title: RTB - Runtime Builder
 ---
 
-# {{page.title}}
-RTB, Runtime Builder, is a class with build function that is actually executed by gulp task.
-RTB builder can execute three types of builders: Function Builder, Object Builder, and BuildConfig.
-See **[builder](builders)** for available builder types.
+# RTB - Runtime Builder
+RTB, Runtime Builder, is a class with build function that is actually executed by gulp task. RTB builder can execute three types of builders: Function Builder, Object Builder, and BuildConfig.
+
+See **[builder](06-builders)** for available builder types.
 
 RTB has one-to-one mapping with gulp tasks, and provides all the information required in build operations.
 All the build functions managed by gbm received rtb as its first argument.
+
 
 ## Quick Example
 Th example will copy *.txt files, showing the file names using 'gulp-debug'.
@@ -50,8 +51,7 @@ Calls gulp pipe() on internal gulp stream.
 
 ---
 ### chain()
-Calls plugin action with this RTB innstance and args as arguments.
-If promise is returned from the plugin, then it is handled in sync or async depending on current sync mode.
+Calls plugin action with this RTB innstance and args as arguments. If promise is returned from the plugin, then it is handled in sync or async depending on current sync mode.
 ```js
 (action: Plugins, ...args: any[]) => this;
 chain(action: Plugins, ...args: any[]): this {
@@ -102,8 +102,8 @@ Turns off sync mode. In async mode, all the build operations are executed in par
 
 ---
 ### wait()
-Added a promise waiting for msec.
-In sync mode, this will suspend build operations in sync promise queue for msec. In async mode, this wait will be independent of other build operations, and it will only delays the finishig of whole build process up to msec.
+Added a promise waiting for msec. In sync mode, this will suspend build operations in sync promise queue for msec. In async mode, this wait will be independent of other build operations, and it will only delays the finishig of whole build process up to msec.
+
 The last argument, 'sync' will override current sync state for this operation.
 ```js
 (msec: number = 0, sync: boolean = false) => this;
@@ -128,9 +128,7 @@ If internal promise queue is not empty, then current stream is added to promise 
 
 ---
 ### sourceMaps()
-if opts.init is valid, sourcemaps operation is initialized with opts.init as argument.
-Otherwise, sourcemaps is written to opts.dest with opts.write option as argument.
-if opts.dest is not defined, then '.' will be used writing output in current directory.
+if opts.init is valid, sourcemaps operation is initialized with opts.init as argument. Otherwise, sourcemaps is written to opts.dest with opts.write option as argument. if opts.dest is not defined, then '.' will be used writing output in current directory.
 For this operation, 'gulp-sourcemaps' module is used.
 ```js
 (options: Options = {}) => this;
@@ -173,6 +171,7 @@ Loads 'gulp-rename' module and pipe it to internal gulp stream with options as a
 ### copy()
 In sync mode, all the copy operations specified in 'param' are added to sync promise queue, and will be executed in sequence.
 In async mode, all the copy operations executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+
 The last argument, 'sync' will override current sync state for this operation.
 ```js
 (param?: CopyParam | CopyParam[], options: Options = {}, sync: boolean = false) => this;
@@ -183,6 +182,7 @@ The last argument, 'sync' will override current sync state for this operation.
 ### del()
 In sync mode, delete operation is added to sync promise queue, and will be executed in sequence.
 In async mode, delete operation executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+
 The last argument, 'sync' will override current sync state for this operation.
 
 For this operation, 'del' module is loaded and called with pattern and options as arguments.
@@ -193,9 +193,8 @@ For this operation, 'del' module is loaded and called with pattern and options a
 
 ---
 ### spawn()
-Spawns external commands with cmd, args, and options.
-In sync mode, spawn operation is added to sync promise queue, and will be executed in sequence.
-In async mode, spawn operation executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+Spawns external commands with cmd, args, and options. In sync mode, spawn operation is added to sync promise queue, and will be executed in sequence. In async mode, spawn operation executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+
 The last argument, 'sync' will override current sync state for this operation.
 ```js
 (cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false) => this;
@@ -204,9 +203,8 @@ The last argument, 'sync' will override current sync state for this operation.
 
 ---
 ### exec()
-Executes external commands with cmd, args, and options.
-In sync mode, the command execution is added to sync promise queue, and will be executed in sequence.
-In async mode, the command is executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+Executes external commands with cmd, args, and options. In sync mode, the command execution is added to sync promise queue, and will be executed in sequence. In async mode, the command is executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+
 The last argument, 'sync' will override current sync state for this operation.
 ```js
 (cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}) => this;
@@ -234,8 +232,8 @@ Loads 'gulp-clean-css' module and pipe it to internal gulp stream with options a
 Triggers delete operations for the patterns specified in BuildConfig.clean and options.clean.
 For this operation, 'del' module is loaded and called with options as arguments.
 
-In sync mode, the clean operation is added to sync promise queue, and will be executed in sequence.
-In async mode, it is executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+In sync mode, the clean operation is added to sync promise queue, and will be executed in sequence. In async mode, it is executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
+
 The last argument, 'sync' will override current sync state for this operation.
 ```js
 (options: Options = {}, sync: boolean = false) => this;
@@ -245,9 +243,7 @@ The last argument, 'sync' will override current sync state for this operation.
 ---
 ### concat()
 Loads 'gulp-concat' module and pipe it to internal gulp stream with BuildConfig.outFile and options.concat as arguments.
-if BuildConfig.outFile is not specified, the operation will be skipped with a warning message.
-In this operation, *.map files in current gulp stream will be filtered out.
-If BuildConfig.sourceMaps is set to true, map files will be grnerated.
+if BuildConfig.outFile is not specified, the operation will be skipped with a warning message. In this operation, *.map files in current gulp stream will be filtered out. If BuildConfig.sourceMaps is set to true, map files will be generated.
 ```js
 (options: Options = {}) => this;
 ```

@@ -3,7 +3,7 @@ layout: docs
 title: GBuildManager
 ---
 
-# {{page.title}}
+# GBuildManager
 
 This is the main class of Gulp Build Manager. It is immediately available as a unique global instance, when 'gulp-build-manager' is loaded.
 
@@ -25,8 +25,7 @@ gbm.createProject({scss, scripts})
 
 ---
 ## createProject()
-Create GBuildProject instance and returns it.
-Note that the instance is not added to project iist of this GBuildManager.
+Create GBuildProject instance and returns it. Note that the instance is not added to project iist of this GBuildManager.
 ```js
 (buildGroup: BuildGroup={}, opts?: ProjectOptions) => GBuildProject
 ```

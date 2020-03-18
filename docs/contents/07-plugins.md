@@ -3,10 +3,9 @@ layout: docs
 title: Plugins
 ---
 
-# {{page.title}}
+# Plugins
 
 Plugin is a peice of build action encapsulated into a function or class object.
-
 ```js
 type PluginFunction = (rtb: RTB, ...args: any[]) => Promise<unknown> | void;
 type Plugins = PluginFunction | GPlugin;
@@ -60,25 +59,24 @@ Otherwise, it runs asynchronously and the returned value is ignored.
 ## Built-in Plugin classes
 
 ### CoffeeScriptPlugin
-CoffeeScript transpiler.
-See [source code]({{site.repo}}/src/plugins/CoffeeScriptPlugin.ts){:target='_blank'} for the details.
+CoffeeScript transpiler. See [source code](../../src/plugins/CoffeeScriptPlugin.ts) for the details.
+
 
 ### CSSPlugin
-Stylesheet processor supporting sass/scss/less with postcss. See source code for the details.
-See [source code]({{site.repo}}/src/plugins/CSSPlugin.ts){:target='_blank'} for the details.
+Stylesheet processor supporting sass/scss/less with postcss. See source code for the details. See [source code](../../src/plugins/CSSPlugin.ts) for the details.
+
 
 ### JavaScriptPlugin
-JavaScript process with babel support. See source code for the details.
-See [source code]({{site.repo}}/src/plugins/JavaScriptPlugin.ts){:target='_blank'} for the details.
+JavaScript process with babel support. See source code for the details. See [source code](../../src/plugins/JavaScriptPlugin.ts) for the details.
+
 
 ### MarkdownPlugin
-Markdown compiler.
-See [source code]({{site.repo}}/src/plugins/MarkdownPlugin.ts){:target='_blank'} for the details.
+Markdown compiler. See [source code](../../src/plugins/MarkdownPlugin.ts) for the details.
+
 
 ### TwigPlugin
-Twig builder. See source code for the details.
-See [source code]({{site.repo}}/src/plugins/TwigPlugin.ts){:target='_blank'} for the details.
+Twig builder. See source code for the details. See [source code](../../src/plugins/TwigPlugin.ts) for the details.
+
 
 ### TypeScriptPlugin
-TypeScript transpiler. See source code for the details.
-See [source code]({{site.repo}}/src/plugins/TypeScriptPlugin.ts){:target='_blank'} for the details.
+TypeScript transpiler. See source code for the details. See [source code](../../src/plugins/TypeScriptPlugin.ts) for the details.

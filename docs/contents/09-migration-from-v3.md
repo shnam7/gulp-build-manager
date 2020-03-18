@@ -3,7 +3,7 @@ layout: docs
 title: Migration from v3
 ---
 
-# {{page.title}}
+# Migration from v3
 
 ### gbm main function
 In v4, gbm() function is not supported. Instead, gbm is available as an instance of GBuildManager class.
@@ -77,8 +77,8 @@ const copy = {
 
 
 ### Built-in builders and Plugins
-Built-in builders available in gbm.xxx now moved to gbm.builders.xxx.
-Built-in plugins available in gbm.xxx now moved to gbm.plugins.xxx.
+Built-in builders available in gbm.xxx now moved to gbm.builders.xxx. Built-in plugins available in gbm.xxx now moved to gbm.plugins.xxx.
+
 v3 example
 ```js
 class MyClass extends gbm.GBuilder {
@@ -229,4 +229,4 @@ gbm.createProject()
 
 
 ### Resource
-For more examples, look into the gbmconfig.js files in **[examples](/examples)** directory of gbm source.
+For more examples, look into the gbmconfig.js files in **[examples](../../examples)** directory of gbm source.

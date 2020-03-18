@@ -3,7 +3,7 @@ Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp ta
 
 
 ## Documentation
-Refer ro [docs/contents](docs/contents)
+Please refer to [docs](docs)
 
 
 ## Key features
@@ -87,8 +87,8 @@ gbm.createProject(app)
 
 
 ## Resource
-- [Documentation](/docs/contents/README.md)
-- [Migration from v3](/docs/contents/09-migration-from-v3.md)
+- [Documentation](docs)
+- [Migration from v3](docs/contents/09-migration-from-v3.md)
 
 
 

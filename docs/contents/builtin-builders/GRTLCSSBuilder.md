@@ -1,5 +1,6 @@
 ---
 layout: docs
+title: GRTLCSSBuilder
 ---
 
 # GRTLCSSBuilder
@@ -11,8 +12,8 @@ None
 
 
 ### Module Options
-moduleOptions.rtlcss: Option for gulp-rtlcss.
-moduleOptions.rename: Options for gulp-rename, which is used to change the output names.
+- moduleOptions.rtlcss: Option for gulp-rtlcss.
+- moduleOptions.rename: Options for gulp-rename, which is used to change the output names.
 
 
 ### Example

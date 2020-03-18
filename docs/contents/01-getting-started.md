@@ -3,11 +3,11 @@ layout: docs
 title: Getting started
 ---
 
-# {{page.title}}
-
+# Getting started
 
 ## Installation
 Gulp Build Manager can be installed with NPM.
+
 Note that gulp 4.0 or higher is also required. It's not installed automatically with gulp-build-manager. So, you have to install it manually.
 
 ```bash
@@ -74,7 +74,8 @@ module.exports = gbm.createProject(scss)
     .resolve();
 ```
 
-This configuration creates three gulp tasks, 'watch', 'scss', and 'clean'. Now, you can edit scss files and see the changes in the browser window immediately. 'GCSSBuilder' is one of built in builders of gbm. It compiles sass/scss/less/postcss into css. You can refer to **[Built-in Builders][3]** section for details.
+This configuration creates three gulp tasks, 'watch', 'scss', and 'clean'. Now, you can edit scss files and see the changes in the browser window immediately. 'GCSSBuilder' is one of built in builders of gbm. It compiles sass/scss/less/postcss into css. You can refer to **[Builders][3]** section for details.
+
 In addition to this, you have clean task which removes files specified in scss.clean of the scss build configuration. Cleaner task created by addCleaner() function collects 'clean' properties form all the build configuration registered to project, which is created by gbm.createProject() function.
 
 This is just a quick start. GBM provides various features useful in using gulp.
@@ -82,35 +83,34 @@ This is just a quick start. GBM provides various features useful in using gulp.
 
 ## Built-in builders
 gbm provides predefined built-in builders, similar to the 'GCSSBuilder' in the above example, for your convenience. Those buildes include:
-- [GBuilder]({{site.contentsurl}}/builtin-builders/GBuilder)
-- [GCoffeeScriptBuilder]({{site.contentsurl}}/builtin-builders/GCoffeeScriptBuilder)
-- [GConcatBuilder]({{site.contentsurl}}/builtin-builders/GConcatBuilder)
-- [GCSSBuilder]({{site.contentsurl}}/builtin-builders/GCSSBuilder)
-- [GImagesBuilder]({{site.contentsurl}}/builtin-builders/GImagesBuilder)
-- [GJavaScriptBuilder]({{site.contentsurl}}/builtin-builders/GJavaScriptBuilder)
-- [GJekyllBuilder]({{site.contentsurl}}/builtin-builders/GJekyllBuilder)
-- [GMarkdownBuilder]({{site.contentsurl}}/builtin-builders/GMarkdownBuilder)
-- [GPaniniBuilder]({{site.contentsurl}}/builtin-builders/GPaniniBuilder)
-- [GRTLCSSBuilder]({{site.contentsurl}}/builtin-builders/GRTLCSSBuilder)
-- [GTwigBuilder]({{site.contentsurl}}/builtin-builders/GTwigBuilder)
-- [GTypeScriptBuilder]({{site.contentsurl}}/builtin-builders/GTypeScriptBuilder)
-- [GWebpackBuilder]({{site.contentsurl}}/builtin-builders/GWebpackBuilder)
-- [GZipBuilder]({{site.contentsurl}}/builtin-builders/GZipBuilder)
+- [GBuilder](builtin-builders/GBuilder.md)
+- [GCoffeeScriptBuilder](builtin-builders/GCoffeeScriptBuilder.md)
+- [GConcatBuilder](builtin-builders/GConcatBuilder.md)
+- [GCSSBuilder](builtin-builders/GCSSBuilder.md)
+- [GImagesBuilder](builtin-builders/GImagesBuilder.md)
+- [GJavaScriptBuilder](builtin-builders/GJavaScriptBuilder.md)
+- [GJekyllBuilder](builtin-builders/GJekyllBuilder.md)
+- [GMarkdownBuilder](builtin-builders/GMarkdownBuilder.md)
+- [GPaniniBuilder](builtin-builders/GPaniniBuilder.md)
+- [GRTLCSSBuilder](builtin-builders/GRTLCSSBuilder.md)
+- [GTwigBuilder](builtin-builders/GTwigBuilder.md)
+- [GTypeScriptBuilder](builtin-builders/GTypeScriptBuilder.md)
+- [GWebpackBuilder](builtin-builders/GWebpackBuilder.md)
+- [GZipBuilder](builtin-builders/GZipBuilder.md)
 
 
 ### Migration from v3
-Version 4 has substantial changes from v3, and it's not compatible with v3 or earlier version.
-You can refer to [Migration guide][2], but it's highly recommended to see the [Examples][0] and create your project configuration file again.
+Version 4 has substantial changes from v3, and it's not compatible with v3 or earlier version. You can refer to [Migration guide][2], but it's highly recommended to see the [Examples][0] and create your project configuration file again.
 
 
 ### Resources
 For better understanding on gbm, it's highly recommended to see the examples included the source code. It contains examples showing various features of gbm that can be applied to your project quickly.
 
-- [Examples][0]{:target="_blank"}
-- [ChangeLog][1]{:target="_blank"}
+- [Examples][0]
+- [ChangeLog][1]
 
 
 
-[0]: {{site.repo}}/examples
-[1]: {{site.repo}}/CHANGELOG.md
-[2]: {site.contentsurl}}/09-migration-from-v3
+[0]: ../../examples
+[1]: ../../CHANGELOG.md
+[2]: 09-migration-from-v3.md

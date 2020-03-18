@@ -3,10 +3,10 @@ layout: docs
 title: GBuildProject
 ---
 
-# {{page.title}}
+# GBuildProject
 
-GBuildProject is a class managing a collection of BuildConfig objects.
-Typically, BuildConfig items are added to GBuildProject instance and resolved generating relevant gulp tasks.
+GBuildProject is a class managing a collection of BuildConfig objects. Typically, BuildConfig items are added to GBuildProject instance and resolved generating relevant gulp tasks.
+
 Every GBuildProject instance has its own GWtacher and GCleaner. Browser reloading is supported by the GWatcher instance.
 
 
@@ -57,8 +57,7 @@ Add BuildConfig item. Returns itself.
 
 ---
 ## addBuildGroup()
-Register BuildConfig objects specified in buildGroup argument into the project.
-Single BuildConfig argument is also accepted.
+Register BuildConfig objects specified in buildGroup argument into the project. Single BuildConfig argument is also accepted.
 ```js
 (buildGroup: BuildGroup | BuildConfig) => this;
 ```
@@ -107,8 +106,7 @@ RegExp is supported.
 
 ---
 ## resolve()
-Analyze all the BuildConfig object registered and actually creates gulp tasks according to it.
-Until resolve() is called, no gulp task is created.
+Analyze all the BuildConfig object registered and actually creates gulp tasks according to it. Until resolve() is called, no gulp task is created.
 ```js
 () => this;
 ```
@@ -132,8 +130,7 @@ prefix specified in ProjectOptions when this instance is created.
 
 ---
 ## vars
-Object with key/value pairs which were added using addVar() function.
-Typically, used to share data between projects and GBuildManager in multi-file projects.
+Object with key/value pairs which were added using addVar() function. Typically, used to share data between projects and GBuildManager in multi-file projects.
 
 
 ---

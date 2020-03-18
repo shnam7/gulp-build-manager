@@ -3,13 +3,14 @@ layout: docs
 title: Builders
 ---
 
-# {{page.title}}
+# Builders
 
 There three builder types supported by gulp-build-manager.
 * Named builder - class name of GBuilder or it's decendant classes
 * Function builder - function or function object
 * Object builder - object describing internal or external command to execute
 * GBuilder instance
+
 
 ## Types
 ```js
@@ -101,8 +102,7 @@ const cmd1 = {
 
 
 ## GBuilder
-It is recommended all the custom builder classes to extend GBuilder, not RTB.
-GBuilder class is avail from GBuilder.builders property.
+It is recommended all the custom builder classes to extend GBuilder, not RTB. GBuilder class is avail from GBuilder.builders property.
 
 ### build()
 Main build function. All the RTB API's are availabe using this object because GBuilder extends RTB.
@@ -123,17 +123,17 @@ class CopyBuilder extends gbm.builders.GBuilder {
 
 
 ## Build-in Builders
-- [GBuilder]({{site.contentsurl}}/builtin-builders/GBuilder)
-- [GCoffeeScriptBuilder]({{site.contentsurl}}/builtin-builders/GCoffeeScriptBuilder)
-- [GConcatBuilder]({{site.contentsurl}}/builtin-builders/GConcatBuilder)
-- [GCSSBuilder]({{site.contentsurl}}/builtin-builders/GCSSBuilder)
-- [GImagesBuilder]({{site.contentsurl}}/builtin-builders/GImagesBuilder)
-- [GJavaScriptBuilder]({{site.contentsurl}}/builtin-builders/GJavaScriptBuilder)
-- [GJekyllBuilder]({{site.contentsurl}}/builtin-builders/GJekyllBuilder)
-- [GMarkdownBuilder]({{site.contentsurl}}/builtin-builders/GMarkdownBuilder)
-- [GPaniniBuilder]({{site.contentsurl}}/builtin-builders/GPaniniBuilder)
-- [GRTLCSSBuilder]({{site.contentsurl}}/builtin-builders/GRTLCSSBuilder)
-- [GTwigBuilder]({{site.contentsurl}}/builtin-builders/GTwigBuilder)
-- [GTypeScriptBuilder]({{site.contentsurl}}/builtin-builders/GTypeScriptBuilder)
-- [GWebpackBuilder]({{site.contentsurl}}/builtin-builders/GWebpackBuilder)
-- [GZipBuilder]({{site.contentsurl}}/builtin-builders/GZipBuilder)
+- [GBuilder]builtin-builders/GBuilder.md)
+- [GCoffeeScriptBuilder]builtin-builders/GCoffeeScriptBuilder.md)
+- [GConcatBuilder]builtin-builders/GConcatBuilder.md)
+- [GCSSBuilder]builtin-builders/GCSSBuilder.md)
+- [GImagesBuilder]builtin-builders/GImagesBuilder.md)
+- [GJavaScriptBuilder]builtin-builders/GJavaScriptBuilder.md)
+- [GJekyllBuilder]builtin-builders/GJekyllBuilder.md)
+- [GMarkdownBuilder]builtin-builders/GMarkdownBuilder.md)
+- [GPaniniBuilder]builtin-builders/GPaniniBuilder.md)
+- [GRTLCSSBuilder]builtin-builders/GRTLCSSBuilder.md)
+- [GTwigBuilder]builtin-builders/GTwigBuilder.md)
+- [GTypeScriptBuilder]builtin-builders/GTypeScriptBuilder.md)
+- [GWebpackBuilder]builtin-builders/GWebpackBuilder.md)
+- [GZipBuilder]builtin-builders/GZipBuilder.md)

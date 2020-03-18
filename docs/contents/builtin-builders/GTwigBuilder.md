@@ -1,15 +1,17 @@
 ---
 layout: docs
+title: GTwigBuilder
 ---
 
 # GTwigBuilder
-Panini project builder.<br>
-See [twig](https://twig.symfony.com){:target='_blank'} to learn more about twig.
+Panini project builder.
+See [twig](https://twig.symfony.com) to learn more about twig.
 
 
 ### Builder specific Options
   - *conf.buildOptions.minify* (<i>type:boolean, default:false</i>)<br>
     If set to true, output html files are minimized.
+
   - *conf.buildOptions.prettify* (<i>type:boolean, default:false</i>)<br>
     If set to true, output html files are prettified.
 
