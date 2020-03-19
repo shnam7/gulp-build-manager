@@ -4,7 +4,6 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { Options } from "../core/common";
 
 export class GRTLCSSBuilder extends GBuilder {
     constructor(conf: BuildConfig) {

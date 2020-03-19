@@ -6,7 +6,7 @@ import { msg, arrayify } from "../utils/utils";
 
 
 export interface ReloaderOptions extends Options {
-    reloadOnChange?: boolean;
+    reloadOnChange?: boolean;       // default is true
 }
 
 export class GReloader {

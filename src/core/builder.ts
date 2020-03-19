@@ -48,26 +48,27 @@ export type Builders = NamedBuilders | FunctionBuilders | ObjectBuilders | GBuil
 
 //--- Build Config
 export interface BuildConfig {
-    buildName: string;          // mandatory
-    builder?: Builders;
+    buildName: string;              // mandatory
+    builder?: Builders;             // main build operations in various form: function, object, class, etc
     src?: string | string[];
     dest?: string;
     outFile?: string;
-    order?: string[];           // input file(src) ordering
-    flushStream?: boolean;      // finish all the output streams before exiting gulp task
-    sync?: boolean,             // serialize each build execution steps
-    verbose?: boolean,          // print verbose messages
-    silent?: boolean,           // depress informative messages
-    preBuild?: FunctionBuilders;
-    postBuild?: FunctionBuilders;
-    buildOptions?: Options;     // buildConfig instance specific custom options
-    moduleOptions?: Options;    // gulp module options
-    dependencies?: BuildSet;    // buildSet to be executed before this build task
-    triggers?: BuildSet;        // buildSet to be executed after this build task
-    watch?: string | string[];  // override default watch, 'src' if defined
+    order?: string[];               // input file(src) ordering
+    flushStream?: boolean;          // finish all the output streams before exiting gulp task
+    sync?: boolean,                 // serialize each build execution steps
+    verbose?: boolean,              // print verbose messages
+    silent?: boolean,               // depress informative messages
+    preBuild?: FunctionBuilders;    // function to be executed before BuildConfig.builder
+    postBuild?: FunctionBuilders;   // function to be executed after BuildConfig.builder
+    buildOptions?: Options;         // buildConfig instance specific custom options
+    moduleOptions?: Options;        // gulp module options
+    dependencies?: BuildSet;        // buildSet to be executed before this build task
+    triggers?: BuildSet;            // buildSet to be executed after this build task
+    watch?: string | string[];      // override default watch, 'src' if defined
     addWatch?: string | string[];   // additional watch in addition to watch or default watch
-    reloadOnFinish?: boolean;
-    clean?: string | string[];
+    reloadOnChange?: boolean;       // Reload on change when watcher is running. default is true.
+    reloadOnFinish?: boolean;       // reload on finishing all the build operations. default is false.
+    clean?: string | string[];      // clean targets
 }
 
 //--- BuildSet

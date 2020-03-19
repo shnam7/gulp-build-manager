@@ -14,7 +14,7 @@ When resolving BuildConfig, RTB(Runtime Builder) instance with the config is cre
 ```js
 interface BuildConfig {
     buildName: string;              // mandatory
-    builder?: Builders;
+    builder?: Builders;             // main build operations in various form: function, object, class, etc
     src?: string | string[];
     dest?: string;
     outFile?: string;
@@ -23,16 +23,17 @@ interface BuildConfig {
     sync?: boolean,                 // serialize each build execution steps
     verbose?: boolean,              // print verbose messages
     silent?: boolean,               // depress informative messages
-    preBuild?: FunctionBuilders;
-    postBuild?: FunctionBuilders;
+    preBuild?: FunctionBuilders;    // function to be executed before BuildConfig.builder
+    postBuild?: FunctionBuilders;   // function to be executed after BuildConfig.builder
     buildOptions?: Options;         // buildConfig instance specific custom options
     moduleOptions?: Options;        // gulp module options
     dependencies?: BuildSet;        // buildSet to be executed before this build task
     triggers?: BuildSet;            // buildSet to be executed after this build task
     watch?: string | string[];      // override default watch, 'src' if defined
     addWatch?: string | string[];   // additional watch in addition to watch or default watch
-    clean?: string | string[];
-    reloadOnFinish?: boolean;       // trigger reload when build operation is finished
+    reloadOnChange?: boolean;       // Reload on change when watcher is running. default is true.
+    reloadOnFinish?: boolean;       // reload on finishing all the build operations. default is false.
+    clean?: string | string[];      // clean targets
 }
 
 //--- BuildSet
@@ -160,12 +161,18 @@ Glob supported.
 Addional watch targets that will be added to conf.watch in addition to default vale, conf.src.
 
 
-### conf.clean
-Specifies clean target files that will be removed by GCleaner when clean task is triggered. GCleaner instance is automatically created by GBuildProject, if there's any clean target to remove. Glob supported.
+### conf.reloadOnChange
+Enable reloading when watch target change detected. Default value us ture. So, to disable automatic reloading on change, this property should be set to **false** clearly, not undefined. See conf.reloadOnFinish option for an examle.
+
+If this is set to false, conf.reloadOnFinish will be turned on outomatically unless it's clearly set to 'false'.
+
+Note: GWatcher has it's own reloadOnChange options. Default value is true. If this is set to false, conf.reloadOnChange will have no effect. If you see reloading is not working, check WatchOptions.reloadOnChange for gbm.addWatcher() call.
 
 
 ### conf.reloadOnFinish
-By default, Gwatcher monitors and triggers reloading. So, reloading ath the end of build is not required. This is generally fine, but in some cases such as executing external commands without gulp stream, reloading need to be delayed until the build execution is finished. In that case, this option can be turned on, and GWatcher's reloadOnChange option can be turned off.
+By default, Gwatcher monitors and triggers reloading. So, reloading at the end of build is not required. This is generally fine, but in some cases such as executing external commands without gulp stream, reloading need to be delayed until the build execution is finished. In that case, this option can be turned on, and reloadOnChange option can be turned off.
+
+If conf.reloadOnChange is set to false, the this will be turned on outomatically unless it's clearly set to 'false'.
 
 Here is an example to do that.
 
@@ -188,15 +195,19 @@ const jekyll = {
     watch: [ upath.join(basePath, '**/*.{yml,html,md}') ],
     clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTrigger],
 
-    reloadOnFinish: true
+    reloadOnChange: false       // turns off automatic reloading on change
+    reloadOnFinish: true        // because reloadOnChange is false, the default value of this will b true unless specified to false
 }
 
 gbm.createProject(jekyll)
     .addWatcher('watch', {
         browserSync: {server: upath.join(destRoot, '_site')}
-        reloadOnChange: false       // turns off automatic reloading on change
     })
     .resolve()
 ```
 
 Note: If reloadOnChange option is turned off, this will affect all the build items registered ito the project. So, in that case, reloadOnFinish option should to be truned on for all the build items in the project to have proper reloading.
+
+
+### conf.clean
+Specifies clean target files that will be removed by GCleaner when clean task is triggered. GCleaner instance is automatically created by GBuildProject, if there's any clean target to remove. Glob supported.

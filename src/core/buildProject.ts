@@ -36,7 +36,8 @@ export class GBuildProject {
     }
 
     addBuildItem(conf: BuildConfig): this {
-        if (this._options.prefix) conf.buildName = this._options.prefix + conf.buildName
+        if (this._options.prefix) conf.buildName = this._options.prefix + conf.buildName;
+        if (conf.reloadOnChange === false && conf.reloadOnFinish !== false) conf.reloadOnFinish = true;
         // this.map.set(this.options.prefix + buildKey, conf);
         this._map.set(conf.buildName, conf);
         return this;
@@ -193,7 +194,8 @@ export class GBuildProject {
                     // buildName: conf.buildName,
                     watch: watched,
                     task: conf.buildName ? gulp.parallel(conf.buildName) : (done) => { done() },
-                    displayName: conf.buildName
+                    displayName: conf.buildName,
+                    reloadOnChange: conf.reloadOnChange
                 });
             }
 

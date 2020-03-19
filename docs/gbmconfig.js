@@ -100,7 +100,7 @@ const jekyll = {
         `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
     ],
     clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTrigger],
-    reloadOnFinish: true
+    reloadOnChange: false
 };
 
 module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
@@ -112,7 +112,6 @@ module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
         ]
     })
     .addWatcher('@watch', {
-        reloadOnChange: false,
         browserSync: {
             server: upath.resolve(basePath),
             open: true,

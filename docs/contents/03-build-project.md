@@ -84,6 +84,16 @@ Add key/value pairs into project-wide variable list, which is accessible using '
 Create a new BuildConfig with build action initiating gulp.watch() and browser reloaders depending on the options. Returns itself.
 ```js
 (buildName = '@watch', opts?: WatcherOptions) => this;
+
+export interface ReloaderOptions extends Options {
+    reloadOnChange?: boolean;       // default is true
+}
+
+export interface WatcherOptions extends ReloaderOptions {
+    watch?: string | string[];      // pure watching: watched files to be reloaded on change w/o build actions
+    browserSync?: ReloaderOptions;  // browserSync initializer options
+    livereload?: ReloaderOptions;   // livereload initializer options
+}
 ```
 
 
