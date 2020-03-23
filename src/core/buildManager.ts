@@ -33,7 +33,10 @@ export class GBuildManager {
 
     addProject(project: GBuildProject | string): this {
         if (is.String(project)) project = require(upath.resolve(project));
-        if (project) this._projects.push(project as GBuildProject);
+        if (project instanceof GBuildProject)
+            this._projects.push(project as GBuildProject);
+        else
+            throw Error('GBuildManager:addProject: Invalid project argument');
         return this;
     }
 
