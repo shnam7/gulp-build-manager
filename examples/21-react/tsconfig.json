@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "module": "CommonJS",
+        "noEmitOnError": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "jsx": "react"
+    }
+}
