@@ -120,4 +120,11 @@ module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
             // reloadDebounce: 500
         }
     })
-    .addCleaner();
+    .addCleaner()
+    .addVars({clean: [
+        destRoot,
+        jekyllTrigger,
+        upath.join(basePath, '{css,js}/**/*.map'),
+        upath.join(basePath, 'gulp-build-{css,js}/**/*.map'),
+        upath.join(basePath, '.jekyll-metadata'),
+    ]});

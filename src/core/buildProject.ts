@@ -168,15 +168,15 @@ export class GBuildProject {
             }
 
             let rtb = this.getBuilder(conf);
-            let defaultTaskFunc = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
+            let mainTask = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
             let deps = arrayify(conf.dependencies);
-            let task = conf.builder ?  defaultTaskFunc : undefined;
+            let task = conf.builder ?  mainTask : undefined;
             let triggers = arrayify(conf.triggers);
 
             // sanity check for the final task function before calling gulp.task()
             let resolved = this.resolveBuildSet([...deps, task, ...<any>triggers]);
             if (!resolved)
-                resolved = defaultTaskFunc;
+                resolved = mainTask;
             else if (is.String(resolved))
                 resolved = gulp.parallel(resolved);
 

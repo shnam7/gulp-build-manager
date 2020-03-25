@@ -20,7 +20,7 @@
         "clean-all": "gulp @clean-all && npm run clean",
         "test": "npm run build && mocha --reporter spec && npm run gulp-test",
         "prepare": "npm run clean && npm run build",
-        "prepare-to-commit": "npm run prepare && npm run build-all && npm run ex-clean && rimraf docs/gulp-build-manager docs/.jekyll-*",
+        "prepare-to-commit": "npm run clean-all && npm run build-all && gulp @clean-to-prepare",
         "npm-dry-run": "npm publish --dry-run",
         "--deprecated-build-babel": "babel src --presets env --out-dir lib",
         "--deprecated-test-babel": "mocha --require babel-core/register --reporter spec"
