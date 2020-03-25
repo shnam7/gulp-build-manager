@@ -69,7 +69,7 @@ export class RTB {
         // build sequence use new promise independent of API promises (this._promises and this._promiseSync)
         if (this._syncMode) console.log('RTB: Strating build in sync Mode.');
         return Promise.resolve()
-            .then(() => this._execute(this.conf.preBuild))           // prebuild
+            .then(() => this._execute(this.conf.preBuild))
             .then(() => this.build())
             .then(() => this._execute(this.conf.postBuild))
             .then(() => Promise.all(this._promises))

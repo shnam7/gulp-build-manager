@@ -32,8 +32,6 @@ Register build action item. currently availabe GBM action tag names are:
 - 'after_src': after calling gulp.src()
 - 'befeore_dest': before calling gulp.dest()
 - 'after_dest': after calling gulp.dest()
-- 'before_clean: before clean action
-- 'after_clean: after clean action
 
 ```js
 type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>

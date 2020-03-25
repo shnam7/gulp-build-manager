@@ -31,11 +31,9 @@ export class GCleaner {
         return {
             buildName: buildName,
             builder: rtb => {
-                rtb.doActions('before_clean');
                 msg('GCleaner::cleanList:', this.cleanList);
                 rtb.promise(del(this.cleanList, this.options), this.options.sync);
-                rtb.doActions('after_clean');
-            }
+            },
         }
     }
 }

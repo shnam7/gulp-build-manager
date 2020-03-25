@@ -12,7 +12,7 @@
 - Feature Add new interface for main task creator in gulpfle
 - Feature Add multiple reloader supports
 - Improve performance by removing all dummy task creation
-- Add build actions API to rtb
+- Add build actions API to rtb (Experimental)
 
 ## 3.2.0-rc
 - Add GRTLCSSBuilder

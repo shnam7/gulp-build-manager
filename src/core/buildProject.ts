@@ -93,9 +93,7 @@ export class GBuildProject {
         // create watch build item
         return this.addBuildItem({
             buildName: buildName,
-            builder: () => {
-                this._watcher.watch();
-            }
+            builder: () => { this._watcher.watch(); },
         });
     }
 
@@ -165,7 +163,7 @@ export class GBuildProject {
                 // So, info message is displayed only when verbose mode is turned on.
                 // However, it's recommended to avoid it by using buildNames in deppendencies and triggers field of BuildConfig
                 // if (conf.verbose)
-                info(`GBuildProject:resolve: taskName=${conf.buildName} already registered`);
+                if (!conf.silent) info(`GBuildProject:resolve: taskName=${conf.buildName} already registered`);
                 return conf.buildName;
             }
 

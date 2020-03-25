@@ -15,9 +15,6 @@ const scss = {
     src: upath.join(srcRoot, 'scss/**/*.scss'),
     dest: upath.join(destRoot, 'css'),
     clean: upath.join(destRoot, 'css'),
-    dependencies: [],
-
-    preBuild: (rtb) => rtb.addAction('after_src', rtb=>rtb.debug())
 }
 
 module.exports = gbm.createProject(scss, { prefix })
