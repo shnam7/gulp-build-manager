@@ -4,9 +4,9 @@
 
 import { Options } from './common';
 import { RTB } from './rtb';
+import { FunctionBuilder } from './builder';
 
-export type PluginFunction = (rtb: RTB, ...args: any[]) => Promise<unknown> | void;
-export type Plugins = PluginFunction | GPlugin;
+export type Plugin = FunctionBuilder | GPlugin;
 
 export class GPlugin {
     constructor(public options: Options = {}) { }

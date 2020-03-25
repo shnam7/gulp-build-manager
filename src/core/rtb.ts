@@ -5,12 +5,13 @@
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilders, FunctionBuilder, CopyParam } from "./builder";
 import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify, copy } from "../utils/utils";
-import { Plugins, GPlugin } from "./plugin";
+import { Plugin, GPlugin } from "./plugin";
 import filter = require("gulp-filter");
 import { GBuildManager } from "./buildManager";
 import { GReloaders } from "./reloader";
 
 type PromiseExecutor = () => void | Promise<unknown>;
+type ActionItem = { priority: number, action: FunctionBuilder };
 
 export class RTB {
     protected _stream?: GulpStream;
@@ -20,6 +21,7 @@ export class RTB {
     protected _syncMode: boolean = false;
     protected _reloaders?: GReloaders;
     protected _buildFunc: FunctionBuilder = (rtb: RTB) => { rtb.src().dest(); };
+    protected _actions: Map<string, ActionItem[]> = new Map();
 
     //--- internal functions
 
@@ -37,12 +39,6 @@ export class RTB {
 
     protected _init(conf: BuildConfig): this {
         this.conf = conf || { buildName: '' };
-
-        // normalize config
-        if (is.Array(this.conf.dependencies) && this.conf.dependencies.length === 0)
-            this.conf.dependencies = undefined;
-        if (is.Array(this.conf.triggers) && this.conf.triggers.length === 0)
-            this.conf.triggers = undefined;
         this.conf.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
         return this;
     }
@@ -88,12 +84,46 @@ export class RTB {
 
 
     /**----------------------------------------------------------------
+     * build actions API for customization - similar to WordPress 'actions'
+     *-----------------------------------------------------------------*/
+
+    addAction(tag: string, action: FunctionBuilder, priority: number = 10): this {
+        let ar = this._actions.get(tag) || [];
+        let idx = 0;
+        for (; idx<ar.length; idx++) if (ar[idx].priority > priority) break;
+
+        ar.splice(idx, 0, { priority, action })
+        this._actions.set(tag, ar);
+        return this;
+    }
+
+    removeAction(tag: string, action: FunctionBuilder, priority: number, sync: boolean = false): this {
+        let ar = this._actions.get(tag);
+        if (!ar) return this;
+
+        for (let idx=0; idx<ar.length; idx++)
+            if (ar[idx].action === action && ar[idx].priority === priority) ar.splice(idx, 0)
+        this._actions.set(tag, ar);
+        return this;
+    }
+
+    doActions(tag: string, ...args: any[]): this {
+        let ar = this._actions.get(tag);
+        if (ar) ar.forEach((item: ActionItem) => {
+            this.promise(()=>item.action(this, ...args))
+        });
+        return this;
+    }
+
+
+    /**----------------------------------------------------------------
      * Build API: Returns value should be 'this'
      *----------------------------------------------------------------*/
 
     src(src?: string | string[]): this {
         if (!src) src = this.conf.src;
         if (!src) return this;
+        this.doActions('before_src');
         this._stream = gulp.src(src, this.moduleOptions.gulp && this.moduleOptions.gulp.src);
 
         // check input file ordering
@@ -101,6 +131,7 @@ export class RTB {
             let order = require('gulp-order');
             this.pipe(order(this.conf.order, this.moduleOptions.order));
         }
+        this.doActions('after_src');
 
         // check sourceMap option
         return this.sourceMaps({ init: true });
@@ -108,7 +139,9 @@ export class RTB {
 
     dest(path?: string): this {
         let opts = this.moduleOptions.gulp || {};
+        this.doActions('before_dest');
         this.pipe(gulp.dest(path || this.conf.dest || '.', opts.dest));
+        this.doActions('after_dest');
         return this;
     }
 
@@ -117,7 +150,7 @@ export class RTB {
         return this;
     }
 
-    chain(action: Plugins, ...args: any[]): this {
+    chain(action: Plugin, ...args: any[]): this {
         let ret = this.promise(action instanceof GPlugin ? action.process(this, ...args) : action(this, ...args));
         if (ret instanceof Promise) this.promise(ret);
         return this;

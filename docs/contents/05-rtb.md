@@ -26,6 +26,38 @@ const copy = {
 
 ## RTB API's
 
+### addAction()
+Register build action item. currently availabe GBM action tag names are:
+- 'befeore_src': before calling gulp.src()
+- 'after_src': after calling gulp.src()
+- 'befeore_dest': before calling gulp.dest()
+- 'after_dest': after calling gulp.dest()
+- 'before_clean: before clean action
+- 'after_clean: after clean action
+
+```js
+type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>
+
+(tag: string, action: FunctionBuilder, priority: number = 10) => this
+```
+
+
+### removeAction()
+Removed actions registered.
+```js
+(tag: string, action: FunctionBuilder, priority: number) => this;
+```
+
+
+### doActions()
+Execute all the build actions registered under the tag name. args will be delivered to all the build action functions as it is.
+
+All the build actions will be executed in sync or async mode according to sync mode status. Refer to rtb.promise() section for more details on sync/async mode operatios.
+```js
+(tag: string, ...args: any[]) => this;
+```
+
+
 ### src()
 Creates internal gulp stream with files specified in BuildConf.src.
 ```js
