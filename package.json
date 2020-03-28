@@ -16,11 +16,9 @@
         "docs-watch": "gulp docs:@watch",
         "ex-build": "gulp @ex-build-all",
         "ex-clean": "gulp @ex-clean-all",
-        "build-all": "npm run build && gulp @build-all",
-        "clean-all": "gulp @clean-all && npm run clean",
         "test": "npm run build && mocha --reporter spec && npm run gulp-test",
         "prepare": "npm run clean && npm run build",
-        "prepare-to-commit": "npm run clean-all && npm run build-all && gulp @clean-to-prepare",
+        "prepare-to-commit": "npm run clean && npm run build && gulp @clean-all && gulp @build-all && gulp @clean-to-prepare",
         "npm-dry-run": "npm publish --dry-run",
         "--deprecated-build-babel": "babel src --presets env --out-dir lib",
         "--deprecated-test-babel": "mocha --require babel-core/register --reporter spec"
@@ -62,6 +60,7 @@
         "gulp-postcss": "^8.0.0",
         "gulp-rename": "^2.0.0",
         "gulp-sourcemaps": "^2.6.5",
+        "stream-to-promise": "^2.2.0",
         "upath": "^1.2.0"
     },
     "peerDependencies": {
@@ -71,8 +70,8 @@
         "@types/glob": "^7.1.1",
         "@types/gulp": "^4.0.6",
         "@types/gulp-filter": "^3.0.33",
-        "@types/jquery": "^3.3.33",
-        "@types/react": "^16.9.25",
+        "@types/jquery": "^3.3.34",
+        "@types/react": "^16.9.26",
         "@types/react-dom": "^16.9.5",
         "babel-core": "^6.26.3",
         "babel-preset-env": "^1.7.0",

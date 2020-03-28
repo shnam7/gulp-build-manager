@@ -1,17 +1,10 @@
-/**
- *  gbm Plugin - TypeScript
- */
 import * as upath from 'upath';
-import { dmsg, msg, warn } from '../utils/utils';
+import { RTB } from "../core/rtb";
 import { Options } from "../core/common";
-import { GPlugin } from "../core/plugin";
-import { RTB } from '../core/rtb';
+import { warn, msg } from '../utils/utils';
 
-export class TypeScriptPlugin extends GPlugin {
-    constructor(options: Options = {}) { super(options); }
-
-    process(rtb: RTB) {
-        const tsOpts = rtb.moduleOptions.typescript || {};
+RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
+    const tsOpts = rtb.moduleOptions.typescript || {};
         const tsConfig = rtb.buildOptions.tsConfig;
 
         // normalize outDir and outFile
@@ -33,7 +26,7 @@ export class TypeScriptPlugin extends GPlugin {
             // const tslintOpts = rtb.moduleOptions.tslint || {formatter: 'stylish'};
             const tslintOpts = rtb.moduleOptions.tslint || { formatter: 'stylish' };
             const reportOpts = tslintOpts.report || {};
-            // dmsg('[TypeScriptPlugin]tslint Options =', tslintOpts, reportOpts);
+            // dmsg('[GBM:ext.typeScript]tslint Options =', tslintOpts, reportOpts);
             rtb.pipe(tslint(tslintOpts)).pipe(tslint.report(reportOpts));
         }
 
@@ -55,7 +48,7 @@ export class TypeScriptPlugin extends GPlugin {
         if (!tsProject) tsProject = typescript.createProject(tsOpts);
 
         if (rtb.buildOptions.printConfig) {
-            msg(`[TypeScriptPlugin]tsconfig evaluated(buildName:${rtb.conf.buildName}):\n`, tsProject.options);
+            msg(`[GBM:ext.typeScript]tsconfig evaluated(buildName:${rtb.conf.buildName}):\n`, tsProject.options);
         }
 
         // workaround for gulp-typescript sourceMap failure which requires sourceRoot value
@@ -63,7 +56,4 @@ export class TypeScriptPlugin extends GPlugin {
         rtb.pipe(tsProject()).sourceMaps(smOpts);
 
         if (!tsOpts.declarationMap) rtb.filter(["**", "!**/*.d.ts.map"]);
-    }
-}
-
-export default TypeScriptPlugin;
+});

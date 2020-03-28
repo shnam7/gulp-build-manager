@@ -3,7 +3,6 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { CSSPlugin } from "../plugins/CSSPlugin";
 import { warn } from "../utils/utils";
 
 export class GCSSBuilder extends GBuilder {
@@ -12,7 +11,7 @@ export class GCSSBuilder extends GBuilder {
     }
 
     protected build() {
-        this.src().chain(new CSSPlugin());
+        this.src().chain(this.ext.css());
         const opts = this.buildOptions;
 
         // sanity check for options

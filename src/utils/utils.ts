@@ -57,15 +57,7 @@ export function registerPropertiesFromFiles(obj: any, globPattern: string, callb
 /** stream to promise */
 export function toPromise(stream: Stream): Promise<Stream> {
     if (!stream) return Promise.resolve(stream);
-    return new Promise<Stream>((resolve, reject) => {
-        return stream
-            .on('end', () => resolve(stream))       // event for read stream
-            .on('finish', () => resolve(stream))    // event for write stream
-            // .on('end', ()=>{dmsg('read stream end'); resolve(stream)})       // event for read stream
-            // .on('finish', ()=>{dmsg('write stream finish'); resolve(stream)})       // event for write stream
-            .on('error', reject)
-        // .resume()
-    })
+    return require('stream-to-promise')(stream);
 }
 
 

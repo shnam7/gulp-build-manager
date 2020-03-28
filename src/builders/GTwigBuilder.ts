@@ -3,8 +3,6 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import TwigPlugin from "../plugins/TwigPlugin";
-import { Options } from "../core/common";
 
 export class GTwigBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -12,7 +10,7 @@ export class GTwigBuilder extends GBuilder {
     }
 
     protected build() {
-        this.src().chain(new TwigPlugin()).dest();
+        this.src().chain(this.ext.twig()).dest();
     }
 }
 

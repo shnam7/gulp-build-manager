@@ -11,7 +11,11 @@ const srcRoot = upath.join(basePath, '_assets');
 const destRoot = upath.join(basePath, 'gulp-build-manager');
 const prefix = projectName + ':';
 const sourceMap = true;
-const jekyllTrigger = upath.join(basePath, '.jekyll-trigger');  // flag to trigger jekyll watcher
+
+// trigger file should be independent because scss and scripts builders will run in parallel
+// If single file is used, file access colision could occur
+const jekyllTriggerCss = upath.join(basePath, '.jekyll-trigger-css');  // flag to trigger jekyll watcher
+const jekyllTriggerJs = upath.join(basePath, '.jekyll-trigger-js');  // flag to trigger jekyll watcher
 const port = 4000;
 
 const scss = {
@@ -51,10 +55,7 @@ const scss = {
             ]
         },
     },
-    postBuild: () => {
-        // return promise to be sure copy operation is done before the task finishes
-        return gbm.utils.exec('echo', ['>' + jekyllTrigger]);
-    },
+    postBuild: (rtb) => rtb.exec('echo', ['>', jekyllTriggerCss]),
     clean: [upath.join(basePath, 'css')],
 }
 
@@ -64,15 +65,15 @@ const scripts = {
     src: [upath.join(srcRoot, 'scripts/**/*.ts')],
     dest: upath.join(basePath, 'js'),
     flushStream: true,
-    postBuild: (rtb) => {
-        rtb.copy([{ src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js') }])
-        return gbm.utils.exec('echo', ['>', jekyllTrigger]);
-    },
+    postBuild: (rtb) => rtb.copy([{
+        src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js')
+    }], true).exec('echo', ['>', jekyllTriggerJs]),
+
     buildOptions: {
         minifyOnly: true,
         tsConfig: upath.join(basePath, "tsconfig.json"),
-            sourceMap: sourceMap,
-        },
+        sourceMap: sourceMap,
+    },
     clean: [upath.join(basePath, 'js')]
 };
 
@@ -92,14 +93,14 @@ const jekyll = {
     },
 
     watch: [
-        jekyllTrigger,
+        jekyllTriggerCss, jekyllTriggerJs,
         upath.join(basePath, '**/*.{yml,html,md}'),
         `!(${upath.join(basePath, '{gulp-build-manager,gulp-build-manager/**/*}')})`,
         `!(${upath.join(basePath, '{js,js/**/*}')})`,
         `!(${upath.join(basePath, '{css,css/**/*}')})`,
         `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
     ],
-    clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTrigger],
+    clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTriggerCss, jekyllTriggerJs],
     reloadOnChange: false
 };
 
@@ -122,8 +123,7 @@ module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
     })
     .addCleaner()
     .addVars({clean: [
-        destRoot,
-        jekyllTrigger,
+        destRoot, jekyllTriggerCss, jekyllTriggerJs,
         upath.join(basePath, '{css,js}/**/*.map'),
         upath.join(basePath, 'gulp-build-{css,js}/**/*.map'),
         upath.join(basePath, '.jekyll-metadata'),

@@ -2,14 +2,16 @@
  * class RTB - Runtime Builder
  */
 
+import * as upath from 'upath';
+import * as glob from 'glob';
 import { GulpStream, Options, gulp } from "./common";
-import { BuildConfig, FunctionBuilders, FunctionBuilder, CopyParam } from "./builder";
-import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify, copy } from "../utils/utils";
-import { Plugin, GPlugin } from "./plugin";
+import { BuildConfig, FunctionBuilder, CopyParam } from "./builder";
+import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify, copy, registerPropertiesFromFiles, addProperty } from "../utils/utils";
 import filter = require("gulp-filter");
 import { GBuildManager } from "./buildManager";
 import { GReloaders } from "./reloader";
 
+type RTBExtension = (...args: any[]) => FunctionBuilder;
 type PromiseExecutor = () => void | Promise<unknown>;
 type ActionItem = { priority: number, action: FunctionBuilder };
 
@@ -72,9 +74,9 @@ export class RTB {
             .then(() => this._execute(this.conf.preBuild))
             .then(() => this.build())
             .then(() => this._execute(this.conf.postBuild))
-            .then(() => Promise.all(this._promises))
             .then(() => { if (flushStream) return toPromise(this._stream); })
             .then(() => this._promiseSync)
+            .then(() => Promise.all(this._promises))
             .then(() => { if (conf.reloadOnFinish === true) this.reload(); });
     }
 
@@ -97,7 +99,7 @@ export class RTB {
         return this;
     }
 
-    removeAction(tag: string, action: FunctionBuilder, priority: number, sync: boolean = false): this {
+    removeAction(tag: string, action: FunctionBuilder, priority: number): this {
         let ar = this._actions.get(tag);
         if (!ar) return this;
 
@@ -150,10 +152,8 @@ export class RTB {
         return this;
     }
 
-    chain(action: Plugin, ...args: any[]): this {
-        let ret = this.promise(action instanceof GPlugin ? action.process(this, ...args) : action(this, ...args));
-        if (ret instanceof Promise) this.promise(ret);
-        return this;
+    chain(action: FunctionBuilder, ...args: any[]): this {
+        return this.promise(action(this, ...args));
     }
 
     on(event: string | symbol, listener: (...args: any[]) => void): this {
@@ -230,7 +230,6 @@ export class RTB {
 
     debug(options: Options = {}): this {
         let title = options.title ? options.title : '';
-        // title = `[debugPlugin${title ? ':' + title : ''}]`;
         let opts = Object.assign({}, this.moduleOptions.debug, options, { title });
         return this.pipe(require('gulp-debug')(opts));
     }
@@ -265,12 +264,6 @@ export class RTB {
         return (sync || this._syncMode)
             ? this.promise(() => require("del")(patterns, options), sync)
             : this.promise(require("del")(patterns, options), sync);
-    }
-
-    spawn(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false): this {
-        return (sync || this._syncMode)
-            ? this.promise(() => (is.Object(cmd)) ? spawn(cmd.command, cmd.args, cmd.options) : spawn(cmd, args, options), sync)
-            : this.promise((is.Object(cmd)) ? spawn(cmd.command, cmd.args, cmd.options) : spawn(cmd, args, options), sync);
     }
 
     exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false): this {
@@ -319,9 +312,33 @@ export class RTB {
             .rename({ extname: '.min.js' }).sourceMaps();
     }
 
-
-    protected _execute(action?: FunctionBuilders): void | Promise<unknown> {
+    protected _execute(action?: FunctionBuilder): void | Promise<unknown> {
         if (is.Function(action)) return action(this);
-        if (is.Object(action)) return action.func(this, ...action.args);
+    }
+
+
+
+    //--- extension support
+
+    get ext() { return RTB._extension; }
+
+    protected static _extension: {[key:string]: RTBExtension} = {}
+
+    static registerExtension(name: string, ext: RTBExtension) {
+        if (this._extension[name])
+            throw Error(`RTB:registerExtension: extension name=${name} already exists.`)
+        this._extension[name] = ext;
+    }
+
+    static loadExtensions(globModules: string | string[]) {
+        let files: string[] = [];
+        let cb = (file: string) => upath.removeExt(file, '.js');
+        arrayify(globModules).forEach(dir => {
+            glob.sync(dir).forEach(file => files.push(cb(file)));
+            files.forEach(file => require(file));
+        });
     }
 }
+
+// load built-in extensions
+RTB.loadExtensions(upath.join(__dirname, '../extension/*.js'))

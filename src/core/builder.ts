@@ -3,23 +3,18 @@
  */
 
 import { Options, GulpTaskFunction } from "./common";
-import { GPlugin } from './plugin';
 import { ExternalCommand } from "../utils/utils";
 import { RTB } from "./rtb";
 
 export type TaskDoneFunction = (error?: any) => void;
-export type Plugin = FunctionBuilder | GPlugin;
 export type BuildName = string;
 
 
 //--- Named Builders
 export type GBuilderClassName = string;
-export type NamedBuilders = GBuilderClassName;
 
 //--- Function Builders
 export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>
-export type FunctionObjectBuilder = { func: FunctionBuilder; args: any[] }
-export type FunctionBuilders = FunctionBuilder | FunctionObjectBuilder;
 
 //--- Object Builders
 export interface ExternalBuilder extends ExternalCommand { }
@@ -43,7 +38,7 @@ export class GBuilder extends RTB {
 }
 
 //--- Combined Builders Type
-export type Builders = NamedBuilders | FunctionBuilders | ObjectBuilders | GBuilder;
+export type Builders = GBuilderClassName | FunctionBuilder | ObjectBuilders | GBuilder;
 
 
 //--- Build Config
@@ -58,8 +53,8 @@ export interface BuildConfig {
     sync?: boolean,                 // serialize each build execution steps
     verbose?: boolean,              // print verbose messages
     silent?: boolean,               // depress informative messages
-    preBuild?: FunctionBuilders;    // function to be executed before BuildConfig.builder
-    postBuild?: FunctionBuilders;   // function to be executed after BuildConfig.builder
+    preBuild?: FunctionBuilder;    // function to be executed before BuildConfig.builder
+    postBuild?: FunctionBuilder;   // function to be executed after BuildConfig.builder
     buildOptions?: Options;         // buildConfig instance specific custom options
     moduleOptions?: Options;        // gulp module options
     dependencies?: BuildSet;        // buildSet to be executed before this build task

@@ -11,11 +11,10 @@ const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
 
-class MyPlugin extends gbm.plugins.GPlugin {
-    process(rtb) {
-        console.log(`This is custom plugin. buildName=${rtb.conf.buildName}`)
-    }
-}
+gbm.RTB.registerExtension('myExt', (options={}) => (rtb, ...args) => {
+    console.log(`This is custom plugin. buildName=${rtb.conf.buildName}`, options.msg)
+    console.log(args);
+})
 
 const copy = {
     buildName: 'copy',
@@ -28,7 +27,7 @@ const build1 = {
     buildName: 'build1',
     builder: (rtb) => {
         rtb
-            .chain(new MyPlugin())
+            .chain(rtb.ext.myExt({msg: 'Hi~~'}), 'AAA')
             .chain((rtb) => console.log(`custom plugin#1, buildName=${rtb.conf.buildName}`))
             .chain(() => console.log('custom plugin'));
         console.log(`build1 executed: src=${rtb.conf.src}, clean=${rtb.conf.clean}`);

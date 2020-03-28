@@ -4,20 +4,16 @@ import { GBuildProject, BuildGroup, ProjectOptions } from './buildProject';
 import { CleanerOptions } from './cleaner';
 import { registerPropertiesFromFiles, is } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
-import { GPlugin as GPluginClass } from './plugin';
 import * as __utils from '../utils/utils';
 import { WatcherOptions } from './watcher';
 import { Options } from './common';
 import { RTB } from './rtb';
 
 
-//-- custom builders and plugins
+//-- custom builders
 function __builders() {}
-function __plugins() {}
 namespace __builders { export const GBuilder = GBuilderClass; }
-namespace __plugins { export const GPlugin = GPluginClass; }
 registerPropertiesFromFiles(__builders, upath.join(__dirname, '../builders/*.js'))
-registerPropertiesFromFiles(__plugins, upath.join(__dirname, '../plugins/*.js'));
 
 
 //--- GBuildManager
@@ -25,7 +21,7 @@ export class GBuildManager {
     protected _projects: GBuildProject[] = [];
     protected _managerProject: GBuildProject = new GBuildProject();
 
-    constructor() { }
+    constructor() {}
 
     createProject(buildGroup: BuildGroup = {}, opts?: ProjectOptions): GBuildProject {
         return new GBuildProject(buildGroup, opts);
@@ -119,8 +115,8 @@ export class GBuildManager {
         return buildNames.concat(this._managerProject.buildNames);
     }
 
+    get RTB() { return RTB; }
     get builders() { return __builders; }
-    get plugins() { return __plugins; }
     get utils() { return __utils; }
     get rtbMap() { return GBuildManager.rtbMap; }
     get defaultModuleOptions() { return GBuildManager.defaultModuleOptions; }

@@ -3,8 +3,6 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { MarkdownPlugin } from "../plugins/MarkdownPlugin";
-import { Options } from "../core/common";
 
 export class GMarkdownBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -12,7 +10,7 @@ export class GMarkdownBuilder extends GBuilder {
     }
 
     protected build() {
-        this.src().chain(new MarkdownPlugin()).dest();
+        this.src().chain(this.ext.markdown()).dest();
     }
 }
 

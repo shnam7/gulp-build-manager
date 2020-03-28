@@ -3,8 +3,6 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { TypeScriptPlugin } from "../plugins/TypeScriptPlugin";
-import { Options } from "../core/common";
 
 export class GTypeScriptBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -12,7 +10,7 @@ export class GTypeScriptBuilder extends GBuilder {
     }
 
     protected build() {
-        this.src().chain(new TypeScriptPlugin());
+        this.src().chain(this.ext.typeScript());
 
         // concat stream is handled by gulp-typescript. only non-concat is handled here
         const opts = this.buildOptions;
