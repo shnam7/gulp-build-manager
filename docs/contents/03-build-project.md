@@ -3,11 +3,13 @@ layout: docs
 title: GBuildProject
 ---
 
-# GBuildProject
+# GBuildProject class
 
 GBuildProject is a class managing a collection of BuildConfig objects. Typically, BuildConfig items are added to GBuildProject instance and resolved generating relevant gulp tasks.
 
 Every GBuildProject instance has its own GWtacher and GCleaner. Browser reloading is supported by the GWatcher instance.
+
+Generally, GBuildProject instances are created by calling gbm.createProject().
 
 
 ## Types
@@ -35,52 +37,50 @@ const sass = { buildName: 'sass' }
 const scripts = { buildName: 'scripts' }
 
 const buildGroup = {sass, styles};
-gbm.createProject(buildGroup).resolve();
-
+const proj = gbm.createProject(buildGroup).resolve();   // returns GBuildProject instance
 ```
 
 
 ---
-## constructor()
+## Instance functions
+---
+
+### constructor()
 Create GBuildProject and initialize it with buildGroup.
 ```js
 (buildGroup: BuildGroup = {}, options: ProjectOptions = {}) => void;
 ```
 
 
----
-## addBuildItem()
+### addBuildItem()
 Add BuildConfig item. Returns itself.
 ```js
 (conf: BuildConfig) => this;
 ```
 
----
-## addBuildGroup()
+
+### addBuildGroup()
 Register BuildConfig objects specified in buildGroup argument into the project. Single BuildConfig argument is also accepted.
 ```js
 (buildGroup: BuildGroup | BuildConfig) => this;
 ```
 
 
----
-## addTrigger
+### addTrigger
 Create a new BuildConfig with no build actions, but triggers other build tasks. Returns itself.
 ```js
 (buildName: string, buildNames: string | string[], opts: TriggerOptions={}) => this;
 ```
 
 
----
-## addVars()
+### addVars()
 Add key/value pairs into project-wide variable list, which is accessible using 'vars' property.
 ```js
 (vars: { [key: string]: any }) => this;
 ```
 
 
----
-## addWatcher()
+### addWatcher()
 Create a new BuildConfig with build action initiating gulp.watch() and browser reloaders depending on the options. Returns itself.
 ```js
 (buildName = '@watch', opts?: WatcherOptions) => this;
@@ -97,16 +97,14 @@ export interface WatcherOptions extends ReloaderOptions {
 ```
 
 
----
-## addCleaner()
+### addCleaner()
 Create GCleaner object for this project. Additional clean targets can be specified in opts.clean.
 ```js
 (buildName = '@clean', opts?: CleanerOptions) => this;
 ```
 
 
----
-## filter()
+### filter()
 Returns list of buildNames, from registered BuildConfig objects, that matches to the pattern specified in selector parameter.
 RegExp is supported.
 ```js
@@ -114,56 +112,57 @@ RegExp is supported.
 ```
 
 
----
-## resolve()
+### resolve()
 Analyze all the BuildConfig object registered and actually creates gulp tasks according to it. Until resolve() is called, no gulp task is created.
 ```js
 () => this;
 ```
 
 
+
 ---
-## size
+## Properties
+---
+
+### size
 Number of total BuildConfig objects in this project.
 
 
----
-## projectName
+### projectName
 projectName specified in ProjectOptions when this instance is created. If not specified, empty string "" is returned.
 
 
----
-## prefix
+### prefix
 prefix specified in ProjectOptions when this instance is created.
 () { return this._options.prefix; }
 
 
----
-## vars
+### vars
 Object with key/value pairs which were added using addVar() function. Typically, used to share data between projects and GBuildManager in multi-file projects.
 
 
----
-## buildNames
+### buildNames
 List of buildNames of all the registered BuildConfig objects in the project.
 
 
----
-## watcher
+### watcher
 GWatcher object specific to this project.
 
 
+
 ---
-## GBuildProject.series()
-Static function. Convert BuildSet arguments into a series type BuildSet.
+## Class functions (static)
+---
+
+### GBuildProject.series()
+Convert BuildSet arguments into a series type BuildSet.
 ```js
 (...args: BuildSet[]) => BuildSetSeries;
 ```
 
 
----
-## GBuildProject.parallel()
-Static function. Convert BuildSet arguments into a parallel type BuildSet.
+### GBuildProject.parallel()
+Convert BuildSet arguments into a parallel type BuildSet.
 ```js
 (...args: BuildSet[]) => BuildSetParallel;
 ```

@@ -192,6 +192,7 @@ Loads 'gulp-filter' module and pipe it to internal gulp stream with pattern and 
 ---
 ### rename()
 Loads 'gulp-rename' module and pipe it to internal gulp stream with options as argument.
+Refer to [gulp-rename][0] documents for option details.
 ```js
 (options: Options = {}) => this;
 ```
@@ -293,3 +294,5 @@ Minify javascript files in the current stream. This operation will filter out *.
 ```js
 () => this;
 ```
+
+[0]: https://github.com/hparra/gulp-rename
