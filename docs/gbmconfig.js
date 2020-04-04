@@ -18,10 +18,40 @@ const jekyllTriggerCss = upath.join(basePath, '.jekyll-trigger-css');  // flag t
 const jekyllTriggerJs = upath.join(basePath, '.jekyll-trigger-js');  // flag to trigger jekyll watcher
 const port = 4000;
 
+const wicleName = 'shnam7/wicle';
+
 const scss = {
     buildName: 'scss',
     builder: 'GCSSBuilder',
-    preBuild: () => gbm.utils.npmInstall(['stylelint-config-recommended', 'shnam7/wicle']),
+    preBuild: (rtb) => {
+        gbm.utils.npmInstall(['stylelint-config-recommended', 'postcss-combine-duplicated-selectors', wicleName]);
+        Object.assign(rtb.conf.moduleOptions, {
+            sass: { includePaths: ["node_modules/sass-wdk", "node_modules/wicle/scss"] },
+            stylelint: {
+                "extends": "stylelint-config-recommended",
+                "rules": {
+                    "function-calc-no-unspaced-operator": null,
+                    "no-descending-specificity": null
+                }
+            },
+            // autoprefixer: {
+            //   // default browserlist is: '> 0.5%, last 2 versions, Firefox ESR, not dead'
+            //   browsers: ['last 4 version']
+            // },
+            postcss: {
+                plugins: [
+                    require('postcss-combine-duplicated-selectors')(),
+                    // require('postcss-cssnext')({features:{rem: false}}),
+                    // require('postcss-utilities')(),
+                    // require('lost')(),
+                    // require('postcss-assets')({
+                    //   loadPaths:[upath.join(srcRoot, 'images')],
+                    // }),
+                    // require('postcss-inline-svg')({path:upath.join(basePath, 'images')}),
+                ]
+            },
+        });
+    },
     src: [upath.join(srcRoot, 'scss/**/*.scss')],
     dest: upath.join(basePath, 'css'),
     buildOptions: {
@@ -30,32 +60,6 @@ const scss = {
         sourceMap: sourceMap
     },
     flushStream: true,
-    moduleOptions: {
-        sass: { includePaths: ["node_modules/sass-wdk", "node_modules/wicle/scss"] },
-        stylelint: {
-            "extends": "stylelint-config-recommended",
-            "rules": {
-                "function-calc-no-unspaced-operator": null,
-                "no-descending-specificity": null
-            }
-        },
-        // autoprefixer: {
-        //   // default browserlist is: '> 0.5%, last 2 versions, Firefox ESR, not dead'
-        //   browsers: ['last 4 version']
-        // },
-        postcss: {
-            plugins: [
-                gbm.utils.requireSafe('postcss-combine-duplicated-selectors')(),
-                // require('postcss-cssnext')({features:{rem: false}}),
-                // require('postcss-utilities')(),
-                // require('lost')(),
-                // require('postcss-assets')({
-                //   loadPaths:[upath.join(srcRoot, 'images')],
-                // }),
-                // require('postcss-inline-svg')({path:upath.join(basePath, 'images')}),
-            ]
-        },
-    },
     postBuild: (rtb) => rtb.exec('echo', ['>', jekyllTriggerCss]),
     clean: [upath.join(basePath, 'css')],
 }

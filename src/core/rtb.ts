@@ -4,7 +4,8 @@
 
 import * as upath from 'upath';
 import * as glob from 'glob';
-import filter = require("gulp-filter");import { GBuildManager } from "./buildManager";
+import * as filter from 'gulp-filter';
+import { GBuildManager } from "./buildManager";
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilder, CopyParam } from "./builder";
 import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy } from "../utils/utils";
@@ -15,6 +16,12 @@ import { npmLock, npmUnlock, requireSafe } from '../utils/npm';
 type RTBExtension = (...args: any[]) => FunctionBuilder;
 type PromiseExecutor = () => void | Promise<unknown>;
 type ActionItem = { priority: number, action: FunctionBuilder };
+
+interface BuildConfigNorm extends BuildConfig {
+    buildOptions: Options;
+    moduleOptions: Options;
+}
+
 
 export class RTB {
     protected _stream?: GulpStream;
@@ -28,9 +35,7 @@ export class RTB {
 
     //--- internal functions
 
-    conf: BuildConfig = { buildName: '' };
-    buildOptions: Options = {};
-    moduleOptions: Options = {};
+    conf: BuildConfigNorm = { buildName: '', buildOptions: {}, moduleOptions: {} };
 
     constructor(conf: BuildConfig) {
         this._init(conf);
@@ -41,8 +46,8 @@ export class RTB {
      *-----------------------------------------------------------------*/
 
     protected _init(conf: BuildConfig): this {
-        this.conf = conf || { buildName: '' };
-        this.conf.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
+        Object.assign(this.conf, conf, { buildName: '', buildOptions:{}, moduleOptions: {} });
+        Object.assign(this.conf.moduleOptions, GBuildManager.defaultModuleOptions, conf.moduleOptions);
         return this;
     }
 
@@ -63,9 +68,7 @@ export class RTB {
 
     _build(conf: BuildConfig) : Promise<unknown> {
         // reset variables
-        this.conf = conf;
-        this.buildOptions = conf.buildOptions || {};
-        this.moduleOptions = conf.moduleOptions || {};
+        Object.assign(this.conf, conf);
         const flushStream = this.conf.flushStream;
         this._syncMode = conf.sync || false;
 
@@ -129,12 +132,12 @@ export class RTB {
         if (!src) src = this.conf.src;
         if (!src) return this;
         this.doActions('before_src');
-        this._stream = gulp.src(src, this.moduleOptions.gulp && this.moduleOptions.gulp.src);
+        this._stream = gulp.src(src, this.conf.moduleOptions.gulp && this.conf.moduleOptions.gulp.src);
 
         // check input file ordering
         if (this.conf.order && this.conf.order?.length > 0) {
             let order = requireSafe('gulp-order');
-            this.pipe(order(this.conf.order, this.moduleOptions.order));
+            this.pipe(order(this.conf.order, this.conf.moduleOptions.order));
         }
         this.doActions('after_src');
 
@@ -143,7 +146,7 @@ export class RTB {
     }
 
     dest(path?: string): this {
-        let opts = this.moduleOptions.gulp || {};
+        let opts = this.conf.moduleOptions.gulp || {};
         this.doActions('before_dest');
         this.pipe(gulp.dest(path || this.conf.dest || '.', opts.dest));
         this.doActions('after_dest');
@@ -216,9 +219,9 @@ export class RTB {
     }
 
     sourceMaps(options: Options = {}): this {
-        if (!this.buildOptions.sourceMap) return this;
+        if (!this.conf.buildOptions.sourceMap) return this;
 
-        let opts = Object.assign({}, this.moduleOptions.sourcemaps, options);
+        let opts = Object.assign({}, this.conf.moduleOptions.sourcemaps, options);
         if (opts.init)
             this.pipe(requireSafe('gulp-sourcemaps').init(opts.init));
         else
@@ -233,17 +236,17 @@ export class RTB {
 
     debug(options: Options = {}): this {
         let title = options.title ? options.title : '';
-        let opts = Object.assign({}, this.moduleOptions.debug, options, { title });
+        let opts = Object.assign({}, this.conf.moduleOptions.debug, options, { title });
         return this.pipe(requireSafe('gulp-debug')(opts));
     }
 
     filter(pattern: string | string[] | filter.FileFunction = ["**", "!**/*.map"], options: filter.Options = {}): this {
-        let opts = Object.assign({}, this.moduleOptions.filter, options);
+        let opts = Object.assign({}, this.conf.moduleOptions.filter, options);
         return this.pipe(requireSafe('gulp-filter')(pattern, opts))
     }
 
     rename(options: Options = {}): this {
-        const opts = Object.assign({}, this.moduleOptions.rename, options.rename || options);
+        const opts = Object.assign({}, this.conf.moduleOptions.rename, options.rename || options);
         return this.pipe(requireSafe('gulp-rename')(opts));
     }
 
@@ -277,19 +280,19 @@ export class RTB {
 
     // minify javascripts
     uglify(options: Options = {}): this {
-        const opts = Object.assign({}, this.moduleOptions.uglifyES, options.uglifyES);
+        const opts = Object.assign({}, this.conf.moduleOptions.uglifyES, options.uglifyES);
         return this.pipe(requireSafe('gulp-uglify-es').default(opts));
     }
 
     cleanCss(options: Options = {}): this {
-        const opts = Object.assign({}, this.moduleOptions.cleanCss, options.cleanCss || options);
+        const opts = Object.assign({}, this.conf.moduleOptions.cleanCss, options.cleanCss || options);
         return this.pipe(requireSafe('gulp-clean-css')(opts));
     }
 
     clean(options: Options = {}, sync: boolean = false): this {
         let cleanList = arrayify(this.conf.clean).concat(arrayify(options.clean));
 
-        const delOpts = Object.assign({}, this.moduleOptions.del, options.del);
+        const delOpts = Object.assign({}, this.conf.moduleOptions.del, options.del);
         return this.del(cleanList, delOpts, sync)
     }
 
@@ -301,7 +304,7 @@ export class RTB {
             if (options.verbose) info('[rtb:concat] Missing conf.outFile. No output generated.');
             return this;
         }
-        let opts = Object.assign({}, this.moduleOptions.concat, options.concat);
+        let opts = Object.assign({}, this.conf.moduleOptions.concat, options.concat);
 
         return this.filter().pipe(requireSafe('gulp-concat')(outFile, opts.concat)).sourceMaps();
     }

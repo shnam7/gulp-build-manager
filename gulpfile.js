@@ -2,7 +2,7 @@ const gbm = require('./lib');
 const upath = require('upath');
 const fs = require('fs');
 
-gbm.utils.setNpmOptions({autoInstall: true})
+// gbm.utils.setNpmOptions({autoInstall: true})
 
 // load docs config
 const docs = require('./docs/gbmconfig');

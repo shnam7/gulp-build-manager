@@ -10,7 +10,7 @@ import { requireSafe, npmInstall } from "../utils/npm";
 function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Options) {
     const sourceType = opts.sourceType || 'scss';
     const pcss = requireSafe('gulp-postcss');
-    const pcssOpts = options.postcss || mopts.postcss || {};
+    const pcssOpts = Object.assign({}, mopts.postcss, options.postcss);
     const plugins = pcssOpts.plugins || [];
     const autoprefixer = opts.autoprefixer !== false;
     const moduleName = sourceType === 'scss' ? 'sass' : sourceType;
@@ -57,8 +57,8 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
 
 
 RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
-    const opts = rtb.buildOptions;
-    const mopts = rtb.moduleOptions;
+    const opts = rtb.conf.buildOptions;
+    const mopts = rtb.conf.moduleOptions;
 
     // backward compatibility on autoprefixer options
     if (opts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {

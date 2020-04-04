@@ -22,7 +22,7 @@ RTB.registerExtension('webpack', (options: Options = {}) => (rtb: RTB) => {
     info(`[GBM:ext.webpack] webpackConfig=${configFile}`);
 
     // load configFile first, and then override with moduleOptions.webpack
-    let wpOpts = merge(configFile ? require(configFile) : {}, rtb.moduleOptions.webpack);
+    let wpOpts = merge(configFile ? require(configFile) : {}, rtb.conf.moduleOptions.webpack);
 
     // override webpack entry file with conf.src
     if (rtb.conf.src) {

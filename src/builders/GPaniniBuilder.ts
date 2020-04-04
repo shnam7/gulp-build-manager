@@ -15,7 +15,7 @@ export class GPaniniBuilder extends GBuilder {
             .chain(() => {
                 const panini = requireSafe('panini');
                 panini.refresh();
-                this.pipe(panini(this.moduleOptions.panini))
+                this.pipe(panini(this.conf.moduleOptions.panini))
             })
             .rename({ extname: '.html' })
             .dest();

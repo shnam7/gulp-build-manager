@@ -2,11 +2,11 @@ import * as upath from 'upath';
 import { RTB } from "../core/rtb";
 import { Options } from "../core/common";
 import { warn, msg } from '../utils/utils';
-import { requireSafe } from '../utils/npm';
+import { requireSafe, npmInstall } from '../utils/npm';
 
 RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
-    const tsOpts = rtb.moduleOptions.typescript || {};
-    const tsConfig = rtb.buildOptions.tsConfig;
+    const tsOpts = Object.assign({}, rtb.conf.moduleOptions.typescript);
+    const tsConfig = rtb.conf.buildOptions.tsConfig;
 
     // normalize outDir and outFile
     let outFile = (tsOpts.output && tsOpts.output.filename) || rtb.conf.outFile;
@@ -22,10 +22,10 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     if (outDir) tsOpts.outDir = outDir;
 
     // check lint option
-    if (rtb.buildOptions.lint) {
+    if (rtb.conf.buildOptions.lint) {
         const tslint = requireSafe('gulp-tslint');
-        // const tslintOpts = rtb.moduleOptions.tslint || {formatter: 'stylish'};
-        const tslintOpts = rtb.moduleOptions.tslint || { formatter: 'stylish' };
+        // const tslintOpts = rtb.conf.moduleOptions.tslint || {formatter: 'stylish'};
+        const tslintOpts = Object.assign({}, { formatter: 'stylish' }, rtb.conf.moduleOptions.tslint);
         const reportOpts = tslintOpts.report || {};
         // dmsg('[GBM:ext.typeScript]tslint Options =', tslintOpts, reportOpts);
         rtb.pipe(tslint(tslintOpts)).pipe(tslint.report(reportOpts));
@@ -33,9 +33,10 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
 
     // workaround for gulp-typescript declarationMap to be true always
     // Addd buildOptions.declarationMap option to override tsconfig files and moduleOptions.tsConfig
-    tsOpts.declarationMap = !!rtb.buildOptions.declarationMap;
+    tsOpts.declarationMap = !!rtb.conf.buildOptions.declarationMap;
 
-    const typescript = requireSafe('gulp-typescript');
+    npmInstall(['gulp-typescript', 'typescript']);
+    const typescript = require('gulp-typescript');
     let tsProject = undefined;
     if (tsConfig) {
         try {
@@ -48,12 +49,12 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     }
     if (!tsProject) tsProject = typescript.createProject(tsOpts);
 
-    if (rtb.buildOptions.printConfig) {
+    if (rtb.conf.buildOptions.printConfig) {
         msg(`[GBM:ext.typeScript]tsconfig evaluated(buildName:${rtb.conf.buildName}):\n`, tsProject.options);
     }
 
     // workaround for gulp-typescript sourceMap failure which requires sourceRoot value
-    let smOpts = Object.assign({ write: { sourceRoot: '.' } }, rtb.moduleOptions.sourcemaps);
+    let smOpts = Object.assign({ write: { sourceRoot: '.' } }, rtb.conf.moduleOptions.sourcemaps);
     rtb.pipe(tsProject()).sourceMaps(smOpts);
 
     if (!tsOpts.declarationMap) rtb.filter(["**", "!**/*.d.ts.map"]);

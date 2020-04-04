@@ -3,7 +3,6 @@
  */
 
 import * as gulpObject from 'gulp';
-
 export type GulpStream = NodeJS.ReadWriteStream;
 export type GulpTaskFunction = gulpObject.TaskFunction;
 export type Stream = GulpStream | undefined;

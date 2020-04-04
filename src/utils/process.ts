@@ -3,7 +3,7 @@
  */
 
 import * as child_process from 'child_process';
-import { msg, notice, is } from "./utils";
+import { msg, is } from "./utils";
 
 export interface SpawnOptions extends child_process.SpawnOptions {
     // spawn?: SpawnOptions;

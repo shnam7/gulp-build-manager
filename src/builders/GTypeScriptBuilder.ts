@@ -14,7 +14,7 @@ export class GTypeScriptBuilder extends GBuilder {
         this.src().chain(this.ext.typeScript());
 
         // concat stream is handled by gulp-typescript. only non-concat is handled here
-        const opts = this.buildOptions;
+        const opts = this.conf.buildOptions;
         if (!opts.minifyOnly) this.dest();      // concat non-minified
 
         let jsFilter = requireSafe("gulp-filter")(["**/*.js"], { restore: true });

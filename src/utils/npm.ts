@@ -10,7 +10,7 @@ if (process.platform == 'win32')
 //--- types
 export type NpmOptions = {
     autoInstall?: boolean,
-    installOptions?: string | string[];
+    installOptions?: string;
     noModuleLoading?: boolean;
 };
 

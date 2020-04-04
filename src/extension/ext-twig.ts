@@ -4,7 +4,7 @@ import { is, loadData } from "../utils/utils";
 import { requireSafe } from "../utils/npm";
 
 RTB.registerExtension('twig', (options: Options = {}) => (rtb: RTB) => {
-    let twigOpts = rtb.moduleOptions.twig || {};
+    let twigOpts = Object.assign({}, rtb.conf.moduleOptions.twig);
     let dataOpts = is.String(twigOpts.data) ? [twigOpts.data] : twigOpts.data;
 
     if (is.Array(dataOpts))
@@ -12,9 +12,9 @@ RTB.registerExtension('twig', (options: Options = {}) => (rtb: RTB) => {
 
     rtb.pipe(requireSafe('gulp-twig')(twigOpts));
 
-    if (rtb.buildOptions.minify)
-        rtb.pipe(requireSafe('gulp-htmlmin')(rtb.moduleOptions.htmlmin));
+    if (rtb.conf.buildOptions.minify)
+        rtb.pipe(requireSafe('gulp-htmlmin')(rtb.conf.moduleOptions.htmlmin));
 
-    if (rtb.buildOptions.prettify)
-        rtb.pipe(requireSafe('gulp-html-beautify')(rtb.moduleOptions.htmlBeautify));
+    if (rtb.conf.buildOptions.prettify)
+        rtb.pipe(requireSafe('gulp-html-beautify')(rtb.conf.moduleOptions.htmlBeautify));
 });

@@ -26,10 +26,12 @@ export class GBuildManager {
         process.argv.forEach(arg => {
             if (arg.startsWith('--npmAutoInstall')) {
                 let autoInstall = true;
-                let installOptions = arg.replace(/['"]+/g, '');
+                let installOptions: string | undefined = arg.replace(/['"]+/g, '');
                 let idx = installOptions.indexOf('=');
-                if (idx > 0) installOptions = installOptions.substr(idx+1)
-                setNpmOptions({ autoInstall, installOptions });
+                installOptions = (idx > 0) ? installOptions.substr(idx+1).trim() : undefined;
+
+                let opts = installOptions ? {autoInstall, installOptions} : {autoInstall};
+                setNpmOptions(opts);
                 return false;
             }}
         );

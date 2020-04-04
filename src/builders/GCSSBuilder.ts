@@ -12,7 +12,7 @@ export class GCSSBuilder extends GBuilder {
 
     protected build() {
         this.src().chain(this.ext.css());
-        const opts = this.buildOptions;
+        const opts = this.conf.buildOptions;
 
         // sanity check for options
         if (!this.conf.outFile && opts.outFileOnly)

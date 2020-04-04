@@ -12,7 +12,7 @@ const destRoot = upath.join(basePath, 'www');
 const port = 5000;
 
 const pcssPlgingNames = ['postcss-preset-env', 'postcss-utilities', 'lost'];
-const pcssPlugins = () => pcssPlgingNames.map( mod => require(mod));
+const pcssPlugins = () => pcssPlgingNames.map( mod => require(mod)());
 const stylelint = {
     "extends": [
         "stylelint-config-recommended",
