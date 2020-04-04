@@ -1,8 +1,9 @@
 import * as glob from 'glob';
 import * as upath from 'upath';
-import {Stream} from "../core/common";
 import * as fs from "fs";
 import * as chalk from "chalk";
+import { Stream } from "../core/common";
+import { requireSafe } from './npm';
 
 /** is: collection of type checking functions */
 function _is(a: any, name: string) {
@@ -57,7 +58,7 @@ export function registerPropertiesFromFiles(obj: any, globPattern: string, callb
 /** stream to promise */
 export function toPromise(stream: Stream): Promise<Stream> {
     if (!stream) return Promise.resolve(stream);
-    return require('stream-to-promise')(stream);
+    return requireSafe('stream-to-promise')(stream);
 }
 
 
@@ -87,11 +88,14 @@ export function copy(patterns: string | string[], destPath: string): Promise<unk
 export function loadData(globPatterns: string | string[]): Object {
     if (is.String(globPatterns)) globPatterns = [globPatterns];
     let data = {};
+    let yaml: any = undefined;
     globPatterns.forEach((globPattern: string) => {
         glob.sync(globPattern).forEach((file) => {
             let ext = upath.extname(file).toLowerCase();
-            if (ext === '.yml' || ext === 'yaml')
-                Object.assign(data, require('js-yaml').safeLoad(fs.readFileSync(file)));
+            if (ext === '.yml' || ext === 'yaml') {
+                if (!yaml) yaml = requireSafe('js-yaml');
+                Object.assign(data, yaml.safeLoad(fs.readFileSync(file)));
+            }
             else if (ext === '.json')
                 Object.assign(data, JSON.parse(fs.readFileSync(file, 'utf-8')));
             else
@@ -101,29 +105,7 @@ export function loadData(globPatterns: string | string[]): Object {
     return data;
 }
 
-export let wait = (msec: number) => new Promise(resolve => setTimeout(() => resolve(), msec));
-// export let wait = (msec: number) => new Promise(resolve => setTimeout(()=>{
-//     console.log('ms=' + msec); resolve()}, msec));
-
-// export function npmInstallGuard(func:()=>void, options: Options={}) {
-//   let errorCount = 0;
-//   let promise = new Promise<void>((res)=>res());  // initially resolved promise
-//   while (true) {
-//     try {
-//       promise.then(func);
-//       break;  // exit loop if no exception occurred
-//     }
-//     catch (e) {
-//       if (e.code !== 'MODULE_NOT_FOUND') throw e;
-//       if (errorCount++ === 1) throw e;  // just try installation once
-//       let moduleName = e.message.slice(e.message.indexOf("'")+1, e.message.lastIndexOf("'"));
-//       if (moduleName.startsWith('.')) throw e;  // not referring to node_modules
-//       msg(`** Installing node package:${moduleName}...`);
-//       promise = npmInstall(moduleName);
-//     }
-//     errorCount = 0;
-//   }
-// }
+export let wait = (msec: number) => new Promise(resolve => setTimeout(resolve, msec));
 
 export function dmsg(...args: any[]) {
     let [arg1, ...arg2] = args; // decompose to seperate object priting
@@ -143,7 +125,8 @@ export function notice(...args: any[]) {
 }
 
 export function warn(...args: any[]) {
-    console.log(chalk.red(...args));
+    console.log(chalk.redBright(...args));
 }
 
 export * from './process';
+export * from './npm';

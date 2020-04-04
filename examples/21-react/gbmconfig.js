@@ -20,6 +20,8 @@ const scss = {
 const scripts = {
     buildName: 'scripts',
     builder: 'GTypeScriptBuilder',
+    preBuild: () => gbm.utils.npmInstall(['react', 'react-dom', '@types/react', '@types/react-dom']),
+
     src: upath.join(srcRoot, 'scripts/**/*.ts*'),
     dest: upath.join(destRoot, 'js'),
     clean: upath.join(destRoot, 'js'),

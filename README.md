@@ -13,7 +13,7 @@ Please refer to [docs](docs)
 - Rich run-time builder API's, which can be used for custom build actions
 - Synchronization control for tasks, build actions, gulp stream flushing, etc.
 - Modular project support to handle multiple sub projects from a single gulpfile.
-
+- Npm module auto install options
 
 ## What's new in version 4?
 - Whole architecture improved for better features and performance
@@ -68,7 +68,7 @@ const twig = {
             data: upath.join(srcRoot, 'data/**/*.{yml,yaml,json}'),
             extend: require('twig-markdown'),
         },
-        htmlPrettify: { indent_char: ' ', indent_size: 2 },
+        htmlBeautify: { indent_char: ' ', indent_size: 2 },
         htmlmin: { collapseWhitespace: true, }
     },
     addWatch: [ // include sub directories to detect changes of the files which are not in src list.

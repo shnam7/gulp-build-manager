@@ -11,6 +11,8 @@ const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, 'www');
 const port = 5000;
 
+const pcssPlgingNames = ['postcss-preset-env', 'postcss-utilities', 'lost'];
+const pcssPlugins = () => pcssPlgingNames.map( mod => require(mod));
 const stylelint = {
     "extends": [
         "stylelint-config-recommended",
@@ -23,18 +25,16 @@ const stylelint = {
     // "fix": true,
 }
 
-const postcssPlugins = [
-    require('postcss-preset-env'),
-    require('postcss-utilities'),
-    require('lost'),
-    // require('cssnano')(), // additional optimization
-    // require('postcss-combine-duplicated-selectors')(), // specific optimization
-];
-
-
 const sass = {
     buildName: 'sass',
     builder: 'GCSSBuilder',
+    preBuild: (rtb) => {
+        gbm.utils.npmInstall(pcssPlgingNames);
+        rtb.conf.moduleOptions = {
+            sass: { includePaths: [ 'assets/scss' ] },
+            postcss: { plugins: pcssPlugins() },
+        }
+    },
     src: [upath.join(srcRoot, 'scss/**/*.scss')],
     dest: upath.join(destRoot, 'css'),
     buildOptions: {
@@ -44,21 +44,18 @@ const sass = {
         minify: false,
         postcss: true
     },
-    moduleOptions: {
-        sass: {
-            includePaths: [ 'assets/scss' ]
-        },
-        postcss: {
-            plugins: postcssPlugins
-        },
-
-    },
     flushStream: true,
 }
 
 const less = {
     buildName: 'less',
     builder: 'GCSSBuilder',
+    preBuild: (rtb) => {
+        gbm.utils.npmInstall(pcssPlgingNames);
+        rtb.conf.moduleOptions = {
+            postcss: { plugins: pcssPlugins() },
+        }
+    },
     src: [upath.join(srcRoot, 'less/**/*.less')],
     dest: upath.join(destRoot, 'css'),
     buildOptions: {
@@ -69,22 +66,19 @@ const less = {
         autoprefixer: false,
         // postcss: true
     },
-    moduleOptions: {
-        // sass: {
-        // includePaths: [
-        // 'assets/scss'
-        // ]
-        // },
-        postcss: {
-            plugins: postcssPlugins
-        }
-    },
     flushStream: true,
 }
 
 const postcss = {
     buildName: 'postcss',
     builder: 'GCSSBuilder',
+    preBuild: (rtb) => {
+        gbm.utils.npmInstall(pcssPlgingNames);
+        rtb.conf.moduleOptions = {
+            stylelint,
+            postcss: { plugins: pcssPlugins() },
+        }
+    },
     src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
     dest: upath.join(destRoot, 'css'),
     buildOptions: {
@@ -92,12 +86,6 @@ const postcss = {
         sourceMap: true,
         minify: false,
         postcss: true
-    },
-    moduleOptions: {
-        postcss: {
-            plugins: postcssPlugins
-        },
-        stylelint
     },
     flushStream: true,
 }
@@ -109,13 +97,10 @@ const rtl = {
         upath.join(destRoot, 'css/*.css'),
         `!${upath.join(destRoot, 'css/**/*-rtl.css')}`
     ],
-
     dest: upath.join(destRoot, 'css'),
     moduleOptions: {
         // if no rename option is set, default is {suffix: '-rtl'}
-        rename: {
-            suffix: '-rtl'
-        }
+        rename: { suffix: '-rtl' }
     },
     watch: []
 }

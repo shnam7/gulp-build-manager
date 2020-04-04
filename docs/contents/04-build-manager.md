@@ -185,7 +185,7 @@ const defaultModuleOptions: Options = {
             progressive: true,
             optimizationLevel: 5
         },
-        htmlPrettify: {
+        htmlBeautify: {
             indent_char: ' ',
             indent_size: 4
         },

@@ -12,7 +12,6 @@ const srcRoot = upath.join(basePath, 'assets');
 const destRoot = upath.join(basePath, '_build');
 const port = 5000;
 
-
 const pages = {
     buildName: 'twig',
     builder: 'GTwigBuilder',
@@ -24,6 +23,9 @@ const pages = {
 const webpack = {
     buildName: 'webpack',
     builder: 'GWebpackBuilder',
+    preBuild: () => {
+        gbm.utils.npmInstall(['ts-loader', '@types/jquery']);
+    },
     // src: [upath.join(srcRoot, 'scripts/ts/app.ts')],
     dest: upath.join(destRoot, 'js'),
     flushStream: true,

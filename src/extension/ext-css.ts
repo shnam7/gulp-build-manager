@@ -5,10 +5,11 @@
 import { Options } from "../core/common";
 import { RTB } from "../core/rtb";
 import { warn } from "../utils/utils";
+import { requireSafe, npmInstall } from "../utils/npm";
 
 function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Options) {
     const sourceType = opts.sourceType || 'scss';
-    const pcss = require('gulp-postcss');
+    const pcss = requireSafe('gulp-postcss');
     const pcssOpts = options.postcss || mopts.postcss || {};
     const plugins = pcssOpts.plugins || [];
     const autoprefixer = opts.autoprefixer !== false;
@@ -17,7 +18,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     // first, transpile to standard css.
     // All the scss/less variables should to be evaluated before postcss process starts
     if (sourceType !== 'css') {
-        const processor = require('gulp-' + moduleName);
+        const processor = requireSafe('gulp-' + moduleName);
         rtb.pipe(processor(options[moduleName] || mopts[moduleName])).sourceMaps();
     }
 
@@ -25,7 +26,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     if (plugins.length > 0) rtb.filter().pipe(pcss(plugins)).sourceMaps();
 
     // do some optimization to remove duplicate selectors, and beautify
-    rtb.filter().pipe(require('gulp-clean-css')({
+    rtb.filter().pipe(requireSafe('gulp-clean-css')({
         sourceMap: true,
         sourceMapInlineSources: true,
         format: 'beautify',
@@ -34,7 +35,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
 
     // now run autoprefixer
     if (autoprefixer) {
-        const prefixer = require('autoprefixer');
+        const prefixer = requireSafe('autoprefixer');
         rtb.filter()
             .pipe(pcss([prefixer({ add: false })])) // remove outdated prefixed
             .pipe(pcss([prefixer(mopts.autoprefixer)]))     // now add prefixes
@@ -44,6 +45,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     // lint final css
     // lint does not understands postcss statements. so,it come after postcss processing
     if (opts.lint) {
+        npmInstall(['stylelint', 'postcss-reporter']);
         const stylelint = require('stylelint');
         const reporter = require('postcss-reporter');
         let lintOpts = mopts.stylelint || {};
@@ -80,19 +82,19 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
 
         // first, transpile to standard css.
         if (sourceType !== 'css') {
-            const processor = require('gulp-' + moduleName);
+            const processor = requireSafe('gulp-' + moduleName);
             rtb.pipe(processor(options[moduleName] || mopts[moduleName])).sourceMaps();
         }
 
         // do some optimization to remove duplicate selectors, and beautify
-        rtb.filter().pipe(require('gulp-clean-css')({
+        rtb.filter().pipe(requireSafe('gulp-clean-css')({
             format: 'beautify',
             level: { 2: { mergeSemantically: true } }
         })).sourceMaps();
 
         // now run autoprefixer
         if (autoprefixer) {
-            const prefixer = require('gulp-autoprefixer');
+            const prefixer = requireSafe('gulp-autoprefixer');
             rtb.filter()
                 .pipe(prefixer({ add: false })) // remove outdated prefixed
                 .pipe(prefixer(mopts.autoprefixer)).sourceMaps();     // now add prefixes
@@ -101,7 +103,7 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
         // lint final css
         // lint does not understands postcss statements. so,it come after postcss processing
         if (opts.lint) {
-            const stylelint = require('gulp-stylelint');
+            const stylelint = requireSafe('gulp-stylelint');
             let lintOpts = mopts.stylelint || {};
             if (!lintOpts.reporters) lintOpts["reporters"] = [{ formatter: 'verbose', console: true }];
             rtb.filter().pipe(stylelint(lintOpts));

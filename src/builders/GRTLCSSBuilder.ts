@@ -4,6 +4,7 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { requireSafe } from "../utils/npm";
 
 export class GRTLCSSBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -15,7 +16,7 @@ export class GRTLCSSBuilder extends GBuilder {
         let renameOpts = this.moduleOptions.rename || { suffix: '-rtl' };
 
         this.src()
-            .pipe(require('gulp-rtlcss')(rtlOpts))
+            .pipe(requireSafe('gulp-rtlcss')(rtlOpts))
             .rename(renameOpts)
             .dest();
     }

@@ -3,6 +3,7 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { requireSafe } from "../utils/npm";
 
 export class GZipBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -10,7 +11,7 @@ export class GZipBuilder extends GBuilder {
     }
 
     protected build() {
-        this.src().pipe(require('gulp-zip')(this.conf.outFile)).dest();
+        this.src().pipe(requireSafe('gulp-zip')(this.conf.outFile)).dest();
     }
 }
 

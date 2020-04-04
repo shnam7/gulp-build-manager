@@ -3,6 +3,7 @@
  */
 import { Options, Stream } from "./common";
 import { msg, arrayify } from "../utils/utils";
+import { requireSafe } from "../utils/npm";
 
 
 export interface ReloaderOptions extends Options {
@@ -36,7 +37,7 @@ export class GLiveReload extends GReloader {
 
     activate() {
         if (this._module) return;
-        this._module = require('gulp-livereload')(this._options);
+        this._module = requireSafe('gulp-livereload')(this._options);
     }
 
     reload(stream?: Stream, opts: Options = {}) {
@@ -57,7 +58,7 @@ export class GBrowserSync extends GReloader {
 
     activate() {
         if (this._module) return;
-        this._module = require('browser-sync');
+        this._module = requireSafe('browser-sync');
         // this._module = this._module.has('gbm') ? this._module.get('gbm') : this._module.create('gbm');
         this._module = this._module.create(this._options.instanceName );
         this._module.init(this._options, () => msg('browserSync server started with options:', this._options));

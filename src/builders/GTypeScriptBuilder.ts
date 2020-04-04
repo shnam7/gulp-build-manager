@@ -3,6 +3,7 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { requireSafe } from "../utils/npm";
 
 export class GTypeScriptBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -16,7 +17,7 @@ export class GTypeScriptBuilder extends GBuilder {
         const opts = this.buildOptions;
         if (!opts.minifyOnly) this.dest();      // concat non-minified
 
-        let jsFilter = require("gulp-filter")(["**/*.js"], { restore: true });
+        let jsFilter = requireSafe("gulp-filter")(["**/*.js"], { restore: true });
         if (opts.minify || opts.minifyOnly) {
             this
                 .filter(["**", "!**/*js.map"])   // exclude non-minified map files

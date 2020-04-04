@@ -2,6 +2,7 @@ import * as upath from 'upath';
 import { RTB } from "../core/rtb";
 import { Options } from "../core/common";
 import { info, is, msg } from '../utils/utils';
+import { requireSafe } from '../utils/npm';
 
 /**
  * Configuration priorities:
@@ -13,7 +14,7 @@ import { info, is, msg } from '../utils/utils';
 RTB.registerExtension('webpack', (options: Options = {}) => (rtb: RTB) => {
     // resolve: workaround function to handle platform dependency of backslashes
     const resolve = (process.platform === 'win32') ? upath.win32.resolve : upath.resolve;
-    const merge = require('lodash.merge');
+    const merge = requireSafe('lodash.merge');
 
     const opts = rtb.conf.buildOptions || {};
     const configFile = resolve(options.configFile || opts.webpackConfig
@@ -43,7 +44,7 @@ RTB.registerExtension('webpack', (options: Options = {}) => (rtb: RTB) => {
     if (wpOpts.output.path) wpOpts.output.path = resolve(wpOpts.output.path);
 
     if (opts.printConfig) msg(`Webpack Config =`, wpOpts);
-    const compiler = require('webpack')(wpOpts);
+    const compiler = requireSafe('webpack')(wpOpts);
     return new Promise((resolve, reject) => {
         compiler.hooks.done.tap("done", resolve);
         compiler.hooks.failed.tap("failed", reject);

@@ -21,6 +21,7 @@ const port = 4000;
 const scss = {
     buildName: 'scss',
     builder: 'GCSSBuilder',
+    preBuild: () => gbm.utils.npmInstall(['stylelint-config-recommended', 'shnam7/wicle']),
     src: [upath.join(srcRoot, 'scss/**/*.scss')],
     dest: upath.join(basePath, 'css'),
     buildOptions: {
@@ -44,7 +45,7 @@ const scss = {
         // },
         postcss: {
             plugins: [
-                require('postcss-combine-duplicated-selectors')(),
+                gbm.utils.requireSafe('postcss-combine-duplicated-selectors')(),
                 // require('postcss-cssnext')({features:{rem: false}}),
                 // require('postcss-utilities')(),
                 // require('lost')(),
@@ -62,6 +63,7 @@ const scss = {
 const scripts = {
     buildName: 'scripts',
     builder: 'GTypeScriptBuilder',
+    preBuild: () => gbm.utils.npmInstall('shnam7/wicle'),
     src: [upath.join(srcRoot, 'scripts/**/*.ts')],
     dest: upath.join(basePath, 'js'),
     flushStream: true,

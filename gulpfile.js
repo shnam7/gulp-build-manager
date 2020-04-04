@@ -2,11 +2,13 @@ const gbm = require('./lib');
 const upath = require('upath');
 const fs = require('fs');
 
+gbm.utils.setNpmOptions({autoInstall: true})
+
 // load docs config
 const docs = require('./docs/gbmconfig');
 gbm.addProject(docs);
 
-// const selector = [1] // ,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
+// const selector = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
 
 //--- load examples config
 fs.readdirSync('./examples').forEach((name) => {
@@ -25,6 +27,7 @@ const cleanToPrepare = {
     triggers: '@ex-clean-all'
 }
 
+
 gbm
     .addTrigger('@build-all', /@build$/)
     .addCleaner('@clean-all')
@@ -42,6 +45,5 @@ gbm
     .addBuildItem(cleanToPrepare)
     .addTrigger('default', ['@clean-all', '@build-all'], true)
     .resolve();
-
 
 // console.log('size=', gbm.size, ', buildNames=', gbm.buildNames);

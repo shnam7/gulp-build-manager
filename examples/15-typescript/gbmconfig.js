@@ -18,6 +18,7 @@ const typeScript = {
     src: [upath.join(srcRoot, 'scripts/ts/**/!(*.d).ts')],
     dest: upath.join(destRoot, 'js'), // (file) => file.base,
     outFile: 'app.js',
+    preBuild: () => gbm.utils.npmInstall('@types/jquery'),
     buildOptions: {
         // lint: true,
         // printConfig: true,

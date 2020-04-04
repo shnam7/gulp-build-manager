@@ -8,6 +8,7 @@ import * as __utils from '../utils/utils';
 import { WatcherOptions } from './watcher';
 import { Options } from './common';
 import { RTB } from './rtb';
+import { setNpmOptions } from '../utils/npm';
 
 
 //-- custom builders
@@ -21,7 +22,18 @@ export class GBuildManager {
     protected _projects: GBuildProject[] = [];
     protected _managerProject: GBuildProject = new GBuildProject();
 
-    constructor() {}
+    constructor() {
+        process.argv.forEach(arg => {
+            if (arg.startsWith('--npmAutoInstall')) {
+                let autoInstall = true;
+                let installOptions = arg.replace(/['"]+/g, '');
+                let idx = installOptions.indexOf('=');
+                if (idx > 0) installOptions = installOptions.substr(idx+1)
+                setNpmOptions({ autoInstall, installOptions });
+                return false;
+            }}
+        );
+    }
 
     createProject(buildGroup: BuildGroup = {}, opts?: ProjectOptions): GBuildProject {
         return new GBuildProject(buildGroup, opts);
@@ -47,9 +59,7 @@ export class GBuildManager {
             ? buildNames[0]
             : series ? buildNames : GBuildProject.parallel(...buildNames);
 
-        if (buildNames.length > 0)
-            this.addBuildItem({ buildName, triggers });
-
+        this.addBuildItem({ buildName, triggers });
         return this;
     }
 
@@ -149,7 +159,7 @@ export class GBuildManager {
             progressive: true,
             optimizationLevel: 5
         },
-        htmlPrettify: {
+        htmlBeautify: {
             indent_char: ' ',
             indent_size: 4
         },

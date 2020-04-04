@@ -1,8 +1,9 @@
 import { Options } from "../core/common";
 import { RTB } from "../core/rtb";
+import { requireSafe } from "../utils/npm";
 
 RTB.registerExtension('markdown', (options: Options = {}) => (rtb: RTB) => {
-    rtb.pipe(require('gulp-markdown')(rtb.moduleOptions.markdown));
-    if (rtb.buildOptions.minify) rtb.pipe(require('gulp-htmlclean')(rtb.moduleOptions.htmlmin));
-    if (rtb.buildOptions.prettify) rtb.pipe(require('gulp-html-prettify')(rtb.moduleOptions.htmlPrettify));
+    rtb.pipe(requireSafe('gulp-markdown')(rtb.moduleOptions.markdown));
+    if (rtb.buildOptions.minify) rtb.pipe(requireSafe('gulp-htmlclean')(rtb.moduleOptions.htmlmin));
+    if (rtb.buildOptions.prettify) rtb.pipe(requireSafe('gulp-html-beautify')(rtb.moduleOptions.htmlBeautify));
 });

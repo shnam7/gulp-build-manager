@@ -3,7 +3,7 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { Options } from "../core/common";
+import { requireSafe } from "../utils/npm";
 
 export class GImagesBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -11,7 +11,7 @@ export class GImagesBuilder extends GBuilder {
     }
 
     protected build() {
-        this.src().pipe(require('gulp-imagemin')(this.moduleOptions.imagemin)).dest();
+        this.src().pipe(requireSafe('gulp-imagemin')(this.moduleOptions.imagemin)).dest();
     }
 }
 

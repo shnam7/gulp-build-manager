@@ -1,4 +1,3 @@
-
 type MyProps = { msg: string };
 
 class MyComponent extends React.Component<MyProps> {

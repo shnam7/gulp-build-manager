@@ -3,7 +3,7 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { Options } from "../core/common";
+import { requireSafe } from "../utils/npm";
 
 export class GPaniniBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -13,7 +13,7 @@ export class GPaniniBuilder extends GBuilder {
     protected build() {
         this.src()
             .chain(() => {
-                const panini = require('panini');
+                const panini = requireSafe('panini');
                 panini.refresh();
                 this.pipe(panini(this.moduleOptions.panini))
             })

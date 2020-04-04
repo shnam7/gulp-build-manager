@@ -4,12 +4,13 @@
 
 import * as upath from 'upath';
 import * as glob from 'glob';
+import filter = require("gulp-filter");import { GBuildManager } from "./buildManager";
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilder, CopyParam } from "./builder";
-import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, spawn, exec, wait, arrayify, copy, registerPropertiesFromFiles, addProperty } from "../utils/utils";
-import filter = require("gulp-filter");
-import { GBuildManager } from "./buildManager";
+import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy } from "../utils/utils";
 import { GReloaders } from "./reloader";
+import { npmLock, npmUnlock, requireSafe } from '../utils/npm';
+
 
 type RTBExtension = (...args: any[]) => FunctionBuilder;
 type PromiseExecutor = () => void | Promise<unknown>;
@@ -71,12 +72,14 @@ export class RTB {
         // build sequence use new promise independent of API promises (this._promises and this._promiseSync)
         if (this._syncMode) console.log('RTB: Strating build in sync Mode.');
         return Promise.resolve()
+            .then(() => npmLock())
             .then(() => this._execute(this.conf.preBuild))
             .then(() => this.build())
             .then(() => this._execute(this.conf.postBuild))
             .then(() => { if (flushStream) return toPromise(this._stream); })
             .then(() => this._promiseSync)
             .then(() => Promise.all(this._promises))
+            .then(() => npmUnlock())
             .then(() => { if (conf.reloadOnFinish === true) this.reload(); });
     }
 
@@ -130,7 +133,7 @@ export class RTB {
 
         // check input file ordering
         if (this.conf.order && this.conf.order?.length > 0) {
-            let order = require('gulp-order');
+            let order = requireSafe('gulp-order');
             this.pipe(order(this.conf.order, this.moduleOptions.order));
         }
         this.doActions('after_src');
@@ -199,7 +202,7 @@ export class RTB {
     pushStream(): this {
         if (this._stream) {
             this._streamQ.push(this._stream);
-            this._stream = this._stream.pipe(require('gulp-clone')());
+            this._stream = this._stream.pipe(requireSafe('gulp-clone')());
         }
         return this;
     }
@@ -217,9 +220,9 @@ export class RTB {
 
         let opts = Object.assign({}, this.moduleOptions.sourcemaps, options);
         if (opts.init)
-            this.pipe(require('gulp-sourcemaps').init(opts.init));
+            this.pipe(requireSafe('gulp-sourcemaps').init(opts.init));
         else
-            this.pipe(require('gulp-sourcemaps').write(opts.dest || '.', opts.write));
+            this.pipe(requireSafe('gulp-sourcemaps').write(opts.dest || '.', opts.write));
         return this;
     }
 
@@ -231,17 +234,17 @@ export class RTB {
     debug(options: Options = {}): this {
         let title = options.title ? options.title : '';
         let opts = Object.assign({}, this.moduleOptions.debug, options, { title });
-        return this.pipe(require('gulp-debug')(opts));
+        return this.pipe(requireSafe('gulp-debug')(opts));
     }
 
     filter(pattern: string | string[] | filter.FileFunction = ["**", "!**/*.map"], options: filter.Options = {}): this {
         let opts = Object.assign({}, this.moduleOptions.filter, options);
-        return this.pipe(require('gulp-filter')(pattern, opts))
+        return this.pipe(requireSafe('gulp-filter')(pattern, opts))
     }
 
     rename(options: Options = {}): this {
         const opts = Object.assign({}, this.moduleOptions.rename, options.rename || options);
-        return this.pipe(require('gulp-rename')(opts));
+        return this.pipe(requireSafe('gulp-rename')(opts));
     }
 
     copy(param?: CopyParam | CopyParam[], options: Options = {}, sync: boolean = false): this {
@@ -262,8 +265,8 @@ export class RTB {
     del(patterns: string | string[], options: Options = {}, sync: boolean = false): this {
         if (!this.conf.silent) msg('Deleting:', patterns);
         return (sync || this._syncMode)
-            ? this.promise(() => require("del")(patterns, options), sync)
-            : this.promise(require("del")(patterns, options), sync);
+            ? this.promise(() => requireSafe("del")(patterns, options), sync)
+            : this.promise(requireSafe("del")(patterns, options), sync);
     }
 
     exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false): this {
@@ -275,12 +278,12 @@ export class RTB {
     // minify javascripts
     uglify(options: Options = {}): this {
         const opts = Object.assign({}, this.moduleOptions.uglifyES, options.uglifyES);
-        return this.pipe(require('gulp-uglify-es').default(opts));
+        return this.pipe(requireSafe('gulp-uglify-es').default(opts));
     }
 
     cleanCss(options: Options = {}): this {
         const opts = Object.assign({}, this.moduleOptions.cleanCss, options.cleanCss || options);
-        return this.pipe(require('gulp-clean-css')(opts));
+        return this.pipe(requireSafe('gulp-clean-css')(opts));
     }
 
     clean(options: Options = {}, sync: boolean = false): this {
@@ -300,7 +303,7 @@ export class RTB {
         }
         let opts = Object.assign({}, this.moduleOptions.concat, options.concat);
 
-        return this.filter().pipe(require('gulp-concat')(outFile, opts.concat)).sourceMaps();
+        return this.filter().pipe(requireSafe('gulp-concat')(outFile, opts.concat)).sourceMaps();
     }
 
     minifyCss(): this {
@@ -312,8 +315,8 @@ export class RTB {
             .rename({ extname: '.min.js' }).sourceMaps();
     }
 
-    protected _execute(action?: FunctionBuilder): void | Promise<unknown> {
-        if (is.Function(action)) return action(this);
+    protected _execute(action?: FunctionBuilder, ...args: any[]): void | Promise<unknown> {
+        if (is.Function(action)) return action(this, args);
     }
 
 

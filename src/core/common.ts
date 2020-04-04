@@ -10,6 +10,3 @@ export type Stream = GulpStream | undefined;
 export type Options = { [key: string]: any; }
 
 export const gulp = gulpObject;
-
-// declare function assert(value: unknown): asserts value;
-// export const assert = require("assert");

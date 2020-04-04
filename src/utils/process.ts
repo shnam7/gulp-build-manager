@@ -63,26 +63,3 @@ export function exec(cmd: string | ExternalCommand, args: string[] = [], options
     let opts = Object.assign({shell: true}, options);
     return spawn(cmd, args, opts);
 }
-
-
-// export function npm(args: string[], options: SpawnOptions={silent: true}) {
-//   return exec('npm', args);
-// }
-//
-// export function npmInstall(packageName:string, silent:boolean = false) {
-//   return exec('npm', ['i', packageName], {silent: silent});
-// }
-//
-// export function node(args: string[]) {
-//   return exec('node', args);
-// }
-//
-// export function gulp(args: string[]) {
-//   return exec('gulp', args);
-// }
-//
-// export function which(command: string): Promise<string> {
-//   let whichCmd = process.platform === 'win32' ? 'where' : 'which';
-//   return exec(whichCmd,[command],{silent: true, captureOutput: true})
-//     .then((res)=>res.stdout);
-// }

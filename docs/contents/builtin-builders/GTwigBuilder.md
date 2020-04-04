@@ -61,7 +61,7 @@ const twig = {
                 }
             ]
         },
-        htmlPrettify: {indent_char: ' ', indent_size: 2},
+        htmlBeautify: {indent_char: ' ', indent_size: 2},
         htmlmin: {
           collapseWhitespace: true,
         }

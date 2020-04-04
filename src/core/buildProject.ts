@@ -58,8 +58,7 @@ export class GBuildProject {
             ? buildNames[0]
             : series ? buildNames : GBuildProject.parallel(...buildNames);
 
-        if (buildNames.length > 0)
-            this.addBuildItem({ buildName, triggers });
+        this.addBuildItem({ buildName, triggers });
         return this;
     }
 

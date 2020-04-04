@@ -141,7 +141,7 @@ buildOptions {
 
 ### conf.moduleOptions
 {: #moduleOptions}
-Build operations typically use one or more gulp plugin modules. This property is used to set options for those modules. The property name of moduleOptions should be the same as the module name without 'gulp-' prefix. If module name is including hyphens, then Camel Case should be used instead of the hyphen. For example, options for 'gulp-html-prettify' will be conf.moduleOptions.htmlPrettify'. Options to 'gulp' itself is set to 'conf.moduleOptions.gulp'.
+Build operations typically use one or more gulp plugin modules. This property is used to set options for those modules. The property name of moduleOptions should be the same as the module name without 'gulp-' prefix. If module name is including hyphens, then Camel Case should be used instead of the hyphen. For example, options for 'gulp-html-prettify' will be conf.moduleOptions.htmlBeautify'. Options to 'gulp' itself is set to 'conf.moduleOptions.gulp'.
 
 
 ### conf.dependencies
