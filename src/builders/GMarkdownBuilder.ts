@@ -2,7 +2,7 @@
  *  Markdown Builder
  */
 
-import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { GBuilder, BuildConfig } from "../core/builder";
 
 export class GMarkdownBuilder extends GBuilder {
     constructor(conf: BuildConfig) {

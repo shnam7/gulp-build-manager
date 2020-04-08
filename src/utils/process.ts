@@ -11,6 +11,7 @@ export interface SpawnOptions extends child_process.SpawnOptions {
     silent?: boolean;
     verbose?: boolean;
     captureOutput?: boolean;
+    sync?: boolean
 }
 
 export type ProcessOutput = {

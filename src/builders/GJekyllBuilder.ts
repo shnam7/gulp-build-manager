@@ -13,7 +13,7 @@ export class GJekyllBuilder extends GBuilder {
     }
 
     protected build() {
-        const opts = this.conf.moduleOptions.jekyll || {};
+        const opts = this.moduleOptions.jekyll;
 
         let args = [opts.subcommand || 'build'];
         if (this.conf.src) args.push('-s ' + this.conf.src);

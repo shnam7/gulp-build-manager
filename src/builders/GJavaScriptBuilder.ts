@@ -16,7 +16,7 @@ export class GJavaScriptBuilder extends GBuilder {
 
     protected build() {
         this.src().transpile();
-        const opts = this.conf.buildOptions;
+        const opts = this.buildOptions;
 
         // sanity check for options
         if (!this.conf.outFile && opts.outFileOnly)

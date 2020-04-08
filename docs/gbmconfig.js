@@ -25,7 +25,7 @@ const scss = {
     builder: 'GCSSBuilder',
     preBuild: (rtb) => {
         gbm.utils.npmInstall(['stylelint-config-recommended', 'postcss-combine-duplicated-selectors', wicleName]);
-        Object.assign(rtb.conf.moduleOptions, {
+        rtb.moduleOptions = {
             sass: { includePaths: ["node_modules/sass-wdk", "node_modules/wicle/scss"] },
             stylelint: {
                 "extends": "stylelint-config-recommended",
@@ -50,7 +50,7 @@ const scss = {
                     // require('postcss-inline-svg')({path:upath.join(basePath, 'images')}),
                 ]
             },
-        });
+        };
     },
     src: [upath.join(srcRoot, 'scss/**/*.scss')],
     dest: upath.join(basePath, 'css'),
@@ -71,9 +71,9 @@ const scripts = {
     src: [upath.join(srcRoot, 'scripts/**/*.ts')],
     dest: upath.join(basePath, 'js'),
     flushStream: true,
-    postBuild: (rtb) => rtb.copy([{
+    postBuild: (rtb) => rtb.sync().copy([{
         src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js')
-    }], true).exec('echo', ['>', jekyllTriggerJs]),
+    }]).exec('echo', ['>', jekyllTriggerJs]).async(),
 
     buildOptions: {
         minifyOnly: true,

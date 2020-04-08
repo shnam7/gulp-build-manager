@@ -7,7 +7,7 @@ import * as glob from 'glob';
 import * as filter from 'gulp-filter';
 import { GBuildManager } from "./buildManager";
 import { GulpStream, Options, gulp } from "./common";
-import { BuildConfig, FunctionBuilder, CopyParam } from "./builder";
+import { BuildConfig, FunctionBuilder } from "./builder";
 import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy } from "../utils/utils";
 import { GReloaders } from "./reloader";
 import { npmLock, npmUnlock, requireSafe } from '../utils/npm';
@@ -22,6 +22,7 @@ interface BuildConfigNorm extends BuildConfig {
     moduleOptions: Options;
 }
 
+export type CopyParam = { src: string | string[], dest: string };
 
 export class RTB {
     protected _stream?: GulpStream;
@@ -131,13 +132,15 @@ export class RTB {
     src(src?: string | string[]): this {
         if (!src) src = this.conf.src;
         if (!src) return this;
+
+        const mopts = this.moduleOptions;
         this.doActions('before_src');
-        this._stream = gulp.src(src, this.conf.moduleOptions.gulp && this.conf.moduleOptions.gulp.src);
+        this._stream = gulp.src(src, mopts.gulp && mopts.gulp.src);
 
         // check input file ordering
         if (this.conf.order && this.conf.order?.length > 0) {
             let order = requireSafe('gulp-order');
-            this.pipe(order(this.conf.order, this.conf.moduleOptions.order));
+            this.pipe(order(this.conf.order, mopts.order));
         }
         this.doActions('after_src');
 
@@ -146,9 +149,8 @@ export class RTB {
     }
 
     dest(path?: string): this {
-        let opts = this.conf.moduleOptions.gulp || {};
         this.doActions('before_dest');
-        this.pipe(gulp.dest(path || this.conf.dest || '.', opts.dest));
+        this.sourceMaps().pipe(gulp.dest(path || this.conf.dest || '.', this.moduleOptions.gulp?.dest));
         this.doActions('after_dest');
         return this;
     }
@@ -219,9 +221,9 @@ export class RTB {
     }
 
     sourceMaps(options: Options = {}): this {
-        if (!this.conf.buildOptions.sourceMap) return this;
+        if (!this.buildOptions.sourceMap) return this;
 
-        let opts = Object.assign({}, this.conf.moduleOptions.sourcemaps, options);
+        let opts = Object.assign({}, this.moduleOptions.sourcemaps, options);
         if (opts.init)
             this.pipe(requireSafe('gulp-sourcemaps').init(opts.init));
         else
@@ -236,64 +238,53 @@ export class RTB {
 
     debug(options: Options = {}): this {
         let title = options.title ? options.title : '';
-        let opts = Object.assign({}, this.conf.moduleOptions.debug, options, { title });
+        let opts = Object.assign({}, this.moduleOptions.debug, { title }, options);
         return this.pipe(requireSafe('gulp-debug')(opts));
     }
 
     filter(pattern: string | string[] | filter.FileFunction = ["**", "!**/*.map"], options: filter.Options = {}): this {
-        let opts = Object.assign({}, this.conf.moduleOptions.filter, options);
+        let opts = Object.assign({}, this.moduleOptions.filter, options);
         return this.pipe(requireSafe('gulp-filter')(pattern, opts))
     }
 
     rename(options: Options = {}): this {
-        const opts = Object.assign({}, this.conf.moduleOptions.rename, options.rename || options);
+        const opts = Object.assign({}, this.moduleOptions.rename, options.rename || options);
         return this.pipe(requireSafe('gulp-rename')(opts));
     }
 
-    copy(param?: CopyParam | CopyParam[], options: Options = {}, sync: boolean = false): this {
+    copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
         if (!param) return this;   // allow null argument
 
         const _copy = (target: any): Promise<unknown> => {
             let copyInfo = `[${target.src}] => ${target.dest}`;
-            if (options.verbose) msg(`copying: [${copyInfo}]`);
+            if (options.verbose) msg(`[${this.buildName}]:copying: ${copyInfo}`);
             return copy(target.src, target.dest)
-                .then(() => { if (this.conf.verbose) msg(`--> copy done: [${copyInfo}]`) });
+                .then(() => { if (this.conf.verbose) msg(`[${this.buildName}]:copying: ${copyInfo} --> done`) });
         }
         arrayify(param).forEach(target => this.promise(
-            (sync || this._syncMode) ? () => _copy(target) : _copy(target)
+            (options.sync || this._syncMode) ? () => _copy(target) : _copy(target)
         ));
         return this;
     }
 
-    del(patterns: string | string[], options: Options = {}, sync: boolean = false): this {
+    del(patterns: string | string[], options: Options = {}): this {
         if (!this.conf.silent) msg('Deleting:', patterns);
-        return (sync || this._syncMode)
-            ? this.promise(() => requireSafe("del")(patterns, options), sync)
-            : this.promise(requireSafe("del")(patterns, options), sync);
+
+        return (options.sync || this._syncMode)
+            ? this.promise(() => requireSafe("del")(patterns, options), options.sync)
+            : this.promise(requireSafe("del")(patterns, options), options.sync);
     }
 
-    exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false): this {
-        return (sync || this._syncMode)
-            ? this.promise(() => exec(cmd, args, options), sync)
-            : this.promise(exec(cmd, args, options), sync);
+    exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {
+        return (options.sync || this._syncMode)
+            ? this.promise(() => exec(cmd, args, options), options.sync)
+            : this.promise(exec(cmd, args, options), options.sync);
     }
 
-    // minify javascripts
-    uglify(options: Options = {}): this {
-        const opts = Object.assign({}, this.conf.moduleOptions.uglifyES, options.uglifyES);
-        return this.pipe(requireSafe('gulp-uglify-es').default(opts));
-    }
-
-    cleanCss(options: Options = {}): this {
-        const opts = Object.assign({}, this.conf.moduleOptions.cleanCss, options.cleanCss || options);
-        return this.pipe(requireSafe('gulp-clean-css')(opts));
-    }
-
-    clean(options: Options = {}, sync: boolean = false): this {
+    clean(options: Options = {}): this {
         let cleanList = arrayify(this.conf.clean).concat(arrayify(options.clean));
-
-        const delOpts = Object.assign({}, this.conf.moduleOptions.del, options.del);
-        return this.del(cleanList, delOpts, sync)
+        const delOpts = Object.assign({}, this.moduleOptions.del, options.del, { sync: options.sync });
+        return this.del(cleanList, delOpts)
     }
 
 
@@ -304,18 +295,19 @@ export class RTB {
             if (options.verbose) info('[rtb:concat] Missing conf.outFile. No output generated.');
             return this;
         }
-        let opts = Object.assign({}, this.conf.moduleOptions.concat, options.concat);
+        let opts = Object.assign({}, this.moduleOptions.concat, options.concat);
 
-        return this.filter().pipe(requireSafe('gulp-concat')(outFile, opts.concat)).sourceMaps();
+        return this.filter().pipe(requireSafe('gulp-concat')(outFile, opts.concat));
     }
 
-    minifyCss(): this {
-        return this.filter().cleanCss().rename({ extname: '.min.css' }).sourceMaps();
+    minifyCss(options: Options = {}): this {
+        const opts = Object.assign({}, this.moduleOptions.cleanCss, options.cleanCss || options);
+        return this.filter().pipe(requireSafe('gulp-clean-css')(opts)).rename({ extname: '.min.css' });
     }
 
-    minifyJs(): this {
-        return this.filter().uglify()
-            .rename({ extname: '.min.js' }).sourceMaps();
+    minifyJs(options: Options = {}): this {
+        const opts = Object.assign({}, this.moduleOptions.uglifyES, options.uglifyES);
+        return this.filter().pipe(requireSafe('gulp-uglify-es').default(opts)).rename({ extname: '.min.js' });
     }
 
     protected _execute(action?: FunctionBuilder, ...args: any[]): void | Promise<unknown> {
@@ -323,8 +315,14 @@ export class RTB {
     }
 
 
-
     //--- extension support
+    get buildName() { return this.conf.buildName; }
+
+    get buildOptions() { return this.conf.buildOptions; }
+    set buildOptions(opts: Options) { Object.assign(this.conf.buildOptions, opts); }
+
+    get moduleOptions() { return this.conf.moduleOptions; }
+    set moduleOptions(mopts: Options) { Object.assign(this.conf.moduleOptions, mopts); }
 
     get ext() { return RTB._extension; }
 

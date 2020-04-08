@@ -1,6 +1,6 @@
 import * as upath from 'upath';
 
-import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, ObjectBuilders, CopyBuilder, BuildSetSeries } from "./builder";
+import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildSetSeries } from "./builder";
 import { RTB } from "./rtb";
 import { GWatcher } from "./watcher";
 import { GulpTaskFunction, gulp } from "./common";
@@ -162,7 +162,7 @@ export class GBuildProject {
                 // So, info message is displayed only when verbose mode is turned on.
                 // However, it's recommended to avoid it by using buildNames in deppendencies and triggers field of BuildConfig
                 // if (conf.verbose)
-                if (!conf.silent) info(`GBuildProject:resolve: taskName=${conf.buildName} already registered`);
+                if (conf.verbose) info(`GBuildProject:resolve: taskName=${conf.buildName} already registered`);
                 return conf.buildName;
             }
 
@@ -197,7 +197,7 @@ export class GBuildProject {
             }
 
             rtb.setReloaders(this._watcher.reloaders);
-            GBuildManager.rtbMap.set(rtb.conf.buildName, rtb);   // register to global rtb list
+            GBuildManager.rtbMap.set(rtb.buildName, rtb);   // register to global rtb list
             return conf.buildName;
         }
 
@@ -277,18 +277,9 @@ export class GBuildProject {
         // if builders is RTB or its derivatives such as GBuilder
         if (builder instanceof RTB) return builder;
 
-        // if builder is ObjectBuilder object
-        if (is.Object(builder) && builder!.hasOwnProperty('command')) {
-            builder = builder as ObjectBuilders;
-            // if builder is CopyBuilder
-            if (builder!.command == 'copy') return new RTB(buildItem).setbuildFunc((rtb: RTB) => {
-                let bs: CopyBuilder = builder as CopyBuilder;
-                rtb.copy(bs.target, bs.options);
-            });
-
-            // if builder is ExternalBuilder
+        // if builder is ExternalBuilder
+        if (is.Object(builder) && builder!.hasOwnProperty('command'))
             return new RTB(buildItem).setbuildFunc(() => exec(<ExternalCommand>builder));
-        }
 
         // if builder is not specified
         if (!builder) return new RTB(buildItem).setbuildFunc(() => {

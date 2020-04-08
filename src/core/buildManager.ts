@@ -137,35 +137,19 @@ export class GBuildManager {
     //--- statics
     static defaultModuleOptions: Options = {
         sass: {
-            outputStyle: 'compact',
-            // outputStyle: 'compressed',
+            outputStyle: 'compact', // 'compressed',
             includePaths: []
         },
-
-        compass: {
-            config_file: './config.rb',
-            css: 'css',
-            sass: 'assets/scss'
-        },
-
         // autoprefixer: {
         // browsers: ['last 2 versions', '> 5%']
         // browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']
         // },
-
         cssnano: { discardUnused: false },
-
-        // babel: {presets:["env"]},
-
-        imagemin: {
-            progressive: true,
-            optimizationLevel: 5
+        imagemin: { progressive: true, optimizationLevel: 5 },
+        cleanCss: {
+            level: { 2: { mergeSemantically: true } },
         },
-        htmlBeautify: {
-            indent_char: ' ',
-            indent_size: 4
-        },
-
+        prettier: { useTabs: false, tabWidth: 4 },
         eslint: { "extends": "eslint:recommended", "rules": { "strict": 1 } },
     }
 

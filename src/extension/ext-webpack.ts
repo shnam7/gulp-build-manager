@@ -16,13 +16,13 @@ RTB.registerExtension('webpack', (options: Options = {}) => (rtb: RTB) => {
     const resolve = (process.platform === 'win32') ? upath.win32.resolve : upath.resolve;
     const merge = requireSafe('lodash.merge');
 
-    const opts = rtb.conf.buildOptions || {};
+    const opts = rtb.buildOptions;
     const configFile = resolve(options.configFile || opts.webpackConfig
         || upath.join(process.cwd(), "webpack.config.js"));
     info(`[GBM:ext.webpack] webpackConfig=${configFile}`);
 
     // load configFile first, and then override with moduleOptions.webpack
-    let wpOpts = merge(configFile ? require(configFile) : {}, rtb.conf.moduleOptions.webpack);
+    let wpOpts = merge(configFile ? require(configFile) : {}, rtb.moduleOptions.webpack);
 
     // override webpack entry file with conf.src
     if (rtb.conf.src) {

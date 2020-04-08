@@ -2,7 +2,7 @@ const gbm = require('./lib');
 const upath = require('upath');
 const fs = require('fs');
 
-// gbm.utils.setNpmOptions({autoInstall: true})
+gbm.utils.setNpmOptions({autoInstall: true})
 
 // load docs config
 const docs = require('./docs/gbmconfig');
@@ -27,10 +27,12 @@ const cleanToPrepare = {
     triggers: '@ex-clean-all'
 }
 
-
-gbm
-    .addTrigger('@build-all', /@build$/)
+gbm.addTrigger('@build-all', /@build$/)
     .addCleaner('@clean-all')
+    .addTrigger('@ex-build-all', /^\d.*@build$/)
+    .addTrigger('@ex-clean-all', /^\d.*@clean$/)
+    .addBuildItem(cleanToPrepare)
+    .addTrigger('default', ['@clean-all', '@build-all'], true)
     // .addTrigger('@watch-all', /@watch$/)
     // .addWatcher('@watch', {
     //     browserSync: {
@@ -40,10 +42,4 @@ gbm
     //     },
     //     reloadOnChange: false
     // })
-    .addTrigger('@ex-build-all', /^\d.*@build$/)
-    .addTrigger('@ex-clean-all', /^\d.*@clean$/)
-    .addBuildItem(cleanToPrepare)
-    .addTrigger('default', ['@clean-all', '@build-all'], true)
     .resolve();
-
-// console.log('size=', gbm.size, ', buildNames=', gbm.buildNames);

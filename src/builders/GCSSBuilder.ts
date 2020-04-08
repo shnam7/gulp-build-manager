@@ -3,7 +3,7 @@
  */
 
 import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
-import { warn } from "../utils/utils";
+import { warn, requireSafe } from "../utils/utils";
 
 export class GCSSBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
@@ -12,7 +12,7 @@ export class GCSSBuilder extends GBuilder {
 
     protected build() {
         this.src().chain(this.ext.css());
-        const opts = this.conf.buildOptions;
+        const opts = this.buildOptions;
 
         // sanity check for options
         if (!this.conf.outFile && opts.outFileOnly)
@@ -29,10 +29,8 @@ export class GCSSBuilder extends GBuilder {
         // concat stream
         if (concat) {
             this.pushStream().concat();
-
             if (!opts.minifyOnly) this.dest();      // concat non-minified
             if (opts.minify || opts.minifyOnly) this.minifyCss().dest();  // concat minified
-
             this.popStream();
         }
 

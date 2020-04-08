@@ -19,15 +19,6 @@ export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unkno
 //--- Object Builders
 export interface ExternalBuilder extends ExternalCommand { }
 
-export interface CopyBuilder {
-    command: 'copy',
-    target?: CopyParam | CopyParam[],
-    options?: Options
-}
-export type CopyParam = { src: string | string[], dest: string };
-
-export type ObjectBuilders = CopyBuilder | ExternalBuilder;
-
 //--- GBuilder
 export class GBuilder extends RTB {
     constructor(conf?: BuildConfig) {
@@ -38,7 +29,7 @@ export class GBuilder extends RTB {
 }
 
 //--- Combined Builders Type
-export type Builders = GBuilderClassName | FunctionBuilder | ObjectBuilders | GBuilder;
+export type Builders = GBuilderClassName | FunctionBuilder | ExternalBuilder | GBuilder;
 
 
 //--- Build Config

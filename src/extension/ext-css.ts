@@ -7,6 +7,12 @@ import { RTB } from "../core/rtb";
 import { warn } from "../utils/utils";
 import { requireSafe, npmInstall } from "../utils/npm";
 
+const cleanCss = (rtb: RTB) => {
+    const opts = Object.assign({}, rtb.moduleOptions.cleanCss, {format: 'beautify'});
+    rtb.filter().pipe(requireSafe('gulp-clean-css')(opts));
+}
+
+
 function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Options) {
     const sourceType = opts.sourceType || 'scss';
     const pcss = requireSafe('gulp-postcss');
@@ -19,19 +25,11 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     // All the scss/less variables should to be evaluated before postcss process starts
     if (sourceType !== 'css') {
         const processor = requireSafe('gulp-' + moduleName);
-        rtb.pipe(processor(options[moduleName] || mopts[moduleName])).sourceMaps();
+        rtb.pipe(processor(options[moduleName] || mopts[moduleName]))
     }
 
     // // now, transpile postcss statements
-    if (plugins.length > 0) rtb.filter().pipe(pcss(plugins)).sourceMaps();
-
-    // do some optimization to remove duplicate selectors, and beautify
-    rtb.filter().pipe(requireSafe('gulp-clean-css')({
-        sourceMap: true,
-        sourceMapInlineSources: true,
-        format: 'beautify',
-        level: { 2: { mergeSemantically: true } }
-    })).sourceMaps();
+    if (plugins.length > 0) rtb.filter().pipe(pcss(plugins))
 
     // now run autoprefixer
     if (autoprefixer) {
@@ -39,8 +37,10 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
         rtb.filter()
             .pipe(pcss([prefixer({ add: false })])) // remove outdated prefixed
             .pipe(pcss([prefixer(mopts.autoprefixer)]))     // now add prefixes
-            .sourceMaps();
     }
+
+    // do minify here to optimise output (this will also remove lint warnings for intermediate output)
+    rtb.chain(cleanCss);
 
     // lint final css
     // lint does not understands postcss statements. so,it come after postcss processing
@@ -56,9 +56,10 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
 }
 
 
+// available options: options.cleanCss
 RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
-    const opts = rtb.conf.buildOptions;
-    const mopts = rtb.conf.moduleOptions;
+    const opts = rtb.buildOptions;
+    const mopts = rtb.moduleOptions;
 
     // backward compatibility on autoprefixer options
     if (opts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
@@ -83,22 +84,19 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
         // first, transpile to standard css.
         if (sourceType !== 'css') {
             const processor = requireSafe('gulp-' + moduleName);
-            rtb.pipe(processor(options[moduleName] || mopts[moduleName])).sourceMaps();
+            rtb.pipe(processor(options[moduleName] || mopts[moduleName]))
         }
-
-        // do some optimization to remove duplicate selectors, and beautify
-        rtb.filter().pipe(requireSafe('gulp-clean-css')({
-            format: 'beautify',
-            level: { 2: { mergeSemantically: true } }
-        })).sourceMaps();
 
         // now run autoprefixer
         if (autoprefixer) {
             const prefixer = requireSafe('gulp-autoprefixer');
             rtb.filter()
                 .pipe(prefixer({ add: false })) // remove outdated prefixed
-                .pipe(prefixer(mopts.autoprefixer)).sourceMaps();     // now add prefixes
+                .pipe(prefixer(mopts.autoprefixer))
         }
+
+        // do minify here to optimise output (this will also remove lint warnings for intermediate output)
+        rtb.chain(cleanCss);
 
         // lint final css
         // lint does not understands postcss statements. so,it come after postcss processing
@@ -109,5 +107,4 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
             rtb.filter().pipe(stylelint(lintOpts));
         }
     }
-    rtb.sourceMaps();
 });

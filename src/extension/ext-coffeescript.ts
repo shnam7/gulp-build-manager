@@ -3,10 +3,10 @@ import { Options } from "../core/common";
 import { requireSafe, npmInstall } from "../utils/npm";
 
 RTB.registerExtension('coffeeScript', (options: Options = {}) => (rtb: RTB) => {
-    const opts = rtb.conf.buildOptions || {};
-    const lint = options.lint || opts.lint;
-    const lintOpt = Object.assign({}, rtb.conf.moduleOptions.coffeelint, options.coffeelint);
-    const coffeeOpts = Object.assign({}, rtb.conf.moduleOptions.coffee, options.coffee);
+    const opts = rtb.buildOptions;
+    const lint = Object.assign({}, opts.lint, options.lint);
+    const lintOpt = Object.assign({}, rtb.moduleOptions.coffeelint, options.coffeelint);
+    const coffeeOpts = Object.assign({}, rtb.moduleOptions.coffee, options.coffee);
 
     if (lint) {
         npmInstall(['gulp-coffeelint', 'coffeelint-stylish']);
@@ -14,5 +14,5 @@ RTB.registerExtension('coffeeScript', (options: Options = {}) => (rtb: RTB) => {
         const stylish = require('coffeelint-stylish');
         rtb.pipe(coffeeLint(lintOpt)).pipe(coffeeLint.reporter(stylish));
     }
-    rtb.pipe(requireSafe('gulp-coffee')(coffeeOpts)).sourceMaps();
+    rtb.pipe(requireSafe('gulp-coffee')(coffeeOpts));
 });

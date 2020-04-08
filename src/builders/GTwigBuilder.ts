@@ -2,7 +2,7 @@
  *  Twig Builder
  */
 
-import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { GBuilder, BuildConfig } from "../core/builder";
 
 export class GTwigBuilder extends GBuilder {
     constructor(conf: BuildConfig) {
