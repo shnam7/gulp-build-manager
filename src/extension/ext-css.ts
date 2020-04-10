@@ -8,7 +8,10 @@ import { warn } from "../utils/utils";
 import { requireSafe, npmInstall } from "../utils/npm";
 
 const cleanCss = (rtb: RTB) => {
-    const opts = Object.assign({}, rtb.moduleOptions.cleanCss, {format: 'beautify'});
+    const opts = Object.assign({}, rtb.moduleOptions.cleanCss, {
+        format: 'beautify',
+        level: { 2: { mergeSemantically: true } },
+    });
     rtb.filter().pipe(requireSafe('gulp-clean-css')(opts));
 }
 

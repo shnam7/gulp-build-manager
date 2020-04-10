@@ -47,7 +47,8 @@ export class RTB {
      *-----------------------------------------------------------------*/
 
     protected _init(conf: BuildConfig): this {
-        Object.assign(this.conf, conf, { buildName: '', buildOptions:{}, moduleOptions: {} });
+        this.conf.buildName = conf.buildName || '';
+        Object.assign(this.conf.buildOptions, conf.buildOptions);
         Object.assign(this.conf.moduleOptions, GBuildManager.defaultModuleOptions, conf.moduleOptions);
         return this;
     }
