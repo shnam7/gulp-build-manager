@@ -15,7 +15,7 @@ npm i gulp-build-manager --save-dev
 npm i gulp --save-dev
 ```
 
-### Node modules dependency
+## Node modules dependency
 gbm provides a collection of built-in builders and plugins. These modules typically has their own dependency to other node modules. gbm does not install all those modules as dependency because they are not always used in the build configurations of your project. So, if you run gulp with gbm configuration, you could see warnings of missing node modules like this:
 
 ```sh
@@ -29,6 +29,45 @@ Require stack:
 ```
 If you see error messages like this, then install all themissing modules required - 'gulp-sass' in this case.
 This can be inconvenient but it'd be more efficient to install only the required modules.
+
+
+
+## Automatic dependency detection and installation
+gbm builders and extension module use various node packages, but those dependencies are not installed automatically to keep gbm simple. To make life easier, v4 provides two ways automatically detecting dependencies and installing them without user intervention.
+
+### Using command line option
+```sh
+npx gulp <taskName> --npmAutoInstall
+npx gulp <taskName> --npmAutoInstall='npm install options>'
+
+ex) npx gulp task1 --npmAutoInstall # default npm install option is '--save-dev'
+ex) npx gulp task1 --npmAutoInstall=='--no-save' # default npm install option is '--save-dev'
+```
+
+### Using gulpfile.js
+```js
+const gbm = require('gulp-build-manager');
+
+// default option valeu: {autoInstall: false, installOptions: '--save-dev'}
+gbm.setNpmOptions({autoInstall: true, installOptions: '--no-save'});
+```
+Automatic dependency detection and installation feature is turned off by default because it would degrade overall build task performance. Once build tasks are executed with this turned on, then package.json file will be updated as described by installOptions (default: '--save-dev'). If package.json file is fully updated with all the gulp tasks, then it's recommended to turn this feature off for better build performance. If the moduels already installed, installation action is skipped.
+
+
+### Dependency check for user programs
+gbm provides two utility functions.
+```js
+const gbm = require('gulp-build-manager');
+
+gbm.utils.npmInstall(ids, options);
+gbm.utils.requireSafe(id);
+
+ex) gbm.utils.npmInstall('react');  // single module installation
+ex) gbm.utils.npmInstall(['react', 'react-dom', ...]);  // multiple module installation
+ex) const pcss = gbm.utils.requireSafe('gulp-postcss'); // Ensure the module is installed before calling require()
+```
+Typically, module installation is done in conf.preBuild function, which is first executed in build process. See the examples folder in the source for actual usage cases.
+
 
 
 ## Quick Start

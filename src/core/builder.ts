@@ -3,7 +3,7 @@
  */
 
 import { Options, GulpTaskFunction } from "./common";
-import { ExternalCommand } from "../utils/utils";
+import { ExternalCommand, warn } from "../utils/utils";
 import { RTB } from "./rtb";
 
 export type TaskDoneFunction = (error?: any) => void;
@@ -61,3 +61,41 @@ export interface BuildConfig {
 export type BuildSet = BuildName | GulpTaskFunction | BuildConfig | BuildSetSeries | BuildSetParallel;
 export type BuildSetSeries = BuildSet[];
 export type BuildSetParallel = { set: BuildSet[] };
+
+
+
+//--- GTrasnpiler
+export class GTranspiler extends GBuilder {
+    constructor(conf?: BuildConfig) { super(conf); }
+
+    protected onTranspile() { return this; }
+    protected onMinify() { return this; }
+
+    protected build() {
+        const opts = this.buildOptions;
+
+        this.src().onTranspile();
+
+        // sanity check for options
+        if (!this.conf.outFile && opts.outFileOnly)
+            warn('GBM: outFileOnly option requires valid outFile value.');
+
+        // evaluate options
+        const concat = !!this.conf.outFile;
+        const concatOnly = concat && opts.outFileOnly !== false;
+
+        // concat stream
+        if (concat) {
+            this.pushStream().concat();
+            if (!opts.minifyOnly) this.dest();      // concat non-minified
+            if (opts.minify || opts.minifyOnly) this.onMinify().dest();  // concat minified
+            this.popStream();
+        }
+
+        // non-concat
+        if (!concat || !concatOnly) {
+            if (!opts.minifyOnly) this.dest();      // concat non-minified
+            if (opts.minify || opts.minifyOnly) this.onMinify().dest();  // concat minified
+        }
+    }
+}

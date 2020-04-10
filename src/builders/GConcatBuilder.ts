@@ -2,16 +2,12 @@
  *  Concatenation Builder
  */
 
-import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { GBuilder, BuildConfig } from "../core/builder";
 
 export class GConcatBuilder extends GBuilder {
-    constructor(conf: BuildConfig) {
-        super(conf);
-    }
+    constructor(conf: BuildConfig) { super(conf); }
 
-    protected build() {
-        this.src().concat().dest();
-    }
+    protected build() { this.src().concat().dest(); }
 }
 
 export default GConcatBuilder;

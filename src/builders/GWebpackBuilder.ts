@@ -6,9 +6,7 @@ import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 import { warn } from "../utils/utils";
 
 export class GWebpackBuilder extends GBuilder {
-    constructor(conf: BuildConfig) {
-        super(conf);
-    }
+    constructor(conf: BuildConfig) { super(conf); }
 
     protected build() {
         if (this.conf.src)
