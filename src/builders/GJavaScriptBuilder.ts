@@ -5,7 +5,7 @@
 import { GTranspiler, BuildConfig } from "../core/builder";
 
 export class GJavaScriptBuilder extends GTranspiler {
-    constructor(conf: BuildConfig) { super(conf); }
+    constructor() { super(); }
 
     protected onTranspile() { return this.chain(this.ext.javaScript()); }
     protected onMinify() { return this.minifyJs(); }

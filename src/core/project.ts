@@ -1,20 +1,19 @@
 import * as upath from 'upath';
-import del = require("del");
-
-import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildSetSeries } from "./builder";
-import { RTB } from "./rtb";
-import { GWatcher } from "./watcher";
+import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildSetSeries, parallel } from "./builder";
+import { RTB, CleanOptions } from "./rtb";
 import { GulpTaskFunction, gulp } from "./common";
 import { is, arrayify, info, ExternalCommand, warn, exec, msg } from "../utils/utils";
-import { WatcherOptions } from './watcher';
 import { GBuildManager } from './buildManager';
+import { GReloader, ReloaderOptions, GBrowserSync } from './reloader';
+import { EventEmitter } from 'events';
 
-type ResolvedType = BuildName | GulpTaskFunction;
-type BuildNameSelector = string | string[] | RegExp | RegExp[];
 
-export interface CleanOptions extends del.Options {
-    clean?: string | string[];
-    sync?: boolean;
+export type BuildNameSelector = string | string[] | RegExp | RegExp[];
+
+export interface WatchOptions extends ReloaderOptions {
+    watch?: string | string[];      // pure watching: watched files to be reloaded on change w/o build actions
+    browserSync?: ReloaderOptions;  // browserSync initializer options
+    livereload?: ReloaderOptions;   // livereload initializer options
 }
 
 export type BuildGroup = {
@@ -28,76 +27,72 @@ export type ProjectOptions = {
 };
 
 
-export class GProject {
+export class GProject extends EventEmitter {
     protected _options: ProjectOptions = { prefix: "" };
     protected _rtbs: RTB[] = [];
-
-    protected _watcher: GWatcher = new GWatcher;
-    protected _map: Map<string, BuildConfig> = new Map();
+    protected _reloaders: GReloader[] = [];
     protected _vars:any  = {};
 
     constructor(buildGroup: BuildGroup = {}, options: ProjectOptions = {}) {
+        super();
         Object.assign(this._options, options);
-        this.addBuildGroup(buildGroup);
+        this.addBuildItems(buildGroup);
     }
 
     addBuildItem(conf: BuildConfig): this {
         if (this._options.prefix) conf.buildName = this._options.prefix + conf.buildName;
         if (conf.reloadOnChange === false && conf.reloadOnFinish !== false) conf.reloadOnFinish = true;
-        this._map.set(conf.buildName, conf);
+        this.resolveBuildSet(conf)
         return this;
     }
 
-    addBuildGroup(buildGroup: BuildGroup | BuildConfig): this {
+    addBuildItems(items: BuildGroup | BuildConfig): this {
         // detect if set is single BuildConfig object, not BuildGroup
-        if (buildGroup.hasOwnProperty('buildName') && is.String(buildGroup.buildName))
-            this.addBuildItem(buildGroup as BuildConfig);
-        else
-            Object.entries(buildGroup as BuildGroup).forEach(([buildKey, conf]) => this.addBuildItem(conf));
+        if (items.hasOwnProperty('buildName')) return this.addBuildItem(items as BuildConfig);
+
+        Object.entries(items as BuildGroup).forEach(([key, conf]) => this.addBuildItem(conf));
         return this;
     }
 
-    addTrigger(buildName: string, selector: string | string[] | RegExp | RegExp[], series: boolean = false): this {
-        let buildNames = this.filter(selector);
+    addTrigger(buildName: string, selector: BuildNameSelector, series: boolean = false): this {
+        let buildNames = this.getBuildNames(selector);
         let triggers = (buildNames.length === 1)
             ? buildNames[0]
-            : series ? buildNames : GProject.parallel(...buildNames);
+            : series ? buildNames : parallel(...buildNames);
 
         this.addBuildItem({ buildName, triggers });
         return this;
     }
 
-    addVars(vars: { [key: string]: any }): this {
-        Object.assign(this._vars, vars);
-        return this;
-    }
-
-    addWatcher(buildName = '@watch', options: WatcherOptions = {}): this {
-        if (options) {
-            if (options.browserSync) Object.assign(options.browserSync,
-                { instanceName: this._options.prefix + buildName });
-            if (options.livereload) Object.assign(options.livereload,
-                { instanceName: this._options.prefix + buildName });
-            let reloaders = this._watcher.reloaders.createReloaders({
-                browserSync: options.browserSync,
-                livereloiad: options.livereload
-            });
-
-            // add additional watch map:
-            // check for pure watch: watch atrgets w/o action/task to run (just for reloading)
-            if (options && options.watch) this._watcher.addWatch({
-                watch: options.watch,
-                task: (done) => { reloaders.reload(); info('<watcher>:reloading triggered.'); done(); },
-                displayName: '<reloader>'
-            });
-
-            this._watcher.reloaders.reloadOnChange(options.reloadOnChange);
-        }
+    addWatcher(buildName = '@watch', options: WatchOptions = {}): this {
+        if (options.browserSync) this._reloaders.push(new GBrowserSync(options.browserSync));
+        if (options.livereload) this._reloaders.push(new GBrowserSync(options.livereload));
 
         // create watch build item
         return this.addBuildItem({
-            buildName: buildName,
-            builder: () => { this._watcher.watch(); },
+            buildName,
+            builder: (rtbWatcher) => {
+                this._rtbs.forEach(rtb => {
+                    let watched = arrayify(rtb.conf.watch ? rtb.conf.watch : rtb.conf.src).concat(arrayify(rtb.conf.addWatch));
+                    if (watched.length <= 0 || rtb.buildName.length === 0) return;
+                    msg(`Watching ${rtb.buildName}: [${watched}]`);
+
+                    this._reloaders.forEach(reloader => rtb.on('exit', () => rtb.pipe(reloader.stream(options))));
+                    let gulpWatcher = gulp.watch(watched, gulp.parallel(rtb.buildName));
+                    gulpWatcher.on('all', this.emit.bind(this, 'change', rtb));
+                });
+
+                // pure watch target
+                const watched = arrayify(options.watch);
+                if (watched.length > 0) {
+                    msg(`Watching ${rtbWatcher.buildName}: [${watched}]`);
+                    let gulpWatcher = gulp.watch(watched, (done) => done());
+                    gulpWatcher.on('all', (path) => this.emit('reload', path));
+                }
+
+                // activate reloaders
+                this._reloaders.forEach(reloader => reloader.activate());
+            }
         });
     }
 
@@ -106,9 +101,7 @@ export class GProject {
             buildName,
             builder: (rtb) => {
                 let cleanList = arrayify(options.clean);
-                // console.log('=======>', this._options.prefix, this._rtbs.length)
                 this._rtbs.forEach(rtb => {
-                    // console.log('==>' + rtb.buildName); console.log(rtb.conf);
                     if (rtb.conf.clean) cleanList = cleanList.concat(arrayify(rtb.conf.clean))
                 });
 
@@ -118,33 +111,27 @@ export class GProject {
         });
     }
 
-    filter(selector: BuildNameSelector): string[] {
-        let ret: string[] = [];
-        arrayify(selector).forEach(sel => {
-            if (is.RegExp(sel)) {
-                this._map.forEach((conf) => {
-                    if (sel.test(conf.buildName)) ret.push(conf.buildName)
-                });
-            }
-            else {
-                let buildNamesArray = arrayify(sel).map(buildName => buildName);
-                this._map.forEach((conf) => {
-                    if (buildNamesArray.includes(conf.buildName)) ret.push(conf.buildName)
-                });
-            }
-        });
-        return ret;
-    }
-
-    resolve() : this {
-        this._map.forEach(conf => this.resolveBuildSet(conf));
+    addVars(vars: { [key: string]: any }): this {
+        Object.assign(this._vars, vars);
         return this;
     }
 
+    getBuildNames(selector: BuildNameSelector): string[] {
+        let ret: string[] = [];
+        const ar = arrayify(selector);
+        this.rtbs.forEach(rtb => ar.forEach(sel => {
+            const buildName = rtb.buildName;
+            if (sel === buildName || (is.RegExp(sel) && sel.test(buildName))) ret.push(buildName)
+        }));
+        return ret;
+    }
 
-    get size() { return this._map.size; }
+
+    //--- accesors
 
     get projectName() { return this._options.projectName || ""; }
+
+    get rtbs() { return this._rtbs; }
 
     get prefix() { return this._options.prefix; }
 
@@ -152,15 +139,14 @@ export class GProject {
 
     get buildNames() {
         let buildNames: string[] = [];
-        this._map.forEach(conf=>{buildNames.push(conf.buildName)})
+        this.rtbs.forEach(rtb => { buildNames.push(rtb.buildName) })
         return buildNames;
     }
 
-    get watcher() { return this._watcher; }
-
 
     //--- internals
-    protected resolveBuildSet(buildSet?: BuildSet): ResolvedType | void {
+
+    protected resolveBuildSet(buildSet?: BuildSet): BuildName | GulpTaskFunction | void {
         if (!buildSet) return;
 
         // if buildSet is BuildName or GulpTaskFunction
@@ -177,13 +163,12 @@ export class GProject {
                 // duplicated buildName may not be error in case it was resolved multiple time due to deps or triggers
                 // So, info message is displayed only when verbose mode is turned on.
                 // However, it's recommended to avoid it by using buildNames in deppendencies and triggers field of BuildConfig
-                // if (conf.verbose)
                 if (conf.verbose) info(`GProject:resolve: taskName=${conf.buildName} already registered`);
                 return conf.buildName;
             }
 
             let rtb = this.getBuilder(conf);
-            let mainTask = (done: TaskDoneFunction) => rtb._build(conf).then(() => done());
+            let mainTask = (done: TaskDoneFunction) => rtb.__build().then(() => done());
             let deps = arrayify(conf.dependencies);
             let task = conf.builder ?  mainTask : undefined;
             let triggers = arrayify(conf.triggers);
@@ -196,22 +181,9 @@ export class GProject {
                 resolved = gulp.parallel(resolved);
 
             gulp.task(conf.buildName, <GulpTaskFunction>resolved);
-
-            // resolve watch
-            let watched = arrayify(conf.watch ? conf.watch : conf.src).concat(arrayify(conf.addWatch));
-            if (watched.length > 0) {
-                this._watcher.addWatch({
-                    // buildName: conf.buildName,
-                    watch: watched,
-                    task: conf.buildName ? gulp.parallel(conf.buildName) : (done) => { done() },
-                    displayName: conf.buildName,
-                    reloadOnChange: conf.reloadOnChange
-                });
-            }
-
-            rtb.setReloaders(this._watcher.reloaders);
+            rtb.__ready(conf)
             this._rtbs.push(rtb);
-            GBuildManager.rtbMap.set(rtb.buildName, rtb);   // register to global rtb list
+            GBuildManager.rtbs.push(rtb);   // register to global rtb list
             return conf.buildName;
         }
 
@@ -248,12 +220,12 @@ export class GProject {
         throw Error('GProject:resolve:Unknown type of buildSet');
     }
 
-    protected getBuilder(buildItem: BuildConfig): RTB {
-        let builder = buildItem.builder;
+    protected getBuilder(conf: BuildConfig): RTB {
+        let builder = conf.builder;
 
         // if builder is GBuilderClassName
         if (is.String(builder)) {
-            if (builder === 'GBuilder') return new GBuilder(buildItem);
+            if (builder === 'GBuilder') return new GBuilder();
 
             // try custom dir first to give a chance to overload default builder
             if (this._options.customBuilderDirs) {
@@ -263,7 +235,7 @@ export class GProject {
                     let pathName = upath.join(process.cwd(), dir, builder);
                     try {
                         let builderClass = require(pathName);
-                        return new builderClass(buildItem);
+                        return new builderClass(conf);
                     }
                     catch (e) {
                         if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(pathName) < 0) throw e;
@@ -275,7 +247,7 @@ export class GProject {
             let pathName = upath.join(__dirname, '../builders', builder as string);
             try {
                 let builderClass = require(pathName);
-                return new builderClass.default(buildItem);
+                return new builderClass.default(conf);
             }
             catch (e) {
                 if (e.code !== 'MODULE_NOT_FOUND' || e.message.indexOf(pathName) < 0) throw e;
@@ -286,23 +258,19 @@ export class GProject {
         }
 
         // if builder is BuildFunction
-        if (is.Function(builder)) return new RTB(buildItem).setBuildFunc(builder);
+        if (is.Function(builder)) return new RTB(builder);
 
         // if builders is RTB or its derivatives such as GBuilder
         if (builder instanceof RTB) return builder;
 
         // if builder is ExternalBuilder
         if (is.Object(builder) && builder!.hasOwnProperty('command'))
-            return new RTB(buildItem).setBuildFunc(() => exec(<ExternalCommand>builder));
+            return new RTB(() => exec(<ExternalCommand>builder));
 
         // if builder is not specified
-        if (!builder) return new RTB(buildItem).setBuildFunc(() => {
+        if (!builder) return new RTB(() => {
             // dmsg(`BuildName:${buildItem.buildName}: No builder specified.`);
         });
-        throw Error(`[buildName:${buildItem.buildName}]Unknown ObjectBuilder.`);
+        throw Error(`[buildName:${conf.buildName}]Unknown ObjectBuilder.`);
     }
-
-    // statics
-    static series(...args: BuildSet[]): BuildSetSeries { return args }
-    static parallel(...args: BuildSet[]): BuildSetParallel { return { set: args } }
 }

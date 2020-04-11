@@ -7,8 +7,8 @@ import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 export class GJekyllBuilder extends GBuilder {
     command: string;
 
-    constructor(conf: BuildConfig) {
-        super(conf);
+    constructor() {
+        super();
         this.command = process.platform.startsWith('win') ? 'jekyll.bat' : 'jekyll';
     }
 

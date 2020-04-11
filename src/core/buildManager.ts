@@ -1,14 +1,12 @@
 import * as upath from 'upath';
-import { BuildSet, BuildConfig, BuildSetSeries, BuildSetParallel, BuildName } from './builder';
-import { GProject, BuildGroup, ProjectOptions, CleanOptions } from './project';
-import { registerPropertiesFromFiles, is } from '../utils/utils';
-import { GBuilder as GBuilderClass } from './builder';
 import * as __utils from '../utils/utils';
-import { WatcherOptions } from './watcher';
+import { BuildSet, BuildConfig, BuildSetSeries, BuildSetParallel, series, parallel } from './builder';
+import { GProject, BuildGroup, ProjectOptions, BuildNameSelector } from './project';
+import { registerPropertiesFromFiles } from '../utils/utils';
+import { GBuilder as GBuilderClass } from './builder';
 import { Options } from './common';
-import { RTB } from './rtb';
+import { RTB, RTBExtension } from './rtb';
 import { setNpmOptions } from '../utils/npm';
-
 
 //-- custom builders
 function __builders() {}
@@ -18,12 +16,13 @@ registerPropertiesFromFiles(__builders, upath.join(__dirname, '../builders/*.js'
 
 //--- GBuildManager
 export class GBuildManager {
-    protected _projects: GProject[] = [];
-    protected _managerProject: GProject = new GProject();
+    protected _projects: GProject[] = []
 
     constructor() {
+        this._projects.push(new GProject());
+
         process.argv.forEach(arg => {
-            if (arg.startsWith('--npmAutoInstall')) {
+            if (arg.startsWith('--npm-auto-install')) {
                 let autoInstall = true;
                 let installOptions: string | undefined = arg.replace(/['"]+/g, '');
                 let idx = installOptions.indexOf('=');
@@ -41,99 +40,48 @@ export class GBuildManager {
     }
 
     addProject(project: GProject | string): this {
-        if (is.String(project)) project = require(upath.resolve(project));
+        if (__utils.is.String(project)) project = require(upath.resolve(project));
         if (project instanceof GProject)
-            this._projects.push(project as GProject);
+            this._projects.push(project);
         else
             throw Error('GBuildManager:addProject: Invalid project argument');
         return this;
     }
 
-    addBuildItem(conf: BuildConfig): this {
-        this._managerProject.addBuildItem(conf);
+    addProjects(items: GProject | GProject[]): this {
+        __utils.arrayify(items).forEach(proj => this.addProject(proj));
         return this;
     }
 
-    addTrigger(buildName: string, selector: string | string[] | RegExp | RegExp[], series: boolean = false): this {
-        let buildNames = this.filter(selector);
-        let triggers = (buildNames.length === 1)
-            ? buildNames[0]
-            : series ? buildNames : GProject.parallel(...buildNames);
-
-        this.addBuildItem({ buildName, triggers });
-        return this;
-    }
-
-    addWatcher(buildName: string, opts:WatcherOptions) {
-        // create reloaders in manager project
-        let watcher = this._managerProject.watcher;
-        let reloaders = watcher.reloaders.createReloaders(opts);
-        this._projects.forEach(proj => proj.watcher.reloaders.addReloaders(reloaders));
-
-        reloaders.reloadOnChange(opts.reloadOnChange);
-
-        // create watch build item
-        return this.addBuildItem({
-            buildName: buildName,
-            builder: () => {
-                // start watch for all the project, but depress reloader activation
-                this._projects.forEach(proj => proj.watcher.watch(false))
-
-                // activate reloaders in manager project
-                reloaders.activate();
-            }
-        });
-    }
-
-    addCleaner(buildName: string, opts?: CleanOptions, selector: string | string[] | RegExp | RegExp[] = /@clean$/): this {
-        let cleanBuilds = this.filter(selector)
-        this._managerProject.addBuildItem({
-            buildName: buildName,
-            triggers: GProject.parallel(...cleanBuilds),
-        });
-        return this;
-    }
-
-    filter(selector: string | string[] | RegExp | RegExp[]): string[] {
+    getBuildNames(selector: BuildNameSelector): string[] {
         let buildNames: string[] = [];
         this._projects.forEach(proj => {
-            buildNames = buildNames.concat(proj.filter(selector));
+            buildNames = buildNames.concat(proj.getBuildNames(selector));
         });
-        return buildNames.concat(this._managerProject.filter(selector));;
+        return buildNames;
     }
 
-    resolve(): void {
-        this._projects.forEach(proj => proj.resolve());
-        this._managerProject.resolve();
+    findProject(projectName: string): GProject | undefined {
+        for (let proj of this._projects)
+            if (proj.projectName === projectName) return proj;
+        return undefined;
     }
 
-    series(...args: BuildSet[]): BuildSetSeries { return GProject.series(args); }
 
-    parallel(...args: BuildSet[]): BuildSetParallel { return GProject.parallel(args); }
-
+    //--- utilities
+    series(...args: BuildSet[]): BuildSetSeries { return series(args); }
+    parallel(...args: BuildSet[]): BuildSetParallel { return parallel(args); }
+    registerExtension(name: string, ext: RTBExtension): void { RTB.registerExtension(name, ext) }
 
     //--- properties
-    get size(): number {
-        let size = 0;
-        this._projects.forEach(proj => { size += proj.size })
-        return size + this._managerProject.size;
-    }
-
-    get buildNames(): BuildName[] {
-        let buildNames: string[] = [];
-        this._projects.forEach(proj => { buildNames = buildNames.concat(proj.buildNames) })
-
-        return buildNames.concat(this._managerProject.buildNames);
-    }
-
-    get RTB() { return RTB; }
+    get rtbs() { return GBuildManager.rtbs; }
     get builders() { return __builders; }
     get utils() { return __utils; }
-    get rtbMap() { return GBuildManager.rtbMap; }
     get defaultModuleOptions() { return GBuildManager.defaultModuleOptions; }
 
 
     //--- statics
+    static rtbs: RTB[] = [];
     static defaultModuleOptions: Options = {
         sass: {
             outputStyle: 'compact', // 'compressed',
@@ -151,7 +99,4 @@ export class GBuildManager {
         prettier: { useTabs: false, tabWidth: 4 },
         eslint: { "extends": "eslint:recommended", "rules": { "strict": 1 } },
     }
-
-    // active RTB list
-    static rtbMap: Map<string, RTB> = new Map();
 }

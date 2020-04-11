@@ -5,7 +5,7 @@
 import { GBuilder, BuildConfig } from "../core/builder";
 
 export class GMarkdownBuilder extends GBuilder {
-    constructor(conf: BuildConfig) { super(conf); }
+    constructor() { super(); }
 
     protected build() {
         this.src().chain(this.ext.markdown()).dest();

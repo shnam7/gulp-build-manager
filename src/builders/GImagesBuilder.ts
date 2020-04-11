@@ -6,7 +6,7 @@ import { GBuilder, BuildConfig } from "../core/builder";
 import { requireSafe } from "../utils/npm";
 
 export class GImagesBuilder extends GBuilder {
-    constructor(conf: BuildConfig) { super(conf); }
+    constructor() { super(); }
 
     protected build() {
         this.src().pipe(requireSafe('gulp-imagemin')(this.moduleOptions.imagemin)).dest();

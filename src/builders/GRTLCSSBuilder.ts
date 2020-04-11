@@ -7,7 +7,7 @@ import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
 import { requireSafe } from "../utils/npm";
 
 export class GRTLCSSBuilder extends GBuilder {
-    constructor(conf: BuildConfig) { super(conf); }
+    constructor() { super(); }
 
     protected build() {
         let rtlOpts = this.moduleOptions.rtlcss;

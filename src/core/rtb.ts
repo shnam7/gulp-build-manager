@@ -9,13 +9,12 @@ import { GBuildManager } from "./buildManager";
 import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilder } from "./builder";
 import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy } from "../utils/utils";
-import { GReloaders } from "./reloader";
 import { npmLock, npmUnlock, requireSafe } from '../utils/npm';
+import { EventEmitter } from 'events';
+import del = require('del');
 
 
-type RTBExtension = (...args: any[]) => FunctionBuilder;
 type PromiseExecutor = () => void | Promise<unknown>;
-type ActionItem = { priority: number, action: FunctionBuilder };
 
 interface BuildConfigNorm extends BuildConfig {
     buildOptions: Options;
@@ -24,101 +23,72 @@ interface BuildConfigNorm extends BuildConfig {
 
 export type CopyParam = { src: string | string[], dest: string };
 
-export class RTB {
+export interface CleanOptions extends del.Options {
+    clean?: string | string[];
+    sync?: boolean;
+}
+
+export type RTBExtension = (...args: any[]) => FunctionBuilder;
+
+
+//--- class RTB
+export class RTB extends EventEmitter {
     protected _stream?: GulpStream;
     protected _streamQ: GulpStream[] = [];
     protected _promises: Promise<unknown>[] = [];
     protected _promiseSync: Promise<unknown> = Promise.resolve();
     protected _syncMode: boolean = false;
-    protected _reloaders?: GReloaders;
     protected _buildFunc: FunctionBuilder = (rtb: RTB) => { rtb.src().dest(); };
-    protected _actions: Map<string, ActionItem[]> = new Map();
     protected _conf: BuildConfigNorm = { buildName: '', buildOptions: {}, moduleOptions: {} };
 
-    constructor(conf: BuildConfig) {
-        this._init(conf);
-    }
-
-    /**----------------------------------------------------------------
-     * Configuration functions
-     *-----------------------------------------------------------------*/
-
-    protected _init(conf: BuildConfig): this {
-        Object.assign(this._conf, conf);
-        this.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
-        return this;
-    }
-
-    setBuildFunc(func: (rtb:RTB) => Promise<unknown> | void) {
-        this._buildFunc = func;
-        return this;
-    }
-
-    setReloaders(reloaders: GReloaders) {
-        this._reloaders = reloaders;
-        return this;
+    constructor(func?: FunctionBuilder) {
+        super();
+        if (func) this._buildFunc = func;
     }
 
 
     /**----------------------------------------------------------------
      * Build sequence functions: Return value should be void or Promise
      *-----------------------------------------------------------------*/
-
-    _build(conf: BuildConfig) : Promise<unknown> {
-        // reset variables
-        Object.assign(this.conf, conf);
-        const flushStream = this.conf.flushStream;
-        this._syncMode = conf.sync || false;
-
-        // build sequence use new promise independent of API promises (this._promises and this._promiseSync)
-        if (this._syncMode) console.log('RTB: Strating build in sync Mode.');
-        return Promise.resolve()
-            .then(() => npmLock())
-            .then(() => this._execute(this.conf.preBuild))
-            .then(() => this.build())
-            .then(() => this._execute(this.conf.postBuild))
-            .then(() => { if (flushStream) return toPromise(this._stream); })
-            .then(() => this._promiseSync)
-            .then(() => Promise.all(this._promises))
-            .then(() => npmUnlock())
-            .then(() => { if (conf.reloadOnFinish === true) this.reload(); });
+    protected _execute(action?: FunctionBuilder, ...args: any[]): void | Promise<unknown> {
+        if (is.Function(action)) return action(this, args);
     }
 
     protected build(): void | Promise<unknown> {
         return this._buildFunc(this);
     }
 
+    protected _init(): void | Promise<unknown> {
+        this._syncMode = this.conf.sync === true;
+        this.emit('init');
+        if (this._syncMode) console.log('RTB: Strating build in sync Mode.');
+    }
 
-    /**----------------------------------------------------------------
-     * build actions API for customization - similar to WordPress 'actions'
-     *-----------------------------------------------------------------*/
+    protected _exit() {
+        this.emit('exit', this);
+        this._stream = undefined;
+        this._streamQ = [];
+    }
 
-    addAction(tag: string, action: FunctionBuilder, priority: number = 10): this {
-        let ar = this._actions.get(tag) || [];
-        let idx = 0;
-        for (; idx<ar.length; idx++) if (ar[idx].priority > priority) break;
-
-        ar.splice(idx, 0, { priority, action })
-        this._actions.set(tag, ar);
+    __ready(conf: BuildConfig): this {
+        Object.assign(this._conf, conf);
+        this.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
+        this.emit('ready', this);
         return this;
     }
 
-    removeAction(tag: string, action: FunctionBuilder, priority: number): this {
-        let ar = this._actions.get(tag);
-        if (!ar) return this;
-
-        for (let idx=0; idx<ar.length; idx++)
-            if (ar[idx].action === action && ar[idx].priority === priority) ar.splice(idx, 0)
-        this._actions.set(tag, ar);
-        return this;
-    }
-
-    doActions(tag: string, ...args: any[]): this {
-        let ar = this._actions.get(tag);
-        if (ar) ar.forEach((item: ActionItem) => {
-            this.promise(()=>item.action(this, ...args))
-        });
-        return this;
+    __build() : Promise<unknown> {
+        return Promise.resolve()
+            .then(this._init.bind(this))
+            .then(npmLock)
+            .then(this._execute.bind(this, this.conf.preBuild))
+            .then(this.build.bind(this))
+            .then(this._execute.bind(this, this.conf.postBuild))
+            .then(() => this._promiseSync)
+            .then(() => Promise.all(this._promises))
+            .then(npmUnlock)
+            .then(() => { if (this.conf.flushStream) return toPromise(this._stream); })
+            .then(this._exit.bind(this))
     }
 
 
@@ -131,7 +101,6 @@ export class RTB {
         if (!src) return this;
 
         const mopts = this.moduleOptions;
-        this.doActions('before_src');
         this._stream = gulp.src(src, mopts.gulp && mopts.gulp.src);
 
         // check input file ordering
@@ -139,16 +108,15 @@ export class RTB {
             let order = requireSafe('gulp-order');
             this.pipe(order(this.conf.order, mopts.order));
         }
-        this.doActions('after_src');
+        this.emit('after-src', this);
 
         // check sourceMap option
         return this.sourceMaps({ init: true });
     }
 
     dest(path?: string): this {
-        this.doActions('before_dest');
+        this.emit('before-dest', this);
         this.sourceMaps().pipe(gulp.dest(path || this.conf.dest || '.', this.moduleOptions.gulp?.dest));
-        this.doActions('after_dest');
         return this;
     }
 
@@ -161,10 +129,6 @@ export class RTB {
         return this.promise(action(this, ...args));
     }
 
-    on(event: string | symbol, listener: (...args: any[]) => void): this {
-        if (this._stream) this._stream = this._stream.on(event, listener);
-        return this;
-    }
 
     //--- accept function or promise
     promise(promise?: Promise<unknown> | void | PromiseExecutor, sync: boolean = false): this {
@@ -228,11 +192,6 @@ export class RTB {
         return this;
     }
 
-    reload(): this {
-        if (this._reloaders) this._reloaders.reload(this._stream);
-        return this;
-    }
-
     debug(options: Options = {}): this {
         let title = options.title ? options.title : '';
         let opts = Object.assign({}, this.moduleOptions.debug, { title }, options);
@@ -279,9 +238,9 @@ export class RTB {
             : this.promise(exec(cmd, args, options), options.sync);
     }
 
-    clean(options: Options = {}): this {
+    clean(options: CleanOptions = {}): this {
         let cleanList = arrayify(this.conf.clean).concat(arrayify(options.clean));
-        const delOpts = Object.assign({}, this.moduleOptions.del, options.del, { sync: options.sync });
+        const delOpts = Object.assign({}, this.moduleOptions.del, options);
         return this.del(cleanList, delOpts)
     }
 
@@ -308,16 +267,13 @@ export class RTB {
         return this.filter().pipe(requireSafe('gulp-uglify-es').default(opts)).rename({ extname: '.min.js' });
     }
 
-    protected _execute(action?: FunctionBuilder, ...args: any[]): void | Promise<unknown> {
-        if (is.Function(action)) return action(this, args);
-    }
-
 
     //--- extension support
     get conf() { return this._conf; }
     get buildName() { return this.conf.buildName; }
     get buildOptions() { return this.conf.buildOptions; }
     get moduleOptions() { return this.conf.moduleOptions; }
+    get stream() { return this._stream; }
 
     set buildOptions(opts: Options) { Object.assign(this.conf.buildOptions, opts); }
     set moduleOptions(mopts: Options) { Object.assign(this.conf.moduleOptions, mopts); }
@@ -326,7 +282,7 @@ export class RTB {
 
     protected static _extension: {[key:string]: RTBExtension} = {}
 
-    static registerExtension(name: string, ext: RTBExtension) {
+    static registerExtension(name: string, ext: RTBExtension): void {
         if (this._extension[name])
             throw Error(`RTB:registerExtension: extension name=${name} already exists.`)
         this._extension[name] = ext;

@@ -2,15 +2,10 @@ const gbm = require('./lib');
 const upath = require('upath');
 const fs = require('fs');
 
-// gbm.utils.setNpmOptions({autoInstall: true})
+gbm.utils.setNpmOptions({autoInstall: true})
 
-// load docs config
-const docs = require('./docs/gbmconfig');
-gbm.addProject(docs);
-
+//--- examples
 // const selector = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20];
-
-//--- load examples config
 fs.readdirSync('./examples').forEach((name) => {
     // if (!selector.includes(parseInt(name))) return;
     const dirPath = './examples/' + name;
@@ -20,6 +15,13 @@ fs.readdirSync('./examples').forEach((name) => {
     }
 });
 
+
+//--- docs
+const docs = require('./docs/gbmconfig');
+gbm.addProject(docs);
+
+
+//--- main
 const cleanToPrepare = {
     buildName: '@clean-to-prepare',
     builder: rtb => rtb.clean(),
@@ -27,19 +29,10 @@ const cleanToPrepare = {
     triggers: '@ex-clean-all'
 }
 
-gbm.addTrigger('@build-all', /@build$/)
-    .addCleaner('@clean-all')
-    .addTrigger('@ex-build-all', /^\d.*@build$/)
-    .addTrigger('@ex-clean-all', /^\d.*@clean$/)
-    .addBuildItem(cleanToPrepare)
-    .addTrigger('default', ['@clean-all', '@build-all'], true)
-    // .addTrigger('@watch-all', /@watch$/)
-    // .addWatcher('@watch', {
-    //     browserSync: {
-    //         server: './docs/_site',
-    //         ui: { port: 3100 },
-    //         port: 3101,
-    //     },
-    //     reloadOnChange: false
-    // })
-    .resolve();
+const buildAll = { buildName: '@build-all', triggers: gbm.getBuildNames(/@build$/) };
+const cleanAll = { buildName: '@clean-all', triggers: gbm.getBuildNames(/@clean$/) };
+const exBuildAll = { buildName: '@ex-build-all', triggers: gbm.getBuildNames(/^\d.*@build$/) };
+const exCleanAll = { buildName: '@ex-clean-all', triggers: gbm.getBuildNames(/^\d.*@clean$/) };
+
+const main = gbm.createProject({buildAll, cleanAll, exBuildAll, exCleanAll, cleanToPrepare})
+gbm.addProject(main);

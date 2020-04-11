@@ -8,7 +8,7 @@ const prefix = projectName + ':';
 const basePath = upath.relative(process.cwd(), __dirname);
 
 //--- custom extension
-gbm.RTB.registerExtension('hello', (options={}) => (rtb, ...args) => {
+gbm.registerExtension('hello', (options={}) => (rtb, ...args) => {
     console.log(`Hello, this is custom extension. buildName=${rtb.buildName}`, options.msg)
     console.log(args);
 });

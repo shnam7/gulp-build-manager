@@ -21,8 +21,7 @@ export interface ExternalBuilder extends ExternalCommand { }
 
 //--- GBuilder
 export class GBuilder extends RTB {
-    constructor(conf?: BuildConfig) {
-        super(conf || { buildName: '' });
+    constructor() { super();
     }
 
     protected build(): void | Promise<unknown> {}
@@ -38,14 +37,10 @@ export interface BuildConfig {
     builder?: Builders;             // main build operations in various form: function, object, class, etc
     src?: string | string[];
     dest?: string;
-    outFile?: string;
     order?: string[];               // input file(src) ordering
-    flushStream?: boolean;          // finish all the output streams before exiting gulp task
-    sync?: boolean,                 // serialize each build execution steps
-    verbose?: boolean,              // print verbose messages
-    silent?: boolean,               // depress informative messages
-    preBuild?: FunctionBuilder;    // function to be executed before BuildConfig.builder
-    postBuild?: FunctionBuilder;   // function to be executed after BuildConfig.builder
+    outFile?: string;
+    preBuild?: FunctionBuilder;     // function to be executed before BuildConfig.builder
+    postBuild?: FunctionBuilder;    // function to be executed after BuildConfig.builder
     buildOptions?: Options;         // buildConfig instance specific custom options
     moduleOptions?: Options;        // gulp module options
     dependencies?: BuildSet;        // buildSet to be executed before this build task
@@ -55,6 +50,10 @@ export interface BuildConfig {
     reloadOnChange?: boolean;       // Reload on change when watcher is running. default is true.
     reloadOnFinish?: boolean;       // reload on finishing all the build operations. default is false.
     clean?: string | string[];      // clean targets
+    flushStream?: boolean;          // finish all the output streams before exiting gulp task
+    sync?: boolean,                 // serialize each build execution steps
+    verbose?: boolean,              // print verbose messages
+    silent?: boolean,               // depress informative messages
 }
 
 //--- BuildSet
@@ -62,11 +61,13 @@ export type BuildSet = BuildName | GulpTaskFunction | BuildConfig | BuildSetSeri
 export type BuildSetSeries = BuildSet[];
 export type BuildSetParallel = { set: BuildSet[] };
 
+export function series(...args: BuildSet[]): BuildSetSeries { return args }
+export function parallel(...args: BuildSet[]): BuildSetParallel { return { set: args } }
 
 
 //--- GTrasnpiler
 export class GTranspiler extends GBuilder {
-    constructor(conf?: BuildConfig) { super(conf); }
+    constructor() { super(); }
 
     protected onTranspile() { return this; }
     protected onMinify() { return this; }

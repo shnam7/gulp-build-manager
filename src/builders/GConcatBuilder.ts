@@ -5,7 +5,7 @@
 import { GBuilder, BuildConfig } from "../core/builder";
 
 export class GConcatBuilder extends GBuilder {
-    constructor(conf: BuildConfig) { super(conf); }
+    constructor() { super(); }
 
     protected build() { this.src().concat().dest(); }
 }
