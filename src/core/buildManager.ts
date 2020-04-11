@@ -1,7 +1,6 @@
 import * as upath from 'upath';
 import { BuildSet, BuildConfig, BuildSetSeries, BuildSetParallel, BuildName } from './builder';
-import { GBuildProject, BuildGroup, ProjectOptions } from './buildProject';
-import { CleanerOptions } from './cleaner';
+import { GProject, BuildGroup, ProjectOptions, CleanOptions } from './project';
 import { registerPropertiesFromFiles, is } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
 import * as __utils from '../utils/utils';
@@ -19,8 +18,8 @@ registerPropertiesFromFiles(__builders, upath.join(__dirname, '../builders/*.js'
 
 //--- GBuildManager
 export class GBuildManager {
-    protected _projects: GBuildProject[] = [];
-    protected _managerProject: GBuildProject = new GBuildProject();
+    protected _projects: GProject[] = [];
+    protected _managerProject: GProject = new GProject();
 
     constructor() {
         process.argv.forEach(arg => {
@@ -37,14 +36,14 @@ export class GBuildManager {
         );
     }
 
-    createProject(buildGroup: BuildGroup = {}, opts?: ProjectOptions): GBuildProject {
-        return new GBuildProject(buildGroup, opts);
+    createProject(buildGroup: BuildGroup = {}, opts?: ProjectOptions): GProject {
+        return new GProject(buildGroup, opts);
     }
 
-    addProject(project: GBuildProject | string): this {
+    addProject(project: GProject | string): this {
         if (is.String(project)) project = require(upath.resolve(project));
-        if (project instanceof GBuildProject)
-            this._projects.push(project as GBuildProject);
+        if (project instanceof GProject)
+            this._projects.push(project as GProject);
         else
             throw Error('GBuildManager:addProject: Invalid project argument');
         return this;
@@ -59,7 +58,7 @@ export class GBuildManager {
         let buildNames = this.filter(selector);
         let triggers = (buildNames.length === 1)
             ? buildNames[0]
-            : series ? buildNames : GBuildProject.parallel(...buildNames);
+            : series ? buildNames : GProject.parallel(...buildNames);
 
         this.addBuildItem({ buildName, triggers });
         return this;
@@ -86,11 +85,11 @@ export class GBuildManager {
         });
     }
 
-    addCleaner(buildName: string, opts?: CleanerOptions, selector: string | string[] | RegExp | RegExp[] = /@clean$/): this {
+    addCleaner(buildName: string, opts?: CleanOptions, selector: string | string[] | RegExp | RegExp[] = /@clean$/): this {
         let cleanBuilds = this.filter(selector)
         this._managerProject.addBuildItem({
             buildName: buildName,
-            triggers: GBuildProject.parallel(...cleanBuilds),
+            triggers: GProject.parallel(...cleanBuilds),
         });
         return this;
     }
@@ -108,9 +107,9 @@ export class GBuildManager {
         this._managerProject.resolve();
     }
 
-    series(...args: BuildSet[]): BuildSetSeries { return GBuildProject.series(args); }
+    series(...args: BuildSet[]): BuildSetSeries { return GProject.series(args); }
 
-    parallel(...args: BuildSet[]): BuildSetParallel { return GBuildProject.parallel(args); }
+    parallel(...args: BuildSet[]): BuildSetParallel { return GProject.parallel(args); }
 
 
     //--- properties

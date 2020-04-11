@@ -1,15 +1,22 @@
 import * as upath from 'upath';
+import del = require("del");
 
 import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildSetSeries } from "./builder";
 import { RTB } from "./rtb";
 import { GWatcher } from "./watcher";
 import { GulpTaskFunction, gulp } from "./common";
-import { is, arrayify, info, ExternalCommand, warn, exec } from "../utils/utils";
-import { GCleaner, CleanerOptions } from "./cleaner";
+import { is, arrayify, info, ExternalCommand, warn, exec, msg } from "../utils/utils";
 import { WatcherOptions } from './watcher';
 import { GBuildManager } from './buildManager';
 
-export type ResolvedType = BuildName | GulpTaskFunction;
+type ResolvedType = BuildName | GulpTaskFunction;
+type BuildNameSelector = string | string[] | RegExp | RegExp[];
+
+export interface CleanOptions extends del.Options {
+    clean?: string | string[];
+    sync?: boolean;
+}
+
 export type BuildGroup = {
     [key: string]: BuildConfig;
 }
@@ -21,13 +28,12 @@ export type ProjectOptions = {
 };
 
 
-export class GBuildProject {
-    protected _map: Map<string, BuildConfig> = new Map();
-    protected _resolved: ResolvedType[] = [];
+export class GProject {
     protected _options: ProjectOptions = { prefix: "" };
+    protected _rtbs: RTB[] = [];
 
     protected _watcher: GWatcher = new GWatcher;
-    protected _cleaner: GCleaner = new GCleaner;
+    protected _map: Map<string, BuildConfig> = new Map();
     protected _vars:any  = {};
 
     constructor(buildGroup: BuildGroup = {}, options: ProjectOptions = {}) {
@@ -38,7 +44,6 @@ export class GBuildProject {
     addBuildItem(conf: BuildConfig): this {
         if (this._options.prefix) conf.buildName = this._options.prefix + conf.buildName;
         if (conf.reloadOnChange === false && conf.reloadOnFinish !== false) conf.reloadOnFinish = true;
-        // this.map.set(this.options.prefix + buildKey, conf);
         this._map.set(conf.buildName, conf);
         return this;
     }
@@ -56,7 +61,7 @@ export class GBuildProject {
         let buildNames = this.filter(selector);
         let triggers = (buildNames.length === 1)
             ? buildNames[0]
-            : series ? buildNames : GBuildProject.parallel(...buildNames);
+            : series ? buildNames : GProject.parallel(...buildNames);
 
         this.addBuildItem({ buildName, triggers });
         return this;
@@ -67,26 +72,26 @@ export class GBuildProject {
         return this;
     }
 
-    addWatcher(buildName = '@watch', opts?: WatcherOptions): this {
-        if (opts) {
-            if (opts.browserSync) Object.assign(opts.browserSync,
+    addWatcher(buildName = '@watch', options: WatcherOptions = {}): this {
+        if (options) {
+            if (options.browserSync) Object.assign(options.browserSync,
                 { instanceName: this._options.prefix + buildName });
-            if (opts.livereload) Object.assign(opts.livereload,
+            if (options.livereload) Object.assign(options.livereload,
                 { instanceName: this._options.prefix + buildName });
             let reloaders = this._watcher.reloaders.createReloaders({
-                browserSync: opts.browserSync,
-                livereloiad: opts.livereload
+                browserSync: options.browserSync,
+                livereloiad: options.livereload
             });
 
             // add additional watch map:
             // check for pure watch: watch atrgets w/o action/task to run (just for reloading)
-            if (opts && opts.watch) this._watcher.addWatch({
-                watch: opts.watch,
+            if (options && options.watch) this._watcher.addWatch({
+                watch: options.watch,
                 task: (done) => { reloaders.reload(); info('<watcher>:reloading triggered.'); done(); },
                 displayName: '<reloader>'
             });
 
-            this._watcher.reloaders.reloadOnChange(opts.reloadOnChange);
+            this._watcher.reloaders.reloadOnChange(options.reloadOnChange);
         }
 
         // create watch build item
@@ -96,11 +101,24 @@ export class GBuildProject {
         });
     }
 
-    addCleaner(buildName = '@clean', opts?: CleanerOptions): this {
-        return this.addBuildItem(this._cleaner.createTask(buildName, opts));
+    addCleaner(buildName = '@clean', options: CleanOptions = {}): this {
+        return this.addBuildItem({
+            buildName,
+            builder: (rtb) => {
+                let cleanList = arrayify(options.clean);
+                // console.log('=======>', this._options.prefix, this._rtbs.length)
+                this._rtbs.forEach(rtb => {
+                    // console.log('==>' + rtb.buildName); console.log(rtb.conf);
+                    if (rtb.conf.clean) cleanList = cleanList.concat(arrayify(rtb.conf.clean))
+                });
+
+                msg('[GBM:clean]:', cleanList);
+                rtb.del(cleanList, { silent: true, sync: options.sync });
+            }
+        });
     }
 
-    filter(selector: string | string[] | RegExp | RegExp[]): string[] {
+    filter(selector: BuildNameSelector): string[] {
         let ret: string[] = [];
         arrayify(selector).forEach(sel => {
             if (is.RegExp(sel)) {
@@ -119,12 +137,10 @@ export class GBuildProject {
     }
 
     resolve() : this {
-        this._map.forEach(conf => {
-            let resolved = this.resolveBuildSet(conf);
-            if (resolved) this._resolved.push(resolved);
-        });
+        this._map.forEach(conf => this.resolveBuildSet(conf));
         return this;
     }
+
 
     get size() { return this._map.size; }
 
@@ -162,7 +178,7 @@ export class GBuildProject {
                 // So, info message is displayed only when verbose mode is turned on.
                 // However, it's recommended to avoid it by using buildNames in deppendencies and triggers field of BuildConfig
                 // if (conf.verbose)
-                if (conf.verbose) info(`GBuildProject:resolve: taskName=${conf.buildName} already registered`);
+                if (conf.verbose) info(`GProject:resolve: taskName=${conf.buildName} already registered`);
                 return conf.buildName;
             }
 
@@ -181,9 +197,6 @@ export class GBuildProject {
 
             gulp.task(conf.buildName, <GulpTaskFunction>resolved);
 
-            // resolve clean targets
-            if (conf.clean) this._cleaner.add(conf.clean);
-
             // resolve watch
             let watched = arrayify(conf.watch ? conf.watch : conf.src).concat(arrayify(conf.addWatch));
             if (watched.length > 0) {
@@ -197,6 +210,7 @@ export class GBuildProject {
             }
 
             rtb.setReloaders(this._watcher.reloaders);
+            this._rtbs.push(rtb);
             GBuildManager.rtbMap.set(rtb.buildName, rtb);   // register to global rtb list
             return conf.buildName;
         }
@@ -230,8 +244,8 @@ export class GBuildProject {
             return list.length > 1 ? gulp.parallel.apply(null, <any>list) : list[0];
         }
 
-        // info('GBuildProject:resolve:buildSet='); dmsg(buildSet);
-        throw Error('GBuildProject:resolve:Unknown type of buildSet');
+        // info('GProject:resolve:buildSet='); dmsg(buildSet);
+        throw Error('GProject:resolve:Unknown type of buildSet');
     }
 
     protected getBuilder(buildItem: BuildConfig): RTB {
@@ -272,17 +286,17 @@ export class GBuildProject {
         }
 
         // if builder is BuildFunction
-        if (is.Function(builder)) return new RTB(buildItem).setbuildFunc(builder);
+        if (is.Function(builder)) return new RTB(buildItem).setBuildFunc(builder);
 
         // if builders is RTB or its derivatives such as GBuilder
         if (builder instanceof RTB) return builder;
 
         // if builder is ExternalBuilder
         if (is.Object(builder) && builder!.hasOwnProperty('command'))
-            return new RTB(buildItem).setbuildFunc(() => exec(<ExternalCommand>builder));
+            return new RTB(buildItem).setBuildFunc(() => exec(<ExternalCommand>builder));
 
         // if builder is not specified
-        if (!builder) return new RTB(buildItem).setbuildFunc(() => {
+        if (!builder) return new RTB(buildItem).setBuildFunc(() => {
             // dmsg(`BuildName:${buildItem.buildName}: No builder specified.`);
         });
         throw Error(`[buildName:${buildItem.buildName}]Unknown ObjectBuilder.`);

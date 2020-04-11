@@ -33,10 +33,7 @@ export class RTB {
     protected _reloaders?: GReloaders;
     protected _buildFunc: FunctionBuilder = (rtb: RTB) => { rtb.src().dest(); };
     protected _actions: Map<string, ActionItem[]> = new Map();
-
-    //--- internal functions
-
-    conf: BuildConfigNorm = { buildName: '', buildOptions: {}, moduleOptions: {} };
+    protected _conf: BuildConfigNorm = { buildName: '', buildOptions: {}, moduleOptions: {} };
 
     constructor(conf: BuildConfig) {
         this._init(conf);
@@ -47,13 +44,12 @@ export class RTB {
      *-----------------------------------------------------------------*/
 
     protected _init(conf: BuildConfig): this {
-        this.conf.buildName = conf.buildName || '';
-        Object.assign(this.conf.buildOptions, conf.buildOptions);
-        Object.assign(this.conf.moduleOptions, GBuildManager.defaultModuleOptions, conf.moduleOptions);
+        Object.assign(this._conf, conf);
+        this.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
         return this;
     }
 
-    setbuildFunc(func: (rtb:RTB) => Promise<unknown> | void) {
+    setBuildFunc(func: (rtb:RTB) => Promise<unknown> | void) {
         this._buildFunc = func;
         return this;
     }
@@ -269,7 +265,8 @@ export class RTB {
     }
 
     del(patterns: string | string[], options: Options = {}): this {
-        if (!this.conf.silent) msg('Deleting:', patterns);
+        let silent = this.conf.silent || options.silent;
+        if (!silent) msg('Deleting:', patterns);
 
         return (options.sync || this._syncMode)
             ? this.promise(() => requireSafe("del")(patterns, options), options.sync)
@@ -317,12 +314,12 @@ export class RTB {
 
 
     //--- extension support
+    get conf() { return this._conf; }
     get buildName() { return this.conf.buildName; }
-
     get buildOptions() { return this.conf.buildOptions; }
-    set buildOptions(opts: Options) { Object.assign(this.conf.buildOptions, opts); }
-
     get moduleOptions() { return this.conf.moduleOptions; }
+
+    set buildOptions(opts: Options) { Object.assign(this.conf.buildOptions, opts); }
     set moduleOptions(mopts: Options) { Object.assign(this.conf.moduleOptions, mopts); }
 
     get ext() { return RTB._extension; }

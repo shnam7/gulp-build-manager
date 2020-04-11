@@ -14,7 +14,7 @@ export type BuildName = string;
 export type GBuilderClassName = string;
 
 //--- Function Builders
-export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>
+export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>;
 
 //--- Object Builders
 export interface ExternalBuilder extends ExternalCommand { }

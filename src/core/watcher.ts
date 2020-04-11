@@ -5,6 +5,7 @@
 import { msg, arrayify, is } from "../utils/utils";
 import { gulp, GulpTaskFunction } from "./common";
 import { GReloaders, ReloaderOptions } from "./reloader";
+import { EventEmitter } from 'events';
 
 
 export interface WatcherOptions extends ReloaderOptions {
@@ -21,12 +22,13 @@ export interface WatchItem {
 }
 
 
-export class GWatcher {
+export class GWatcher extends EventEmitter {
     protected _watchMap: WatchItem[] = [];
     protected _options: WatcherOptions = {};
     protected _reloaders: GReloaders = new GReloaders();
 
     constructor(options: WatcherOptions={}) {
+        super();
         Object.assign(this._options, options);
     }
 
@@ -48,7 +50,10 @@ export class GWatcher {
             // watcher always trigger onChange event.
             // reloader should determin if reload actually because there coul be multiple reloaders in single watcher
             // if (this._options.reloadOnChange !== false)
-            gulpWatcher.on('change', () => { if (wItem.reloadOnChange !== false) this._reloaders.onChange() });
+            gulpWatcher.on('change', () => {
+                this.emit('reload');
+                if (wItem.reloadOnChange !== false) this._reloaders.onChange()
+            });
         });
         if (activate) this.reloaders.activate();
         return this;
