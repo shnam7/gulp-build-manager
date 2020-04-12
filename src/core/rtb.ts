@@ -59,7 +59,7 @@ export class RTB extends EventEmitter {
     }
 
     protected _init(): void | Promise<unknown> {
-        this._syncMode = this.conf.sync === true;
+        this._syncMode = false;
         this.emit('init');
         if (this._syncMode) console.log('RTB: Strating build in sync Mode.');
     }

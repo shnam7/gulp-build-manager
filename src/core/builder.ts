@@ -49,7 +49,6 @@ export interface BuildConfig {
     addWatch?: string | string[];   // additional watch in addition to watch or default watch
     clean?: string | string[];      // clean targets
     flushStream?: boolean;          // finish all the output streams before exiting gulp task
-    sync?: boolean,                 // serialize each build execution steps
     reloadOnChange?: boolean;       // Reload on change when watcher is running. default is true.
     verbose?: boolean,              // print verbose messages
     silent?: boolean,               // depress informative messages
