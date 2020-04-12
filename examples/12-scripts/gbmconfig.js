@@ -78,6 +78,9 @@ const babel = {
 const typeScript = {
     buildName: 'typeScript',
     builder: 'GTypeScriptBuilder',
+    src: [upath.join(srcRoot, 'ts/**/!(*.d).ts')],
+    dest: upath.join(destRoot, 'js'), // (file) => file.base,
+    outFile: 'app.js',
     preBuild: (rtb) => {
         rtb.copy({
             src: upath.join(srcRoot, 'ts/**/*.js'), dest: upath.join(destRoot, 'js')
@@ -85,12 +88,6 @@ const typeScript = {
         gbm.utils.npmInstall('@types/jquery');
     },
 
-    src: [upath.join(srcRoot, 'ts/**/!(*.d).ts')],
-    dest: upath.join(destRoot, 'js'), // (file) => file.base,
-
-    // dest: (file) => file.base,
-    dest: upath.resolve(destRoot, 'js'),
-    outFile: 'app.js',
     buildOptions: {
         // lint: true,
         // printConfig: true,
@@ -118,17 +115,15 @@ const typeScript = {
     addWatch: [upath.join(srcRoot, 'ts/**/*.js')],
 }
 
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(coffee, javaScript, babel, typeScript),
+    clean: [ upath.join(destRoot, 'js'), `!${destRoot}`,`!${upath.join(destRoot, 'index.html')}` ]
+}
 
-const scripts = { coffee, javaScript, babel, typeScript };
 
-module.exports = gbm.createProject(scripts, {prefix})
-    .addTrigger('@build', /.*/)
-    .addCleaner('@clean', {
-        clean: [
-            upath.join(destRoot, 'js'),
-            `!${destRoot}`,`!${upath.join(destRoot, 'index.html')}`
-        ]
-    })
+module.exports = gbm.createProject(build, {prefix})
+    .addCleaner()
     .addWatcher('@watch', {
         watch: [upath.join(destRoot, "**/*.html")],
         browserSync: {

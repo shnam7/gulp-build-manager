@@ -69,6 +69,8 @@ const importedCustomBuilder = {
     builder: 'ImportedCustomBuilder'
 };
 
-const buildList = { customExt, customBuilder, customCSSBuilder, customFunctionBuilder, importedCustomBuilder }
-module.exports = gbm.createProject(buildList, {prefix,customBuilderDirs})
-    .addTrigger('@build', /.*/, true)
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(customExt, customBuilder, customCSSBuilder, customFunctionBuilder, importedCustomBuilder) }
+
+module.exports = gbm.createProject(build, {prefix, customBuilderDirs})

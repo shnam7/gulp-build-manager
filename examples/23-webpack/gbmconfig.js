@@ -23,12 +23,11 @@ const pages = {
 const webpack = {
     buildName: 'webpack',
     builder: 'GWebpackBuilder',
+    // src: [upath.join(srcRoot, 'scripts/ts/app.ts')],
+    dest: upath.join(destRoot, 'js'),
     preBuild: () => {
         gbm.utils.npmInstall(['ts-loader', '@types/jquery']);
     },
-    // src: [upath.join(srcRoot, 'scripts/ts/app.ts')],
-    dest: upath.join(destRoot, 'js'),
-    flushStream: true,
     buildOptions: {
         printConfig: true,
         webpackConfig: upath.join(basePath, 'webpack.config.js')
@@ -38,12 +37,18 @@ const webpack = {
             // settings here will be merged override webpackConfig file contents
         },
     },
-    watch: [upath.join(srcRoot, 'scripts/ts/**/*.ts')]
+    watch: [upath.join(srcRoot, 'scripts/ts/**/*.ts')],
+    flushStream: true,
+}
+
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(pages, webpack),
+    clean: destRoot
 }
 
 
-module.exports = gbm.createProject({pages, webpack}, { prefix })
-    .addTrigger('@build', /.*/)
+module.exports = gbm.createProject(build, { prefix })
     .addWatcher('@watch', {
         browserSync: {
             server: upath.resolve(destRoot),
@@ -52,4 +57,4 @@ module.exports = gbm.createProject({pages, webpack}, { prefix })
             ui: { port: port + 100 + parseInt(prefix) }
        }
     })
-    .addCleaner('@clean', { clean: [destRoot]});
+    .addCleaner();

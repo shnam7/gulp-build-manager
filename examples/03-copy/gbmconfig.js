@@ -37,6 +37,10 @@ const copy2 = {
     verbose: true
 }
 
-module.exports = gbm.createProject({copy1, copy2}, {prefix})
-    .addTrigger('@build', /.*/, true)
-    .addCleaner('@clean', { clean: [upath.join(basePath, 'path-dest*')] });
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(copy1, copy2),
+    clean: [upath.join(basePath, 'path-dest*')]
+}
+
+module.exports = gbm.createProject(build, {prefix}).addCleaner();

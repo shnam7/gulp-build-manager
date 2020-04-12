@@ -40,7 +40,6 @@ export class GProject extends EventEmitter {
     }
 
     addBuildItem(conf: BuildConfig): this {
-        if (this._options.prefix) conf.buildName = this._options.prefix + conf.buildName;
         if (conf.reloadOnChange === false && conf.reloadOnFinish !== false) conf.reloadOnFinish = true;
         this.resolveBuildSet(conf)
         return this;
@@ -51,16 +50,6 @@ export class GProject extends EventEmitter {
         if (items.hasOwnProperty('buildName')) return this.addBuildItem(items as BuildConfig);
 
         Object.entries(items as BuildGroup).forEach(([key, conf]) => this.addBuildItem(conf));
-        return this;
-    }
-
-    addTrigger(buildName: string, selector: BuildNameSelector, series: boolean = false): this {
-        let buildNames = this.getBuildNames(selector);
-        let triggers = (buildNames.length === 1)
-            ? buildNames[0]
-            : series ? buildNames : parallel(...buildNames);
-
-        this.addBuildItem({ buildName, triggers });
         return this;
     }
 
@@ -180,7 +169,9 @@ export class GProject extends EventEmitter {
             else if (is.String(resolved))
                 resolved = gulp.parallel(resolved);
 
+            conf.buildName = this._options.prefix + conf.buildName;
             gulp.task(conf.buildName, <GulpTaskFunction>resolved);
+
             rtb.__ready(conf)
             this._rtbs.push(rtb);
             GBuildManager.rtbs.push(rtb);   // register to global rtb list
@@ -271,6 +262,6 @@ export class GProject extends EventEmitter {
         if (!builder) return new RTB(() => {
             // dmsg(`BuildName:${buildItem.buildName}: No builder specified.`);
         });
-        throw Error(`[buildName:${conf.buildName}]Unknown ObjectBuilder.`);
+        throw Error(`[buildName:${this._options.prefix + conf.buildName}]Unknown ObjectBuilder.`);
     }
 }

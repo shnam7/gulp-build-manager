@@ -27,8 +27,14 @@ const scss = {
     clean: [destRoot]
 };
 
-module.exports = gbm.createProject({markdown, scss}, { prefix })
-    .addTrigger('@build', [markdown.buildName, scss.buildName])
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(markdown, scss),
+    clean: [destRoot]
+}
+
+
+module.exports = gbm.createProject(build, { prefix })
     .addWatcher('@watch', {
         browserSync: {
             server: destRoot,
@@ -36,4 +42,4 @@ module.exports = gbm.createProject({markdown, scss}, { prefix })
             ui: { port: port + 100 + parseInt(prefix) }
         }
     })
-    .addCleaner('@clean', {clean: [destRoot]});
+    .addCleaner();

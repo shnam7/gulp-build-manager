@@ -28,8 +28,8 @@ const main = {
     preBuild: (rtb) => console.log(rtb.buildName + ' preBuild called.'),
     postBuild: (rtb) => console.log(rtb.buildName + ' postBuild called.'),
 
-    dependencies: gbm.parallel(prefix+build1.buildName, prefix+build2.buildName),
-    triggers: gbm.series(prefix+build1.buildName, prefix+build2.buildName)
+    dependencies: gbm.parallel(build1, build2),
+    triggers: gbm.series(build1, build2)
 };
 
 module.exports = gbm.createProject({ build1, build2, main }, {prefix});

@@ -34,6 +34,8 @@ const scripts = {
 const twig = {
     buildName: 'twig',
     builder: 'GTwigBuilder',
+    src: [upath.join(srcRoot, 'pages/**/*.twig')],
+    dest: upath.join(destRoot, ''),
     preBuild: (rtb) => {
         gbm.utils.npmInstall('twig-markdown');
         rtb.moduleOptions = {
@@ -69,13 +71,10 @@ const twig = {
             }
         };
     },
-    src: [upath.join(srcRoot, 'pages/**/*.twig')],
-    dest: upath.join(destRoot, ''),
     buildOptions: {
         minify: true,
         prettify: true
     },
-
     addWatch: [ // include sub directories to detect changes of the file which are not in src list.
         upath.join(srcRoot, 'templates/**/*.twig'),
         upath.join(srcRoot, 'markdown/**/*.md'),
@@ -83,8 +82,13 @@ const twig = {
     ]
 }
 
-module.exports = gbm.createProject({ scss, scripts, twig }, {prefix})
-    .addTrigger('@build', /.*/)
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(scss, scripts, twig),
+    clean: destRoot
+}
+
+module.exports = gbm.createProject(build, {prefix})
     .addWatcher('@watch', {
         browserSync: {
             server: upath.resolve(destRoot),
@@ -92,4 +96,4 @@ module.exports = gbm.createProject({ scss, scripts, twig }, {prefix})
             ui: { port: port + 100 + parseInt(prefix) }
         }
     })
-    .addCleaner('@clean', { clean: destRoot });
+    .addCleaner();

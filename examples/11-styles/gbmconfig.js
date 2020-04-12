@@ -29,6 +29,8 @@ const stylelint = {
 const sass = {
     buildName: 'sass',
     builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'scss/**/*.scss')],
+    dest: upath.join(destRoot, 'css'),
     preBuild: (rtb) => {
         gbm.utils.npmInstall(pcssPlgingNames);
         rtb.moduleOptions = {
@@ -36,8 +38,6 @@ const sass = {
             postcss: { plugins: pcssPlugins() },
         }
     },
-    src: [upath.join(srcRoot, 'scss/**/*.scss')],
-    dest: upath.join(destRoot, 'css'),
     buildOptions: {
         sourceType: 'scss',
         sourceMap,
@@ -51,12 +51,12 @@ const sass = {
 const less = {
     buildName: 'less',
     builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'less/**/*.less')],
+    dest: upath.join(destRoot, 'css'),
     preBuild: (rtb) => {
         gbm.utils.npmInstall(pcssPlgingNames);
         rtb.moduleOptions = { postcss: { plugins: pcssPlugins() }, }
     },
-    src: [upath.join(srcRoot, 'less/**/*.less')],
-    dest: upath.join(destRoot, 'css'),
     buildOptions: {
         sourceType: 'less',
         sourceMap,
@@ -71,6 +71,8 @@ const less = {
 const postcss = {
     buildName: 'postcss',
     builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
+    dest: upath.join(destRoot, 'css'),
     preBuild: (rtb) => {
         gbm.utils.npmInstall(pcssPlgingNames);
         rtb.moduleOptions = {
@@ -78,8 +80,6 @@ const postcss = {
             postcss: { plugins: pcssPlugins() },
         }
     },
-    src: [upath.join(srcRoot, 'postcss/**/*.pcss')],
-    dest: upath.join(destRoot, 'css'),
     buildOptions: {
         lint: true,
         sourceMap,
@@ -97,9 +97,7 @@ const rtl = {
         `!${upath.join(destRoot, 'css/**/*-rtl.css')}`
     ],
     dest: upath.join(destRoot, 'css'),
-    buildOptions: {
-        sourceMap
-    },
+    buildOptions: { sourceMap },
     moduleOptions: {
         // if no rename option is set, default is {suffix: '-rtl'}
         rename: { suffix: '-rtl' }
@@ -107,13 +105,14 @@ const rtl = {
     watch: []
 }
 
+const build = {
+    buildName: '@build',
+    dependencies: gbm.series(gbm.parallel(sass, less, postcss), rtl),
+    clean: [upath.join(destRoot, 'css')]
+}
 
-module.exports = gbm.createProject({sass, less, postcss, rtl}, {prefix})
-    .addBuildItem({
-        buildName: '@build',
-        dependencies: [gbm.parallel(sass, less, postcss), rtl],
-        clean: [upath.join(destRoot, 'css')]
-    })
+
+module.exports = gbm.createProject(build, {prefix})
     .addWatcher('@watch', {
         watch: [upath.join(destRoot, "**/*.html")],
         browserSync: {

@@ -37,6 +37,6 @@ const cleaner = {
     flushStream: true, // finish clean before the build finishes (sync)
 };
 
-module.exports = gbm.createProject({copyer, cleaner}, {prefix})
-    .addTrigger('@build', /.*/)
-    .addCleaner();  // create clean task
+const build = { buildName: '@build', triggers: gbm.parallel(copyer, cleaner) }
+
+module.exports = gbm.createProject(build, {prefix}).addCleaner();

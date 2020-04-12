@@ -51,13 +51,12 @@ const zip = {
     clean: destZip
 }
 
-const buildList = {concat, scss, images, zip};
+const build = {
+    buildName: '@build',
+    dependencies: gbm.series(gbm.parallel(concat, scss, images), zip)
+}
 
-module.exports = gbm.createProject(buildList, { prefix })
-    .addBuildItem({
-        buildName: '@build',
-        dependencies: [gbm.parallel(concat, scss, images), zip]
-    })
+module.exports = gbm.createProject(build, { prefix })
     .addWatcher('@watch', {
         watch: [upath.join(destRoot, '**/*.html')],  // watch files for reloader (no build actions)
         browserSync: {

@@ -33,8 +33,9 @@ const panini = {
     clean: [destRoot]
 };
 
-module.exports = gbm.createProject(panini, {prefix})
-    .addTrigger('@build', /.*/)
+const build = { buildName: '@build', triggers: panini }
+
+module.exports = gbm.createProject(build, {prefix})
     .addWatcher('@watch', {
         browserSync: {
             server: upath.resolve(destRoot),

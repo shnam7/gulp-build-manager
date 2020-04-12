@@ -23,6 +23,8 @@ const wicleName = 'shnam7/wicle';
 const scss = {
     buildName: 'scss',
     builder: 'GCSSBuilder',
+    src: [upath.join(srcRoot, 'scss/**/*.scss')],
+    dest: upath.join(basePath, 'css'),
     preBuild: (rtb) => {
         gbm.utils.npmInstall(['stylelint-config-recommended', 'postcss-combine-duplicated-selectors', wicleName]);
         rtb.moduleOptions = {
@@ -52,25 +54,22 @@ const scss = {
             },
         };
     },
-    src: [upath.join(srcRoot, 'scss/**/*.scss')],
-    dest: upath.join(basePath, 'css'),
+    postBuild: (rtb) => rtb.exec('echo', ['>', jekyllTriggerCss]),
     buildOptions: {
         lint: true,
         minifyOnly: true,
         sourceMap: sourceMap
     },
-    flushStream: true,
-    postBuild: (rtb) => rtb.exec('echo', ['>', jekyllTriggerCss]),
     clean: [upath.join(basePath, 'css')],
+    flushStream: true,
 }
 
 const scripts = {
     buildName: 'scripts',
     builder: 'GTypeScriptBuilder',
-    preBuild: () => gbm.utils.npmInstall('shnam7/wicle'),
     src: [upath.join(srcRoot, 'scripts/**/*.ts')],
     dest: upath.join(basePath, 'js'),
-    flushStream: true,
+    preBuild: () => gbm.utils.npmInstall('shnam7/wicle'),
     postBuild: (rtb) => rtb.sync().copy([{
         src: ['node_modules/wicle/dist/js/wicle.min.js'], dest: upath.join(basePath, 'js')
     }]).exec('echo', ['>', jekyllTriggerJs]).async(),
@@ -80,7 +79,8 @@ const scripts = {
         tsConfig: upath.join(basePath, "tsconfig.json"),
         sourceMap: sourceMap,
     },
-    clean: [upath.join(basePath, 'js')]
+    clean: [upath.join(basePath, 'js')],
+    flushStream: true,
 };
 
 const jekyll = {
@@ -107,17 +107,15 @@ const jekyll = {
         `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
     ],
     clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTriggerCss, jekyllTriggerJs],
-    reloadOnChange: false
+    // reloadOnChange: false
 };
 
-module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
-    .addBuildItem({
-        buildName: '@build',
-        dependencies: [
-            gbm.parallel(scss.buildName, scripts.buildName),
-            jekyll.buildName
-        ]
-    })
+const build = {
+    buildName: '@build',
+    dependencies: gbm.series(gbm.parallel(scss, scripts), jekyll)
+}
+
+module.exports = gbm.createProject({scss, scripts, jekyll, build}, {prefix})
     .addWatcher('@watch', {
         browserSync: {
             server: upath.resolve(basePath),
@@ -128,9 +126,11 @@ module.exports = gbm.createProject({scss, scripts, jekyll}, {prefix})
         }
     })
     .addCleaner()
-    .addVars({clean: [
-        destRoot, jekyllTriggerCss, jekyllTriggerJs,
-        upath.join(basePath, '{css,js}/**/*.map'),
-        upath.join(basePath, 'gulp-build-{css,js}/**/*.map'),
-        upath.join(basePath, '.jekyll-metadata'),
-    ]});
+    .addVars({
+        clean: [
+            destRoot, jekyllTriggerCss, jekyllTriggerJs,
+            upath.join(basePath, '{css,js}/**/*.map'),
+            upath.join(basePath, 'gulp-build-{css,js}/**/*.map'),
+            upath.join(basePath, '.jekyll-metadata'),
+        ]
+    });

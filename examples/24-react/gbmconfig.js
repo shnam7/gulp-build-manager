@@ -20,20 +20,19 @@ const scss = {
 const scripts = {
     buildName: 'scripts',
     builder: 'GTypeScriptBuilder',
-    preBuild: () => gbm.utils.npmInstall(['react', 'react-dom', '@types/react', '@types/react-dom']),
-
     src: upath.join(srcRoot, 'scripts/**/*.ts*'),
     dest: upath.join(destRoot, 'js'),
-    clean: upath.join(destRoot, 'js'),
-    addWatch: upath.join(basePath, 'tsconfig.json'),
-
+    preBuild: () => gbm.utils.npmInstall(['react', 'react-dom', '@types/react', '@types/react-dom']),
     buildOptions: {
         tsConfig: upath.join(basePath, 'tsconfig.json')
-    }
+    },
+    addWatch: upath.join(basePath, 'tsconfig.json'),
+    clean: upath.join(destRoot, 'js'),
 }
 
-module.exports = gbm.createProject({scss, scripts}, { prefix })
-    .addTrigger('@build', /.*/)
+const build = { buildName: '@build', triggers: gbm.parallel(scss, scripts) }
+
+module.exports = gbm.createProject(build, { prefix })
     .addWatcher('@watch', {
         watch: [upath.join(destRoot, '**/*.html')],  // watch files for reloader (no build actions)
         browserSync: {
