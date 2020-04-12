@@ -107,7 +107,6 @@ const jekyll = {
         `!(${upath.join(basePath, '{.jekyll-metadata,gbmconfig.js,gulpfile.js}')})`,
     ],
     clean: [destRoot, upath.join(basePath, '.jekyll-metadata'), jekyllTriggerCss, jekyllTriggerJs],
-    // reloadOnChange: false
 };
 
 const build = {

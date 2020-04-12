@@ -5,7 +5,6 @@ import { GulpTaskFunction, gulp } from "./common";
 import { is, arrayify, info, ExternalCommand, warn, exec, msg } from "../utils/utils";
 import { GBuildManager } from './buildManager';
 import { GReloader, ReloaderOptions, GBrowserSync } from './reloader';
-import { EventEmitter } from 'events';
 
 
 export type BuildNameSelector = string | string[] | RegExp | RegExp[];
@@ -27,20 +26,18 @@ export type ProjectOptions = {
 };
 
 
-export class GProject extends EventEmitter {
+export class GProject {
     protected _options: ProjectOptions = { prefix: "" };
     protected _rtbs: RTB[] = [];
     protected _reloaders: GReloader[] = [];
     protected _vars:any  = {};
 
     constructor(buildGroup: BuildGroup = {}, options: ProjectOptions = {}) {
-        super();
         Object.assign(this._options, options);
         this.addBuildItems(buildGroup);
     }
 
     addBuildItem(conf: BuildConfig): this {
-        if (conf.reloadOnChange === false && conf.reloadOnFinish !== false) conf.reloadOnFinish = true;
         this.resolveBuildSet(conf)
         return this;
     }
@@ -62,13 +59,22 @@ export class GProject extends EventEmitter {
             buildName,
             builder: (rtbWatcher) => {
                 this._rtbs.forEach(rtb => {
+                    this._reloaders.forEach(reloader => rtb.on('reload', (rtb, type, path, stats) => {
+                        // console.log(`[${rtb.buildName}:reload]: stream=${!!rtb.stream} type=${type}, path=${path}, stats=${stats}`);
+                        if (rtb.stream)
+                            rtb.pipe(reloader.stream(options))
+                        else
+                            reloader.reload(type=='change' ? path: undefined)
+                    }));
+
                     let watched = arrayify(rtb.conf.watch ? rtb.conf.watch : rtb.conf.src).concat(arrayify(rtb.conf.addWatch));
                     if (watched.length <= 0 || rtb.buildName.length === 0) return;
                     msg(`Watching ${rtb.buildName}: [${watched}]`);
-
-                    this._reloaders.forEach(reloader => rtb.on('exit', () => rtb.pipe(reloader.stream(options))));
                     let gulpWatcher = gulp.watch(watched, gulp.parallel(rtb.buildName));
-                    gulpWatcher.on('all', this.emit.bind(this, 'change', rtb));
+
+                    // transfer gulp watch events to rtb
+                    if (rtb.conf.reloadOnChange !== false)
+                        gulpWatcher.on('all', (...args) => rtb.once('exit', () => rtb.emit('reload', rtb, ...args)));
                 });
 
                 // pure watch target
@@ -76,7 +82,12 @@ export class GProject extends EventEmitter {
                 if (watched.length > 0) {
                     msg(`Watching ${rtbWatcher.buildName}: [${watched}]`);
                     let gulpWatcher = gulp.watch(watched, (done) => done());
-                    gulpWatcher.on('all', (path) => this.emit('reload', path));
+
+                    if (rtbWatcher.conf.reloadOnChange != false) {
+                        gulpWatcher.on('all', (path) => {
+                            this._reloaders.forEach(reloader => reloader.reload(path));
+                        });
+                    }
                 }
 
                 // activate reloaders

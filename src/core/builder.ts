@@ -47,11 +47,10 @@ export interface BuildConfig {
     triggers?: BuildSet;            // buildSet to be executed after this build task
     watch?: string | string[];      // override default watch, 'src' if defined
     addWatch?: string | string[];   // additional watch in addition to watch or default watch
-    reloadOnChange?: boolean;       // Reload on change when watcher is running. default is true.
-    reloadOnFinish?: boolean;       // reload on finishing all the build operations. default is false.
     clean?: string | string[];      // clean targets
     flushStream?: boolean;          // finish all the output streams before exiting gulp task
     sync?: boolean,                 // serialize each build execution steps
+    reloadOnChange?: boolean;       // Reload on change when watcher is running. default is true.
     verbose?: boolean,              // print verbose messages
     silent?: boolean,               // depress informative messages
 }

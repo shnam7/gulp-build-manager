@@ -6,9 +6,7 @@ import { msg } from "../utils/utils";
 import { requireSafe } from "../utils/npm";
 
 
-export interface ReloaderOptions extends Options {
-    reloadOnChange?: boolean;       // default is true
-}
+export interface ReloaderOptions extends Options { }
 
 export class GReloader {
     protected _module: any;
