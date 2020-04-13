@@ -22,15 +22,13 @@ export class GBuildManager {
         this._projects.push(new GProject());
 
         process.argv.forEach(arg => {
-            if (arg.startsWith('--npm-auto-install')) {
-                let autoInstall = true;
-                let installOptions: string | undefined = arg.replace(/['"]+/g, '');
-                let idx = installOptions.indexOf('=');
-                installOptions = (idx > 0) ? installOptions.substr(idx+1).trim() : undefined;
-
-                let opts = installOptions ? {autoInstall, installOptions} : {autoInstall};
-                setNpmOptions(opts);
-                return false;
+            if (arg.startsWith('--npm-auto')) {
+                const [cmd, installOptions] = arg.split('=');
+                let autoInstall = cmd === '--nam-auto' || cmd === '--npm--auto-install';
+                if (autoInstall) {
+                    setNpmOptions(installOptions ? {autoInstall, installOptions} : {autoInstall});
+                    return false;
+                }
             }}
         );
     }

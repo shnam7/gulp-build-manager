@@ -17,7 +17,7 @@
         "docs-watch": "gulp docs:@watch",
         "ex-build": "gulp @ex-build-all",
         "ex-clean": "gulp @ex-clean-all",
-        "build-all-npm-auto": "gulp docs:@build --npm-auto-install && gulp @ex-build-all --npm-auto-install",
+        "build-all-npm-auto": "gulp docs:@build --npm-auto && gulp @ex-build-all --npm-auto",
         "test": "mocha --reporter spec",
         "prepare": "npm run clean && npm run build",
         "prepare-to-commit": "npm run clean && npm run build && npm run test && gulp @clean-all && gulp @build-all && gulp @clean-to-prepare",
@@ -57,11 +57,9 @@
         "gulp": "^4.0.2"
     },
     "devDependencies": {
-        "@babel/core": "^7.9.0",
         "@types/gulp": "^4.0.6",
         "@types/gulp-filter": "3.0.33",
         "@types/jquery": "^3.3.34",
-        "@types/react": "^16.9.34",
         "@types/react-dom": "^16.9.6",
         "autoprefixer": "^9.7.6",
         "browser-sync": "^2.26.7",

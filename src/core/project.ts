@@ -74,7 +74,7 @@ export class GProject {
 
                     // transfer gulp watch events to rtb
                     if (rtb.conf.reloadOnChange !== false)
-                        gulpWatcher.on('all', (...args) => rtb.once('exit', () => rtb.emit('reload', rtb, ...args)));
+                        gulpWatcher.on('all', (...args) => rtb.once('finish', () => rtb.emit('reload', rtb, ...args)));
                 });
 
                 // pure watch target
@@ -183,7 +183,7 @@ export class GProject {
             conf.buildName = this._options.prefix + conf.buildName;
             gulp.task(conf.buildName, <GulpTaskFunction>resolved);
 
-            rtb.__ready(conf)
+            rtb.__create(conf)
             this._rtbs.push(rtb);
             GBuildManager.rtbs.push(rtb);   // register to global rtb list
             return conf.buildName;

@@ -61,8 +61,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
 
 // available options: options.cleanCss
 RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
-    const opts = rtb.buildOptions;
-    const mopts = rtb.moduleOptions;
+    const { buildOptions: opts, moduleOptions: mopts } = rtb.conf;
 
     // backward compatibility on autoprefixer options
     if (opts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {

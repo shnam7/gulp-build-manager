@@ -14,7 +14,7 @@
 - Feature Add automatic npm module installation
 - Replace plugins with extension model
 - Improve performance by removing all dummy task creation
-- Add build actions API to rtb (Experimental)
+- Add Event emissions to RTB for custom hooks
 
 
 ## 3.2.0-rc

@@ -32,6 +32,7 @@ export type RTBExtension = (...args: any[]) => FunctionBuilder;
 
 
 //--- class RTB
+// RTB event sequence: create > start > (after-src > before-dest) > finish
 export class RTB extends EventEmitter {
     protected _stream?: GulpStream;
     protected _streamQ: GulpStream[] = [];
@@ -58,28 +59,31 @@ export class RTB extends EventEmitter {
         return this._buildFunc(this);
     }
 
-    protected _init(): void | Promise<unknown> {
+    protected _start(): void | Promise<unknown> {
         this._syncMode = false;
-        this.emit('init');
+        this.emit('start');
         if (this._syncMode) console.log('RTB: Strating build in sync Mode.');
     }
 
-    protected _exit() {
-        this.emit('exit', this);
+    protected _finish() {
+        this.emit('finish', this);
         this._stream = undefined;
         this._streamQ = [];
     }
 
-    __ready(conf: BuildConfig): this {
+
+    //--- internal functions to be used by friend classes: GBuildManager
+
+    __create(conf: BuildConfig): this {
         Object.assign(this._conf, conf);
         this.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
-        this.emit('ready', this);
+        this.emit('create', this);
         return this;
     }
 
     __build() : Promise<unknown> {
         return Promise.resolve()
-            .then(this._init.bind(this))
+            .then(this._start.bind(this))
             .then(npmLock)
             .then(this._execute.bind(this, this.conf.preBuild))
             .then(this.build.bind(this))
@@ -88,7 +92,7 @@ export class RTB extends EventEmitter {
             .then(() => Promise.all(this._promises))
             .then(npmUnlock)
             .then(() => { if (this.conf.flushStream) return toPromise(this._stream); })
-            .then(this._exit.bind(this))
+            .then(this._finish.bind(this))
     }
 
 
