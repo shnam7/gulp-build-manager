@@ -49,7 +49,7 @@ const build = {
 
 
 module.exports = gbm.createProject(build, { prefix })
-    .addWatcher('@watch', {
+    .addWatcher({
         browserSync: {
             server: upath.resolve(destRoot),
             open: true,

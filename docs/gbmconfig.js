@@ -115,7 +115,7 @@ const build = {
 }
 
 module.exports = gbm.createProject({scss, scripts, jekyll, build}, {prefix})
-    .addWatcher('@watch', {
+    .addWatcher({
         browserSync: {
             server: upath.resolve(basePath),
             open: true,

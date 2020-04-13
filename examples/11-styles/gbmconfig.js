@@ -113,7 +113,7 @@ const build = {
 
 
 module.exports = gbm.createProject(build, {prefix})
-    .addWatcher('@watch', {
+    .addWatcher({
         watch: [upath.join(destRoot, "**/*.html")],
         browserSync: {
             server: upath.resolve(destRoot),

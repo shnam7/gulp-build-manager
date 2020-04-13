@@ -57,7 +57,7 @@ const build = {
 }
 
 module.exports = gbm.createProject(build, { prefix })
-    .addWatcher('@watch', {
+    .addWatcher({
         watch: [upath.join(destRoot, '**/*.html')],  // watch files for reloader (no build actions)
         browserSync: {
             server: destRoot,

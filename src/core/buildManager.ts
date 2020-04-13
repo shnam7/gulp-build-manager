@@ -1,6 +1,6 @@
 import * as upath from 'upath';
 import * as __utils from '../utils/utils';
-import { BuildSet, BuildConfig, BuildSetSeries, BuildSetParallel, series, parallel } from './builder';
+import { BuildSet, BuildSetSeries, BuildSetParallel, series, parallel, BuildConfig } from './builder';
 import { GProject, BuildGroup, ProjectOptions, BuildNameSelector } from './project';
 import { registerPropertiesFromFiles } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
@@ -33,14 +33,16 @@ export class GBuildManager {
         );
     }
 
-    createProject(buildGroup: BuildGroup = {}, opts?: ProjectOptions): GProject {
+    createProject(buildGroup: BuildConfig | BuildGroup = {}, opts?: ProjectOptions): GProject {
         return new GProject(buildGroup, opts);
     }
 
-    addProject(project: GProject | string): this {
+    addProject(project: BuildGroup | GProject | string): this {
         if (__utils.is.String(project)) project = require(upath.resolve(project));
         if (project instanceof GProject)
             this._projects.push(project);
+        else if (__utils.is.Object(project))
+            this._projects.push(new GProject(project));
         else
             throw Error('GBuildManager:addProject: Invalid project argument');
         return this;

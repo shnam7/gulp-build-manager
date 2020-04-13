@@ -33,7 +33,7 @@ const scripts = {
 const build = { buildName: '@build', triggers: gbm.parallel(scss, scripts) }
 
 module.exports = gbm.createProject(build, { prefix })
-    .addWatcher('@watch', {
+    .addWatcher({
         watch: [upath.join(destRoot, '**/*.html')],  // watch files for reloader (no build actions)
         browserSync: {
             server: destRoot,

@@ -32,7 +32,7 @@ export class GProject {
     protected _reloaders: GReloader[] = [];
     protected _vars:any  = {};
 
-    constructor(buildGroup: BuildGroup = {}, options: ProjectOptions = {}) {
+    constructor(buildGroup: BuildConfig | BuildGroup = {}, options: ProjectOptions = {}) {
         Object.assign(this._options, options);
         this.addBuildItems(buildGroup);
     }
@@ -50,7 +50,7 @@ export class GProject {
         return this;
     }
 
-    addWatcher(buildName = '@watch', options: WatchOptions = {}): this {
+    addWatcher(options: WatchOptions = {}, buildName = '@watch'): this {
         if (options.browserSync) this._reloaders.push(new GBrowserSync(options.browserSync));
         if (options.livereload) this._reloaders.push(new GBrowserSync(options.livereload));
 
@@ -96,7 +96,7 @@ export class GProject {
         });
     }
 
-    addCleaner(buildName = '@clean', options: CleanOptions = {}): this {
+    addCleaner(options: CleanOptions = {}, buildName = '@clean'): this {
         return this.addBuildItem({
             buildName,
             builder: (rtb) => {

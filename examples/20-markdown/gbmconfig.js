@@ -35,7 +35,7 @@ const build = {
 
 
 module.exports = gbm.createProject(build, { prefix })
-    .addWatcher('@watch', {
+    .addWatcher({
         browserSync: {
             server: destRoot,
             port: port + parseInt(prefix),
