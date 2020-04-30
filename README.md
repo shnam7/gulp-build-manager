@@ -78,6 +78,42 @@ This gulpfile will create a single project with 5 gulp tasks as following:
 - @watch: Full featured watch task with reloading using browser-sync (default name is @watch)
 
 
+## Easier way using built-in builders: gulpfile.js
+```js
+const gbm = require('gulp-build-manager');
+const upath = require('upath')
+
+const basePath = upath.relative(process.cwd(), __dirname);
+const srcRoot = upath.join(basePath, 'assets');
+const destRoot = upath.join(basePath, 'www');
+
+
+const scss = {
+    buildName: 'GCCSSBuilder',
+    src: upath.join(srcRoot, 'scss/**/*.scss'),
+    dest: upath.join(destRoot, 'css'),
+}
+
+const scripts = {
+    buildName: 'GJavaScriptBuilder',
+    src: upath.join(srcRoot, 'js/**/*.js'),
+    dest: upath.join(destRoot, 'js'),
+}
+
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(scss, scripts),
+    clean: upath.join(destRoot, '{css,js}')
+}
+
+gbm.createProject(build)
+    .addWatcher({
+        watch: upath.join(destRoot, '**/*.html'),
+        browserSync: { server: destRoot }
+    })
+    .addCleaner()
+```
+
 
 <p align="center">
   <img class="logo" src="https://shnam7.github.io/gulp-build-manager/images/gbm.svg" width="64px">
