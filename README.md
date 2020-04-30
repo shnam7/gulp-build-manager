@@ -3,22 +3,11 @@ Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp ta
 
 Focus on build actions, rather than environment setup.
 
-## Early access Verson 4 early access
-
-
 ## Installation
 ```bash
-npm i gulp-build-manager@v4 --save-dev
+npm i gulp-build-manager --save-dev
 npm i gulp --save-dev
 ```
-
-### Installation from github for latest updates
-```js
-npm i shnam7/gulp-build-manager#v4 --save-dev
-```
-
-Note: v4 is not officially released. So the interface can be changed.
-
 
 ## Documentation
 Go to [docs](docs/README.md)
