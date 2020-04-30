@@ -114,6 +114,8 @@ gbm.createProject(build)
     .addCleaner()
 ```
 
+Check **[examples](examples)** directory for more working examples.
+
 
 <p align="center">
   <img class="logo" src="https://shnam7.github.io/gulp-build-manager/images/gbm.svg" width="64px">
