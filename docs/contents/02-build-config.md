@@ -113,7 +113,6 @@ For actual options available, you should refer to specification or documentation
 
 **Example properties for conf.buildOptions**:
 
-|---------------|-----------|-------------|
 | property      | type      | description |
 |:--------------|:---------:|-------------|
 | lint          | boolean   | Enable lint
@@ -127,7 +126,6 @@ For actual options available, you should refer to specification or documentation
 | printConfig   | boolean   | Print any relevant config files
 | tsConfig      | string    | path to typescript config file
 | webpackConfig | string    | path to webpack config file
-|:--------------|:---------:|-------------|
 
 
 ### conf.moduleOptions: Options

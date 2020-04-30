@@ -25,7 +25,6 @@ const copy = {
 
 ---
 ## Member functions: RTB API
----
 
 ### src()
 ```js
@@ -212,7 +211,6 @@ Minify javascript files in the current stream. This operation will filter out *.
 
 ---
 ## Properties
----
 
 ### conf
 BuildConf object this RTB is attached to.
@@ -236,7 +234,6 @@ Object containing all the RTB extension modules
 
 ---
 ## Static functions
----
 
 ### static registerExtension()
 ```js

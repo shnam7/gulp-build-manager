@@ -44,7 +44,6 @@ const proj = gbm.createProject(buildGroup);   // returns GProject instance
 
 ---
 ## Member functions
----
 
 ### constructor()
 ```js
@@ -132,7 +131,6 @@ Returns list of buildNames that matches the selector pattern from the build item
 
 ---
 ## Properties
----
 
 ### projectName
 projectName specified in ProjectOptions when the project instance is created. If not not available, empty string "" is returned.

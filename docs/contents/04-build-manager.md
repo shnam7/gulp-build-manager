@@ -24,7 +24,6 @@ gbm.createProject(build)
 
 ---
 ## Member functions
----
 
 ## createProject()
 ```js
@@ -86,7 +85,7 @@ Convert argument list into parallel type build set
 
 
 
-
+---
 ## Properties
 
 ### rtbs
