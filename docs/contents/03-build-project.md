@@ -1,15 +1,16 @@
 ---
-layout: docs
-title: GBuildProject
+id: build-project
+title: GProject
 ---
 
-# GBuildProject class
+# GProject class
 
-GBuildProject is a class managing a collection of BuildConfig objects. Typically, BuildConfig items are added to GBuildProject instance and resolved generating relevant gulp tasks.
+GProject is a class managing a collection of BuildConfig objects. Typically, BuildConfig item is added to GProject instance, and at this moment, it is resolved getting relevant gulp task and RTB instance attached.
 
-Every GBuildProject instance has its own GWtacher and GCleaner. Browser reloading is supported by the GWatcher instance.
+GProject instance can also create watcher and cleaner tasks. Browser reloading is also supported as part of watch taask.
 
-Generally, GBuildProject instances are created by calling gbm.createProject().
+GProject instances can be created by calling gbm.createProject().
+
 
 
 ## Types
@@ -37,86 +38,95 @@ const sass = { buildName: 'sass' }
 const scripts = { buildName: 'scripts' }
 
 const buildGroup = {sass, styles};
-const proj = gbm.createProject(buildGroup).resolve();   // returns GBuildProject instance
+const proj = gbm.createProject(buildGroup);   // returns GProject instance
 ```
 
 
 ---
-## Instance functions
+## Member functions
 ---
 
 ### constructor()
-Create GBuildProject and initialize it with buildGroup.
 ```js
-(buildGroup: BuildGroup = {}, options: ProjectOptions = {}) => void;
+constructor(buildGroup: BuildConfig | BuildGroup = {}, options: ProjectOptions = {});
 ```
+
+Create GProject and initialize it with buildGroup. Initial buildGroup can be a single BuildConfig item or a collection of BuildConfig items in BuildGroup object. buildGrop is empty, then empty project is created.
+
 
 
 ### addBuildItem()
-Add BuildConfig item. Returns itself.
 ```js
-(conf: BuildConfig) => this;
+addBuildItem(conf: BuildConfig) => this;
 ```
 
+Add single BuildConfig item, conf, to the project after resolving it. When a BuildConfig item is resolved, following actions takse place:
+- Create RTB instance initialized with conf.
+- ProjectOptions.prefix is specified, it is prepended tp conf.buildName. (buildName mangling to avoid gulp task name collision)
+- A new gulp task is created with the prefixed conf.buildName, and task function to execute RTB's build sequences.
 
-### addBuildGroup()
-Register BuildConfig objects specified in buildGroup argument into the project. Single BuildConfig argument is also accepted.
+
+### addBuildItems()
 ```js
-(buildGroup: BuildGroup | BuildConfig) => this;
+addBuildItems(items: BuildGroup | BuildConfig) => this
 ```
 
-
-### addTrigger
-Create a new BuildConfig with no build actions, but triggers other build tasks. Returns itself.
-```js
-(buildName: string, buildNames: string | string[], opts: TriggerOptions={}) => this;
-```
-
-
-### addVars()
-Add key/value pairs into project-wide variable list, which is accessible using 'vars' property.
-```js
-(vars: { [key: string]: any }) => this;
-```
+Add single or multiple BuildConfig objects to the project using addBuildItem() function.
 
 
 ### addWatcher()
-Create a new BuildConfig with build action initiating gulp.watch() and browser reloaders depending on the options. Returns itself.
 ```js
-(buildName = '@watch', opts?: WatcherOptions) => this;
-
-export interface ReloaderOptions extends Options {
-    reloadOnChange?: boolean;       // default is true
-}
-
-export interface WatcherOptions extends ReloaderOptions {
-    watch?: string | string[];      // pure watching: watched files to be reloaded on change w/o build actions
-    browserSync?: ReloaderOptions;  // browserSync initializer options
-    livereload?: ReloaderOptions;   // livereload initializer options
-}
+addWatcher(buildName = '@watch') => this;
+addWatcher(options: WatchOptions = {}, buildName = '@watch') => this;
 ```
+
+Create watch task which monitors all the watch targets of each build items in the project. Watch targets for single BuildConfig item is determined by this rule:
+- If conf.watch is specified, add it to watch target.
+- If conf.watch is not specified, conf.src is added to watch target.
+- If conf.watch is set to empty array([]), then conf.src is not added to watch target.
+- If conf.addWatch is specified, add it to watch target.
+
+##### available options
+- options.watch: additional watch targets (string | strinig[]). Glob is supported.
+- options.browserSync: browser-sync module options.
+- options.livereload: livereload module options.
 
 
 ### addCleaner()
-Create GCleaner object for this project. Additional clean targets can be specified in opts.clean.
 ```js
-(buildName = '@clean', opts?: CleanerOptions) => this;
+addCleaner(buildName = '@clean') => this;
+addCleaner(options: string | CleanOptions = {}, buildName = '@clean') => this;
+```
+
+Create cleaner task which cleans all the clean targets of each build items in the project. Clean targets of single BuildConfig item is specified in conf.clean property.
+
+##### available options
+- options.clean: additional clean targets (string | strinig[]). Glob is supported.
+
+
+### addVars()
+```js
+addVars(vars: { [key: string]: any }) => this;
+```
+
+Add key/value pairs into project-wide variable list, which is accessible using project.vars property. This is typically used to deliver project specific data to GBuildManager[0] for multi-project management.
+
+**example**
+```js
+const pro = gbm.createProject().addVar({ port: 1000 });
+
+console.log(proj.vars.port) // this will print 1000
 ```
 
 
-### filter()
-Returns list of buildNames, from registered BuildConfig objects, that matches to the pattern specified in selector parameter.
-RegExp is supported.
+### getBuildNames()
 ```js
-(selector: string | string[] | RegExp | RegExp[]): string[];
+type BuildNameSelector = string | string[] | RegExp | RegExp[];
+
+getBuildNames(selector: BuildNameSelector) => string[];
 ```
 
-
-### resolve()
-Analyze all the BuildConfig object registered and actually creates gulp tasks according to it. Until resolve() is called, no gulp task is created.
-```js
-() => this;
-```
+Returns list of buildNames that matches the selector pattern from the build items in the project.
 
 
 
@@ -124,45 +134,21 @@ Analyze all the BuildConfig object registered and actually creates gulp tasks ac
 ## Properties
 ---
 
-### size
-Number of total BuildConfig objects in this project.
-
-
 ### projectName
-projectName specified in ProjectOptions when this instance is created. If not specified, empty string "" is returned.
+projectName specified in ProjectOptions when the project instance is created. If not not available, empty string "" is returned.
+
+
+### rtbs
+Array of RTB instances created by build items in the project.
 
 
 ### prefix
 prefix specified in ProjectOptions when this instance is created.
-() { return this._options.prefix; }
 
 
 ### vars
-Object with key/value pairs which were added using addVar() function. Typically, used to share data between projects and GBuildManager in multi-file projects.
-
-
-### buildNames
-List of buildNames of all the registered BuildConfig objects in the project.
-
-
-### watcher
-GWatcher object specific to this project.
+Object with key/value pairs which were added by addVar() function. Typically, used to share data between projects and GBuildManager in multi-file projects.
 
 
 
----
-## Class functions (static)
----
-
-### GBuildProject.series()
-Convert BuildSet arguments into a series type BuildSet.
-```js
-(...args: BuildSet[]) => BuildSetSeries;
-```
-
-
-### GBuildProject.parallel()
-Convert BuildSet arguments into a parallel type BuildSet.
-```js
-(...args: BuildSet[]) => BuildSetParallel;
-```
+[0]:04-build-manager.md

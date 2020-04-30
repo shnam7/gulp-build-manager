@@ -19,8 +19,6 @@ export class GBuildManager {
     protected _projects: GProject[] = []
 
     constructor() {
-        this._projects.push(new GProject());
-
         process.argv.forEach(arg => {
             if (arg.startsWith('--npm-auto')) {
                 const [cmd, installOptions] = arg.split('=');

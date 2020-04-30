@@ -50,9 +50,15 @@ export class GProject {
         return this;
     }
 
-    addWatcher(options: WatchOptions = {}, buildName = '@watch'): this {
-        if (options.browserSync) this._reloaders.push(new GBrowserSync(options.browserSync));
-        if (options.livereload) this._reloaders.push(new GBrowserSync(options.livereload));
+    addWatcher(options: string | WatchOptions = {}, buildName = '@watch'): this {
+        if (is.String(options)) {
+            buildName = options;
+            options = {} as WatchOptions
+        }
+        const opts = options as WatchOptions;   // for type assertion
+
+        if (opts.browserSync) this._reloaders.push(new GBrowserSync(opts.browserSync));
+        if (opts.livereload) this._reloaders.push(new GBrowserSync(opts.livereload));
 
         // create watch build item
         return this.addBuildItem({
@@ -62,7 +68,7 @@ export class GProject {
                     this._reloaders.forEach(reloader => rtb.on('reload', (rtb, type, path, stats) => {
                         // console.log(`[${rtb.buildName}:reload]: stream=${!!rtb.stream} type=${type}, path=${path}, stats=${stats}`);
                         if (rtb.stream)
-                            rtb.pipe(reloader.stream(options))
+                            rtb.pipe(reloader.stream(opts))
                         else
                             reloader.reload(type=='change' ? path: undefined)
                     }));
@@ -78,7 +84,7 @@ export class GProject {
                 });
 
                 // pure watch target
-                const watched = arrayify(options.watch);
+                const watched = arrayify(opts.watch);
                 if (watched.length > 0) {
                     msg(`Watching ${rtbWatcher.buildName}: [${watched}]`);
                     let gulpWatcher = gulp.watch(watched, (done) => done());
@@ -96,17 +102,23 @@ export class GProject {
         });
     }
 
-    addCleaner(options: CleanOptions = {}, buildName = '@clean'): this {
+    addCleaner(options: string | CleanOptions = {}, buildName = '@clean'): this {
+        if (is.String(options)) {
+            buildName = options;
+            options = {}
+        }
+        const opts = options as CleanOptions;   // for type assertion
+
         return this.addBuildItem({
             buildName,
             builder: (rtb) => {
-                let cleanList = arrayify(options.clean);
+                let cleanList = arrayify(opts.clean);
                 this._rtbs.forEach(rtb => {
                     if (rtb.conf.clean) cleanList = cleanList.concat(arrayify(rtb.conf.clean))
                 });
 
                 msg('[GBM:clean]:', cleanList);
-                rtb.del(cleanList, { silent: true, sync: options.sync });
+                rtb.del(cleanList, { silent: true, sync: opts.sync });
             }
         });
     }
@@ -136,12 +148,6 @@ export class GProject {
     get prefix() { return this._options.prefix; }
 
     get vars() { return this._vars; }
-
-    get buildNames() {
-        let buildNames: string[] = [];
-        this.rtbs.forEach(rtb => { buildNames.push(rtb.buildName) })
-        return buildNames;
-    }
 
 
     //--- internals

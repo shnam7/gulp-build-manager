@@ -1,7 +1,7 @@
 ## Contents
 {:class="title"}
 01. [Gettiing Started]({{site.contentsurl}}/01-getting-started)
-02. [Build Configuration]({{site.contentsurl}}/02-build-configuration)
+02. [Build Config]({{site.contentsurl}}/02-build-config)
 03. [Build Project]({{site.contentsurl}}/03-build-project)
 04. [Build Manager]({{site.contentsurl}}/04-build-manager)
 05. [RTB - Runtime Builder]({{site.contentsurl}}/05-rtb)

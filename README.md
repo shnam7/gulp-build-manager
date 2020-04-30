@@ -1,94 +1,92 @@
 # Gulp Build Manager
 Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp task manager. Users can create gulp tasks with simple build configurations. At the same time, javascript can be used to customize and extend the configuration.
 
+Focus on build actions, rather than environment setup.
 
-## Documentation
-Please refer to [docs](docs)
-
-
-## Key features
-- Various Buildt-in builders and plugins
-- Custom builders and plugins support
-- Watchers and Reloaders for change detection and browser reloading
-- Rich run-time builder API's, which can be used for custom build actions
-- Synchronization control for tasks, build actions, gulp stream flushing, etc.
-- Modular project support to handle multiple sub projects from a single gulpfile.
-- Npm module auto install options
-
-## What's new in version 4?
-- Whole architecture improved for better features and performance
-- Main task creator redesigned using class object, not gbm() function
-- Promise handling improved for better synchronization in build processes
-- Multiple, modular build projects support is supported in a single gulpfile
-- Reloaders enhanced to support multiple watch task execution
-- Rich run time API support with RTB, Run-Time-Builder, class
-- And more ...
+## Early access Verson 4 early access
 
 
 ## Installation
 ```bash
-npm i gulp-build-manager --save-dev
+npm i gulp-build-manager@v4 --save-dev
 npm i gulp --save-dev
 ```
-Refer to [Getting Started](/docs/contents/01-getting-started.md) guide for the details.
+
+### Installation from github for latest updates
+```js
+npm i shnam7/gulp-build-manager#v4 --save-dev
+```
+
+Note: v4 is not officially released. So the interface can be changed.
 
 
-## Sample gulpfile.js using gbm
+## Documentation
+Go to [docs](docs/README.md)
+
+
+## Key features
+- Quick and easy gulp task creation
+- Watching, reloading, and cleaning with minimal efforts
+- Rich run-time builder API for user build actions
+- Sync and async control for tasks, build actions, and gulp streams for flushing.
+- Automatic NPM module installation
+- Small to large scale project support using modular configuration
+- Pre-defined Buildt-in builders and extensions
+- Custom builders and extension support
+
+
+## What's new in version 4?
+- New architecture for better performance and easier interface
+- Improved promise handling for better synchronization in build processes
+- Multiple, modular build projects support
+- Enhanced watching and reloading
+- Rich runtime builder API for easier build routine development and customization
+
+
+## Quick example: gulpfile.js
 
 ```js
-const gbm = require('../../lib');
-const upath = require('upath');
+const gbm = require('gulp-build-manager');
+const upath = require('upath')
 
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, 'assets');
-const destRoot = upath.join(basePath, '_build');
+const destRoot = upath.join(basePath, 'www');
+
 
 const scss = {
     buildName: 'scss',
-    builder: 'GCSSBuilder',
+    builder: (rtb) => rtb.src().pipe(sass().on('error', sass.logError)).dest(),
     src: upath.join(srcRoot, 'scss/**/*.scss'),
     dest: upath.join(destRoot, 'css'),
 }
 
 const scripts = {
-    buildName: 'scripts',
-    builder: 'GTypeScriptBuilder',
-    src: upath.join(srcRoot, 'scripts/**/*.ts'),
+    buildName: 'babel',
+    builder: (rtb) => rtb.src().pipe(require('gulp-babel')()).dest(),
+    src: upath.join(srcRoot, 'js/**/*.js'),
     dest: upath.join(destRoot, 'js'),
 }
 
-const twig = {
-    buildName: 'twig',
-    builder: 'GTwigBuilder',
-    src: [upath.join(srcRoot, 'pages/**/*.twig')],
-    dest: upath.join(destRoot, ''),
-    moduleOptions: {
-        twig: {
-            base: upath.join(srcRoot, 'templates'),
-            data: upath.join(srcRoot, 'data/**/*.{yml,yaml,json}'),
-            extend: require('twig-markdown'),
-        },
-        htmlBeautify: { indent_char: ' ', indent_size: 2 },
-        htmlmin: { collapseWhitespace: true, }
-    },
-    addWatch: [ // include sub directories to detect changes of the files which are not in src list.
-        upath.join(srcRoot, 'templates/**/*.twig'),
-        upath.join(srcRoot, 'markdown/**/*.md'),
-        upath.join(srcRoot, 'data/**/*.{yml,yaml,json}')
-    ]
+const build = {
+    buildName: '@build',
+    triggers: gbm.parallel(scss, scripts),
+    clean: upath.join(destRoot, '{css,js}')
 }
 
-gbm.createProject(app)
-    .addTrigger('default', /.*/)
-    .addWatcher('watch', { browserSync: { server: upath.resolve(destRoot), } })
-    .addCleaner('clean', { clean: destRoot })
-    .resolve();
+gbm.createProject(build)
+    .addWatcher({
+        watch: upath.join(destRoot, '**/*.html'),
+        browserSync: { server: destRoot }
+    })
+    .addCleaner()
 ```
-
-
-## Resource
-- [Documentation](docs)
-- [Migration from v3](docs/contents/09-migration-from-v3.md)
+This gulpfile will create a single project with 5 gulp tasks as following:
+- scss: sass transpiler
+- babel: ES6 transpiler using babel
+- @build: main task running 'scss' and 'babel' in parallel
+- @clean: clean task (default name is @clean)
+- @watch: Full featured watch task with reloading using browser-sync (default name is @watch)
 
 
 

@@ -1,14 +1,12 @@
 ---
-layout: docs
+id: migration-from-v3
 title: Migration from v3
 ---
 
 # Migration from v3
 
 ### gbm main function
-In v4, gbm() function is not supported. Instead, gbm is available as an instance of GBuildManager class.
-To resolve build configurations, createProject() with build configurations, and add additional managing build configuratiopns with addTrigger(), addBuildItem(), addWatcher(), addCleaner(), and then finally call resolve().
-resolve() actually analyze build configurations registered and creates gulp task tree based on it.
+In v4, gbm() function is not supported. Instead, gbm is available as an instance of GBuildManager class. No systemBuilds tasks are created automatically. So, uses should create it using conf.dependencies or conf.triggers property if it is necessary.
 
 v3 example
 ```js
@@ -25,12 +23,11 @@ gbm({
 
 v4 conversion
 ```js
-gbm.project({scss, scripts, twig})
-    .addTrigger('@build', /.*/, {sync: true})   // sync option determins series or parallel(default)
-    .addTrigger('default', '@build')
-    .addWatcher('@watch', { browserSync: { server: upath.resolve(destRoot) } })
-    .addCleaner('@clean', { clean: ['_build'] })
-    .resolve()
+const build = { buildName: '@build', dependencies: gbm.parallel(scss, scripts, twig) };
+const default = { buildName: '@default', dependencies: '@build' };
+gbm.project(build)
+    .addWatcher({ browserSync: { server: upath.resolve(destRoot) } })
+    .addCleaner({ clean: ['_build'] })
 ```
 
 
@@ -77,23 +74,17 @@ const copy = {
 
 
 ### Built-in builders and Plugins
-Built-in builders available in gbm.xxx now moved to gbm.builders.xxx. Built-in plugins available in gbm.xxx now moved to gbm.plugins.xxx.
+Built-in builders available in gbm.xxx now moved to gbm.builders.xxx. Plugins are not supported anymore because it's replace with RTB extension.
 
 v3 example
 ```js
 class MyClass extends gbm.GBuilder {
-};
-
-class MyPlugin extends gbm.GPlugin {
 };
 ```
 
 v4 conversion
 ```js
 class MyClass extends gbm.builders.GBuilder {
-};
-
-class MyPlugin extends gbm.plugins.GPlugin {
 };
 ```
 
@@ -123,8 +114,6 @@ const clean1 = {
 ### GPlugin static functions moved to RTB class
 - gbm.GPlugin.clean --> rtb.clean()
 - gbm.GPlugin.clean --> rtb.copy()
-- gbm.GPlugin.uglify --> rtb.uglify()
-- gbm.GPlugin.cleanCss --> rtb.cleanCss()
 - ...
 
 v3 example
@@ -151,7 +140,7 @@ const clean1 = {
 
 
 ### External command no longer supported in GBuilder constructor
-Use rtb.exec() instead.
+Use rtb.exec() or External Builder instead.
 
 v3 example
 ```js
@@ -163,15 +152,25 @@ const cmd1 = {
 
 v4 conversion
 ```js
-cmd1: {
-    buildName: 'command1',
+const cmd1: {
+    buildName: 'external-command1',
     builder: rtb => rtb.exec({ command: 'dir', args: ['.'] }),
+}
+
+//--- or
+
+const cmd2 = {
+    buildName: 'node-version',
+    builder: {
+        command: 'node',
+        args: ['-v'],
+    }
 }
 ```
 
 
 ### BuildConfig.watch,  options
-In v4, BuildConfig.watch should be striing | string[], not object. BuildConfig.watch.watchedPlus changed to BuildConfig.addWatch. No reloader options, such as livereload or browserSync, are accepted because these are now supported by GBuildProject, and can be configured using GBuildProject.addWatcher().
+In v4, BuildConfig.watch should be striing | string[], not object. BuildConfig.watch.watchedPlus changed to BuildConfig.addWatch. No reloader options, such as livereload or browserSync, are accepted because these are now supported by GProject, and can be configured using GProject.addWatcher().
 
 v3 example
 ```js
@@ -194,37 +193,6 @@ const panini = {
     watch: [upath.join(srcRoot, '**/*')],
     addWatch: ['extra-files/**/*']
 };
-```
-
-
-### Sequenced triggering in GBMConfig.sysBuilds
-To create systemBuilds entries with complex sequence options with mixied gbm.series() or gbm.parallel in v4, use gbm.addBuildItem().
-
-v3 example
-```js
-gbm({
-    systemBuilds: {
-        build: [gbm.parallel(copy, images), zip],
-    }
-});
-```
-
-v4 conversion
-```js
-gbm.createProject()
-    .addBuildItem({
-        buildName: '@build',
-        dependencies: [gbm.parallel(copy, images), zip],
-    })
-});
-```
-
-For single series or parallel options, ProjectOptions.sync can be used. Default sequence option is parallel (sync:false).
-```js
-gbm.createProject()
-    .addTrigger('@build', [copy.buildName, images.buildName], {sync: true}),
-    })
-});
 ```
 
 

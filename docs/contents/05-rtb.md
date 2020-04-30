@@ -1,5 +1,5 @@
 ---
-layout: docs
+id: rtb
 title: RTB - Runtime Builder
 ---
 
@@ -8,8 +8,7 @@ RTB, Runtime Builder, is a class with build function that is actually executed b
 
 See **[builder](06-builders)** for available builder types.
 
-RTB has one-to-one mapping with gulp tasks, and provides all the information required in build operations.
-All the build functions managed by gbm received rtb as its first argument.
+RTB has one-to-one mapping with gulp tasks, and provides all the information required in build operations. RTB API All the build functions managed by gbm receive rtb as its first argument.
 
 
 ## Quick Example
@@ -24,81 +23,45 @@ const copy = {
 ```
 
 
-## RTB API's
-
-### addAction()
-Register build action item. currently availabe GBM action tag names are:
-- 'befeore_src': before calling gulp.src()
-- 'after_src': after calling gulp.src()
-- 'befeore_dest': before calling gulp.dest()
-- 'after_dest': after calling gulp.dest()
-
-```js
-type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>
-
-(tag: string, action: FunctionBuilder, priority: number = 10) => this
-```
-
-
-### removeAction()
-Removed actions registered.
-```js
-(tag: string, action: FunctionBuilder, priority: number) => this;
-```
-
-
-### doActions()
-Execute all the build actions registered under the tag name. args will be delivered to all the build action functions as it is.
-
-All the build actions will be executed in sync or async mode according to sync mode status. Refer to rtb.promise() section for more details on sync/async mode operatios.
-```js
-(tag: string, ...args: any[]) => this;
-```
-
+---
+## Member functions: RTB API
+---
 
 ### src()
-Creates internal gulp stream with files specified in BuildConf.src.
 ```js
-(src?: string | string[]) => this;
+src(src?: string | string[]) => this;
 ```
+Creates internal gulp stream with files specified in BuildConf.src. sourceMap is automatically handled if it is enabled in BuildConfig.
 
 
----
 ### dest()
-Calls gulp.dest() on internal gulp stream with BuildConf.dest.
 ```js
-(path?: string) => this;
+dest(path?: string) => this;
 ```
+Calls gulp.dest() on internal gulp stream with BuildConf.dest. sourceMap is automatically handled if is enabled in BuildConfig.
 
 
----
 ### pipe()
+```js
+pipe(destination: any, options?: { end?: boolean; }) => this;
+```
 Calls gulp pipe() on internal gulp stream.
-```js
-(destination: any, options?: { end?: boolean; }) => this;
-```
 
 
----
 ### chain()
+```js
+chain(action: FunctionBuilder, ...args: any[]) => this;
+```
 Calls plugin action with this RTB innstance and args as arguments. If promise is returned from the plugin, then it is handled in sync or async depending on current sync mode.
-```js
-(action: Plugins, ...args: any[]) => this;
-chain(action: Plugins, ...args: any[]): this {
-```
 
 
----
-### on()
-Calls gulp on() function on internal gulp stream.
-```js
-(event: string | symbol, listener: (...args: any[]) => void) => this;
-```
-
-
----
 ### promise()
-If 'promise' argument is an instance of Promise, then it is added to sync or async promise queue depending on current sync mode.
+```js
+type PromiseExecutor = () => void | Promise<unknown>;
+
+promise(promise?: Promise<unknown> | void | PromiseExecutor, sync: boolean = false) => this;
+```
+If 'promise' argument is an instance of Promise, then it is added to sync or async promise queue depending on current sync mode (default is async).
 
 If promise is a function, then it is added to sync promise queue in sync mode, or it is executed immediately in async mode. if it returns promise, then it is added to sync or async queue depending on current sync mode.
 
@@ -107,192 +70,187 @@ The last argument, 'sync' will override current sync mode.
 Current sync mode is determined by conf.sync property initially, but it can be changed by RTB functions, sync() or async().
 
 Note that all the promise objects, sync or async, are waited before finishing the build process. If no sync mode specified, all the build operations are executed in async mode by default for better performance.
-```js
-type PromiseExecutor = () => void | Promise<unknown>;
-
-(promise?: Promise<unknown> | void | PromiseExecutor, sync: boolean = false) => this;
-```
 
 
----
 ### sync()
+```js
+sync() => this;
+```
 Turns on sync mode. Once enabled, all the build operations are executed in sequence.
-```js
-() => this;
-```
 
 
----
 ### async()
-Turns off sync mode. In async mode, all the build operations are executed in parallel.
 ```js
-() => this;
+async() => this;
 ```
+Turns off sync mode. In async mode, all the build operations are executed in parallel.
 
 
----
 ### wait()
-Added a promise waiting for msec. In sync mode, this will suspend build operations in sync promise queue for msec. In async mode, this wait will be independent of other build operations, and it will only delays the finishig of whole build process up to msec.
+```js
+wait(msec: number = 0, sync: boolean = false) => this;
+```
+Add a promise waiting for msec. In sync mode, this will suspend build operations in sync promise queue for msec. In async mode, this wait will be independent of other build operations, and it will only delays the finishig of whole build process up to msec.
 
 The last argument, 'sync' will override current sync state for this operation.
-```js
-(msec: number = 0, sync: boolean = false) => this;
-```
 
 
----
 ### pushStream()
+```js
+pushStream() => this;
+```
 Save current gulp stream into internal stream queue. Multiple pushes are allowed.
-```js
-() => this;
-```
 
 
----
 ### popStream()
-If internal promise queue is not empty, then current stream is added to promise execution sequence to be flushed, and the latest stream pushed to the internal stream queue is restored as current stream. Multiple pops are allowed.
 ```js
-() => this;
+popStream() => this;
 ```
+If internal promise queue is not empty, then current stream is added to promise execution sequence to be flushed, and the latest stream pushed to the internal stream queue is restored as current stream. Multiple pops are allowed.
 
 
----
 ### sourceMaps()
+```js
+sourceMaps(options: Options = {}) => this;
+```
 if opts.init is valid, sourcemaps operation is initialized with opts.init as argument. Otherwise, sourcemaps is written to opts.dest with opts.write option as argument. if opts.dest is not defined, then '.' will be used writing output in current directory.
 For this operation, 'gulp-sourcemaps' module is used.
-```js
-(options: Options = {}) => this;
-```
 
 
----
-### reload()
-Triggers realod operation on all the registered browser reloaders.
-```js
-() => this;
-```
-
-
----
 ### debug()
+```js
+debug(options: Options = {}) => this;
+```
 Loads 'gulp-debug' module and pipe it to internal gulp stream with opts as argument.
-```js
-(options: Options = {}) => this;
-```
 
 
----
 ### filter()
-Loads 'gulp-filter' module and pipe it to internal gulp stream with pattern and options as argument.
 ```js
-(pattern: string | string[] | filter.FileFunction = ["**", "!**/*.map"], options: filter.Options = {}) => this;
+filter(pattern: string | string[] | filter.FileFunction = ["**", "!**/*.map"],
+    options: filter.Options = {}) => this;
 ```
+Loads 'gulp-filter' module and pipe it to internal gulp stream with pattern and options as argument.
 
 
----
 ### rename()
+```js
+rename(options: Options = {}) => this;
+```
 Loads 'gulp-rename' module and pipe it to internal gulp stream with options as argument.
 Refer to [gulp-rename][0] documents for option details.
-```js
-(options: Options = {}) => this;
-```
 
 
----
 ### copy()
+```js
+copy(param?: CopyParam | CopyParam[], options: Options = {}) => this;
+```
 In sync mode, all the copy operations specified in 'param' are added to sync promise queue, and will be executed in sequence.
 In async mode, all the copy operations executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
 
 The last argument, 'sync' will override current sync state for this operation.
-```js
-(param?: CopyParam | CopyParam[], options: Options = {}, sync: boolean = false) => this;
-```
 
 
----
 ### del()
+```js
+del(patterns: string | string[], options: Options = {}) => this;
+```
 In sync mode, delete operation is added to sync promise queue, and will be executed in sequence.
 In async mode, delete operation executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
 
-The last argument, 'sync' will override current sync state for this operation.
-
 For this operation, 'del' module is loaded and called with pattern and options as arguments.
-```js
-(patterns: string | string[], options: Options = {}, sync: boolean = false) => this;
-```
+
+#### options
+options argument accepts all the properties available from node 'del' module.
+
+In addition, options.sync can be specified to override current sync state for this operation.
 
 
----
-### spawn()
-Spawns external commands with cmd, args, and options. In sync mode, spawn operation is added to sync promise queue, and will be executed in sequence. In async mode, spawn operation executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
-
-The last argument, 'sync' will override current sync state for this operation.
-```js
-(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}, sync: boolean = false) => this;
-```
-
-
----
 ### exec()
+```js
+exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}) => this;
+```
 Executes external commands with cmd, args, and options. In sync mode, the command execution is added to sync promise queue, and will be executed in sequence. In async mode, the command is executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
 
 The last argument, 'sync' will override current sync state for this operation.
-```js
-(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}) => this;
-```
 
 
----
-### uglify()
-Loads 'gulp-uglify-es' module and pipe it to internal gulp stream with options as argument.
-```js
-(options: Options = {}) => this;
-```
-
-
----
-### cleanCss()
-Loads 'gulp-clean-css' module and pipe it to internal gulp stream with options as argument.
-```js
-(options: Options = {}) => this;
-```
-
-
----
 ### clean()
+```js
+clean(options: CleanOptions = {}): this
+```
 Triggers delete operations for the patterns specified in BuildConfig.clean and options.clean.
 For this operation, 'del' module is loaded and called with options as arguments.
 
 In sync mode, the clean operation is added to sync promise queue, and will be executed in sequence. In async mode, it is executed immediately, and the returned promise is added to sync or async queue depending on current sync state.
 
-The last argument, 'sync' will override current sync state for this operation.
-```js
-(options: Options = {}, sync: boolean = false) => this;
-```
+#### options
+clean() internally use del(). So, options argument accepts all the properties available for del() including options.sync.
 
 
----
 ### concat()
+```js
+concat(options: Options = {}) => this;
+```
 Loads 'gulp-concat' module and pipe it to internal gulp stream with BuildConfig.outFile and options.concat as arguments.
 if BuildConfig.outFile is not specified, the operation will be skipped with a warning message. In this operation, *.map files in current gulp stream will be filtered out. If BuildConfig.sourceMaps is set to true, map files will be generated.
-```js
-(options: Options = {}) => this;
-```
 
 
----
 ### minifyCss()
-Minify css files in the current stream. This operation will filter out *.map files. Output files will have '*.min.css'  extension names. If BuildConfig.sourceMaps is set to true, map files will be grnerated.
 ```js
-() => this;
+minifyCss(options: Options = {}) => this;
 ```
+Minify css files in the current stream. This operation will filter out *.map files. Output files will have '*.min.css'  extension names. If BuildConfig.sourceMaps is set to true, map files will be grnerated.
+
+
+### minifyJs()
+```js
+minifyJs(options: Options = {}) => this;
+```
+Minify javascript files in the current stream. This operation will filter out *.map files. Output files will have '*.min.js' extion names. If BuildConfig.sourceMaps is set to true, map files will be grnerated.
+
 
 
 ---
-### minifyJs()
-Minify javascript files in the current stream. This operation will filter out *.map files. Output files will have '*.min.js' extion names. If BuildConfig.sourceMaps is set to true, map files will be grnerated.
+## Properties
+---
+
+### conf
+BuildConf object this RTB is attached to.
+
+### buildName
+Sams as conf.buildName
+
+### buildOptions
+Same as conf.buildOptions
+
+### moduleOptions
+Sams as conf.moduleOptions
+
+### stream
+Internal file stream, typically opened by gulp.src()
+
+### ext
+Object containing all the RTB extension modules
+
+
+
+---
+## Static functions
+---
+
+### static registerExtension()
 ```js
-() => this;
+static registerExtension(name: string, ext: RTBExtension) => void;
 ```
+Register RTB extension under the given name.
+
+
+### static loadExtensions()
+```js
+tatic loadExtensions(globModules: string | string[]) => void;
+```
+Load extension modules from the globModules files specified
+
+
 
 [0]: https://github.com/hparra/gulp-rename

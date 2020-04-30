@@ -1,5 +1,5 @@
 ---
-layout: docs
+id: build-manager
 title: GBuildManager
 ---
 
@@ -14,112 +14,83 @@ const gbm = require('gulp-build-manager');
 
 const scss = { buildName: 'scss' };
 const scripts = { buildName: 'scripts' };
+const build = { buildName='@build', dependencies: gbm.parallel(scss, scripts) };
 
-gbm.createProject({scss, scripts})
-    .addTrigger('build', /.*/)
+gbm.createProject(build)
     .addCleaner()
     .addWatcher()
-    .resolve()
 ```
 
 
 ---
+## Member functions
+---
+
 ## createProject()
-Create GBuildProject instance and returns it. Note that the instance is not added to project iist of this GBuildManager.
 ```js
-(buildGroup: BuildGroup={}, opts?: ProjectOptions) => GBuildProject
+createProject(buildGroup: BuildConfig | BuildGroup = {}, opts?: ProjectOptions) => GProject;
 ```
+Create GProject instance and returns it. Note that the instance is not added to project iist of this GBuildManager.
 
 
----
 ## addProject()
-Add 'project' to project list. If 'project' is path name in string type, then it is loaded from the file using require().
-The file loaded should export GBuildProject.
 ```js
-(project: GBuildProject | string) => this;
+addProject(project: BuildGroup | GProject | string) => this;
 ```
+Add 'project' to internal project list. If 'project' is path name in string type, then it is loaded from the file using require(). The file loaded should export GProject instance.
 
 ### example
 ```js
-module.exports = gbm.createProject({sass, script})
-    .addTrigger('build', /.*/);
+module.exports = gbm.createProject({sass, script});
 ```
 
 
----
-## addBuildItem()
-Add BuildConfig item to manager project inside.
+## addProjects()
 ```js
-(conf: BuildConfig) => this;
+addProjects(items: GProject | GProject[]) => this;
 ```
+Add single or multiple projects to internal project list.
 
 
----
-## addTrigger()
-Create a new BuildConfig with no build actions, but triggers other build tasks, and add it to manager project inside.
-If series is true, then triggered tasks are executed in series. Otherwise, executed in parallel, which is default.
+
+## getBuildNames()
 ```js
-(buildName: string, selector: string | string[] | RegExp | RegExp[], series: boolean = false)
+type BuildNameSelector = string | string[] | RegExp | RegExp[];
+getBuildNames(selector: BuildNameSelector): string[]
 ```
+Returns an array of buildNames that matches the pattern in selector. All the projects inside are are searched.
 
 
----
-### addWatcher()
-Create a new BuildConfig with build action triggering gulp.watch() and initialize browser reloaders depending on the options, and add it to manager project inside.
+
+## findProject()
 ```js
-(buildName: string, opts:WatcherOptions) => this;
+findProject(projectName: string) => GProject | undefined;
 ```
+Returns first project that matches parojectName. projectName can be optionally assigned when it's created by createProject() function. If not found, returns undefined.
 
 
----
-## addCleaner()
-Create a new BuildConfig item with build action cleaning clean targets specified in BuildConfig.clean and opts.clean, and add it to manager project inside.
-```js
-(buildName: string, opts?: CleanerOptions, selector: string | string[] | RegExp | RegExp[] = /@clean$/) => this;
-```
 
-
----
-## filter()
-Returns an array of buildNames that matches the pattern in selector.
-All the projects in project list and manager project inside are searched.
-```js
-(selector: string | string[] | RegExp | RegExp[]) => string[];
-```
-
-
----
-## resolve()
-Resolves all the projects in project list and manager project inside.
-```js
-() => void;
-```
-
-
----
 ## series()
-Convert args arguments into series type.
 ```js
-(...args: BuildSet[]) => BuildSetSeries;
+series(...args: BuildSet[]) => BuildSetSeries;
 ```
+Convert argument list into series type build set.
 
 
----
+
 ## parallel()
-Convert args arguments into parallel type.
 ```js
-(...args: BuildSet[]) => BuildSetParallel;
+parallel(...args: BuildSet[]) => BuildSetParallel;
 ```
+Convert argument list into parallel type build set
 
 
----
+
+
 ## Properties
 
-### size
-Number of total BuildConfig items in all the projects in project list and manager project.
-
-### buildNames
-Array of buildNames from all the projects in project list and manager project inside.
+### rtbs
+Global RTB list which contains all the RTB instances attached to BuildConfig
 
 ### builders
 Object containing all the built-in builder classes, which can be used in custom builder creation.
@@ -163,9 +134,31 @@ gbm.utils.is.Map() => boolean;
 gbm.utils.is.WeakMap() => boolean;
 gbm.utils.is.Set() => boolean;
 gbm.utils.is.WeakSet() => boolean;
+
 gbm.utils.arrayify<T>(arg?: T | T[]) => T;
-gbm.utils.wait(msec: number) => Promise;
+
+//** copy multi-glob files to single destination */
+gbm.utils.copy(patterns: string | string[], destPath: string) => Promise<unknown>;
+
+//** load yml and json files
+gbm.utils.loadData(globPatterns: string | string[]) => Object;
+
+gbm.utils.wait = (msec: number) => Promise;
+
+//** execute external program asynchronously and returns promise */
+gbm.utils.exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): Promise<ProcessOutput>;
+
+//** set npm auto install options */
+gbm.utils.setNpmOptions(opts: NpmOptions) => NpmOptions;
+
+//** call require() after ensuring the required module is installed */
+gbm.utils.requireSafe(id: string) => any;
+
+//** install npm module */
+gbm.utils.npmInstall(ids: string | string[], options: NpmOptions = {});
+
 ```
+
 
 ### defaultModuleOptions
 Object containinig default Node modules options.

@@ -10,13 +10,13 @@ export type TaskDoneFunction = (error?: any) => void;
 export type BuildName = string;
 
 
-//--- Named Builders
+//--- Named Builder
 export type GBuilderClassName = string;
 
-//--- Function Builders
+//--- Function Builder
 export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>;
 
-//--- Object Builders
+//--- External Builder
 export interface ExternalBuilder extends ExternalCommand { }
 
 //--- GBuilder
