@@ -45,7 +45,7 @@ gbm.setNpmOptions({autoInstall: true, installOptions: '--no-save'});
 npx gulp task1 --npm-auto # default npm install option is '--save-dev'
 ```
 
-Refer to [Getting Started](docs/contents/01-getting-started) page for more information.
+Refer to [Getting Started](docs/contents/01-getting-started.md) page for more information.
 
 
 
