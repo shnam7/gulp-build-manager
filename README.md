@@ -32,7 +32,7 @@ Go to [docs](docs/README.md)
 - Rich runtime builder API for easier build routine development and customization
 
 
-## Aautomatic mudule installation
+## Automatic mudule installation
 
 ### Using gulpfile.js
 ```js
@@ -42,7 +42,7 @@ gbm.setNpmOptions({autoInstall: true, installOptions: '--no-save'});
 
 ### Using command line
 ```sh
-npx gulp task1 --npm-auto # default npm install option is '--save-dev'
+npx gulp <task-name> --npm-auto # default npm install option is '--save-dev'
 ```
 
 Refer to [Getting Started](docs/contents/01-getting-started.md) page for more information.
