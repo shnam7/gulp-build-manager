@@ -106,7 +106,7 @@ const destRoot = upath.join(basePath, 'www');
 
 
 const scss = {
-    buildName: 'GCCSSBuilder',
+    buildName: 'GCSSBuilder',
     src: upath.join(srcRoot, 'scss/**/*.scss'),
     dest: upath.join(destRoot, 'css'),
 }
