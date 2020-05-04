@@ -6,7 +6,7 @@
 04. [Build Manager]({{site.contentsurl}}/04-build-manager)
 05. [RTB - Runtime Builder]({{site.contentsurl}}/05-rtb)
 06. [Builders]({{site.contentsurl}}/06-builders)
-07. [Plugins]({{site.contentsurl}}/07-plugins)
+07. [Plugins]({{site.contentsurl}}/07-extension)
 08. [Modular Configuration]({{site.contentsurl}}/08-modular-configuration)
 09. [Migration from v3]({{site.contentsurl}}/09-migration-from-v3)
 
