@@ -9,7 +9,7 @@ title: Getting started
 Gulp Build Manager can be installed with NPM.
 
 ```bash
-npm i gulp-build-manager@v4 --save-dev
+npm i gulp-build-manager --save-dev
 npm i gulp --save-dev
 ```
 
