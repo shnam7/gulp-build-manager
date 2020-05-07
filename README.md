@@ -10,7 +10,7 @@ npm i gulp --save-dev
 ```
 
 ## Documentation
-Go to [docs](docs/README.md)
+Go to [Documentation](https://shnam7.github.io/gulp-build-manager)
 
 
 ## Key features

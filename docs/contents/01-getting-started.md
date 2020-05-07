@@ -196,5 +196,5 @@ Version 4 has substantial changes from v3, and it's not compatible with v3 or ea
 
 
 [0]: 02-build-config.md
-[1]: ../../examples
+[1]: https://github.com/shnam7/gulp-build-manager/tree/master/examples
 [2]: 09-migration-from-v3.md
