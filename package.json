@@ -1,6 +1,6 @@
 {
     "name": "gulp-build-manager",
-    "version": "4.0.1",
+    "version": "4.0.2",
     "description": "Easy to use, flexible gulp task manager",
     "files": [
         "lib",
@@ -59,7 +59,7 @@
     "devDependencies": {
         "@types/gulp": "^4.0.6",
         "@types/gulp-filter": "3.0.33",
-        "@types/jquery": "^3.3.36",
+        "@types/jquery": "^3.3.38",
         "@types/react-dom": "^16.9.7",
         "autoprefixer": "^9.7.6",
         "browser-sync": "^2.26.7",
@@ -87,9 +87,9 @@
         "gulp-rtlcss": "^1.4.1",
         "gulp-sass": "^4.1.0",
         "gulp-sourcemaps": "^2.6.5",
+        "gulp-terser": "^1.2.0",
         "gulp-twig": "^1.2.0",
         "gulp-typescript": "^6.0.0-alpha.1",
-        "gulp-uglify-es": "^2.0.0",
         "gulp-zip": "^5.0.1",
         "lodash.merge": "^4.6.2",
         "lost": "^8.3.1",
@@ -104,7 +104,7 @@
         "stream-to-promise": "^2.2.0",
         "stylelint": "^13.3.3",
         "stylelint-config-recommended": "^3.0.0",
-        "ts-loader": "^7.0.2",
+        "ts-loader": "^7.0.3",
         "twig-markdown": "^0.2.1",
         "typescript": "^3.8.3",
         "webpack": "^4.43.0",
