@@ -22,7 +22,7 @@ export class GBuildManager {
         process.argv.forEach(arg => {
             if (arg.startsWith('--npm-auto')) {
                 const [cmd, installOptions] = arg.split('=');
-                let autoInstall = cmd === '--nam-auto' || cmd === '--npm--auto-install';
+                let autoInstall = cmd === '--npm-auto' || cmd === '--npm--auto-install';
                 if (autoInstall) {
                     setNpmOptions(installOptions ? {autoInstall, installOptions} : {autoInstall});
                     return false;
