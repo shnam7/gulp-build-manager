@@ -1,7 +1,6 @@
 import * as upath from 'upath';
 import { RTB } from "../core/rtb";
-import { Options } from "../core/common";
-import { warn, msg } from '../utils/utils';
+import { Options, warn, msg } from '../utils/utils';
 import { requireSafe, npmInstall } from '../utils/npm';
 
 RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {

@@ -2,9 +2,8 @@
  *  gbm Plugin - CSS
  */
 
-import { Options } from "../core/common";
 import { RTB } from "../core/rtb";
-import { warn } from "../utils/utils";
+import { Options, warn } from "../utils/utils";
 import { requireSafe, npmInstall } from "../utils/npm";
 
 const cleanCss = (rtb: RTB) => {

@@ -1,4 +1,4 @@
-import { Options } from "../core/common";
+import { Options } from "../utils/utils";
 import { RTB } from "../core/rtb";
 import { npmInstall, requireSafe } from "../utils/npm";
 

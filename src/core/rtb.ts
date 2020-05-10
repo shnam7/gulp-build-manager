@@ -2,16 +2,16 @@
  * class RTB - Runtime Builder
  */
 
+import * as gulp from 'gulp';
 import * as upath from 'upath';
 import * as glob from 'glob';
 import * as filter from 'gulp-filter';
+import * as del from 'del';
 import { GBuildManager } from "./buildManager";
-import { GulpStream, Options, gulp } from "./common";
 import { BuildConfig, FunctionBuilder } from "./builder";
-import { toPromise, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy } from "../utils/utils";
+import { Options, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy } from "../utils/utils";
 import { npmLock, npmUnlock, requireSafe } from '../utils/npm';
 import { EventEmitter } from 'events';
-import del = require('del');
 
 
 type PromiseExecutor = () => void | Promise<unknown>;
@@ -21,6 +21,21 @@ interface BuildConfigNorm extends BuildConfig {
     moduleOptions: Options;
 }
 
+/** stream to promise */
+function toPromise(stream: Stream): Promise<Stream> {
+    if (!stream) return Promise.resolve(stream);
+    return requireSafe('stream-to-promise')(stream);
+}
+
+
+export { gulp };
+
+export type GulpStream = NodeJS.ReadWriteStream;
+
+export type Stream = GulpStream | undefined;
+
+export type GulpTaskFunction = gulp.TaskFunction;
+
 export type CopyParam = { src: string | string[], dest: string };
 
 export interface CleanOptions extends del.Options {
@@ -29,7 +44,6 @@ export interface CleanOptions extends del.Options {
 }
 
 export type RTBExtension = (...args: any[]) => FunctionBuilder;
-
 
 //--- class RTB
 // RTB event sequence: create > start > (after-src > before-dest) > finish
@@ -284,7 +298,7 @@ export class RTB extends EventEmitter {
 
     get ext() { return RTB._extension; }
 
-    protected static _extension: {[key:string]: RTBExtension} = {}
+    protected static _extension: { [key: string]: RTBExtension } = {}
 
     static registerExtension(name: string, ext: RTBExtension): void {
         if (this._extension[name])

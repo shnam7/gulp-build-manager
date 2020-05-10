@@ -1,8 +1,7 @@
 /**
  *  GReloader - Browser reloader
  */
-import { Options, Stream } from "./common";
-import { msg } from "../utils/utils";
+import { msg, Options } from "../utils/utils";
 import { requireSafe } from "../utils/npm";
 
 

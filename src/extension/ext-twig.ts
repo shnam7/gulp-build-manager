@@ -1,6 +1,5 @@
 import { RTB } from "../core/rtb";
-import { Options } from "../core/common";
-import { is, loadData } from "../utils/utils";
+import { Options, is, loadData } from "../utils/utils";
 import { requireSafe } from "../utils/npm";
 
 RTB.registerExtension('twig', (options: Options = {}) => (rtb: RTB) => {

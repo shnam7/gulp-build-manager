@@ -2,9 +2,8 @@ import * as upath from 'upath';
 import * as __utils from '../utils/utils';
 import { BuildSet, BuildSetSeries, BuildSetParallel, series, parallel, BuildConfig } from './builder';
 import { GProject, BuildGroup, ProjectOptions, BuildNameSelector } from './project';
-import { registerPropertiesFromFiles } from '../utils/utils';
+import { Options, registerPropertiesFromFiles } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
-import { Options } from './common';
 import { RTB, RTBExtension } from './rtb';
 import { setNpmOptions } from '../utils/npm';
 

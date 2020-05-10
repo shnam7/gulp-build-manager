@@ -1,11 +1,9 @@
 import * as upath from 'upath';
 import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildSetSeries, parallel } from "./builder";
-import { RTB, CleanOptions } from "./rtb";
-import { GulpTaskFunction, gulp } from "./common";
+import { RTB, CleanOptions, gulp, GulpTaskFunction } from "./rtb";
 import { is, arrayify, info, ExternalCommand, warn, exec, msg } from "../utils/utils";
 import { GBuildManager } from './buildManager';
 import { GReloader, ReloaderOptions, GBrowserSync } from './reloader';
-
 
 export type BuildNameSelector = string | string[] | RegExp | RegExp[];
 

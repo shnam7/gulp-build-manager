@@ -1,6 +1,6 @@
 import { RTB } from "../core/rtb";
-import { Options } from "../core/common";
 import { requireSafe, npmInstall } from "../utils/npm";
+import { Options } from "../utils/utils";
 
 RTB.registerExtension('coffeeScript', (options: Options = {}) => (rtb: RTB) => {
     const opts = rtb.buildOptions;

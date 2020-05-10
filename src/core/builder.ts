@@ -2,9 +2,8 @@
  *  Builder Base Class
  */
 
-import { Options, GulpTaskFunction } from "./common";
-import { ExternalCommand, warn } from "../utils/utils";
-import { RTB } from "./rtb";
+import { ExternalCommand, warn, Options } from "../utils/utils";
+import { RTB, GulpTaskFunction } from "./rtb";
 
 export type TaskDoneFunction = (error?: any) => void;
 export type BuildName = string;

@@ -2,8 +2,10 @@ import * as glob from 'glob';
 import * as upath from 'upath';
 import * as fs from "fs";
 import * as chalk from "chalk";
-import { Stream } from "../core/common";
 import { requireSafe } from './npm';
+
+export type Options = { [key: string]: any; }
+
 
 /** is: collection of type checking functions */
 function _is(a: any, name: string) {
@@ -53,12 +55,6 @@ export function registerPropertiesFromFiles(obj: any, globPattern: string, callb
 
     glob.sync(globPattern).forEach(file => files.push(cb(file)));
     files.forEach(file => addProperty(obj, upath.basename(file), () => require(file).default));
-}
-
-/** stream to promise */
-export function toPromise(stream: Stream): Promise<Stream> {
-    if (!stream) return Promise.resolve(stream);
-    return requireSafe('stream-to-promise')(stream);
 }
 
 
