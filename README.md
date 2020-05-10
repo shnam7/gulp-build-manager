@@ -24,7 +24,7 @@ Go to [Documentation](https://shnam7.github.io/gulp-build-manager)
 - Custom builders and extension support
 
 
-## What's new in version 4?
+## What's new in version 4
 - New architecture for better performance and easier interface
 - Improved promise handling for better synchronization in build processes
 - Multiple, modular build projects support

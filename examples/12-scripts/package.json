@@ -15,7 +15,6 @@
         "gulp-jshint": "",
         "gulp-rename": "^1.2.2",
         "gulp-typescript": "^3.1.7",
-        "gulp-uglify": "^3.0.0",
         "jshint": "",
         "jshint-stylish": "",
         "typescript": "^2.3.4"

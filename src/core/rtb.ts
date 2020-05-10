@@ -267,8 +267,8 @@ export class RTB extends EventEmitter {
     }
 
     minifyJs(options: Options = {}): this {
-        const opts = Object.assign({}, this.moduleOptions.uglifyES, options.uglifyES);
-        return this.filter().pipe(requireSafe('gulp-uglify-es').default(opts)).rename({ extname: '.min.js' });
+        const opts = Object.assign({}, this.moduleOptions.terser, options.terser);
+        return this.filter().pipe(requireSafe('gulp-terser')(opts)).rename({ extname: '.min.js' });
     }
 
 
