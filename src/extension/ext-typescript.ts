@@ -1,7 +1,6 @@
 import * as upath from 'upath';
 import { RTB } from "../core/rtb";
-import { Options, warn, msg } from '../utils/utils';
-import { requireSafe, npmInstall } from '../utils/npm';
+import { Options, warn, msg, requireSafe, npm } from '../utils/utils';
 
 RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     const tsConfig = rtb.buildOptions.tsConfig;     // tsconfig file path
@@ -34,7 +33,7 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     // Addd buildOptions.declarationMap option to override tsconfig files and moduleOptions.tsConfig
     tsOpts.declarationMap = !!rtb.buildOptions.declarationMap;
 
-    npmInstall(['gulp-typescript', 'typescript']);
+    npm.install(['typescript', 'gulp-typescript']);
     const typescript = require('gulp-typescript');
     let tsProject = undefined;
     if (tsConfig) {

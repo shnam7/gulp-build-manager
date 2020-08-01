@@ -1,10 +1,10 @@
 // ref: https://github.com/pbardov/es6-mutex
 
-const { EventEmitter } = require('events');
+import { EventEmitter } from 'events';
 
 export class Semaphore extends EventEmitter {
-    protected _n = 0;
-    protected _max = 1;
+    protected _n = 0;       // # of currently allowed accesses
+    protected _max = 1;     // # of maximum concurrent access
 
     constructor(max: number = 1, maxConsumers = 100) {
         super();
@@ -21,16 +21,12 @@ export class Semaphore extends EventEmitter {
     }
 
     async acquire(): Promise<void> {
-        while (this._n >= this._max) {
-            await this.onRelease();
-        }
-        this._n++;
-        this.emit('acquire', this._n);
+        while (this._n >= this._max) await this.onRelease();
+        this.emit('acquire', ++this._n);
     }
 
-    release() {
-        this._n -= 1;
-        this.emit('release', this._n);
+    release(): void {
+        this.emit('release', --this._n);
     }
 }
 
@@ -39,6 +35,6 @@ export class Mutex extends Semaphore {
         super(1, maxClients);
     }
 
-    lock() { return this.acquire(); }
-    unlock() { return this.release(); }
+    lock(): Promise<unknown> { return this.acquire(); }
+    unlock(): void { this.release(); }
 }

@@ -5,7 +5,7 @@ let should = chai.should();
 let parallel = gbm.parallel;
 
 module.exports = function () {
-    describe('buildSet', function () {
+    describe('buildManager', function () {
         it('calling with non-zero string argument should be ok', function () {
             should.not.throw(() => parallel('test'), Error);
         });

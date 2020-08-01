@@ -1,7 +1,6 @@
-import * as fs from "fs";
 import child_process = require('child_process');
 import { Mutex } from "./mutex";
-import { arrayify, notice, info, warn } from "./utils";
+import { arrayify, notice, info, warn, is } from "./utils";
 
 //--- init: workaround for git-sh-setup not found error
 if (process.platform == 'win32')
@@ -11,84 +10,161 @@ if (process.platform == 'win32')
 export type NpmOptions = {
     autoInstall?: boolean,
     installOptions?: string;
-    noModuleLoading?: boolean;
 };
 
-//--- variables
-const _mutex = new Mutex(1000);
-const _npmInstalled: string[] = [];
-const _npmOptions: NpmOptions = {
-    autoInstall: false,
-    installOptions: '--save-dev'
+type NodePackageManager = {
+    installCommand: string;
+    installOptions?: string;
 };
 
 
-//--- functions
-// let waitingCount = 0;
-export function npmLock(): Promise<void> {
-    // console.log('--- WaitiingCount=', ++waitingCount)
-    // return (_npmOptions.autoInstall ? _mutex.lock() : Promise.resolve()).then(() => {
-    //     console.log('--- WaitiingCount=', --waitingCount)
-    // });
-    return (_npmOptions.autoInstall ? _mutex.lock() : Promise.resolve());
-}
+//--- node package manager
+export class NPM {
+    protected _mutex = new Mutex(1000);
+    protected _packageManager: NodePackageManager = { installCommand: "npm i", installOptions: "--save-dev" };
+    protected _enable = false;
 
-export function npmUnlock(): void {
-    // console.log('---npmUnlock')
-    if (_npmOptions.autoInstall) _mutex.unlock();
-}
+    constructor() {}
 
-export function setNpmOptions(opts: NpmOptions): NpmOptions {
-    return Object.assign(_npmOptions, opts)
-}
+    public enable() { this._enable = true; }
+    public disable() { this._enable = false; }
 
-export function requireSafe(id: string): any {
-    npmInstall(id);
-    return require(id);
-}
+    public lock(): Promise<unknown> {
+        return (this._enable ? this._mutex.lock() : Promise.resolve());
+    }
 
-export function npmInstall(ids: string | string[], options: NpmOptions = {}) {
-    const upath = require('upath');
-    const opts = Object.assign({}, _npmOptions, options);
+    public unlock() {
+        if (this._enable) this._mutex.unlock();
+    }
 
-    // get uninstalled list only
-    ids = arrayify(ids).filter(id => {
-        if (_npmInstalled.indexOf(id) >= 0) return false; // already installed
+    public setPackageManager(packageManager: string) {
+        if (!packageManager) return;
 
-        const isCustom = id.startsWith('/') || id.startsWith('./');
-        if (isCustom) return false;
-
-        // if github module, then take project name without branch name
-        const isGit = !id.startsWith('@') && id.indexOf(upath.sep) > 0;
-        if (isGit) {
-            id = upath.basename(id);
-            let pos = id.indexOf('#');
-            if (pos > 0) id = id.substring(0, );
+        // strip outer quotes and white spaces
+        packageManager = packageManager.trim().replace(/^["'](.*)["']$/, '$1').trim();
+        if (packageManager.startsWith('-')) {
+            this._packageManager.installOptions = packageManager;
+            return;
         }
 
-        let moduleAvailable = false;
-        module.paths.forEach((nodeModulesPath) => {
+        switch (packageManager) {
+            case "npm":
+                this._packageManager.installCommand = "npm i";
+                this._packageManager.installOptions = "--save-dev";
+                break;
+            case "pnpm":
+                this._packageManager.installCommand = "pnpm i";
+                this._packageManager.installOptions = "--save-dev";
+                break;
+            case "yarn":
+                this._packageManager.installCommand = "yarn add";
+                this._packageManager.installOptions = "--dev";
+                break;
+            default: {
+                this._packageManager.installCommand = packageManager;
+                this._packageManager.installOptions = "";
+                break;
+            }
+        }
+    }
+
+    public install(ids: string | string[], installOptions?: string) {
+        if (!this._enable) return;
+        // get uninstalled list only
+        ids = arrayify(ids).filter(id => !this.isInstalled(id));
+        if (ids.length > 0) {
+            let installList = ids.join(' ');
+            let cmd = this._packageManager.installCommand;
+            if (this.packageManager.installOptions) cmd += " " + this.packageManager.installOptions;
+            cmd += " " + installList;
+            try {
+                notice(`GBM:NPM:install: ${cmd}`);
+                child_process.execSync(cmd, { cwd: process.cwd() })
+                info(`GBM:npmInstall:'${installList}' install finished.`);
+            }
+            catch (e) {
+                warn(`GBM:npmInstall:'${installList}' install failed.`);
+                throw e;
+            }
+        }
+    }
+
+    public isEnabled() { return this._enable; }
+    public isInstalled(id: string): boolean {
+        const fs = require("fs");
+        const upath = require('upath');
+
+        id = id.trim();
+        if (id.startsWith('git:') || id.startsWith('git+')) { // handle git/protocol
+            // strip branch name
+            let idx = id.lastIndexOf('#');
+            if (idx > 0) id = id.substring(0, idx);     // ex) sax@0.0.1, sax@latest
+
+            // strip training .git
+            if (id.endsWith('.git')) id = id.substring(0, id.length-4);
+
+            // strip leading protocol name
+            idx = id.indexOf(':');
+            if (idx > 0) id = id.substring(idx+1);
+        }
+        else if (id.startsWith('/') || id.startsWith('./') || id.startsWith('../')) {   // local folder
+            id = upath.basename(id);
+        }
+        else if (id.startsWith('@')) {  // scope handling
+            // strip version tag. should not strip leading scope mark '@'
+            let idx = id.lastIndexOf('@');
+            if (idx > 0) id = id.substring(0, idx);     // ex) sax@0.0.1, @types/gulp@latest
+        }
+        else {  // normal name or github repo
+            if (id.indexOf(upath.sep) > 0) {
+                id = upath.basename(id); // ex) shnam7/gulp-build-manager
+                let idx = id.lastIndexOf('#');
+                if (idx > 0) id = id.substring(0, idx);
+            }
+        }
+        id = id.trim();
+        if (id.length <= 0) return false;
+
+        // workaround to support using npm/pnpm link command
+        const cpath = upath.join(upath.normalize(process.cwd()).toLowerCase(), "node_modules");
+        const paths = module.paths.find(el => upath.normalize(el).toLowerCase() == cpath) ? module.paths : [cpath];
+
+        // look for node_modules directories
+        let isModuleAvailable = false;
+        // const mpath = upath.normalize(module.path);
+        paths.forEach((nodeModulesPath) => {
+            // replace module path with cwd to have correct path when using npm/pnpm link command
             const moduleFilePath = upath.join(nodeModulesPath, id);
             if (fs.existsSync(moduleFilePath)) {
-                moduleAvailable = true;
+                isModuleAvailable = true;
                 return false;
             }
         });
-        return moduleAvailable == false;
-    })
-
-    if (opts.autoInstall && ids.length > 0) {
-        const installList = ids.join(' ');
-        const cmd = `npm i ${installList} ${opts.installOptions}`;
-        try {
-            notice(`GBM:npmInstall:installing '${installList}' with option='${opts.installOptions}'...`);
-            child_process.execSync(cmd, { cwd: process.cwd() })
-            ids.forEach(id => _npmInstalled.push(id));
-            info(`GBM:npmInstall:'${installList}' install finished.`);
-        }
-        catch (e) {
-            warn(`GBM:npmInstall:'${installList}' install failed.`);
-            throw e;
-        }
+        return isModuleAvailable;
     }
+
+    get packageManager() { return this._packageManager; }
+};
+
+export const npm = new NPM();
+
+//--- deprecated
+export function setNpmOptions(opts: NpmOptions): void {
+    notice("[GBM]setNpmOption() is deprecarted. Use gbm.npm.setpackageManager() instead.");
+    notice("[GBM]Use gbm.npm.enable() to activate npm auto install.");
+    if (opts.autoInstall) npm.enable();
+    if (opts.installOptions) npm.setPackageManager(opts.installOptions);
+}
+
+// deprecated
+export function npmInstall(ids: string | string[], options: NpmOptions = {}) {
+    notice("[GBM]npmInstall() is deprecarted. Use gbm.npm.install() instead.");
+    notice("[GBM]Use gbm.npm.enable() to activate npm auto install.");
+    setNpmOptions(options);
+    npm.install(ids);
+}
+
+export function requireSafe(id: string): any {
+    npm.install(id);
+    return require(id);
 }

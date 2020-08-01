@@ -1,9 +1,5 @@
-.idea
 .vscode
-.trash
 node_modules
 /__*
 *.map
 /lib
-/docs/gulp-build-manager
-/docs/.jekyll-*

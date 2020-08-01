@@ -5,7 +5,7 @@ import { GProject, BuildGroup, ProjectOptions, BuildNameSelector } from './proje
 import { Options, registerPropertiesFromFiles } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
 import { RTB, RTBExtension } from './rtb';
-import { setNpmOptions } from '../utils/npm';
+import { npm } from '../utils/npm';
 
 //-- custom builders
 function __builders() {}
@@ -15,15 +15,15 @@ registerPropertiesFromFiles(__builders, upath.join(__dirname, '../builders/*.js'
 
 //--- GBuildManager
 export class GBuildManager {
-    protected _projects: GProject[] = []
+    protected _projects: GProject[] = [];
 
     constructor() {
         process.argv.forEach(arg => {
             if (arg.startsWith('--npm-auto')) {
-                const [cmd, installOptions] = arg.split('=');
-                let autoInstall = cmd === '--npm-auto' || cmd === '--npm--auto-install';
-                if (autoInstall) {
-                    setNpmOptions(installOptions ? {autoInstall, installOptions} : {autoInstall});
+                const [optName, optValue] = arg.split('=');
+                if (optName === '--npm-auto' || optName === '--npm--auto-install') {
+                    npm.enable();
+                    npm.setPackageManager(optValue);
                     return false;
                 }
             }}
@@ -72,6 +72,7 @@ export class GBuildManager {
 
     //--- properties
     get rtbs() { return GBuildManager.rtbs; }
+    get npm() { return npm; }
     get builders() { return __builders; }
     get utils() { return __utils; }
     get defaultModuleOptions() { return GBuildManager.defaultModuleOptions; }

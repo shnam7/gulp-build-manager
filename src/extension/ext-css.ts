@@ -4,7 +4,7 @@
 
 import { RTB } from "../core/rtb";
 import { Options, warn } from "../utils/utils";
-import { requireSafe, npmInstall } from "../utils/npm";
+import { requireSafe, npm } from "../utils/npm";
 
 const cleanCss = (rtb: RTB) => {
     const opts = Object.assign({}, rtb.moduleOptions.cleanCss, {
@@ -47,7 +47,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     // lint final css
     // lint does not understands postcss statements. so,it come after postcss processing
     if (opts.lint) {
-        npmInstall(['stylelint', 'postcss-reporter']);
+        npm.install(['stylelint', 'postcss-reporter']);
         const stylelint = require('stylelint');
         const reporter = require('postcss-reporter');
         let lintOpts = mopts.stylelint || {};

@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1
+- Add custom package manager support in --npm-auto-install option (pnpm, yard can be used now)
+- Replace gulp-uglify-es with gulp-terser
+- Separeate docs and examples (moved to other repositories)
+
+
 ## 4.0
 - RTB, Run-Time-Builder, introduction with rich API set
 - Improved promise handling for better build process synchronization

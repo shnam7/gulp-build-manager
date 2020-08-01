@@ -1,7 +1,7 @@
 import * as upath from 'upath';
 import { RTB } from "../core/rtb";
 import { Options,info, is, msg } from '../utils/utils';
-import { requireSafe } from '../utils/npm';
+import { requireSafe } from "../utils/npm";
 
 /**
  * Configuration priorities:

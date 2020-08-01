@@ -32,17 +32,21 @@ Go to [Documentation](https://shnam7.github.io/gulp-build-manager)
 - Rich runtime builder API for easier build routine development and customization
 
 
-## Automatic mudule installation
+## Automatic module installation
 
 ### Using gulpfile.js
 ```js
 const gbm = require('gulp-build-manager');
-gbm.setNpmOptions({autoInstall: true, installOptions: '--no-save'});
+gbm.npm.enable();
+
+// default package manager is npm. To change it, pnpm or yarn, do this
+gbm.setPackageManager("pnpm");  // or "yarn"
 ```
 
 ### Using command line
 ```sh
 npx gulp <task-name> --npm-auto # default npm install option is '--save-dev'
+npx gulp <task-name> --npm-auto="pnpm" # default npm. You can specify pnpm, yarn, or custom command here
 ```
 
 Refer to [Getting Started](docs/contents/01-getting-started.md) page for more information.

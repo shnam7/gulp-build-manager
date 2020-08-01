@@ -2,17 +2,15 @@
  * class RTB - Runtime Builder
  */
 
-import * as gulp from 'gulp';
 import * as upath from 'upath';
 import * as glob from 'glob';
 import * as filter from 'gulp-filter';
 import * as del from 'del';
 import { GBuildManager } from "./buildManager";
 import { BuildConfig, FunctionBuilder } from "./builder";
-import { Options, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy } from "../utils/utils";
-import { npmLock, npmUnlock, requireSafe } from '../utils/npm';
+import { Options, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy, requireSafe, npm } from "../utils/utils";
 import { EventEmitter } from 'events';
-
+import { TaskFunction } from 'gulp';
 
 type PromiseExecutor = () => void | Promise<unknown>;
 
@@ -21,20 +19,22 @@ interface BuildConfigNorm extends BuildConfig {
     moduleOptions: Options;
 }
 
-/** stream to promise */
+//--- stream to promise
 function toPromise(stream: Stream): Promise<Stream> {
     if (!stream) return Promise.resolve(stream);
     return requireSafe('stream-to-promise')(stream);
 }
 
+//--- npm lock functions
+function npmLock(): Promise<unknown> { return npm.lock(); }
+function npmUnlock(): void { npm.unlock(); }
 
-export { gulp };
 
 export type GulpStream = NodeJS.ReadWriteStream;
 
 export type Stream = GulpStream | undefined;
 
-export type GulpTaskFunction = gulp.TaskFunction;
+export type GulpTaskFunction = TaskFunction;
 
 export type CopyParam = { src: string | string[], dest: string };
 
@@ -119,7 +119,7 @@ export class RTB extends EventEmitter {
         if (!src) return this;
 
         const mopts = this.moduleOptions;
-        this._stream = gulp.src(src, mopts.gulp && mopts.gulp.src);
+        this._stream = requireSafe('gulp').src(src, mopts.gulp && mopts.gulp.src);
 
         // check input file ordering
         if (this.conf.order && this.conf.order?.length > 0) {
@@ -134,11 +134,11 @@ export class RTB extends EventEmitter {
 
     dest(path?: string): this {
         this.emit('before-dest', this);
-        this.sourceMaps().pipe(gulp.dest(path || this.conf.dest || '.', this.moduleOptions.gulp?.dest));
+        this.sourceMaps().pipe(requireSafe('gulp').dest(path || this.conf.dest || '.', this.moduleOptions.gulp?.dest));
         return this;
     }
 
-    pipe(destination: any, options?: { end?: boolean; }): this {
+    pipe(destination: any, options?: { end?: boolean | undefined; }): this {
         if (this._stream) this._stream = this._stream.pipe(destination, options);
         return this;
     }
@@ -246,8 +246,8 @@ export class RTB extends EventEmitter {
         if (!silent) msg('Deleting:', patterns);
 
         return (options.sync || this._syncMode)
-            ? this.promise(() => requireSafe("del")(patterns, options), options.sync)
-            : this.promise(requireSafe("del")(patterns, options), options.sync);
+            ? this.promise(() => del(patterns, options), options.sync)
+            : this.promise(del(patterns, options), options.sync);
     }
 
     exec(cmd: string | ExternalCommand, args: string[] = [], options: SpawnOptions = {}): this {

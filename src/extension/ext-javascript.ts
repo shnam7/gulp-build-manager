@@ -1,6 +1,6 @@
 import { Options } from "../utils/utils";
 import { RTB } from "../core/rtb";
-import { npmInstall, requireSafe } from "../utils/npm";
+import { requireSafe, npm } from "../utils/npm";
 
 RTB.registerExtension('javaScript', (options: Options = {}) => (rtb: RTB) => {
     const opts = rtb.buildOptions;
@@ -17,7 +17,7 @@ RTB.registerExtension('javaScript', (options: Options = {}) => (rtb: RTB) => {
 
     if (opts.babel) {
         // make sure peer dependencies are installed
-        npmInstall(['gulp-babel', '@babel/core']);
+        npm.install(['gulp-babel', '@babel/core']);
         rtb.pipe(require('gulp-babel')(rtb.moduleOptions.babel));
     }
 });

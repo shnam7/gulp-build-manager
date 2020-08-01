@@ -1,6 +1,6 @@
 import * as upath from 'upath';
 import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildSetSeries, parallel } from "./builder";
-import { RTB, CleanOptions, gulp, GulpTaskFunction } from "./rtb";
+import { RTB, CleanOptions, GulpTaskFunction } from "./rtb";
 import { is, arrayify, info, ExternalCommand, warn, exec, msg } from "../utils/utils";
 import { GBuildManager } from './buildManager';
 import { GReloader, ReloaderOptions, GBrowserSync } from './reloader';
@@ -49,6 +49,8 @@ export class GProject {
     }
 
     addWatcher(options: string | WatchOptions = {}, buildName = '@watch'): this {
+        const gulp = require('gulp');
+
         if (is.String(options)) {
             buildName = options;
             options = {} as WatchOptions
@@ -78,17 +80,17 @@ export class GProject {
 
                     // transfer gulp watch events to rtb
                     if (rtb.conf.reloadOnChange !== false)
-                        gulpWatcher.on('all', (...args) => rtb.once('finish', () => rtb.emit('reload', rtb, ...args)));
+                        gulpWatcher.on('all', (...args: any[]) => rtb.once('finish', () => rtb.emit('reload', rtb, ...args)));
                 });
 
                 // pure watch target
                 const watched = arrayify(opts.watch);
                 if (watched.length > 0) {
                     msg(`Watching ${rtbWatcher.buildName}: [${watched}]`);
-                    let gulpWatcher = gulp.watch(watched, (done) => done());
+                    let gulpWatcher = gulp.watch(watched, (done: any) => done());
 
                     if (rtbWatcher.conf.reloadOnChange != false) {
-                        gulpWatcher.on('all', (path) => {
+                        gulpWatcher.on('all', (path: string) => {
                             this._reloaders.forEach(reloader => reloader.reload(path));
                         });
                     }
@@ -157,8 +159,9 @@ export class GProject {
         if (is.String(buildSet) || is.Function(buildSet))
             return buildSet as (BuildName | GulpTaskFunction);
 
+        const gulp = require('gulp');
         // if buildSet is BuildConfig
-        else if (is.Object(buildSet) && buildSet.hasOwnProperty('buildName')) {
+        if (is.Object(buildSet) && buildSet.hasOwnProperty('buildName')) {
             let conf = buildSet as BuildConfig;
 
             // check for duplicate task registeration
