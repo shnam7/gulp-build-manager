@@ -70,6 +70,7 @@ export class RTB extends EventEmitter {
     }
 
     protected _start(): void | Promise<unknown> {
+        if (this.conf.npmInstall) npm.install(this.conf.npmInstall);
         this._syncMode = false;
         this.emit('start');
         if (this._syncMode) console.log('RTB: Strating build in sync Mode.');

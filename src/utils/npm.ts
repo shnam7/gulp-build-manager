@@ -6,14 +6,14 @@ import { arrayify, notice, info, warn, is } from "./utils";
 if (process.platform == 'win32')
     process.env.PATH += ';C:\\Program Files\\Git\\mingw64\\libexec\\git-core';
 
-//--- types
+//--- types: deprecated in v4.1
 export type NpmOptions = {
     autoInstall?: boolean,
     installOptions?: string;
 };
 
 type NodePackageManager = {
-    installCommand: string;
+    installCommand?: string;
     installOptions?: string;
 };
 
@@ -52,7 +52,7 @@ export class NPM {
                 this._packageManager.installOptions = "--save-dev";
                 break;
             case "pnpm":
-                this._packageManager.installCommand = "pnpm i";
+                this._packageManager.installCommand = "pnpm add";
                 this._packageManager.installOptions = "--save-dev";
                 break;
             case "yarn":
@@ -67,14 +67,15 @@ export class NPM {
         }
     }
 
-    public install(ids: string | string[], enforce=true) {
-        if (!this._enable && !enforce) return;
+    public install(ids: string | string[]) {
+        if (!this._enable) return;
+
         // get uninstalled list only
         ids = arrayify(ids).filter(id => !this.isInstalled(id));
         if (ids.length > 0) {
             let installList = ids.join(' ');
-            let cmd = this._packageManager.installCommand;
-            if (this.packageManager.installOptions) cmd += " " + this.packageManager.installOptions;
+            let cmd = this._packageManager.installCommand as string;
+            if (this._packageManager.installOptions) cmd += " " + this.packageManager.installOptions;
             cmd += " " + installList;
 
             notice(`GBM:NPM:install: ${cmd}`);
