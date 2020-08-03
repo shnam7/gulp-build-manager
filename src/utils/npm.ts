@@ -20,7 +20,6 @@ type NodePackageManager = {
 
 //--- node package manager
 export class NPM {
-    protected _mutex = new Mutex(1000);
     protected _packageManager: NodePackageManager = { installCommand: "npm i", installOptions: "--save-dev" };
     protected _enable = false;
 
@@ -30,11 +29,11 @@ export class NPM {
     public disable() { this._enable = false; }
 
     public lock(): Promise<unknown> {
-        return (this._enable ? this._mutex.lock() : Promise.resolve());
+        return (this._enable ? NPM._mutex.lock() : Promise.resolve());
     }
 
     public unlock() {
-        if (this._enable) this._mutex.unlock();
+        if (this._enable) NPM._mutex.unlock();
     }
 
     public setPackageManager(packageManager: string) {
@@ -68,8 +67,8 @@ export class NPM {
         }
     }
 
-    public install(ids: string | string[], installOptions?: string) {
-        if (!this._enable) return;
+    public install(ids: string | string[], enforce=true) {
+        if (!this._enable && !enforce) return;
         // get uninstalled list only
         ids = arrayify(ids).filter(id => !this.isInstalled(id));
         if (ids.length > 0) {
@@ -77,15 +76,18 @@ export class NPM {
             let cmd = this._packageManager.installCommand;
             if (this.packageManager.installOptions) cmd += " " + this.packageManager.installOptions;
             cmd += " " + installList;
+
+            notice(`GBM:NPM:install: ${cmd}`);
+            this.lock();
             try {
-                notice(`GBM:NPM:install: ${cmd}`);
                 child_process.execSync(cmd, { cwd: process.cwd() })
-                info(`GBM:npmInstall:'${installList}' install finished.`);
             }
             catch (e) {
                 warn(`GBM:npmInstall:'${installList}' install failed.`);
                 throw e;
             }
+            this.unlock();
+            info(`GBM:npmInstall:'${installList}' install finished.`);
         }
     }
 
@@ -132,6 +134,7 @@ export class NPM {
         // look for node_modules directories
         let isModuleAvailable = false;
         // const mpath = upath.normalize(module.path);
+        // this.lock();
         paths.forEach((nodeModulesPath) => {
             // replace module path with cwd to have correct path when using npm/pnpm link command
             const moduleFilePath = upath.join(nodeModulesPath, id);
@@ -140,10 +143,13 @@ export class NPM {
                 return false;
             }
         });
+        // this.unlock();
         return isModuleAvailable;
     }
 
     get packageManager() { return this._packageManager; }
+
+    protected static _mutex = new Mutex(1000);
 };
 
 export const npm = new NPM();

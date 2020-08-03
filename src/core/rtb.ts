@@ -25,10 +25,6 @@ function toPromise(stream: Stream): Promise<Stream> {
     return requireSafe('stream-to-promise')(stream);
 }
 
-//--- npm lock functions
-function npmLock(): Promise<unknown> { return npm.lock(); }
-function npmUnlock(): void { npm.unlock(); }
-
 
 export type GulpStream = NodeJS.ReadWriteStream;
 
@@ -98,13 +94,11 @@ export class RTB extends EventEmitter {
     __build() : Promise<unknown> {
         return Promise.resolve()
             .then(this._start.bind(this))
-            .then(npmLock)
             .then(this._execute.bind(this, this.conf.preBuild))
             .then(this.build.bind(this))
             .then(this._execute.bind(this, this.conf.postBuild))
             .then(() => this._promiseSync)
             .then(() => Promise.all(this._promises))
-            .then(npmUnlock)
             .then(() => { if (this.conf.flushStream) return toPromise(this._stream); })
             .then(this._finish.bind(this))
     }
