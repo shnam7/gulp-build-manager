@@ -7,7 +7,7 @@ devDependencies:
   '@types/gulp': 4.0.6
   '@types/gulp-filter': 3.0.33
   chai: 4.2.0
-  mocha: 8.1.0
+  mocha: 8.1.1
   typescript: 3.9.7
 lockfileVersion: 5.1
 packages:
@@ -573,7 +573,7 @@ packages:
       has: 1.0.3
       has-symbols: 1.0.1
       is-callable: 1.2.0
-      is-regex: 1.1.0
+      is-regex: 1.1.1
       object-inspect: 1.8.0
       object-keys: 1.1.1
       object.assign: 4.1.0
@@ -731,6 +731,7 @@ packages:
   /flat/4.1.0:
     dependencies:
       is-buffer: 2.0.4
+    deprecated: 'Fixed a prototype pollution security issue in 4.1.0, please upgrade to ^4.1.1 or ^5.0.1.'
     dev: true
     hasBin: true
     resolution:
@@ -1108,14 +1109,14 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==
-  /is-regex/1.1.0:
+  /is-regex/1.1.1:
     dependencies:
       has-symbols: 1.0.1
     dev: true
     engines:
       node: '>= 0.4'
     resolution:
-      integrity: sha512-iI97M8KTWID2la5uYXlkbSDQIg4F6o1sYboZKKTDpnDQMLtUL86zxhgDet3Q2SriaYsyGqZ6Mn2SjbRKeLHdqw==
+      integrity: sha512-1+QkEcxiLlB7VEyFtyBg94e08OAsvq7FUBgApTq/w2ymCLyKJgDPsybBENVtA7XCQEgEXxKPonG+mvYRxh/LIg==
   /is-set/2.0.1:
     dev: true
     resolution:
@@ -1301,7 +1302,7 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-WRoDn//mXBiJ1H40rqa3vH0toePwSsGb45iInWlTySa+Uu4k3tYUSxa2v1KqAiLtvlrSzaExqS1gtk96A9zvEA==
-  /mocha/8.1.0:
+  /mocha/8.1.1:
     dependencies:
       ansi-colors: 4.1.1
       browser-stdout: 1.3.1
@@ -1333,7 +1334,7 @@ packages:
       node: '>= 10.12.0'
     hasBin: true
     resolution:
-      integrity: sha512-sI0gaI1I/jPVu3KFpnveWGadfe3JNBAENqgTUPgLZAUppu725zS2mrVztzAgIR8DUscuS4doEBTx9LATC+HSeA==
+      integrity: sha512-p7FuGlYH8t7gaiodlFreseLxEmxTgvyG9RgPHODFPySNhwUehu8NIb0vdSt3WFckSneswZ0Un5typYcWElk7HQ==
   /ms/2.0.0:
     dev: true
     resolution:
@@ -2015,7 +2016,7 @@ specifiers:
   chai: ^4.2.0
   chalk: ^4.1.0
   del: ^5.1.0
-  mocha: ^8.1.0
+  mocha: ^8.1.1
   rimraf: ^3.0.2
   typescript: ^3.9.7
   upath: ^1.2.0

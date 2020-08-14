@@ -114,7 +114,7 @@ export class RTB extends EventEmitter {
         if (!src) return this;
 
         const mopts = this.moduleOptions;
-        this._stream = requireSafe('gulp').src(src, mopts.gulp && mopts.gulp.src);
+        this._stream = requireSafe('gulp').src(src, mopts.gulp?.src);
 
         // check input file ordering
         if (this.conf.order && this.conf.order?.length > 0) {
@@ -124,13 +124,23 @@ export class RTB extends EventEmitter {
         this.emit('after-src', this);
 
         // check sourceMap option
-        return this.sourceMaps({ init: true });
+        if (this.buildOptions.sourceMap)
+            this.pipe(requireSafe('gulp-sourcemaps').init(this.moduleOptions?.sourcemaps?.init));
+
+        return this;
     }
 
     dest(path?: string): this {
         this.emit('before-dest', this);
-        this.sourceMaps().pipe(requireSafe('gulp').dest(path || this.conf.dest || '.', this.moduleOptions.gulp?.dest));
-        return this;
+
+        // check sourceMap option
+        if (this.buildOptions.sourceMap) {
+            let opts = this.moduleOptions.sourcemaps || {};
+            if (!opts.dest && opts.inline !== true) opts.dest = '.';
+            this.pipe(requireSafe('gulp-sourcemaps').write(opts.dest, opts.write));
+        }
+
+        return this.pipe(requireSafe('gulp').dest(path || this.conf.dest || '.', this.moduleOptions.gulp?.dest));
     }
 
     pipe(destination: any, options?: { end?: boolean | undefined; }): this {
@@ -191,17 +201,6 @@ export class RTB extends EventEmitter {
             if (this._stream) this.promise(toPromise(this._stream));  // back for flushing
             this._stream = this._streamQ.pop()
         }
-        return this;
-    }
-
-    sourceMaps(options: Options = {}): this {
-        if (!this.buildOptions.sourceMap) return this;
-
-        let opts = Object.assign({}, this.moduleOptions.sourcemaps, options);
-        if (opts.init)
-            this.pipe(requireSafe('gulp-sourcemaps').init(opts.init));
-        else
-            this.pipe(requireSafe('gulp-sourcemaps').write(opts.dest || '.', opts.write));
         return this;
     }
 
