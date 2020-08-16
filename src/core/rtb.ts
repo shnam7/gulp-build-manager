@@ -85,6 +85,7 @@ export class RTB extends EventEmitter {
 
     //--- internal functions to be used by friend classes: GBuildManager
 
+    //: init RTB instance
     __create(conf: BuildConfig): this {
         Object.assign(this._conf, conf);
         this.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
@@ -92,6 +93,7 @@ export class RTB extends EventEmitter {
         return this;
     }
 
+    //: gulp task entry point
     __build() : Promise<unknown> {
         return Promise.resolve()
             .then(this._start.bind(this))
