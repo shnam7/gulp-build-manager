@@ -34,7 +34,9 @@ export type GulpTaskFunction = TaskFunction;
 
 export type CopyParam = { src: string | string[], dest: string };
 
-export interface CleanOptions extends del.Options {
+export interface CleanerOptions extends del.Options {
+    name?: string,
+    filter?: string | RegExp | (string | RegExp)[],
     clean?: string | string[];
     sync?: boolean;
 }
@@ -252,7 +254,7 @@ export class RTB extends EventEmitter {
             : this.promise(exec(cmd, args, options), options.sync);
     }
 
-    clean(options: CleanOptions = {}): this {
+    clean(options: CleanerOptions = {}): this {
         let cleanList = arrayify(this.conf.clean).concat(arrayify(options.clean));
         const delOpts = Object.assign({}, this.moduleOptions.del, options);
         return this.del(cleanList, delOpts)

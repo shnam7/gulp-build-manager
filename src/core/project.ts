@@ -1,13 +1,15 @@
 import * as upath from 'upath';
 import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildSetSeries, parallel } from "./builder";
-import { RTB, CleanOptions, GulpTaskFunction } from "./rtb";
+import { RTB, CleanerOptions, GulpTaskFunction } from "./rtb";
 import { is, arrayify, info, ExternalCommand, warn, exec, msg } from "../utils/utils";
 import { GBuildManager } from './buildManager';
 import { GReloader, ReloaderOptions, GBrowserSync } from './reloader';
 
 export type BuildNameSelector = string | string[] | RegExp | RegExp[];
 
-export interface WatchOptions extends ReloaderOptions {
+export interface WatcherOptions extends ReloaderOptions {
+    name?: string,                  // watcher (gulp) task name
+    filter?: string | RegExp | (string | RegExp)[],     // filter for buildNames (inside the project) to be watched
     watch?: string | string[];      // pure watching: watched files to be reloaded on change w/o build actions
     browserSync?: ReloaderOptions;  // browserSync initializer options
     livereload?: ReloaderOptions;   // livereload initializer options
@@ -48,23 +50,26 @@ export class GProject {
         return this;
     }
 
-    addWatcher(options: string | WatchOptions = {}, buildName = '@watch'): this {
+    addWatcher(options: string | WatcherOptions = {}, buildName = '@watch'): this {
         const gulp = require('gulp');
-
-        if (is.String(options)) {
-            buildName = options;
-            options = {} as WatchOptions
-        }
-        const opts = options as WatchOptions;   // for type assertion
+        const opts: WatcherOptions = is.String(options) ? { name: options }
+            : Object.assign({}, { name: buildName }, options);
 
         if (opts.browserSync) this._reloaders.push(new GBrowserSync(opts.browserSync));
         if (opts.livereload) this._reloaders.push(new GBrowserSync(opts.livereload));
 
         // create watch build item
         return this.addBuildItem({
-            buildName,
+            buildName: opts.name || '@watch',
             builder: (rtbWatcher) => {
+                // watch build items
                 this._rtbs.forEach(rtb => {
+                    if (opts.filter) {
+                        let skip = true;
+                        arrayify(opts.filter).forEach(filter => { if (rtb.buildName.match(filter)) { skip = false; return; } })
+                        if (skip) return;
+                    }
+
                     this._reloaders.forEach(reloader => rtb.on('reload', (rtb, type, path, stats) => {
                         // console.log(`[${rtb.buildName}:reload]: stream=${!!rtb.stream} type=${type}, path=${path}, stats=${stats}`);
                         if (rtb.stream)
@@ -102,18 +107,21 @@ export class GProject {
         });
     }
 
-    addCleaner(options: string | CleanOptions = {}, buildName = '@clean'): this {
-        if (is.String(options)) {
-            buildName = options;
-            options = {}
-        }
-        const opts = options as CleanOptions;   // for type assertion
+    addCleaner(options: string | CleanerOptions = {}, buildName = '@clean'): this {
+        const opts: CleanerOptions = is.String(options) ? { name: options }
+            : Object.assign({}, { name: buildName }, options) as CleanerOptions;
 
         return this.addBuildItem({
-            buildName,
+            buildName: opts.name || '@clean',
             builder: (rtb) => {
                 let cleanList = arrayify(opts.clean);
                 this._rtbs.forEach(rtb => {
+                    if (opts.filter) {
+                        let skip = true;
+                        arrayify(opts.filter).forEach(filter => { if (rtb.buildName.match(filter)) { skip = false; return; } })
+                        if (skip) return;
+                    }
+
                     if (rtb.conf.clean) cleanList = cleanList.concat(arrayify(rtb.conf.clean))
                 });
 
