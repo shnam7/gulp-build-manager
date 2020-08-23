@@ -51,7 +51,7 @@ export interface BuildConfig {
     reloadOnChange?: boolean;       // Reload on change when watcher is running. default is true.
     verbose?: boolean,              // print verbose messages
     silent?: boolean,               // depress informative messages
-    npmInstall?: string | string[]; // npm-auto-install option
+    npmInstall?: string | string[]; // node packages to be installed by npm-auto-install option
 }
 
 //--- BuildSet

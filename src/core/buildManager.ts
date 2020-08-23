@@ -16,6 +16,7 @@ registerPropertiesFromFiles(__builders, upath.join(__dirname, '../builders/*.js'
 //--- GBuildManager
 export class GBuildManager {
     protected _projects: GProject[] = [];
+    protected _config: Options = {}
 
     constructor() {
         process.argv.forEach(arg => {
@@ -28,6 +29,18 @@ export class GBuildManager {
                 }
             }}
         );
+
+        this.config({ moduleOptions: this.defaultModuleOptions }).config('gbm.config.js');
+    }
+
+    config(data: string | Options = {}) {
+        if (__utils.is.String(data)) {
+            const fs = require('fs');
+            const pathNname = upath.resolve(process.cwd(), data);
+            data = fs.existsSync(pathNname) ? require(pathNname) : {};
+        }
+        this._config = Object.assign((<any>data).reset === true ? {} : this._config, data);
+        return this;
     }
 
     createProject(buildGroup: BuildConfig | BuildGroup = {}, opts?: ProjectOptions): GProject {
@@ -71,6 +84,7 @@ export class GBuildManager {
     registerExtension(name: string, ext: RTBExtension): void { RTB.registerExtension(name, ext) }
 
     //--- properties
+    get conf() { return this._config; }
     get rtbs() { return GBuildManager.rtbs; }
     get npm() { return npm; }
     get builders() { return __builders; }

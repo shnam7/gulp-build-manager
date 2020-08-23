@@ -11,6 +11,7 @@ import { BuildConfig, FunctionBuilder } from "./builder";
 import { Options, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy, requireSafe, npm } from "../utils/utils";
 import { EventEmitter } from 'events';
 import { TaskFunction } from 'gulp';
+import { BuildNameSelector } from './project';
 
 type PromiseExecutor = () => void | Promise<unknown>;
 
@@ -36,7 +37,7 @@ export type CopyParam = { src: string | string[], dest: string };
 
 export interface CleanerOptions extends del.Options {
     name?: string,
-    filter?: string | RegExp | (string | RegExp)[],
+    filter?: BuildNameSelector,
     clean?: string | string[];
     sync?: boolean;
 }

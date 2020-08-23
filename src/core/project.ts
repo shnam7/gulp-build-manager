@@ -9,7 +9,7 @@ export type BuildNameSelector = string | string[] | RegExp | RegExp[];
 
 export interface WatcherOptions extends ReloaderOptions {
     name?: string,                  // watcher (gulp) task name
-    filter?: string | RegExp | (string | RegExp)[],     // filter for buildNames (inside the project) to be watched
+    filter?: BuildNameSelector,     // filter for buildNames (inside the project) to be watched
     watch?: string | string[];      // pure watching: watched files to be reloaded on change w/o build actions
     browserSync?: ReloaderOptions;  // browserSync initializer options
     livereload?: ReloaderOptions;   // livereload initializer options
@@ -140,8 +140,7 @@ export class GProject {
         let ret: string[] = [];
         const ar = arrayify(selector);
         this.rtbs.forEach(rtb => ar.forEach(sel => {
-            const buildName = rtb.buildName;
-            if (sel === buildName || (is.RegExp(sel) && sel.test(buildName))) ret.push(buildName)
+            if (rtb.buildName.match(sel)) ret.push(rtb.buildName)
         }));
         return ret;
     }
@@ -271,7 +270,6 @@ export class GProject {
                 warn(`builder '${builder}' not found:`, e);
             }
             throw Error('Builder not found: ' + builder + ', or check for modules imported from ' + builder);
-
         }
 
         // if builder is BuildFunction
