@@ -88,7 +88,7 @@ export function loadData(globPatterns: string | string[]): Object {
     globPatterns.forEach((globPattern: string) => {
         glob.sync(globPattern).forEach((file) => {
             let ext = upath.extname(file).toLowerCase();
-            if (ext === '.yml' || ext === 'yaml') {
+            if (ext === '.yml' || ext === '.yaml') {
                 if (!yaml) yaml = requireSafe('js-yaml');
                 Object.assign(data, yaml.safeLoad(fs.readFileSync(file)));
             }
