@@ -2,7 +2,7 @@
  *  Jekyll Builder
  */
 
-import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { GBuilder } from "../core/builder";
 
 export class GJekyllBuilder extends GBuilder {
     command: string;

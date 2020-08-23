@@ -48,7 +48,7 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     if (!tsProject) tsProject = typescript.createProject(tsOpts);
 
     if (rtb.buildOptions.printConfig) {
-        msg(`[GBM:ext.typeScript]tsconfig evaluated(buildName:${rtb.buildName}):\n`, tsProject.options);
+        msg(`[GBM:ext-typeScript]tsconfig evaluated(name:${rtb.name}):\n`, tsProject.options);
     }
 
     // workaround for gulp-typescript sourceMap failure which requires sourceRoot value

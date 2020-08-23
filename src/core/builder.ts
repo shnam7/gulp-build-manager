@@ -2,44 +2,40 @@
  *  Builder Base Class
  */
 
-import { ExternalCommand, warn, Options } from "../utils/utils";
-import { RTB, GulpTaskFunction } from "./rtb";
+import { ExternalCommand, warn, Options, is } from "../utils/utils";
+import { RTB, GulpTaskFunction, CleanOptions } from "./rtb";
+import { ReloaderOptions } from "./reloader";
 
 export type TaskDoneFunction = (error?: any) => void;
 export type BuildName = string;
+export type BuildNameSelector = string | string[] | RegExp | RegExp[];
+export type BuildFunction = (rtb: RTB, ...args: any[]) => void | Promise<unknown>;
 
+//--- BuilderType
+export type BuilderClassName = string;
+export type BuilderType = BuilderClassName | BuildFunction | ExternalCommand | GBuilder | 'cleaner' | 'watcher';
 
-//--- Named Builder
-export type GBuilderClassName = string;
+//--- BuildSet
+export type BuildSet = BuildName | GulpTaskFunction | BuildConfig | BuildSetSeries | BuildSetParallel;
+export type BuildSetSeries = BuildSet[];
+export type BuildSetParallel = { set: BuildSet[] };
+export function series(...args: BuildSet[]): BuildSetSeries { return args }
+export function parallel(...args: BuildSet[]): BuildSetParallel { return { set: args } }
 
-//--- Function Builder
-export type FunctionBuilder = (rtb: RTB, ...args: any[]) => void | Promise<unknown>;
+//--- BuildItem
+export type BuildItem = BuildConfig | WatcherConfig | CleanerConfig;
+export type BuildItems = { [key: string]: BuildItem };
 
-//--- External Builder
-export interface ExternalBuilder extends ExternalCommand { }
-
-//--- GBuilder
-export class GBuilder extends RTB {
-    constructor() { super();
-    }
-
-    protected build(): void | Promise<unknown> {}
-}
-
-//--- Combined Builders Type
-export type Builders = GBuilderClassName | FunctionBuilder | ExternalBuilder | GBuilder;
-
-
-//--- Build Config
+//--- BuildConfig
 export interface BuildConfig {
-    buildName: string;              // mandatory
-    builder?: Builders;             // main build operations in various form: function, object, class, etc
-    src?: string | string[];
-    dest?: string;
+    name: string;                   // buildName, mandatory field
+    builder?: BuilderType;          // main build operations in various form: function, object, class, etc
+    src?: string | string[];        // source for build operation
+    dest?: string;                  // output(destination) directory of the build operation
     order?: string[];               // input file(src) ordering
-    outFile?: string;
-    preBuild?: FunctionBuilder;     // function to be executed before BuildConfig.builder
-    postBuild?: FunctionBuilder;    // function to be executed after BuildConfig.builder
+    outFile?: string;               // optional output file name
+    preBuild?: BuildFunction;       // function to be executed before BuildConfig.builder
+    postBuild?: BuildFunction;      // function to be executed after BuildConfig.builder
     buildOptions?: Options;         // buildConfig instance specific custom options
     moduleOptions?: Options;        // gulp module options
     dependencies?: BuildSet;        // buildSet to be executed before this build task
@@ -52,15 +48,37 @@ export interface BuildConfig {
     verbose?: boolean,              // print verbose messages
     silent?: boolean,               // depress informative messages
     npmInstall?: string | string[]; // node packages to be installed by npm-auto-install option
+
+    //--- obsolete
+    buildName?: string;             // keep for backward compatibility
 }
 
-//--- BuildSet
-export type BuildSet = BuildName | GulpTaskFunction | BuildConfig | BuildSetSeries | BuildSetParallel;
-export type BuildSetSeries = BuildSet[];
-export type BuildSetParallel = { set: BuildSet[] };
+//--- WatcherConfig (Watcher task config)
+export interface WatcherConfig extends Pick<BuildConfig, "name" | "buildName" | "builder" | "watch"> {
+    filter?: BuildNameSelector,     // filter for buildNames (inside the project) to be watched
+    browserSync?: ReloaderOptions;  // browserSync initializer options
+    livereload?: ReloaderOptions;   // livereload initializer options
+}
 
-export function series(...args: BuildSet[]): BuildSetSeries { return args }
-export function parallel(...args: BuildSet[]): BuildSetParallel { return { set: args } }
+//--- CleanerConfig (Cleaner task config)
+export interface CleanerConfig extends Pick<BuildConfig, "name" | "buildName" | "builder" | "clean">, CleanOptions {
+    filter?: BuildNameSelector,
+    sync?: boolean;
+}
+
+
+//--- GBuilder
+export class GBuilder extends RTB {
+    constructor() { super();
+    }
+
+    protected build(): void | Promise<unknown> {}
+
+    static isBuildItem(item: any) : boolean {
+        return item.hasOwnProperty('name') && is.String(item.name)
+            || item.hasOwnProperty('buildName') && is.String(item.buildName);
+    }
+}
 
 
 //--- GTrasnpiler

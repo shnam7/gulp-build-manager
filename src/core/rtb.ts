@@ -7,12 +7,23 @@ import * as glob from 'glob';
 import * as filter from 'gulp-filter';
 import * as del from 'del';
 import { GBuildManager } from "./buildManager";
-import { BuildConfig, FunctionBuilder } from "./builder";
+import { BuildConfig, BuildFunction } from "./builder";
 import { Options, msg, info, is, ExternalCommand, SpawnOptions, exec, wait, arrayify, copy, requireSafe, npm } from "../utils/utils";
 import { EventEmitter } from 'events';
 import { TaskFunction } from 'gulp';
-import { BuildNameSelector } from './project';
 
+export type GulpStream = NodeJS.ReadWriteStream;
+export type Stream = GulpStream | undefined;
+export type GulpTaskFunction = TaskFunction;
+export type CopyParam = { src: string | string[], dest: string };
+export type RTBExtension = (...args: any[]) => BuildFunction;
+
+export interface CleanOptions extends del.Options {
+    clean?: string | string[];
+}
+
+
+//--- internals
 type PromiseExecutor = () => void | Promise<unknown>;
 
 interface BuildConfigNorm extends BuildConfig {
@@ -20,29 +31,10 @@ interface BuildConfigNorm extends BuildConfig {
     moduleOptions: Options;
 }
 
-//--- stream to promise
 function toPromise(stream: Stream): Promise<Stream> {
-    if (!stream) return Promise.resolve(stream);
-    return requireSafe('stream-to-promise')(stream);
+    return stream ? requireSafe('stream-to-promise')(stream) : Promise.resolve(stream);
 }
 
-
-export type GulpStream = NodeJS.ReadWriteStream;
-
-export type Stream = GulpStream | undefined;
-
-export type GulpTaskFunction = TaskFunction;
-
-export type CopyParam = { src: string | string[], dest: string };
-
-export interface CleanerOptions extends del.Options {
-    name?: string,
-    filter?: BuildNameSelector,
-    clean?: string | string[];
-    sync?: boolean;
-}
-
-export type RTBExtension = (...args: any[]) => FunctionBuilder;
 
 //--- class RTB
 // RTB event sequence: create > start > (after-src > before-dest) > finish
@@ -52,10 +44,10 @@ export class RTB extends EventEmitter {
     protected _promises: Promise<unknown>[] = [];
     protected _promiseSync: Promise<unknown> = Promise.resolve();
     protected _syncMode: boolean = false;
-    protected _buildFunc: FunctionBuilder = (rtb: RTB) => { rtb.src().dest(); };
-    protected _conf: BuildConfigNorm = { buildName: '', buildOptions: {}, moduleOptions: {} };
+    protected _buildFunc: BuildFunction = (rtb: RTB) => { rtb.src().dest(); };
+    protected _conf: BuildConfigNorm = { name: '', buildOptions: {}, moduleOptions: {} };
 
-    constructor(func?: FunctionBuilder) {
+    constructor(func?: BuildFunction) {
         super();
         if (func) this._buildFunc = func;
     }
@@ -64,7 +56,7 @@ export class RTB extends EventEmitter {
     /**----------------------------------------------------------------
      * Build sequence functions: Return value should be void or Promise
      *-----------------------------------------------------------------*/
-    protected _execute(action?: FunctionBuilder, ...args: any[]): void | Promise<unknown> {
+    protected _execute(action?: BuildFunction, ...args: any[]): void | Promise<unknown> {
         if (is.Function(action)) return action(this, args);
     }
 
@@ -153,7 +145,7 @@ export class RTB extends EventEmitter {
         return this;
     }
 
-    chain(action: FunctionBuilder, ...args: any[]): this {
+    chain(action: BuildFunction, ...args: any[]): this {
         return this.promise(action(this, ...args));
     }
 
@@ -230,9 +222,9 @@ export class RTB extends EventEmitter {
 
         const _copy = (target: any): Promise<unknown> => {
             let copyInfo = `[${target.src}] => ${target.dest}`;
-            if (options.verbose) msg(`[${this.buildName}]:copying: ${copyInfo}`);
+            if (options.verbose) msg(`[${this.name}]:copying: ${copyInfo}`);
             return copy(target.src, target.dest)
-                .then(() => { if (this.conf.verbose) msg(`[${this.buildName}]:copying: ${copyInfo} --> done`) });
+                .then(() => { if (this.conf.verbose) msg(`[${this.name}]:copying: ${copyInfo} --> done`) });
         }
         arrayify(param).forEach(target => this.promise(
             (options.sync || this._syncMode) ? () => _copy(target) : _copy(target)
@@ -255,7 +247,7 @@ export class RTB extends EventEmitter {
             : this.promise(exec(cmd, args, options), options.sync);
     }
 
-    clean(options: CleanerOptions = {}): this {
+    clean(options: CleanOptions = {}): this {
         let cleanList = arrayify(this.conf.clean).concat(arrayify(options.clean));
         const delOpts = Object.assign({}, this.moduleOptions.del, options);
         return this.del(cleanList, delOpts)
@@ -287,7 +279,8 @@ export class RTB extends EventEmitter {
 
     //--- extension support
     get conf() { return this._conf; }
-    get buildName() { return this.conf.buildName; }
+
+    get name() { return this.conf.name; }
     get buildOptions() { return this.conf.buildOptions; }
     get moduleOptions() { return this.conf.moduleOptions; }
     get stream() { return this._stream; }
@@ -312,6 +305,12 @@ export class RTB extends EventEmitter {
             glob.sync(dir).forEach(file => files.push(cb(file)));
             files.forEach(file => require(file));
         });
+    }
+
+    // deprecated
+    get buildName() {
+        // warn('[GBM:rtb:builName] rtb.buildName is deprecated. Use rtb.name instead.');
+        return this.conf.name;
     }
 }
 

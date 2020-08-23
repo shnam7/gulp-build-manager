@@ -2,7 +2,7 @@
  *  Panini Builder
  */
 
-import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { GBuilder } from "../core/builder";
 import { requireSafe } from "../utils/npm";
 
 export class GPaniniBuilder extends GBuilder {

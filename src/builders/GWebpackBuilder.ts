@@ -2,7 +2,7 @@
  *  Webpack Builder
  */
 
-import { GBuilder, BuildConfig, FunctionBuilder } from "../core/builder";
+import { GBuilder } from "../core/builder";
 import { warn } from "../utils/utils";
 
 export class GWebpackBuilder extends GBuilder {

@@ -157,16 +157,16 @@ export const npm = new NPM();
 
 //--- deprecated
 export function setNpmOptions(opts: NpmOptions): void {
-    notice("[GBM]setNpmOption() is deprecarted. Use gbm.npm.setpackageManager() instead.");
-    notice("[GBM]Use gbm.npm.enable() to activate npm auto install.");
+    warn("[GBM:npm] setNpmOption() is deprecarted. Use gbm.npm.setpackageManager() instead.");
+    warn("[GBM:npm] Use gbm.npm.enable() to activate npm auto install.");
     if (opts.autoInstall) npm.enable();
     if (opts.installOptions) npm.setPackageManager(opts.installOptions);
 }
 
 // deprecated
 export function npmInstall(ids: string | string[], options: NpmOptions = {}) {
-    notice("[GBM]npmInstall() is deprecarted. Use gbm.npm.install() instead.");
-    notice("[GBM]Use gbm.npm.enable() to activate npm auto install.");
+    notice("[GBM:npm] npmInstall() is deprecarted. Use gbm.npm.install() instead.");
+    notice("[GBM:npm] Use gbm.npm.enable() to activate npm auto install.");
     setNpmOptions(options);
     npm.install(ids);
 }

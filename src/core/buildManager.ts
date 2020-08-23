@@ -1,16 +1,11 @@
 import * as upath from 'upath';
 import * as __utils from '../utils/utils';
-import { BuildSet, BuildSetSeries, BuildSetParallel, series, parallel, BuildConfig } from './builder';
-import { GProject, BuildGroup, ProjectOptions, BuildNameSelector } from './project';
+import { BuildSet, BuildSetSeries, BuildSetParallel, series, parallel, BuildItems, BuildNameSelector, BuildItem } from './builder';
+import { GProject, ProjectOptions } from './project';
 import { Options, registerPropertiesFromFiles } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
 import { RTB, RTBExtension } from './rtb';
 import { npm } from '../utils/npm';
-
-//-- custom builders
-function __builders() {}
-namespace __builders { export const GBuilder = GBuilderClass; }
-registerPropertiesFromFiles(__builders, upath.join(__dirname, '../builders/*.js'))
 
 
 //--- GBuildManager
@@ -43,11 +38,11 @@ export class GBuildManager {
         return this;
     }
 
-    createProject(buildGroup: BuildConfig | BuildGroup = {}, opts?: ProjectOptions): GProject {
-        return new GProject(buildGroup, opts);
+    createProject(buildItems: BuildItem | BuildItems = {}, opts?: ProjectOptions): GProject {
+        return new GProject(buildItems, opts);
     }
 
-    addProject(project: BuildGroup | GProject | string): this {
+    addProject(project: BuildItem | BuildItems | GProject | string): this {
         if (__utils.is.String(project)) project = require(upath.resolve(project));
         if (project instanceof GProject)
             this._projects.push(project);
@@ -112,3 +107,9 @@ export class GBuildManager {
         eslint: { "extends": "eslint:recommended", "rules": { "strict": 1 } },
     }
 }
+
+
+//-- custom builders
+function __builders() {}
+namespace __builders { export const GBuilder = GBuilderClass; }
+registerPropertiesFromFiles(__builders, upath.join(__dirname, '../builders/*.js'))
