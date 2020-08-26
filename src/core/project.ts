@@ -24,7 +24,7 @@ export class GProject {
 
     addBuildItem(buildItem: BuildItem): this {
         if (buildItem.builder === 'watcher') return this.addWatcher(buildItem);
-        if (buildItem.builder === 'clean') return this.addCleaner(buildItem);
+        if (buildItem.builder === 'cleaner') return this.addCleaner(buildItem);
 
         this.resolveBuildSet(buildItem)
         return this;

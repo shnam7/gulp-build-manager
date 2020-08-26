@@ -17,7 +17,7 @@ RTB.registerExtension('javaScript', (options: Options = {}) => (rtb: RTB) => {
 
     if (opts.babel) {
         // make sure peer dependencies are installed
-        npm.install(['gulp-babel', '@babel/core']);
+        npm.install(['gulp-babel']);
         rtb.pipe(require('gulp-babel')(rtb.moduleOptions.babel));
     }
 });

@@ -5,7 +5,7 @@ import { GProject, ProjectOptions } from './project';
 import { Options, registerPropertiesFromFiles } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
 import { RTB, RTBExtension } from './rtb';
-import { npm } from '../utils/npm';
+import { npm, requireSafe, PackageManagerOptions } from '../utils/npm';
 
 
 //--- GBuildManager
@@ -16,10 +16,14 @@ export class GBuildManager {
     constructor() {
         process.argv.forEach(arg => {
             if (arg.startsWith('--npm-auto')) {
-                const [optName, optValue] = arg.split('=');
+                let [optName, optValue] = arg.split('=');
                 if (optName === '--npm-auto' || optName === '--npm--auto-install') {
-                    npm.enable();
-                    npm.setPackageManager(optValue);
+                    // strip outer quotes
+                    optValue = optValue.trim().replace(/^["'](.*)["']$/, '$1');
+                    let pos = optValue.indexOf('-');
+                    let installCommand = optValue.substring(0, pos).trim() || undefined;
+                    let installOptions = optValue.substring(pos).trim() || undefined;
+                    npm.setPackageManager({installCommand, installOptions, autoInstall: true});
                     return false;
                 }
             }}
@@ -28,18 +32,25 @@ export class GBuildManager {
         this.config({ moduleOptions: this.defaultModuleOptions }).config('gbm.config.js');
     }
 
-    config(data: string | Options = {}) {
+    config(data?: string | Options) {
+        if (!data) return this._config;
+
         if (__utils.is.String(data)) {
             const fs = require('fs');
             const pathNname = upath.resolve(process.cwd(), data);
             data = fs.existsSync(pathNname) ? require(pathNname) : {};
         }
-        this._config = Object.assign((<any>data).reset === true ? {} : this._config, data);
+
+        this._config = Object.assign((<Options>data).reset === true ? {} : this._config, data);
+        if (this._config.reset) delete this._config.reset;
+        if ((<Options>data).moduleOptions) Object.assign(this._config)
         return this;
     }
 
     createProject(buildItems: BuildItem | BuildItems = {}, opts?: ProjectOptions): GProject {
-        return new GProject(buildItems, opts);
+        let proj = new GProject(buildItems, opts);
+        this._projects.push(proj);
+        return proj;
     }
 
     addProject(project: BuildItem | BuildItems | GProject | string): this {
@@ -72,11 +83,16 @@ export class GBuildManager {
         return undefined;
     }
 
+    public setPackageManager(packageManager: string | PackageManagerOptions) {
+        return this.npm.setPackageManager(packageManager);
+    }
+
 
     //--- utilities
     series(...args: BuildSet[]): BuildSetSeries { return series(args); }
     parallel(...args: BuildSet[]): BuildSetParallel { return parallel(args); }
     registerExtension(name: string, ext: RTBExtension): void { RTB.registerExtension(name, ext) }
+    require(id: string) { return requireSafe(id); }
 
     //--- properties
     get conf() { return this._config; }
@@ -85,7 +101,6 @@ export class GBuildManager {
     get builders() { return __builders; }
     get utils() { return __utils; }
     get defaultModuleOptions() { return GBuildManager.defaultModuleOptions; }
-
 
     //--- statics
     static rtbs: RTB[] = [];
