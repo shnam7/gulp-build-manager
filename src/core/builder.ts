@@ -16,7 +16,7 @@ export type BuilderClassName = string;
 export type BuilderType = BuilderClassName | BuildFunction | ExternalCommand | GBuilder | 'cleaner' | 'watcher';
 
 //--- BuildSet
-export type BuildSet = BuildName | GulpTaskFunction | BuildConfig | BuildSetSeries | BuildSetParallel;
+export type BuildSet = BuildName | GulpTaskFunction | BuildItem | BuildSetSeries | BuildSetParallel;
 export type BuildSetSeries = BuildSet[];
 export type BuildSetParallel = { set: BuildSet[] };
 export function series(...args: BuildSet[]): BuildSetSeries { return args }
@@ -54,14 +54,16 @@ export interface BuildConfig {
 }
 
 //--- WatcherConfig (Watcher task config)
-export interface WatcherConfig extends Pick<BuildConfig, "name" | "buildName" | "builder" | "watch"> {
+export interface WatcherConfig extends Pick<BuildConfig, "builder" | "watch"> {
+    name?: string;
     filter?: BuildNameSelector,     // filter for buildNames (inside the project) to be watched
     browserSync?: ReloaderOptions;  // browserSync initializer options
     livereload?: ReloaderOptions;   // livereload initializer options
 }
 
 //--- CleanerConfig (Cleaner task config)
-export interface CleanerConfig extends Pick<BuildConfig, "name" | "buildName" | "builder" | "clean">, CleanOptions {
+export interface CleanerConfig extends Pick<BuildConfig, "builder" | "clean">, CleanOptions {
+    name?: string;
     filter?: BuildNameSelector,
     sync?: boolean;
 }
