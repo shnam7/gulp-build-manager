@@ -36,22 +36,6 @@ export class GBuildManager {
         return proj;
     }
 
-    addProject(project: BuildItem | BuildItems | GProject | string): this {
-        if (__utils.is.String(project)) project = require(upath.resolve(project));
-        if (project instanceof GProject)
-            this._projects.push(project);
-        else if (__utils.is.Object(project))
-            this._projects.push(new GProject(project));
-        else
-            throw Error('GBuildManager:addProject: Invalid project argument');
-        return this;
-    }
-
-    addProjects(items: GProject | GProject[]): this {
-        __utils.arrayify(items).forEach(proj => this.addProject(proj));
-        return this;
-    }
-
     getBuildNames(selector: BuildNameSelector): string[] {
         let buildNames: string[] = [];
         this._projects.forEach(proj => {
