@@ -28,23 +28,6 @@ export class GBuildManager {
                 }
             }}
         );
-
-        this.config({ moduleOptions: this.defaultModuleOptions }).config('gbm.config.js');
-    }
-
-    config(data?: string | Options) {
-        if (!data) return this._config;
-
-        if (__utils.is.String(data)) {
-            const fs = require('fs');
-            const pathNname = upath.resolve(process.cwd(), data);
-            data = fs.existsSync(pathNname) ? require(pathNname) : {};
-        }
-
-        this._config = Object.assign((<Options>data).reset === true ? {} : this._config, data);
-        if (this._config.reset) delete this._config.reset;
-        if ((<Options>data).moduleOptions) Object.assign(this._config)
-        return this;
     }
 
     createProject(buildItems: BuildItem | BuildItems = {}, opts?: ProjectOptions): GProject {
