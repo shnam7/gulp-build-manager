@@ -21,9 +21,12 @@ export class GBuildManager {
                     // strip outer quotes
                     optValue = optValue.trim().replace(/^["'](.*)["']$/, '$1');
                     let pos = optValue.indexOf('-');
-                    let installCommand = optValue.substring(0, pos).trim() || undefined;
+                    if (pos < 0) pos = optValue.length;
+                    let s1 = optValue.substring(0, pos).split(' ') || undefined;
+                    let name = (s1.length>0) ? s1[0] : undefined;
+                    let installCommand = s1.length >= 2 ? s1.join(' ') : undefined;
                     let installOptions = optValue.substring(pos).trim() || undefined;
-                    npm.setPackageManager({installCommand, installOptions, autoInstall: true});
+                    npm.setPackageManager({name, installCommand, installOptions, autoInstall: true});
                     return false;
                 }
             }}

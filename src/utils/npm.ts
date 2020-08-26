@@ -16,8 +16,8 @@ export type PackageManagerOptions = {
 
 //--- node package manager
 export class NPM {
-    protected _options: PackageManagerOptions = { name: "npm", installCommand:"npm i", installOptions: "--save-dev" };
-    protected _packageFile: any = undefined;
+    protected _options: PackageManagerOptions = { name: "npm", installCommand: "npm i", installOptions: "--save-dev" };
+    protected _packageFile: any = {};
 
     constructor() {}
 
@@ -61,7 +61,7 @@ export class NPM {
             if (packageManager.autoInstall != undefined) this._options.autoInstall = packageManager.autoInstall;
         }
 
-        if (this._options.autoInstall && !this._packageFile) this._reloadPackegeFile();
+        if (this._options.autoInstall) this._reloadPackegeFile();
     }
 
     public install(ids: string | string[]) {
@@ -99,11 +99,11 @@ export class NPM {
             if (idx > 0) id = id.substring(0, idx);     // ex) sax@0.0.1, sax@latest
 
             // strip training .git
-            if (id.endsWith('.git')) id = id.substring(0, id.length-4);
+            if (id.endsWith('.git')) id = id.substring(0, id.length - 4);
 
             // strip leading protocol name
             idx = id.indexOf(':');
-            if (idx > 0) id = id.substring(idx+1);
+            if (idx > 0) id = id.substring(idx + 1);
         }
         else if (id.startsWith('/') || id.startsWith('./') || id.startsWith('../')) {   // local folder
             const upath = require('upath');
@@ -124,7 +124,8 @@ export class NPM {
         }
         id = id.trim();
         if (id.length <= 0) return false;
-        return this._packageFile?.dependencies[id] || this._packageFile?.devDependencies[id];
+
+        return this._packageFile?.dependencies?.[id] || this._packageFile?.devDependencies?.[id];
     }
 
     protected _reloadPackegeFile() {
