@@ -3,7 +3,6 @@
  */
 
 import GJavaScriptBuilder from "./GJavaScriptBuilder";
-import { BuildConfig } from "../core/builder";
 
 export class GCoffeeScriptBuilder extends GJavaScriptBuilder {
     constructor() { super(); }

@@ -44,7 +44,7 @@ export class RTB extends EventEmitter {
     protected _promises: Promise<unknown>[] = [];
     protected _promiseSync: Promise<unknown> = Promise.resolve();
     protected _syncMode: boolean = false;
-    protected _buildFunc: BuildFunction = (rtb: RTB) => { rtb.src().dest(); };
+    protected _buildFunc: BuildFunction = () => {};
     protected _conf: BuildConfigNorm = { name: '', buildOptions: {}, moduleOptions: {} };
 
     constructor(func?: BuildFunction) {
@@ -56,8 +56,11 @@ export class RTB extends EventEmitter {
     /**----------------------------------------------------------------
      * Build sequence functions: Return value should be void or Promise
      *-----------------------------------------------------------------*/
-    protected _execute(action?: BuildFunction, ...args: any[]): void | Promise<unknown> {
-        if (is.Function(action)) return action(this, args);
+    protected _execute(action?: BuildFunction): void | Promise<unknown> {
+        if (is.Function(action)) return action(this);
+
+        // if wrong argument, warn the user
+        if (action) throw Error(`[GBM:RTB:${this.name}]BuildFunction type error. Check preBuid or postBuild props in BuildConfig.`);
     }
 
     protected build(): void | Promise<unknown> {
@@ -145,8 +148,8 @@ export class RTB extends EventEmitter {
         return this;
     }
 
-    chain(action: BuildFunction, ...args: any[]): this {
-        return this.promise(action(this, ...args));
+    chain(action: BuildFunction): this {
+        return this.promise(action(this));
     }
 
 
@@ -220,11 +223,12 @@ export class RTB extends EventEmitter {
     copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
         if (!param) return this;   // allow null argument
 
+        const verbose = this.conf.verbose && options.verbose !== false;
         const _copy = (target: any): Promise<unknown> => {
             let copyInfo = `[${target.src}] => ${target.dest}`;
-            if (options.verbose) msg(`[${this.name}]:copying: ${copyInfo}`);
+            if (verbose) msg(`[${this.name}]:copying: ${copyInfo}`);
             return copy(target.src, target.dest)
-                .then(() => { if (this.conf.verbose) msg(`[${this.name}]:copying: ${copyInfo} --> done`) });
+                .then(() => { if (verbose) msg(`[${this.name}]:copying: ${copyInfo} --> done`) });
         }
         arrayify(param).forEach(target => this.promise(
             (options.sync || this._syncMode) ? () => _copy(target) : _copy(target)
@@ -258,7 +262,8 @@ export class RTB extends EventEmitter {
     concat(options: Options = {}): this {
         const outFile = options.outFile || this.conf.outFile;
         if (!outFile) {
-            if (options.verbose) info('[rtb:concat] Missing conf.outFile. No output generated.');
+            const verbose = this.conf.verbose && options.verbose !== false;
+            if (verbose) info('[rtb:concat] Missing conf.outFile. No output generated.');
             return this;
         }
         let opts = Object.assign({}, this.moduleOptions.concat, options.concat);

@@ -6,11 +6,8 @@ import * as child_process from 'child_process';
 import { msg, is } from "./utils";
 
 export interface SpawnOptions extends child_process.SpawnOptions {
-    // spawn?: SpawnOptions;
-    stopOnMatch?: RegExp;
     silent?: boolean;
     verbose?: boolean;
-    captureOutput?: boolean;
     sync?: boolean
 }
 

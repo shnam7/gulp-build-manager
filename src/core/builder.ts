@@ -9,7 +9,7 @@ import { ReloaderOptions } from "./reloader";
 export type TaskDoneFunction = (error?: any) => void;
 export type BuildName = string;
 export type BuildNameSelector = string | string[] | RegExp | RegExp[];
-export type BuildFunction = (rtb: RTB, ...args: any[]) => void | Promise<unknown>;
+export type BuildFunction = (rtb: RTB) => void | Promise<unknown>;
 
 //--- BuilderType
 export type BuilderClassName = string;
@@ -74,7 +74,9 @@ export class GBuilder extends RTB {
     constructor() { super();
     }
 
-    protected build(): void | Promise<unknown> {}
+    protected build(): void | Promise<unknown> {
+        if (this.conf.src && this.conf.dest) this.copy({src: this.conf.src, dest: this.conf.dest});
+    }
 
     static isBuildItem(item: any) : boolean {
         return item.hasOwnProperty('name') && is.String(item.name)

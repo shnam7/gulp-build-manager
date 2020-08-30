@@ -37,7 +37,7 @@ export class GProject {
         return this;
     }
 
-    addWatcher(config: string | WatcherConfig = { name: '@watcher'}): this {
+    addWatcher(config: string | WatcherConfig = {}): this {
         const gulp = require('gulp');
         const opts: WatcherConfig = is.String(config) ? { name: config } : Object.assign({}, config);
 
@@ -94,7 +94,7 @@ export class GProject {
         });
     }
 
-    addCleaner(config: string | CleanerConfig = { name: '@clean' }): this {
+    addCleaner(config: string | CleanerConfig = {}): this {
         const opts: CleanerConfig = is.String(config) ? { name: config } : Object.assign({}, config );
 
         return this.addBuildItem({

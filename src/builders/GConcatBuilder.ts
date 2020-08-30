@@ -2,7 +2,7 @@
  *  Concatenation Builder
  */
 
-import { GBuilder, BuildConfig } from "../core/builder";
+import { GBuilder } from "../core/builder";
 
 export class GConcatBuilder extends GBuilder {
     constructor() { super(); }

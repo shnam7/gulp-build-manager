@@ -2,7 +2,7 @@
  *  JavaScript Builder
  */
 
-import { GTranspiler, BuildConfig } from "../core/builder";
+import { GTranspiler } from "../core/builder";
 
 export class GJavaScriptBuilder extends GTranspiler {
     constructor() { super(); }

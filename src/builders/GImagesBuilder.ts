@@ -2,7 +2,7 @@
  *  Image Optimization Builder
  */
 
-import { GBuilder, BuildConfig } from "../core/builder";
+import { GBuilder } from "../core/builder";
 import { requireSafe } from "../utils/npm";
 
 export class GImagesBuilder extends GBuilder {
