@@ -4,6 +4,7 @@
 - Add custom package manager support in --npm-auto-install option (pnpm, yard can be used now)
 - Replace gulp-uglify-es with gulp-terser
 - Separeate docs and examples (moved to other repositories)
+- Add babel support to GCoffeeScriptBuilder
 
 
 ## 4.0

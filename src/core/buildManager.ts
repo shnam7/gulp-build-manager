@@ -33,8 +33,8 @@ export class GBuildManager {
         );
     }
 
-    createProject(buildItems: BuildItem | BuildItems = {}, opts?: ProjectOptions): GProject {
-        let proj = new GProject(buildItems, opts);
+    createProject(buildItems: BuildItem | BuildItems = {}, options?: ProjectOptions): GProject {
+        let proj = new GProject(buildItems, options);
         this._projects.push(proj);
         return proj;
     }
@@ -88,6 +88,7 @@ export class GBuildManager {
         cleanCss: {
             level: { 2: { mergeSemantically: true } },
         },
+        babel: { "presets": ["@babel/env"] },
         prettier: { useTabs: false, tabWidth: 4 },
         eslint: { "extends": "eslint:recommended", "rules": { "strict": 1 } },
     }

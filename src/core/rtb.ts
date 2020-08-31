@@ -223,7 +223,7 @@ export class RTB extends EventEmitter {
     copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
         if (!param) return this;   // allow null argument
 
-        const verbose = this.conf.verbose && options.verbose !== false;
+        const verbose = this.conf.verbose || options.verbose;
         const _copy = (target: any): Promise<unknown> => {
             let copyInfo = `[${target.src}] => ${target.dest}`;
             if (verbose) msg(`[${this.name}]:copying: ${copyInfo}`);
@@ -262,7 +262,7 @@ export class RTB extends EventEmitter {
     concat(options: Options = {}): this {
         const outFile = options.outFile || this.conf.outFile;
         if (!outFile) {
-            const verbose = this.conf.verbose && options.verbose !== false;
+            const verbose = this.conf.verbose || options.verbose;
             if (verbose) info('[rtb:concat] Missing conf.outFile. No output generated.');
             return this;
         }

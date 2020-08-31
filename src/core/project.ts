@@ -1,6 +1,6 @@
 import * as upath from 'upath';
 import { BuildConfig, BuildName, GBuilder, BuildSet, TaskDoneFunction, BuildSetParallel, BuildItems, BuildNameSelector, BuildItem, CleanerConfig, WatcherConfig } from "./builder";
-import { RTB, GulpTaskFunction } from "./rtb";
+import { RTB, GulpTaskFunction, CleanOptions } from "./rtb";
 import { is, arrayify, info, ExternalCommand, warn, exec, msg } from "../utils/utils";
 import { GBuildManager } from './buildManager';
 import { GReloader, GBrowserSync } from './reloader';
@@ -23,8 +23,8 @@ export class GProject {
     }
 
     addBuildItem(buildItem: BuildItem): this {
-        if (buildItem.builder === 'watcher') return this.addWatcher(buildItem);
-        if (buildItem.builder === 'cleaner') return this.addCleaner(buildItem);
+        if (buildItem.builder === 'watcher') return this.addWatcher(buildItem as WatcherConfig);
+        if (buildItem.builder === 'cleaner') return this.addCleaner(buildItem as CleanerConfig);
 
         this.resolveBuildSet(buildItem)
         return this;
@@ -37,10 +37,9 @@ export class GProject {
         return this;
     }
 
-    addWatcher(config: string | WatcherConfig = {}): this {
+    addWatcher(config: string | WatcherConfig = { builder: 'watcher' }): this {
         const gulp = require('gulp');
-        const opts: WatcherConfig = is.String(config) ? { name: config } : Object.assign({}, config);
-
+        const opts: WatcherConfig = is.String(config) ? { name: config, builder: 'watcher' } : Object.assign({}, config);
 
         if (opts.browserSync) this._reloaders.push(new GBrowserSync(opts.browserSync));
         if (opts.livereload) this._reloaders.push(new GBrowserSync(opts.livereload));
@@ -94,8 +93,8 @@ export class GProject {
         });
     }
 
-    addCleaner(config: string | CleanerConfig = {}): this {
-        const opts: CleanerConfig = is.String(config) ? { name: config } : Object.assign({}, config );
+    addCleaner(config: string | CleanerConfig = { builder: 'cleaner' }): this {
+        const opts: CleanerConfig = is.String(config) ? { name: config, builder: 'cleaner' } : Object.assign({}, config );
 
         return this.addBuildItem({
             name: opts.name || '@clean',

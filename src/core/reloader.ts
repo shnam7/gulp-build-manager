@@ -44,7 +44,7 @@ export class GBrowserSync extends GReloader {
     activate() {
         if (this._module) return;
         this._module = requireSafe('browser-sync');
-        this._module = this._module.create(this._options.instanceName );
+        this._module = this._module.create(this._options.instanceName);
         this._module.init(this._options, () => msg('browserSync server started with options:', this._options));
     }
 

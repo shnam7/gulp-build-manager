@@ -28,7 +28,7 @@ export type BuildItems = { [key: string]: BuildItem };
 
 //--- BuildConfig
 export interface BuildConfig {
-    name: string;                   // buildName, mandatory field
+    name: string;                   // build name, mandatory field
     builder?: BuilderType;          // main build operations in various form: function, object, class, etc
     src?: string | string[];        // source for build operation
     dest?: string;                  // output(destination) directory of the build operation
@@ -50,22 +50,24 @@ export interface BuildConfig {
     npmInstall?: string | string[]; // node packages to be installed by npm-auto-install option
 
     //--- obsolete
-    buildName?: string;             // keep for backward compatibility
+    buildName?: string;             // alias for name, for backward compatibility
 }
 
 //--- WatcherConfig (Watcher task config)
-export interface WatcherConfig extends Pick<BuildConfig, "builder" | "watch"> {
-    name?: string;
+export interface WatcherConfig extends Pick<BuildConfig, "watch"> {
+    name?: string;                  // optional buildName. if undefined, defaults to '@watch'
+    builder: 'watcher',             // MUST be literal constant 'watcher'
     filter?: BuildNameSelector,     // filter for buildNames (inside the project) to be watched
     browserSync?: ReloaderOptions;  // browserSync initializer options
     livereload?: ReloaderOptions;   // livereload initializer options
 }
 
 //--- CleanerConfig (Cleaner task config)
-export interface CleanerConfig extends Pick<BuildConfig, "builder" | "clean">, CleanOptions {
-    name?: string;
-    filter?: BuildNameSelector,
-    sync?: boolean;
+export interface CleanerConfig extends Pick<BuildConfig, "clean">, CleanOptions {
+    name?: string;                  // optional buildName. if undefined, defaults to '@clean'
+    builder: 'cleaner',             // MUST be literal constant 'cleaner'
+    filter?: BuildNameSelector,     // filter for buildNames (inside the project) to be cleaned
+    sync?: boolean;                 // syncMode option. refer to class RTB.
 }
 
 
