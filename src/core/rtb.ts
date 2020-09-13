@@ -293,14 +293,18 @@ export class RTB extends EventEmitter {
     set buildOptions(opts: Options) { Object.assign(this.conf.buildOptions, opts); }
     set moduleOptions(mopts: Options) { Object.assign(this.conf.moduleOptions, mopts); }
 
-    get ext() { return RTB._extension; }
-
-    protected static _extension: { [key: string]: RTBExtension } = {}
+    get ext() {return (<any>this) as { [key: string]: (...args: any[]) => RTB}; } // type casting to call extension
 
     static registerExtension(name: string, ext: RTBExtension): void {
-        if (this._extension[name])
-            throw Error(`RTB:registerExtension: extension name=${name} already exists.`)
-        this._extension[name] = ext;
+        if (RTB.prototype.hasOwnProperty(name))
+            throw Error(`[GBM:RTB:registerExtension] Name conflict for extension '${name}'`);
+
+        Object.defineProperty(RTB.prototype, name, {
+            configurable: false,
+            enumerable: true,
+            writable: true,
+            value: function func(...args: any[]) { return this.promise(ext(...args)(this)); }
+        });
     }
 
     static loadExtensions(globModules: string | string[]) {

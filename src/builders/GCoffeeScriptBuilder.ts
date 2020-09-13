@@ -7,6 +7,7 @@ import GJavaScriptBuilder from "./GJavaScriptBuilder";
 export class GCoffeeScriptBuilder extends GJavaScriptBuilder {
     constructor() { super(); }
 
-    protected onTranspile() { return this.chain(this.ext.coffeeScript()); } }
+    protected onTranspile() { this.ext.coffeeScript(); return this; }
+}
 
 export default GCoffeeScriptBuilder;

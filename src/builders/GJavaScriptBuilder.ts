@@ -7,7 +7,7 @@ import { GTranspiler } from "../core/builder";
 export class GJavaScriptBuilder extends GTranspiler {
     constructor() { super(); }
 
-    protected onTranspile() { return this.chain(this.ext.javaScript()); }
+    protected onTranspile() { this.ext.javaScript(); return this; }
     protected onMinify() { return this.minifyJs(); }
 }
 

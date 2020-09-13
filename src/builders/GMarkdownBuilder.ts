@@ -8,7 +8,7 @@ export class GMarkdownBuilder extends GBuilder {
     constructor() { super(); }
 
     protected build() {
-        this.src().chain(this.ext.markdown()).dest();
+        this.src().ext.markdown().dest();
     }
 }
 

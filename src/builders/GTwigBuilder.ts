@@ -8,7 +8,7 @@ export class GTwigBuilder extends GBuilder {
     constructor() { super(); }
 
     protected build() {
-        this.src().chain(this.ext.twig()).dest();
+        this.src().ext.twig().dest();
     }
 }
 

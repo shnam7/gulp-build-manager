@@ -9,7 +9,7 @@ export class GTypeScriptBuilder extends GBuilder {
     constructor() { super(); }
 
     protected build() {
-        this.src().chain(this.ext.typeScript());
+        this.src().ext.typeScript();
 
         // concat stream is handled by gulp-typescript. only non-concat is handled here
         const opts = this.buildOptions;

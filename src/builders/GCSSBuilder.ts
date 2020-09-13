@@ -7,7 +7,7 @@ import { GTranspiler } from "../core/builder";
 export class GCSSBuilder extends GTranspiler {
     constructor() { super(); }
 
-    protected onTranspile() { return this.chain(this.ext.css()); }
+    protected onTranspile() { this.ext.css(); return this; }
     protected onMinify() { return this.minifyCss(); }
 }
 
