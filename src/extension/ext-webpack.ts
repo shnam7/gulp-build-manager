@@ -1,3 +1,7 @@
+/**
+ *  gbm extension - webpack
+ */
+
 import * as upath from 'upath';
 import { RTB } from "../core/rtb";
 import { Options,info, is, msg } from '../utils/utils';

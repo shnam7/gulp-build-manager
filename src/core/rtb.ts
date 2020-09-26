@@ -205,7 +205,7 @@ export class RTB extends EventEmitter {
     }
 
     debug(options: Options = {}): this {
-        let title = options.title ? options.title : '';
+        let title = options.title || '';
         let opts = Object.assign({}, this.moduleOptions.debug, { title }, options);
         return this.pipe(requireSafe('gulp-debug')(opts));
     }
@@ -307,11 +307,11 @@ export class RTB extends EventEmitter {
         });
     }
 
-    static loadExtensions(globModules: string | string[]) {
+    static loadExtension(globModules: string | string[]) {
         let files: string[] = [];
         let cb = (file: string) => upath.removeExt(file, '.js');
         arrayify(globModules).forEach(dir => {
-            glob.sync(dir).forEach(file => files.push(cb(file)));
+            glob.sync(upath.resolve(dir)).forEach(file => files.push(cb(file)));
             files.forEach(file => require(file));
         });
     }
@@ -324,4 +324,4 @@ export class RTB extends EventEmitter {
 }
 
 // load built-in extensions
-RTB.loadExtensions(upath.join(__dirname, '../extension/*.js'))
+RTB.loadExtension(upath.join(__dirname, '../extension/*.js'))

@@ -1,3 +1,7 @@
+/**
+ *  gbm extension - typescript
+ */
+
 import * as upath from 'upath';
 import { RTB } from "../core/rtb";
 import { Options, warn, msg, requireSafe, npm } from '../utils/utils';

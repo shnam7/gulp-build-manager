@@ -1,3 +1,7 @@
+/**
+ *  gbm extension - twig
+ */
+
 import { RTB } from "../core/rtb";
 import { Options, is, loadData } from "../utils/utils";
 import { requireSafe } from "../utils/npm";

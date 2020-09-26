@@ -11,7 +11,6 @@ import { npm, requireSafe, PackageManagerOptions } from '../utils/npm';
 //--- GBuildManager
 export class GBuildManager {
     protected _projects: GProject[] = [];
-    protected _config: Options = {}
 
     constructor() {
         process.argv.forEach(arg => {
@@ -53,8 +52,8 @@ export class GBuildManager {
         return undefined;
     }
 
-    public setPackageManager(packageManager: string | PackageManagerOptions) {
-        return this.npm.setPackageManager(packageManager);
+    setPackageManager(packageManager: string | PackageManagerOptions) {
+        return npm.setPackageManager(packageManager);
     }
 
 
@@ -62,12 +61,11 @@ export class GBuildManager {
     series(...args: BuildSet[]): BuildSetSeries { return series(args); }
     parallel(...args: BuildSet[]): BuildSetParallel { return parallel(args); }
     registerExtension(name: string, ext: RTBExtension): void { RTB.registerExtension(name, ext) }
+    loadExtension(globModules: string | string[]) { RTB.loadExtension(globModules) }
     require(id: string) { return requireSafe(id); }
 
     //--- properties
-    get conf() { return this._config; }
     get rtbs() { return GBuildManager.rtbs; }
-    get npm() { return npm; }
     get builders() { return __builders; }
     get utils() { return __utils; }
     get defaultModuleOptions() { return GBuildManager.defaultModuleOptions; }

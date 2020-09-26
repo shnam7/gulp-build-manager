@@ -1,4 +1,8 @@
-import { Options } from "../utils/utils";
+/**
+ *  gbm extension - javascript
+ */
+
+ import { Options } from "../utils/utils";
 import { RTB } from "../core/rtb";
 import { requireSafe, npm } from "../utils/npm";
 

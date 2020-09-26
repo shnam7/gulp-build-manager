@@ -9,7 +9,7 @@ import { ReloaderOptions } from "./reloader";
 export type TaskDoneFunction = (error?: any) => void;
 export type BuildName = string;
 export type BuildNameSelector = string | string[] | RegExp | RegExp[];
-export type BuildFunction = (rtb: RTB) => void | Promise<unknown>;
+export type BuildFunction = (rtb: RTB, ...args: any[]) => void | Promise<unknown>;
 
 //--- BuilderType
 export type BuilderClassName = string;

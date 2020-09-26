@@ -1,3 +1,7 @@
+/**
+ *  gbm extension - markdown
+ */
+
 import { Options } from "../utils/utils";
 import { RTB } from "../core/rtb";
 import { requireSafe } from "../utils/npm";

@@ -1,5 +1,8 @@
 /**
- *  gbm Plugin - CSS
+ * gbm extension - css
+ *
+ * Options
+ *  sass: Overrides rtb.moduleOptions.sass
  */
 
 import { RTB } from "../core/rtb";
@@ -27,7 +30,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     // All the scss/less variables should to be evaluated before postcss process starts
     if (sourceType !== 'css') {
         const processor = requireSafe('gulp-' + moduleName);
-        rtb.pipe(processor(options[moduleName] || mopts[moduleName]))
+        rtb.pipe(processor(Object.assign({}, mopts[moduleName], options[moduleName])));
     }
 
     // // now, transpile postcss statements
@@ -37,8 +40,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     if (autoprefixer) {
         const prefixer = requireSafe('autoprefixer');
         rtb.filter()
-            .pipe(pcss([prefixer({ add: false })])) // remove outdated prefixed
-            .pipe(pcss([prefixer(mopts.autoprefixer)]))     // now add prefixes
+            .pipe(pcss([prefixer(mopts.autoprefixer)])) // now add prefixes
     }
 
     // do minify here to optimise output (this will also remove lint warnings for intermediate output)
@@ -53,7 +55,7 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
         let lintOpts = mopts.stylelint || {};
         const reporterOpts = lintOpts.reporter || {};
         rtb.filter()
-            .pipe(pcss([stylelint(lintOpts.stylelint || lintOpts), reporter(reporterOpts)]));
+            .pipe(pcss([stylelint(lintOpts), reporter(reporterOpts)]));
     }
 }
 
@@ -100,11 +102,12 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
         rtb.chain(cleanCss);
 
         // lint final css
-        // lint does not understands postcss statements. so,it come after postcss processing
+        // lint does not understands postcss statements. so, it comes after postcss processing
         if (opts.lint) {
             const stylelint = requireSafe('gulp-stylelint');
-            let lintOpts = mopts.stylelint || {};
-            if (!lintOpts.reporters) lintOpts["reporters"] = [{ formatter: 'verbose', console: true }];
+            const lintOpts = Object.assign({}, mopts.stylelint,
+                { reporters: [{ formatter: 'verbose', console: true }]}, options.stylelint);
+            // if (!lintOpts.reporters) lintOpts["reporters"] = [{ formatter: 'verbose', console: true }];
             rtb.filter().pipe(stylelint(lintOpts));
         }
     }
