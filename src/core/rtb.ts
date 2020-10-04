@@ -86,7 +86,7 @@ export class RTB extends EventEmitter {
     //: init RTB instance
     __create(conf: BuildConfig): this {
         Object.assign(this._conf, conf);
-        this.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
+        // this.moduleOptions = Object.assign({}, GBuildManager.defaultModuleOptions, conf.moduleOptions);
         this.emit('create', this);
         return this;
     }
@@ -108,6 +108,9 @@ export class RTB extends EventEmitter {
     /**----------------------------------------------------------------
      * Build API: Returns value should be 'this'
      *----------------------------------------------------------------*/
+    setBuildOptions(opts: Options) { Object.assign(this.conf.buildOptions, opts); }
+
+    setModuleOptions(mopts: Options) { Object.assign(this.conf.moduleOptions, mopts); }
 
     src(src?: string | string[]): this {
         if (!src) src = this.conf.src;
@@ -205,19 +208,16 @@ export class RTB extends EventEmitter {
     }
 
     debug(options: Options = {}): this {
-        let title = options.title || '';
-        let opts = Object.assign({}, this.moduleOptions.debug, { title }, options);
+        let opts = Object.assign({ title: options.title || '' }, options);
         return this.pipe(requireSafe('gulp-debug')(opts));
     }
 
     filter(pattern: string | string[] | filter.FileFunction = ["**", "!**/*.map"], options: filter.Options = {}): this {
-        let opts = Object.assign({}, this.moduleOptions.filter, options);
-        return this.pipe(requireSafe('gulp-filter')(pattern, opts))
+        return this.pipe(requireSafe('gulp-filter')(pattern, options))
     }
 
     rename(options: Options = {}): this {
-        const opts = Object.assign({}, this.moduleOptions.rename, options.rename || options);
-        return this.pipe(requireSafe('gulp-rename')(opts));
+        return this.pipe(requireSafe('gulp-rename')(options));
     }
 
     copy(param?: CopyParam | CopyParam[], options: Options = {}): this {
@@ -251,14 +251,13 @@ export class RTB extends EventEmitter {
             : this.promise(exec(cmd, args, options), options.sync);
     }
 
-    clean(options: CleanOptions = {}): this {
-        let cleanList = arrayify(this.conf.clean).concat(arrayify(options.clean));
-        const delOpts = Object.assign({}, this.moduleOptions.del, options);
-        return this.del(cleanList, delOpts)
+    clean(cleanList: string | string[]=[], options: CleanOptions = {}): this {
+        cleanList = arrayify(this.conf.clean).concat(arrayify(cleanList));
+        return this.del(cleanList, options);
     }
 
 
-    //--- Stream contents handling API: sourceMaps() should be called ---
+    //--- Stream contents handling API
     concat(options: Options = {}): this {
         const outFile = options.outFile || this.conf.outFile;
         if (!outFile) {
@@ -266,35 +265,27 @@ export class RTB extends EventEmitter {
             if (verbose) info('[rtb:concat] Missing conf.outFile. No output generated.');
             return this;
         }
-        let opts = Object.assign({}, this.moduleOptions.concat, options.concat);
-
-        return this.filter().pipe(requireSafe('gulp-concat')(outFile, opts.concat));
+        return this.filter().pipe(requireSafe('gulp-concat')(outFile, options));
     }
 
     minifyCss(options: Options = {}): this {
-        const opts = Object.assign({}, this.moduleOptions.cleanCss, options.cleanCss || options);
-        return this.filter().pipe(requireSafe('gulp-clean-css')(opts)).rename({ extname: '.min.css' });
+        return this.filter().pipe(requireSafe('gulp-clean-css')(options)).rename({ extname: '.min.css' });
     }
 
     minifyJs(options: Options = {}): this {
-        const opts = Object.assign({}, this.moduleOptions.terser, options.terser);
-        return this.filter().pipe(requireSafe('gulp-terser')(opts)).rename({ extname: '.min.js' });
+        return this.filter().pipe(requireSafe('gulp-terser')(options)).rename({ extname: '.min.js' });
     }
 
 
-    //--- extension support
     get conf() { return this._conf; }
-
     get name() { return this.conf.name; }
     get buildOptions() { return this.conf.buildOptions; }
     get moduleOptions() { return this.conf.moduleOptions; }
     get stream() { return this._stream; }
-
-    set buildOptions(opts: Options) { Object.assign(this.conf.buildOptions, opts); }
-    set moduleOptions(mopts: Options) { Object.assign(this.conf.moduleOptions, mopts); }
-
     get ext() {return (<any>this) as { [key: string]: (...args: any[]) => RTB}; } // type casting to call extension
 
+
+    //--- extension support
     static registerExtension(name: string, ext: RTBExtension): void {
         if (RTB.prototype.hasOwnProperty(name))
             throw Error(`[GBM:RTB:registerExtension] Name conflict for extension '${name}'`);

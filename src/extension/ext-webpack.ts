@@ -1,5 +1,15 @@
 /**
  *  gbm extension - webpack
+ *
+ *  Options:
+ *    configFile: override for buildOptions.webpackConfig
+ *
+ *  buildOptions:
+ *    webpackConfig: webpack config file name.
+ *    printConfig: Print tsConfig options.
+ *
+ *  moduleOptions:
+ *    webpack: Options to gulp-webpack.
  */
 
 import * as upath from 'upath';
@@ -15,17 +25,17 @@ import { requireSafe } from "../utils/npm";
  * - override it with rtb.conf.outFile and rtb.conf.dest
  */
 RTB.registerExtension('webpack', (options: Options = {}) => (rtb: RTB) => {
+    const { buildOptions: opts, moduleOptions: mopts } = rtb.conf;
     // resolve: workaround function to handle platform dependency of backslashes
     const resolve = (process.platform === 'win32') ? upath.win32.resolve : upath.resolve;
     const merge = requireSafe('lodash.merge');
 
-    const opts = rtb.buildOptions;
     const configFile = resolve(options.configFile || opts.webpackConfig
         || upath.join(process.cwd(), "webpack.config.js"));
     info(`[GBM:ext.webpack] webpackConfig=${configFile}`);
 
     // load configFile first, and then override with moduleOptions.webpack
-    let wpOpts = merge(configFile ? require(configFile) : {}, rtb.moduleOptions.webpack);
+    let wpOpts = merge(configFile ? require(configFile) : {}, mopts.webpack);
 
     // override webpack entry file with conf.src
     if (rtb.conf.src) {

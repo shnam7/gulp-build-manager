@@ -68,28 +68,9 @@ export class GBuildManager {
     get rtbs() { return GBuildManager.rtbs; }
     get builders() { return __builders; }
     get utils() { return __utils; }
-    get defaultModuleOptions() { return GBuildManager.defaultModuleOptions; }
 
     //--- statics
     static rtbs: RTB[] = [];
-    static defaultModuleOptions: Options = {
-        sass: {
-            outputStyle: 'compact', // 'compressed',
-            includePaths: []
-        },
-        // autoprefixer: {
-        // browsers: ['last 2 versions', '> 5%']
-        // browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3']
-        // },
-        cssnano: { discardUnused: false },
-        imagemin: { progressive: true, optimizationLevel: 5 },
-        cleanCss: {
-            level: { 2: { mergeSemantically: true } },
-        },
-        babel: { "presets": ["@babel/env"] },
-        prettier: { useTabs: false, tabWidth: 4 },
-        eslint: { "extends": "eslint:recommended", "rules": { "strict": 1 } },
-    }
 }
 
 

@@ -1,23 +1,29 @@
 /**
  *  gbm extension - twig
+ *
+ *  buildOptions:
+ *    minify: Minify html output
+ *    prettify: Prettify html output
+ *
+ *  moduleOptions:
+ *    twig: Options to gulp-twig. twig.data can be object or data file names in string or string array.
+ *    htmlmin: Options to gulp-htmlmin.
+ *    prettier: Options to gulp-prettier.
  */
 
 import { RTB } from "../core/rtb";
-import { Options, is, loadData } from "../utils/utils";
+import { Options, is, loadData, arrayify } from "../utils/utils";
 import { requireSafe } from "../utils/npm";
 
 RTB.registerExtension('twig', (options: Options = {}) => (rtb: RTB) => {
-    let twigOpts = Object.assign({}, rtb.moduleOptions.twig, options.twig);
-    let dataOpts = is.String(twigOpts.data) ? [twigOpts.data] : twigOpts.data;
+    const { buildOptions: opts, moduleOptions: mopts } = rtb.conf;
+    const twigOpts = Object.assign({}, mopts.twig, options.twig);
+    const htmlminOpts = Object.assign({}, mopts.htmlmin, options.htmlmin);
+    const prettierOpts = Object.assign({}, mopts.prettier, options.prettier);
+    const dataFiles = is.String(twigOpts.data) || is.Array(twigOpts.data) ? arrayify(twigOpts.data) : undefined;
 
-    if (is.Array(dataOpts))
-        rtb.pipe(requireSafe('gulp-data')(() => loadData(dataOpts)));
-
+    if (dataFiles) rtb.pipe(requireSafe('gulp-data')(() => loadData(dataFiles)));
     rtb.pipe(requireSafe('gulp-twig')(twigOpts));
-
-    if (rtb.buildOptions.minify)
-        rtb.pipe(requireSafe('gulp-htmlmin')(rtb.moduleOptions.htmlmin));
-
-    if (rtb.buildOptions.prettify)
-        rtb.pipe(requireSafe('gulp-prettier')(rtb.moduleOptions.prettier));
+    if (opts.minify) rtb.pipe(requireSafe('gulp-htmlmin')(htmlminOpts));
+    if (opts.prettify) rtb.pipe(requireSafe('gulp-prettier')(prettierOpts));
 });

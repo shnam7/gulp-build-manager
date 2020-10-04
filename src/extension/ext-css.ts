@@ -1,8 +1,19 @@
 /**
- * gbm extension - css
+ *  gbm extension - css
  *
- * Options
- *  sass: Overrides rtb.moduleOptions.sass
+ *  buildOptions:
+ *    sourceType: Specifies input source type. Possible values are 'css', 'scss', 'sass', 'less'.
+ *    lint: Enable lint.
+ *    postcss: Enable PostCSS.
+ *    autoprefixer: Enable autoprefixer.
+ *
+ *  moduleOptions:
+ *    sass: Options to gulp-sass.
+ *    autoprefixer: Options to gulp-autoprefixer or autoprefixer(if postcss enabled).
+ *    postcss: Options to gulp-postcss.
+ *    postcss.plugins: postcss plugins array (default: [])
+ *    stylelint: Options to gulp-style or stylelint(if postcss enabled).
+ *    postcssReporter: Options to postcss-reporter. Valid only when rtb.buildOptions.postcss is true.
  */
 
 import { RTB } from "../core/rtb";
@@ -19,12 +30,15 @@ const cleanCss = (rtb: RTB) => {
 
 
 function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Options) {
+    npm.install('postcss');     // required peer dependency for gulp-postcss
+
     const sourceType = opts.sourceType || 'scss';
     const pcss = requireSafe('gulp-postcss');
     const pcssOpts = Object.assign({}, mopts.postcss, options.postcss);
     const plugins = pcssOpts.plugins || [];
     const autoprefixer = opts.autoprefixer !== false;
     const moduleName = sourceType === 'scss' ? 'sass' : sourceType;
+    delete pcssOpts.plugins;    // delete gbm specific option
 
     // first, transpile to standard css.
     // All the scss/less variables should to be evaluated before postcss process starts
@@ -34,13 +48,14 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
     }
 
     // // now, transpile postcss statements
-    if (plugins.length > 0) rtb.filter().pipe(pcss(plugins))
+    if (plugins.length > 0) rtb.filter().pipe(pcss(plugins, pcssOpts))
 
     // now run autoprefixer
     if (autoprefixer) {
         const prefixer = requireSafe('autoprefixer');
+        const prefixerOpts = Object.assign({}, mopts.autoprefixer, options.autoprefixer);
         rtb.filter()
-            .pipe(pcss([prefixer(mopts.autoprefixer)])) // now add prefixes
+            .pipe(pcss([prefixer(prefixerOpts)])) // now add prefixes
     }
 
     // do minify here to optimise output (this will also remove lint warnings for intermediate output)
@@ -52,10 +67,9 @@ function processPostcss(rtb: RTB, opts: Options, mopts: Options, options: Option
         npm.install(['stylelint', 'postcss-reporter']);
         const stylelint = require('stylelint');
         const reporter = require('postcss-reporter');
-        let lintOpts = mopts.stylelint || {};
-        const reporterOpts = lintOpts.reporter || {};
-        rtb.filter()
-            .pipe(pcss([stylelint(lintOpts), reporter(reporterOpts)]));
+        const lintOpts = Object.assign({}, mopts.stylelint, options.stylelint);
+        const reporterOpts = Object.assign({}, mopts.postcssReporter, options.postcssReporter);
+        rtb.filter().pipe(pcss([stylelint(lintOpts), reporter(reporterOpts)]));
     }
 }
 
@@ -87,15 +101,13 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
         // first, transpile to standard css.
         if (sourceType !== 'css') {
             const processor = requireSafe('gulp-' + moduleName);
-            rtb.pipe(processor(options[moduleName] || mopts[moduleName]))
+            rtb.pipe(processor(Object.assign({}, mopts[moduleName], options[moduleName])));
         }
 
         // now run autoprefixer
         if (autoprefixer) {
-            const prefixer = requireSafe('gulp-autoprefixer');
-            rtb.filter()
-                .pipe(prefixer({ add: false })) // remove outdated prefixed
-                .pipe(prefixer(mopts.autoprefixer))
+            const prefixerOpts = Object.assign({}, mopts.autoprefixer, options.autoprefixer);
+            rtb.filter().pipe(requireSafe('gulp-autoprefixer')(prefixerOpts));
         }
 
         // do minify here to optimise output (this will also remove lint warnings for intermediate output)
@@ -104,11 +116,9 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
         // lint final css
         // lint does not understands postcss statements. so, it comes after postcss processing
         if (opts.lint) {
-            const stylelint = requireSafe('gulp-stylelint');
             const lintOpts = Object.assign({}, mopts.stylelint,
                 { reporters: [{ formatter: 'verbose', console: true }]}, options.stylelint);
-            // if (!lintOpts.reporters) lintOpts["reporters"] = [{ formatter: 'verbose', console: true }];
-            rtb.filter().pipe(stylelint(lintOpts));
+            rtb.filter().pipe(requireSafe('gulp-stylelint')(lintOpts));
         }
     }
 });

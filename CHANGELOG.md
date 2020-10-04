@@ -5,7 +5,7 @@
 - Replace gulp-uglify-es with gulp-terser
 - Separeate docs and examples (moved to other repositories)
 - Add babel support to GCoffeeScriptBuilder
-
+- Remove gbm.defaultModuleOptions
 
 ## 4.0
 - RTB, Run-Time-Builder, introduction with rich API set

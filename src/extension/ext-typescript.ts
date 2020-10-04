@@ -1,5 +1,13 @@
 /**
  *  gbm extension - typescript
+ *
+ *  buildOptions:
+ *    lint: Enable lint
+ *    printConfig: Print tsConfig settiings actually used.
+ *
+ *  moduleOptions:
+ *    typescript: Options to gulp-typescript.
+ *    tslint: Options to gulp-tslint.
  */
 
 import * as upath from 'upath';
@@ -7,8 +15,9 @@ import { RTB } from "../core/rtb";
 import { Options, warn, msg, requireSafe, npm } from '../utils/utils';
 
 RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
-    const tsConfig = rtb.buildOptions.tsConfig;     // tsconfig file path
-    const tsOpts = Object.assign({}, rtb.moduleOptions.typescript, options.typescript);
+    const { buildOptions: opts, moduleOptions: mopts } = rtb.conf;
+    const tsConfig = opts.tsConfig;     // tsconfig file path
+    const tsOpts = Object.assign({}, mopts.typescript, options.typescript);
 
     // normalize outDir and outFile
     let outFile = tsOpts.output?.filename || rtb.conf.outFile;
@@ -24,10 +33,10 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     if (outDir) tsOpts.outDir = outDir;
 
     // check lint option
-    if (rtb.buildOptions.lint) {
+    if (opts.lint) {
         const tslint = requireSafe('gulp-tslint');
         // const tslintOpts = rtb.moduleOptions.tslint || {formatter: 'stylish'};
-        const tslintOpts = Object.assign({}, { formatter: 'stylish' }, rtb.moduleOptions.tslint);
+        const tslintOpts = Object.assign({}, { formatter: 'stylish' }, mopts.tslint);
         const reportOpts = tslintOpts.report || {};
         // dmsg('[GBM:ext.typeScript]tslint Options =', tslintOpts, reportOpts);
         rtb.pipe(tslint(tslintOpts)).pipe(tslint.report(reportOpts));
@@ -51,7 +60,7 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     }
     if (!tsProject) tsProject = typescript.createProject(tsOpts);
 
-    if (rtb.buildOptions.printConfig) {
+    if (opts.printConfig) {
         msg(`[GBM:ext-typeScript]tsconfig evaluated(name:${rtb.name}):\n`, tsProject.options);
     }
 
