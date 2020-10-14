@@ -1,5 +1,5 @@
 /**
- *  gbm - Gulp Build Manager
+ *  gbm - Build Manager
  */
 
 import { GBuildManager } from './core/buildManager';

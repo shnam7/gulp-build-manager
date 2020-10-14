@@ -81,11 +81,11 @@ RTB.registerExtension('css', (options: Options = {}) => (rtb: RTB) => {
     // backward compatibility on autoprefixer options
     if (opts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
         opts.autoprefixer = opts.autoPrefixer;
-        warn('[GBM:ext-css] buildOptions.autoPrefixer is deprecated. Use buildOptions.autoprefixer instead.');
+        warn('[ext-css] buildOptions.autoPrefixer is deprecated. Use buildOptions.autoprefixer instead.');
     }
     if (mopts.autoPrefixer === undefined && opts.autoPrefixer !== undefined) {
         mopts.autoprefixer = mopts.autoPrefixer;
-        warn('[GBM:ext.css] moduleOptions.autoPrefixer is deprecated. Use moduleOptions.autoprefixer instead.');
+        warn('[ext-css] moduleOptions.autoPrefixer is deprecated. Use moduleOptions.autoprefixer instead.');
     }
 
     // basic build options

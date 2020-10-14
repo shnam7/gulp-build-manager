@@ -1,6 +1,5 @@
 /**
  *  gbm extension - coffeescript
- *  rtb.coffeescript(options={})
  *
  *  buildOptions:
  *    lint: Enable lint

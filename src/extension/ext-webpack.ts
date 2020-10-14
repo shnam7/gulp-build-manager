@@ -21,7 +21,7 @@ import { requireSafe } from "../utils/npm";
  * Configuration priorities:
  * - load webpack.config.js if buildOptions.webpackConfig is set
  * - override the config file with moduleOptions.webpack
- * - override it with rtb.conf.src (src can be an array to specify multiple entries
+ * - override it with rtb.conf.src (src can be an array to specify multiple entries)
  * - override it with rtb.conf.outFile and rtb.conf.dest
  */
 RTB.registerExtension('webpack', (options: Options = {}) => (rtb: RTB) => {
@@ -32,7 +32,7 @@ RTB.registerExtension('webpack', (options: Options = {}) => (rtb: RTB) => {
 
     const configFile = resolve(options.configFile || opts.webpackConfig
         || upath.join(process.cwd(), "webpack.config.js"));
-    info(`[GBM:ext.webpack] webpackConfig=${configFile}`);
+    info(`[ext-webpack] webpackConfig=${configFile}`);
 
     // load configFile first, and then override with moduleOptions.webpack
     let wpOpts = merge(configFile ? require(configFile) : {}, mopts.webpack);

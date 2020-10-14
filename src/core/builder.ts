@@ -101,7 +101,7 @@ export class GTranspiler extends GBuilder {
 
         // sanity check for options
         if (!this.conf.outFile && opts.outFileOnly)
-            warn('GBM: outFileOnly option requires valid outFile value.');
+            warn('GTranspiler: outFileOnly option requires valid outFile value.');
 
         // evaluate options
         const concat = !!this.conf.outFile;

@@ -108,21 +108,13 @@ export function dmsg(...args: any[]) {
     console.log(arg1); if (arg2.length > 0) console.log(...arg2);
 }
 
-export function msg(...args: any[]) {
-    console.log(...args);
-}
+export function msg(...args: any[]) { console.log(...args); }
 
-export function info(...args: any[]) {
-    console.log(chalk.green(...args));
-}
+export function info(...args: any[]) { console.log(chalk.green(...args)); }
 
-export function notice(...args: any[]) {
-    console.log(chalk.yellow(...args));
-}
+export function notice(...args: any[]) { console.log(chalk.yellow(...args)); }
 
-export function warn(...args: any[]) {
-    console.log(chalk.redBright(...args));
-}
+export function warn(...args: any[]) { console.log(chalk.redBright(...args)); }
 
 export * from './process';
 export * from './npm';

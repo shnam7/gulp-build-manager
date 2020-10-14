@@ -16,7 +16,7 @@ export type PackageManagerOptions = {
 
 //--- node package manager
 export class NPM {
-    protected _options: PackageManagerOptions = { name: "npm", installCommand: "npm i", installOptions: "--save-dev" };
+    protected _options: PackageManagerOptions = { name: "npm", installCommand: "npm i", installOptions: "--save-dev", autoInstall: true };
     protected _packageFile: any = {};
 
     constructor() {}
@@ -65,8 +65,6 @@ export class NPM {
     }
 
     public install(ids: string | string[]) {
-        if (!this._options.autoInstall) return;
-
         // get uninstalled list only
         ids = arrayify(ids).filter(id => !this.isInstalled(id));
         if (ids.length > 0) {
@@ -75,19 +73,25 @@ export class NPM {
             if (this._options.installOptions) cmd += " " + this._options.installOptions;
             cmd += " " + installList;
 
-            notice(`GBM:NPM:install: ${cmd}`);
+            notice(`NPM:install: ${cmd}`);
             this.lock();
             try {
                 child_process.execSync(cmd, { cwd: process.cwd() })
             }
             catch (e) {
-                warn(`GBM:npmInstall:'${installList}' install failed.`);
+                warn(`NPM:npmInstall: '${installList}' install failed.`);
                 throw e;
             }
             this.unlock();
-            info(`GBM:npmInstall:'${installList}' install finished.`);
+            info(`NPM:npmInstall: '${installList}' install finished.`);
             this._reloadPackegeFile();
         }
+    }
+
+    public requireSafe(id: string): any {
+        if (!this._options.autoInstall) return;
+        this.install(id);
+        return require(id);
     }
 
     // public isEnabled() { return this._enable; }
@@ -117,7 +121,7 @@ export class NPM {
         else {  // normal name or github repo
             const upath = require('upath');
             if (id.indexOf(upath.sep) > 0) {
-                id = upath.basename(id); // ex) shnam7/gulp-build-manager
+                id = upath.basename(id); // ex) shnam7/lake
                 let idx = id.lastIndexOf('#');
                 if (idx > 0) id = id.substring(0, idx);
             }
@@ -137,30 +141,4 @@ export class NPM {
 };
 
 export const npm = new NPM();
-
-
-
-//--- deprecated
-export type NpmOptions = {
-    autoInstall?: boolean,
-    installOptions?: string;
-};
-
-export function setNpmOptions(opts: NpmOptions): void {
-    warn("[GBM:npm] setNpmOption() is deprecarted. Use gbm.npm.setpackageManager() instead.");
-    warn("[GBM:npm] Use gbm.npm.enable() to activate npm auto install.");
-    if (opts.installOptions) npm.setPackageManager(opts);
-}
-
-// deprecated
-export function npmInstall(ids: string | string[], options: NpmOptions = {}) {
-    notice("[GBM:npm] npmInstall() is deprecarted. Use gbm.npm.install() instead.");
-    notice("[GBM:npm] Use gbm.npm.enable() to activate npm auto install.");
-    setNpmOptions(options);
-    npm.install(ids);
-}
-
-export function requireSafe(id: string): any {
-    npm.install(id);
-    return require(id);
-}
+export function requireSafe(id: string) { return npm.requireSafe(id); }

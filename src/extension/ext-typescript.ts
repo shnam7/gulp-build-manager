@@ -35,10 +35,8 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     // check lint option
     if (opts.lint) {
         const tslint = requireSafe('gulp-tslint');
-        // const tslintOpts = rtb.moduleOptions.tslint || {formatter: 'stylish'};
         const tslintOpts = Object.assign({}, { formatter: 'stylish' }, mopts.tslint);
         const reportOpts = tslintOpts.report || {};
-        // dmsg('[GBM:ext.typeScript]tslint Options =', tslintOpts, reportOpts);
         rtb.pipe(tslint(tslintOpts)).pipe(tslint.report(reportOpts));
     }
 
@@ -61,7 +59,7 @@ RTB.registerExtension('typeScript', (options: Options = {}) => (rtb: RTB) => {
     if (!tsProject) tsProject = typescript.createProject(tsOpts);
 
     if (opts.printConfig) {
-        msg(`[GBM:ext-typeScript]tsconfig evaluated(name:${rtb.name}):\n`, tsProject.options);
+        msg(`[ext-typeScript] tsconfig evaluated(name:${rtb.name}):\n`, tsProject.options);
     }
 
     // workaround for gulp-typescript sourceMap failure which requires sourceRoot value

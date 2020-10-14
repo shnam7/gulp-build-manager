@@ -60,7 +60,7 @@ export class RTB extends EventEmitter {
         if (is.Function(action)) return action(this);
 
         // if wrong argument, warn the user
-        if (action) throw Error(`[GBM:RTB:${this.name}]BuildFunction type error. Check preBuid or postBuild props in BuildConfig.`);
+        if (action) throw Error(`[RTB:${this.name}] BuildFunction type error. Check preBuid or postBuild props in BuildConfig.`);
     }
 
     protected build(): void | Promise<unknown> {
@@ -288,7 +288,7 @@ export class RTB extends EventEmitter {
     //--- extension support
     static registerExtension(name: string, ext: RTBExtension): void {
         if (RTB.prototype.hasOwnProperty(name))
-            throw Error(`[GBM:RTB:registerExtension] Name conflict for extension '${name}'`);
+            throw Error(`[RTB:registerExtension] Name conflict for extension '${name}'`);
 
         Object.defineProperty(RTB.prototype, name, {
             configurable: false,
@@ -308,10 +308,7 @@ export class RTB extends EventEmitter {
     }
 
     // deprecated
-    get buildName() {
-        // warn('[GBM:rtb:builName] rtb.buildName is deprecated. Use rtb.name instead.');
-        return this.conf.name;
-    }
+    get buildName() { return this.conf.name; }
 }
 
 // load built-in extensions

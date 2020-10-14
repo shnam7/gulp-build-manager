@@ -8,6 +8,8 @@ Focus on build actions, rather than environment setup.
 npm i gulp-build-manager --save-dev
 npm i gulp --save-dev
 ```
+Note that gulp should also be installed.
+
 
 ## Documentation
 Go to [Documentation](https://shnam7.github.io/gulp-build-manager)
@@ -18,79 +20,53 @@ Go to [Documentation](https://shnam7.github.io/gulp-build-manager)
 - Watching, reloading, and cleaning with minimal efforts
 - Rich run-time builder API for user build actions
 - Sync and async control for tasks, build actions, and gulp streams for flushing.
-- Automatic NPM module installation
+- Automatic Node module installation (npm/pnpm/yarn)
 - Small to large scale project support using modular configuration
 - Pre-defined Buildt-in builders and extensions
 - Custom builders and extension support
-
-
-## What's new in version 4
-- New architecture for better performance and easier interface
-- Improved promise handling for better synchronization in build processes
-- Multiple, modular build projects support
-- Enhanced watching and reloading
-- Rich runtime builder API for easier build routine development and customization
-
-
-## Automatic module installation
-
-### Using gulpfile.js
-```js
-const gbm = require('gulp-build-manager');
-gbm.npm.enable();
-
-// default package manager is npm. To change it, pnpm or yarn, do this
-gbm.setPackageManager("pnpm");  // or "yarn"
-```
-
-### Using command line
-```sh
-npx gulp <task-name> --npm-auto # default npm install option is '--save-dev'
-npx gulp <task-name> --npm-auto="pnpm" # default npm. You can specify pnpm, yarn, or custom command here
-```
-
-Refer to [Getting Started](docs/contents/01-getting-started.md) page for more information.
-
 
 
 ## Quick example: gulpfile.js
 
 ```js
 const gbm = require('gulp-build-manager');
-const upath = require('upath')
-
-const basePath = upath.relative(process.cwd(), __dirname);
-const srcRoot = upath.join(basePath, 'assets');
-const destRoot = upath.join(basePath, 'www');
-
 
 const scss = {
     buildName: 'scss',
-    builder: (rtb) => rtb.src().pipe(sass().on('error', sass.logError)).dest(),
-    src: upath.join(srcRoot, 'scss/**/*.scss'),
-    dest: upath.join(destRoot, 'css'),
+    builder: (rtb) => {
+        const sass = require('gulp-sass');
+        rtb.src().pipe(sass().on('error', sass.logError)).dest()
+    },
+    src: 'assets/scss/**/*.scss',
+    dest: 'www/css',
+    npmInstall: ['gulp-sass']
 }
 
 const scripts = {
     buildName: 'babel',
-    builder: (rtb) => rtb.src().pipe(require('gulp-babel')()).dest(),
-    src: upath.join(srcRoot, 'js/**/*.js'),
-    dest: upath.join(destRoot, 'js'),
+    builder: (rtb) => {
+        const babel = require('gulp-babel');
+        rtb.src().pipe(babel()).dest()
+    },
+    src: 'assets/js/**/*.js',
+    dest: 'www/js',
+    npmInstall: ['gulp-babel', '@babel/core']
 }
 
 const build = {
     buildName: '@build',
     triggers: gbm.parallel(scss, scripts),
-    clean: upath.join(destRoot, '{css,js}')
+    clean: 'www/{css,js}'
 }
 
 gbm.createProject(build)
     .addWatcher({
-        watch: upath.join(destRoot, '**/*.html'),
-        browserSync: { server: destRoot }
+        watch: 'www/**/*.html',
+        browserSync: { server: 'www' }
     })
-    .addCleaner()
+    .addCleaner();
 ```
+
 This gulpfile will create a single project with 5 gulp tasks as following:
 - scss: sass transpiler
 - babel: ES6 transpiler using babel
@@ -102,37 +78,35 @@ This gulpfile will create a single project with 5 gulp tasks as following:
 ## Easier way using built-in builders: gulpfile.js
 ```js
 const gbm = require('gulp-build-manager');
-const upath = require('upath')
-
-const basePath = upath.relative(process.cwd(), __dirname);
-const srcRoot = upath.join(basePath, 'assets');
-const destRoot = upath.join(basePath, 'www');
-
 
 const scss = {
-    buildName: 'GCSSBuilder',
-    src: upath.join(srcRoot, 'scss/**/*.scss'),
-    dest: upath.join(destRoot, 'css'),
+    buildName: 'scss',
+    builder: 'GCSSBuilder',
+    src: 'assets/scss/**/*.scss',
+    dest: 'www/css',
+    npmInstall: ['gulp-sass']
 }
 
 const scripts = {
-    buildName: 'GJavaScriptBuilder',
-    src: upath.join(srcRoot, 'js/**/*.js'),
-    dest: upath.join(destRoot, 'js'),
+    buildName: 'babel',
+    builder: 'GJavaScriptBuilder',
+    src: 'assets/js/**/*.js',
+    dest: 'www/js',
+    npmInstall: ['gulp-babel', '@babel/core']
 }
 
 const build = {
     buildName: '@build',
     triggers: gbm.parallel(scss, scripts),
-    clean: upath.join(destRoot, '{css,js}')
+    clean: 'www/{css,js}'
 }
 
 gbm.createProject(build)
     .addWatcher({
-        watch: upath.join(destRoot, '**/*.html'),
-        browserSync: { server: destRoot }
+        watch: 'www/**/*.html',
+        browserSync: { server: 'www' }
     })
-    .addCleaner()
+    .addCleaner();
 ```
 
 Check **[examples](examples)** directory for more working examples.

@@ -110,7 +110,7 @@ export class GProject {
                     if (rtb.conf.clean) cleanList = cleanList.concat(arrayify(rtb.conf.clean))
                 });
 
-                msg('[GBM:clean]:', cleanList);
+                msg(`[${rtb.conf.name}]: cleaning `, cleanList);
                 rtb.del(cleanList, { silent: true, sync: opts.sync });
             }
         });
@@ -180,10 +180,7 @@ export class GProject {
                 resolved = gulp.parallel(resolved);
 
             // deprecated name check
-            if (!conf.name && conf.buildName) {
-                conf.name = conf.buildName;
-                // warn(`[GBM:${this._options.prefix + conf.name}] buildConfig.buildName is deprecated. Use buildConfig.name instead.`);
-            }
+            if (!conf.name && conf.buildName) conf.name = conf.buildName;
 
             conf.name = this._options.prefix + conf.name;
             rtb.__create(conf)

@@ -2,10 +2,10 @@ import * as upath from 'upath';
 import * as __utils from '../utils/utils';
 import { BuildSet, BuildSetSeries, BuildSetParallel, series, parallel, BuildItems, BuildNameSelector, BuildItem } from './builder';
 import { GProject, ProjectOptions } from './project';
-import { Options, registerPropertiesFromFiles } from '../utils/utils';
+import { registerPropertiesFromFiles } from '../utils/utils';
 import { GBuilder as GBuilderClass } from './builder';
 import { RTB, RTBExtension } from './rtb';
-import { npm, requireSafe, PackageManagerOptions } from '../utils/npm';
+import { npm, PackageManagerOptions } from '../utils/npm';
 
 
 //--- GBuildManager
@@ -62,7 +62,8 @@ export class GBuildManager {
     parallel(...args: BuildSet[]): BuildSetParallel { return parallel(args); }
     registerExtension(name: string, ext: RTBExtension): void { RTB.registerExtension(name, ext) }
     loadExtension(globModules: string | string[]) { RTB.loadExtension(globModules) }
-    require(id: string) { return requireSafe(id); }
+    require(id: string) { return npm.requireSafe(id); }
+    install(ids: string | string[]) { return npm.install(ids); }    // TODO: add to docs
 
     //--- properties
     get rtbs() { return GBuildManager.rtbs; }
