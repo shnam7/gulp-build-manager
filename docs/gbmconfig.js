@@ -8,7 +8,7 @@ const upath = require('upath');
 const projectName = upath.basename(__dirname);   // set template name to parent directory name
 const basePath = upath.relative(process.cwd(), __dirname);
 const srcRoot = upath.join(basePath, '_assets');
-const destRoot = upath.join(basePath, 'gulp-build-manager');
+const destRoot = upath.join(basePath, '_site');
 const prefix = projectName + ':';
 const sourceMap = true;
 
@@ -86,16 +86,11 @@ const scripts = {
 const jekyll = {
     buildName: 'jekyll',
     builder: {
-        command: 'jekyll',
+        command: `jekyll build -s ${basePath} -d ${destRoot}/gulp-build-manager`,
         args: [
-            'build',
-            '-s ' + upath.join(basePath, ''), // source path
-            '-d ' + destRoot, // destination path
             '--safe', // github runs in safe mode foe security reason. Custom plugins are not supported.
-            // '--baseurl http://localhost/gulp-build-manager:' + port, // root folder relative to local server,
             '--incremental'
         ],
-        // options: { shell: true }
     },
 
     watch: [
@@ -117,7 +112,8 @@ const build = {
 module.exports = gbm.createProject({scss, scripts, jekyll, build}, {prefix})
     .addWatcher({
         browserSync: {
-            server: upath.resolve(basePath),
+            server: upath.resolve(destRoot),
+            startPath: '/gulp-build-manager/',
             open: true,
             port: port,
             ui: { port: port + 100 }

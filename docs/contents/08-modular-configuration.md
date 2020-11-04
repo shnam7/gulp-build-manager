@@ -34,5 +34,5 @@ gbm.addProject([docs, example]);
 
 Refer to **[gulpfile.js][1]** of gulp-bild-manager source and gbmconfig.js file in its **[examples][0]** directory for general usage and examples.
 
-[0]: ../../examples
-[1]: ../../gulpfile.js
+[0]: {{site.repo}}/examples/
+[1]: {{site.repo}}/gulpfile.js

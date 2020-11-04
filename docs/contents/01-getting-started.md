@@ -5,6 +5,14 @@ title: Getting started
 
 # Getting started
 
+<div style='color:white; background:#B12F5C; padding: 1.5rem; border-radius: 5px; text-align:center'>
+<div style='font-size:1.3rem; margin-bottom: 0.5rem'>
+    Migration to <a href='https://github.com/shnam7/gulp-tron' target='_blank' style='color:#FFE21f'>gulp-tron</a>
+</div>
+<div>gulp-build-manager is no longer maintained. Please use <a href='https://github.com/shnam7/gulp-tron' target='_blank' style='color:#FFE21f'>gulp-tron</a> instead.</div>
+</div>
+
+
 ## Installation
 Gulp Build Manager can be installed with NPM.
 
@@ -168,20 +176,20 @@ const scss = {
 ```
 
 Currently, following built-in builders are available:
-- [GBuilder](builtin-builders/GBuilder.md)
-- [GCoffeeScriptBuilder](builtin-builders/GCoffeeScriptBuilder.md)
-- [GConcatBuilder](builtin-builders/GConcatBuilder.md)
-- [GCSSBuilder](builtin-builders/GCSSBuilder.md)
-- [GImagesBuilder](builtin-builders/GImagesBuilder.md)
-- [GJavaScriptBuilder](builtin-builders/GJavaScriptBuilder.md)
-- [GJekyllBuilder](builtin-builders/GJekyllBuilder.md)
-- [GMarkdownBuilder](builtin-builders/GMarkdownBuilder.md)
-- [GPaniniBuilder](builtin-builders/GPaniniBuilder.md)
-- [GRTLCSSBuilder](builtin-builders/GRTLCSSBuilder.md)
-- [GTwigBuilder](builtin-builders/GTwigBuilder.md)
-- [GTypeScriptBuilder](builtin-builders/GTypeScriptBuilder.md)
-- [GWebpackBuilder](builtin-builders/GWebpackBuilder.md)
-- [GZipBuilder](builtin-builders/GZipBuilder.md)
+- [GBuilder]({{site.baseurl}}/contents/builtin-builders/GBuilder)
+- [GCoffeeScriptBuilder]({{site.baseurl}}/contents/builtin-builders/GCoffeeScriptBuilder)
+- [GConcatBuilder]({{site.baseurl}}/contents/builtin-builders/GConcatBuilder)
+- [GCSSBuilder]({{site.baseurl}}/contents/builtin-builders/GCSSBuilder)
+- [GImagesBuilder]({{site.baseurl}}/contents/builtin-builders/GImagesBuilder)
+- [GJavaScriptBuilder]({{site.baseurl}}/contents/builtin-builders/GJavaScriptBuilder)
+- [GJekyllBuilder]({{site.baseurl}}/contents/builtin-builders/GJekyllBuilder)
+- [GMarkdownBuilder]({{site.baseurl}}/contents/builtin-builders/GMarkdownBuilder)
+- [GPaniniBuilder]({{site.baseurl}}/contents/builtin-builders/GPaniniBuilder)
+- [GRTLCSSBuilder]({{site.baseurl}}/contents/builtin-builders/GRTLCSSBuilder)
+- [GTwigBuilder]({{site.baseurl}}/contents/builtin-builders/GTwigBuilder)
+- [GTypeScriptBuilder]({{site.baseurl}}/contents/builtin-builders/GTypeScriptBuilder)
+- [GWebpackBuilder]({{site.baseurl}}/contents/builtin-builders/GWebpackBuilder)
+- [GZipBuilder]({{site.baseurl}}/contents/builtin-builders/GZipBuilder)
 
 
 
@@ -195,6 +203,6 @@ Version 4 has substantial changes from v3, and it's not compatible with v3 or ea
 
 
 
-[0]: 02-build-config.md
+[0]: {{site.baseurl}}/contents/02-build-config
 [1]: https://github.com/shnam7/gulp-build-manager/tree/master/examples
-[2]: 09-migration-from-v3.md
+[2]: {{site.baseurl}}/contents/09-migration-from-v3

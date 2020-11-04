@@ -1,6 +1,6 @@
 {
     "name": "gulp-build-manager",
-    "version": "4.0.2",
+    "version": "4.0.3",
     "description": "Easy to use, flexible gulp task manager",
     "files": [
         "lib",
@@ -15,6 +15,7 @@
         "docs-build": "gulp docs:@build",
         "docs-clean": "gulp docs:@clean",
         "docs-watch": "gulp docs:@watch",
+        "jekyll-server": "jekyll serve -s docs -d docs/_site/gulp-build-manager --safe --incremental",
         "ex-build": "gulp @ex-build-all",
         "ex-clean": "gulp @ex-clean-all",
         "build-all-npm-auto": "gulp docs:@build --npm-auto && gulp @ex-build-all --npm-auto",
@@ -101,6 +102,7 @@
         "postcss-utilities": "^0.8.4",
         "react": "^16.13.1",
         "react-dom": "^16.13.1",
+        "sass-wdk": "^1.1.2",
         "stream-to-promise": "^2.2.0",
         "stylelint": "^13.3.3",
         "stylelint-config-recommended": "^3.0.0",

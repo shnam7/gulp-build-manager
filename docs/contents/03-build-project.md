@@ -108,7 +108,7 @@ Create cleaner task which cleans all the clean targets of each build items in th
 addVars(vars: { [key: string]: any }) => this;
 ```
 
-Add key/value pairs into project-wide variable list, which is accessible using project.vars property. This is typically used to deliver project specific data to GBuildManager[0] for multi-project management.
+Add key/value pairs into project-wide variable list, which is accessible using project.vars property. This is typically used to deliver project specific data to [GBuildManager][0] for multi-project management.
 
 **example**
 ```js
@@ -149,4 +149,4 @@ Object with key/value pairs which were added by addVar() function. Typically, us
 
 
 
-[0]:04-build-manager.md
+[0]:{{site.baseurl}}/contents/04-build-manager/

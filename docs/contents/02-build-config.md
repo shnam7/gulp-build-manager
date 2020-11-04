@@ -177,5 +177,5 @@ Suppress non critical messages. Default is false.
 
 
 
-[0]:05-rtb.md
+[0]:{{site.baseurl}}/contents/05-rtb/
 [1]:https://github.com/sirlantis/gulp-order

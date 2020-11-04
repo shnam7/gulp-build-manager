@@ -6,9 +6,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/systemjs/5.0.0/extras/named-register.min.js" integrity="sha256-Vuh3TczExPMAVhPsR3+vaqgN90hBtLgOUSU8m4gL0GQ=" crossorigin="anonymous"></script>
 
 <script>
-    baseUrl = (window.location.hostname === 'localhost') ? '/js/' : '/gulp-build-manager/js/';
+    // baseUrl = (window.location.hostname === 'localhost') ? '/js/' : '/gulp-build-manager/js/';
+    // System.import(baseUrl + 'wicle.min.js').then(() => System.import(baseUrl + "docs.min.js"));
+    var baseUrl = '/gulp-build-manager/js/';
     System.import(baseUrl + 'wicle.min.js').then(() => System.import(baseUrl + "docs.min.js"));
-
     hljs.initHighlightingOnLoad();
 
 </script>

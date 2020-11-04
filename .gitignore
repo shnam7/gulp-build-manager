@@ -7,3 +7,4 @@ node_modules
 /lib
 /docs/gulp-build-manager
 /docs/.jekyll-*
+/docs/_site
