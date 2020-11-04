@@ -1,12 +1,11 @@
 # Gulp Build Manager
 
-<div style='padding: 1.5rem; border-radius: 5px; text-align:center'>
+<div style='color:white; background:#B12F5C; padding: 1.5rem; border-radius: 5px; text-align:center'>
 <div style='font-size:1.3rem; margin-bottom: 0.5rem'>
     Migration to <a href='https://github.com/shnam7/gulp-tron' target='_blank' style='color:#FFE21f'>gulp-tron</a>
 </div>
-<div>gulp-build-manager is no longer maintained. Please use gulp-tron instead.</div>
+<div>gulp-build-manager is no longer maintained. Please use <a href='https://github.com/shnam7/gulp-tron' target='_blank' style='color:#FFE21f'>gulp-tron</a> instead.</div>
 </div><br>
-
 
 Gulp Build Manager, gbm in short, is an easy to use, configuration based gulp task manager. Users can create gulp tasks with simple build configurations. At the same time, javascript can be used to customize and extend the configuration.
 
